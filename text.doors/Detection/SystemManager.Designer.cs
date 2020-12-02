@@ -51,18 +51,21 @@
             this.groupBox1.Controls.Add(this.label4);
             this.groupBox1.Controls.Add(this.label3);
             this.groupBox1.Controls.Add(this.label1);
-            this.groupBox1.Location = new System.Drawing.Point(27, 26);
+            this.groupBox1.Location = new System.Drawing.Point(40, 39);
+            this.groupBox1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(315, 165);
+            this.groupBox1.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.groupBox1.Size = new System.Drawing.Size(472, 248);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "系统设置";
             // 
             // btn_save
             // 
-            this.btn_save.Location = new System.Drawing.Point(216, 126);
+            this.btn_save.Location = new System.Drawing.Point(324, 189);
+            this.btn_save.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.btn_save.Name = "btn_save";
-            this.btn_save.Size = new System.Drawing.Size(75, 23);
+            this.btn_save.Size = new System.Drawing.Size(112, 34);
             this.btn_save.TabIndex = 2;
             this.btn_save.Text = "保存";
             this.btn_save.UseVisualStyleBackColor = true;
@@ -70,71 +73,79 @@
             // 
             // txt_mm
             // 
-            this.txt_mm.Location = new System.Drawing.Point(112, 100);
+            this.txt_mm.Location = new System.Drawing.Point(168, 150);
+            this.txt_mm.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.txt_mm.Name = "txt_mm";
-            this.txt_mm.Size = new System.Drawing.Size(100, 21);
+            this.txt_mm.Size = new System.Drawing.Size(148, 28);
             this.txt_mm.TabIndex = 1;
             this.txt_mm.Text = "0.08";
             // 
             // txt_prot
             // 
-            this.txt_prot.Location = new System.Drawing.Point(112, 67);
+            this.txt_prot.Location = new System.Drawing.Point(168, 100);
+            this.txt_prot.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.txt_prot.Name = "txt_prot";
-            this.txt_prot.Size = new System.Drawing.Size(100, 21);
+            this.txt_prot.Size = new System.Drawing.Size(148, 28);
             this.txt_prot.TabIndex = 1;
             this.txt_prot.Text = "502";
             // 
             // txt_IP
             // 
-            this.txt_IP.Location = new System.Drawing.Point(113, 32);
+            this.txt_IP.Location = new System.Drawing.Point(170, 48);
+            this.txt_IP.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.txt_IP.Name = "txt_IP";
-            this.txt_IP.Size = new System.Drawing.Size(100, 21);
+            this.txt_IP.Size = new System.Drawing.Size(148, 28);
             this.txt_IP.TabIndex = 1;
             this.txt_IP.Text = "192.168.2.5";
             // 
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(29, 103);
+            this.label5.Location = new System.Drawing.Point(44, 154);
+            this.label5.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(77, 12);
+            this.label5.Size = new System.Drawing.Size(116, 18);
             this.label5.TabIndex = 0;
             this.label5.Text = "集流管直径：";
             // 
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(65, 70);
+            this.label4.Location = new System.Drawing.Point(98, 105);
+            this.label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(41, 12);
+            this.label4.Size = new System.Drawing.Size(62, 18);
             this.label4.TabIndex = 0;
             this.label4.Text = "端口：";
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(29, 103);
+            this.label3.Location = new System.Drawing.Point(44, 154);
+            this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(41, 12);
+            this.label3.Size = new System.Drawing.Size(62, 18);
             this.label3.TabIndex = 0;
             this.label3.Text = "label1";
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(77, 42);
+            this.label1.Location = new System.Drawing.Point(116, 63);
+            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(29, 12);
+            this.label1.Size = new System.Drawing.Size(44, 18);
             this.label1.TabIndex = 0;
             this.label1.Text = "IP：";
             // 
             // SystemManager
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(374, 213);
+            this.ClientSize = new System.Drawing.Size(561, 320);
             this.Controls.Add(this.groupBox1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Name = "SystemManager";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "系统设置";

@@ -38,17 +38,19 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(25, 22);
+            this.label1.Location = new System.Drawing.Point(38, 33);
+            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(101, 12);
+            this.label1.Size = new System.Drawing.Size(152, 18);
             this.label1.TabIndex = 0;
             this.label1.Text = "请输入检测编号：";
             // 
             // btn_Ok
             // 
-            this.btn_Ok.Location = new System.Drawing.Point(220, 19);
+            this.btn_Ok.Location = new System.Drawing.Point(330, 28);
+            this.btn_Ok.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.btn_Ok.Name = "btn_Ok";
-            this.btn_Ok.Size = new System.Drawing.Size(75, 23);
+            this.btn_Ok.Size = new System.Drawing.Size(112, 34);
             this.btn_Ok.TabIndex = 1;
             this.btn_Ok.Text = "确定";
             this.btn_Ok.UseVisualStyleBackColor = true;
@@ -56,9 +58,10 @@
             // 
             // btn_Close
             // 
-            this.btn_Close.Location = new System.Drawing.Point(220, 54);
+            this.btn_Close.Location = new System.Drawing.Point(330, 81);
+            this.btn_Close.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.btn_Close.Name = "btn_Close";
-            this.btn_Close.Size = new System.Drawing.Size(75, 23);
+            this.btn_Close.Size = new System.Drawing.Size(112, 34);
             this.btn_Close.TabIndex = 1;
             this.btn_Close.Text = "取消";
             this.btn_Close.UseVisualStyleBackColor = true;
@@ -66,21 +69,23 @@
             // 
             // txt_Code
             // 
-            this.txt_Code.Location = new System.Drawing.Point(27, 87);
+            this.txt_Code.Location = new System.Drawing.Point(40, 130);
+            this.txt_Code.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.txt_Code.Name = "txt_Code";
-            this.txt_Code.Size = new System.Drawing.Size(268, 21);
+            this.txt_Code.Size = new System.Drawing.Size(400, 28);
             this.txt_Code.TabIndex = 2;
             // 
             // Select_Code
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(343, 120);
+            this.ClientSize = new System.Drawing.Size(514, 180);
             this.Controls.Add(this.txt_Code);
             this.Controls.Add(this.btn_Close);
             this.Controls.Add(this.btn_Ok);
             this.Controls.Add(this.label1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "Select_Code";

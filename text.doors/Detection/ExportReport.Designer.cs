@@ -41,18 +41,20 @@
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("宋体", 13F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.label1.Location = new System.Drawing.Point(28, 25);
+            this.label1.Location = new System.Drawing.Point(42, 38);
+            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(236, 18);
+            this.label1.Size = new System.Drawing.Size(336, 26);
             this.label1.TabIndex = 0;
             this.label1.Text = "请确定数据已经处理完毕！";
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(29, 74);
+            this.label2.Location = new System.Drawing.Point(44, 111);
+            this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(77, 12);
+            this.label2.Size = new System.Drawing.Size(116, 18);
             this.label2.TabIndex = 1;
             this.label2.Text = "请选择模板：";
             // 
@@ -63,16 +65,18 @@
             "-------请选择-----",
             "门窗检验报告.doc",
             "实验室记录.doc"});
-            this.cm_Report.Location = new System.Drawing.Point(112, 70);
+            this.cm_Report.Location = new System.Drawing.Point(168, 105);
+            this.cm_Report.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.cm_Report.Name = "cm_Report";
-            this.cm_Report.Size = new System.Drawing.Size(135, 20);
+            this.cm_Report.Size = new System.Drawing.Size(200, 26);
             this.cm_Report.TabIndex = 2;
             // 
             // btn_ok
             // 
-            this.btn_ok.Location = new System.Drawing.Point(31, 117);
+            this.btn_ok.Location = new System.Drawing.Point(46, 176);
+            this.btn_ok.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.btn_ok.Name = "btn_ok";
-            this.btn_ok.Size = new System.Drawing.Size(75, 23);
+            this.btn_ok.Size = new System.Drawing.Size(112, 34);
             this.btn_ok.TabIndex = 3;
             this.btn_ok.Text = "导出";
             this.btn_ok.UseVisualStyleBackColor = true;
@@ -80,9 +84,10 @@
             // 
             // btn_close
             // 
-            this.btn_close.Location = new System.Drawing.Point(172, 117);
+            this.btn_close.Location = new System.Drawing.Point(258, 176);
+            this.btn_close.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.btn_close.Name = "btn_close";
-            this.btn_close.Size = new System.Drawing.Size(75, 23);
+            this.btn_close.Size = new System.Drawing.Size(112, 34);
             this.btn_close.TabIndex = 3;
             this.btn_close.Text = "取消";
             this.btn_close.UseVisualStyleBackColor = true;
@@ -93,18 +98,19 @@
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("宋体", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.label3.ForeColor = System.Drawing.Color.Red;
-            this.label3.Location = new System.Drawing.Point(104, 151);
+            this.label3.Location = new System.Drawing.Point(156, 226);
+            this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(173, 19);
+            this.label3.Size = new System.Drawing.Size(246, 28);
             this.label3.TabIndex = 4;
             this.label3.Text = "下载中,请稍后...";
             this.label3.Visible = false;
             // 
             // ExportReport
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(276, 179);
+            this.ClientSize = new System.Drawing.Size(414, 268);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.btn_close);
             this.Controls.Add(this.btn_ok);
@@ -112,6 +118,7 @@
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "ExportReport";
