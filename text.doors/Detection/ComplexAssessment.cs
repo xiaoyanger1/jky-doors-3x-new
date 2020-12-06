@@ -562,8 +562,8 @@ namespace text.doors.Detection
 
         private void button2_Click(object sender, EventArgs e)
         {
-            ExportReport er = new ExportReport(_code);
-            er.Show();
+            //ExportReport er = new ExportReport(_code);
+            //er.Show();
         }
     }
 }

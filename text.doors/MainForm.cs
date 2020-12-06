@@ -25,7 +25,7 @@ namespace text.doors
 {
     public partial class MainForm : Form
     {
-        private static TCPClient tcpClient = new TCPClient();
+        private static SerialPortClient _serialPortClient = new SerialPortClient();
         public static Young.Core.Logger.ILog Logger = Young.Core.Logger.LoggerManager.Current();
 
 
@@ -55,7 +55,9 @@ namespace text.doors
             OpenTcp();
 
             //设置高压标零
-            var pressureZero = tcpClient.SendGYBD(true);
+            var pressureZero = _serialPortClient.SendGYBD(true);
+
+            _serialPortClient.SendDYBD(true);
 
             DataInit();
             ShowDetectionSet();
@@ -109,9 +111,9 @@ namespace text.doors
                         bw.DoWork += new DoWorkEventHandler(Tcp_DoWork);
                         bw.RunWorkerAsync();
                     }
-                    if (!tcpClient.IsTCPLink)
+                    if (!_serialPortClient.IsSerialPortLink)
                     {
-                        tcpClient.TcpOpen();
+                        _serialPortClient.SerialPortOpen();
                         Thread.Sleep(500);
                     }
                     else
@@ -123,7 +125,7 @@ namespace text.doors
 
         void Tcp_DoWork(object sender, DoWorkEventArgs e)
         {
-            e.Result = tcpClient.IsTCPLink ? "服务器连接：成功" : "服务器连接：失败";
+            e.Result = _serialPortClient.IsSerialPortLink ? "服务器连接：成功" : "服务器连接：失败";
         }
 
         void Tcp_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -156,19 +158,6 @@ namespace text.doors
         }
 
         /// <summary>
-        /// 检测监控
-        /// </summary>
-        //private void ShowRealTimeSurveillance(int type)
-        //{
-        //    RealTimeSurveillance rts = new RealTimeSurveillance(tcpClient, _tempCode, _tempTong, type);
-        //    this.pl_showItem.Controls.Clear();
-        //    rts.TopLevel = false;
-        //    rts.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
-        //    rts.Parent = this.pl_showItem;
-        //    rts.Show();
-        //}
-
-        /// <summary>
         /// 参数设置
         /// </summary>
         private void ShowDetectionSet()
@@ -180,15 +169,6 @@ namespace text.doors
             ds.TopLevel = false;
             ds.Parent = this.pl_showItem;
             ds.Show();
-
-
-            //new AirtightDetection().Dispose();
-            // new WatertightDetection().Dispose();
-            //new WindPressureDetection().Dispose();
-
-            //new AirtightDetection().StopTimer();
-            //new WatertightDetection().StopTimer();
-            //new WindPressureDetection().StopTimer();
         }
 
         /// <summary>
@@ -196,90 +176,76 @@ namespace text.doors
         /// </summary>
         private void ShowWatertightDetection()
         {
-            WatertightDetection rts = new WatertightDetection(tcpClient, _tempCode, _tempTong);
+            WatertightDetection rts = new WatertightDetection(_serialPortClient, _tempCode, _tempTong);
             this.pl_showItem.Controls.Clear();
             rts.TopLevel = false;
             rts.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             rts.Parent = this.pl_showItem;
             rts.Show();
-
-            //new AirtightDetection().StopTimer();
-            //new WatertightDetection().InitTimer();
-            //new WindPressureDetection().StopTimer();
         }
         /// <summary>
         /// 气密监控
         /// </summary>
         private void ShowAirtightDetection()
         {
-            AirtightDetection rts = new AirtightDetection(tcpClient, _tempCode, _tempTong);
+            AirtightDetection rts = new AirtightDetection(_serialPortClient, _tempCode, _tempTong);
             this.pl_showItem.Controls.Clear();
             rts.TopLevel = false;
             rts.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             rts.Parent = this.pl_showItem;
             rts.Show();
 
-
-            //new AirtightDetection().InitTimer();
-            //new WatertightDetection().StopTimer();
-            //new WindPressureDetection().StopTimer();
         }
         /// <summary>
         /// 抗风压
         /// </summary>
         private void ShowWindPressure()
         {
-            WindPressureDetection rts = new WindPressureDetection(tcpClient, _tempCode, _tempTong);
+            WindPressureDetection rts = new WindPressureDetection(_serialPortClient, _tempCode, _tempTong);
             this.pl_showItem.Controls.Clear();
             rts.TopLevel = false;
             rts.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             rts.Parent = this.pl_showItem;
             rts.Show();
-
-            //new AirtightDetection().Dispose();
-            //new WatertightDetection().Dispose();
-            //new DetectionSet().Dispose();
-
-            //new AirtightDetection().StopTimer();
-            //new WatertightDetection().StopTimer();
-            //new WindPressureDetection().InitTimer();
         }
 
 
         private void DataInit()
         {
-            //隐藏打开按钮
-            // tsb_open.Visible = false;
-
-            if (tcpClient.IsTCPLink)
+            if (_serialPortClient.IsSerialPortLink)
             {
                 #region 获取面板显示
                 var IsSeccess = false;
 
-                var temperature = _temperature = tcpClient.GetWDXS(ref IsSeccess);
+                var temperature = _temperature = _serialPortClient.GetWDXS(ref IsSeccess);
                 if (!IsSeccess) return;
 
-                var temppressure = _temppressure = tcpClient.GetDQYLXS(ref IsSeccess);
+                var temppressure = _temppressure = _serialPortClient.GetDQYLXS(ref IsSeccess);
                 if (!IsSeccess) return;
 
-                var windSpeed = tcpClient.GetFSXS(ref IsSeccess).ToString();
+                var windSpeed = _serialPortClient.GetFSXS(ref IsSeccess).ToString();
                 if (!IsSeccess) return;
 
-                var diffPress = tcpClient.GetCYXS(ref IsSeccess).ToString();
+                var diffPressG = _serialPortClient.GetCYGXS(ref IsSeccess).ToString();
                 if (!IsSeccess) return;
+
+                var diffPressD = _serialPortClient.GetCYDXS(ref IsSeccess).ToString();
+                if (!IsSeccess) return;
+
 
                 lbl_wdcgq.Text = temperature.ToString();
                 lbl_dqylcgq.Text = temppressure.ToString();
                 lbl_fscgq.Text = windSpeed.ToString();
-                lbl_cycgq.Text = diffPress.ToString();
+                lbl_cygcgq.Text = diffPressG.ToString();
 
+                lbl_cydcgq.Text = diffPressD.ToString();
 
                 //抗风压
-                var displace1 = tcpClient.GetDisplace1(ref IsSeccess).ToString();
+                var displace1 = _serialPortClient.GetDisplace1(ref IsSeccess).ToString();
                 if (!IsSeccess) return;
-                var displace2 = tcpClient.GetDisplace2(ref IsSeccess).ToString();
+                var displace2 = _serialPortClient.GetDisplace2(ref IsSeccess).ToString();
                 if (!IsSeccess) return;
-                var displace3 = tcpClient.GetDisplace3(ref IsSeccess).ToString();
+                var displace3 = _serialPortClient.GetDisplace3(ref IsSeccess).ToString();
                 if (!IsSeccess) return;
 
                 lbl_Displace1.Text = displace1.ToString();
@@ -288,24 +254,10 @@ namespace text.doors
 
                 #endregion
 
-                #region 获取正负压阀状态
-                GetPRVs();
-                #endregion
+                //#region 获取正负压阀状态
+                //GetPRVs();
+                //#endregion
             }
-        }
-
-        private void GetPRVs()
-        {
-            //检测正负压阀状态
-            bool z = false, f = false;
-            var res = tcpClient.GetZFYF(ref z, ref f);
-            if (!res)
-            {
-                return;
-                //  MessageBox.Show("压阀状态异常,请确认服务器连接是否成功!", "检测状态", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
-            }
-            btn_z.BackColor = z ? Color.Green : Color.Transparent;
-            btn_f.BackColor = f ? Color.Green : Color.Transparent;
         }
 
         private void hsb_WindControl_Scroll(object sender, ScrollEventArgs e)
@@ -320,7 +272,7 @@ namespace text.doors
 
 
             Logger.Info("发送-" + value);
-            var res = tcpClient.SendFJKZ(value);
+            var res = _serialPortClient.SendFJKZ(value);
 
             if (!res)
             {
@@ -404,7 +356,7 @@ namespace text.doors
 
         private void tsm_sensorSet_Click(object sender, EventArgs e)
         {
-            SensorSet ss = new SensorSet(tcpClient);
+            SensorSet ss = new SensorSet(_serialPortClient);
             ss.Show();
             ss.TopMost = true;
         }
@@ -413,9 +365,7 @@ namespace text.doors
         {
             if (DefaultBase.IsSetTong)
             {
-                ExportReport ep = new ExportReport(_tempCode);
-                ep.Show();
-                ep.TopMost = true;
+
             }
             else
                 MessageBox.Show("请先检测设定", "检测", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
@@ -429,55 +379,44 @@ namespace text.doors
 
         private void btn_gyZero_Click(object sender, EventArgs e)
         {
-            if (!tcpClient.SendGYBD())
+            if (!_serialPortClient.SendGYBD())
             {
                 MessageBox.Show("高压归零异常,请确认服务器连接是否成功!", "设置", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
             }
         }
+
+        /// <summary>
+        /// 低压归零
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btn_dyZero_Click(object sender, EventArgs e)
+        {
+            if (!_serialPortClient.SendDYBD())
+            {
+                MessageBox.Show("低压归零异常,请确认服务器连接是否成功!", "设置", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
+            }
+        }
+
         /// <summary>
         /// 风速归零
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void btn_fsgl_Click(object sender, EventArgs e)
-        {
-            var res = tcpClient.SendFSGL();
-            if (!res)
-            {
-                MessageBox.Show("风速归零异常,请确认服务器连接是否成功!", "设置", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
-            }
-        }
-
-        private void btn_z_Click(object sender, EventArgs e)
-        {
-            var res = tcpClient.SendZYF();
-            if (!res)
-            {
-                MessageBox.Show("正压阀异常,请确认服务器连接是否成功!", "设置", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
-                return;
-            }
-            Thread.Sleep(3000);
-            GetPRVs();
-        }
-
-        private void btn_f_Click(object sender, EventArgs e)
-        {
-            var res = tcpClient.SendFYF();
-            if (!res)
-            {
-                MessageBox.Show("负压阀异常,请确认服务器连接是否成功!", "设置", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
-                return;
-            }
-
-            Thread.Sleep(3000);
-            GetPRVs();
-        }
+        //private void btn_fsgl_Click(object sender, EventArgs e)
+        //{
+        //    var res = _serialPortClient.SendFSGL();
+        //    if (!res)
+        //    {
+        //        MessageBox.Show("风速归零异常,请确认服务器连接是否成功!", "设置", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
+        //    }
+        //}
 
         private void btn_OkFj_Click(object sender, EventArgs e)
         {
             //0-50HZ滚动条 标示0-4000值
             double value = double.Parse(txt_hz.Text) * 80;
-            var res = tcpClient.SendFJKZ(value);
+            var res = _serialPortClient.SendFJKZ(value);
 
             if (!res)
             {
@@ -586,7 +525,7 @@ namespace text.doors
         void hsb_DoWork(object sender, DoWorkEventArgs e)
         {
             var IsSeccess = false;
-            var diffPress = tcpClient.ReadFJSD(ref IsSeccess);
+            var diffPress = _serialPortClient.ReadFJSD(ref IsSeccess);
             if (!IsSeccess) return;
 
             //需要计算
@@ -602,20 +541,20 @@ namespace text.doors
 
             Logger.Info("获取-" + e.Result.ToString());
             var value = int.Parse(e.Result.ToString()) / 80;
-            this.hsb_WindControl.Value = value * 100;
+            this.hsb_WindControl.Value = value;// * 100;
             txt_hz.Text = value.ToString();
         }
 
 
         private void pID设定ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            PIDManager p = new PIDManager(tcpClient);
+            PIDManager p = new PIDManager(_serialPortClient);
             p.Show();
         }
 
         private void tim_panelValue_Tick(object sender, EventArgs e)
         {
-            if (tcpClient.IsTCPLink)
+            if (_serialPortClient.IsSerialPortLink)
             {
                 DataInit();
 
@@ -633,5 +572,112 @@ namespace text.doors
         {
 
         }
+
+        private void btn_kglkz_Click(object sender, EventArgs e)
+        {
+            if (!_serialPortClient.Sendkglkz())
+            {
+                MessageBox.Show("开关量控制异常,请确认服务器连接是否成功!", "设置", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
+            }
+
+        }
+
+        private bool _FengJiQiDongStat = false;
+
+        private void btn_fjqd_Click(object sender, EventArgs e)
+        {
+            var res = _serialPortClient.SendFengJiQiDong(ref _FengJiQiDongStat);
+            if (!res)
+            {
+                MessageBox.Show("风机启动异常,请确认服务器连接是否成功!", "设置", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
+                return;
+            }
+        }
+        private bool _ShuiBengQiDong = false;
+        private void btn_sbqd_Click(object sender, EventArgs e)
+        {
+            var res = _serialPortClient.SendShuiBengQiDong(ref _ShuiBengQiDong);
+            if (!res)
+            {
+                MessageBox.Show("水泵启动异常,请确认服务器连接是否成功!", "设置", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
+                return;
+            }
+        }
+
+        private bool _BaoHuFaTong = false;
+        private void btn_bhft_Click(object sender, EventArgs e)
+        {
+            var res = _serialPortClient.SendBaoHuFaTong(ref _BaoHuFaTong);
+            if (!res)
+            {
+                MessageBox.Show("保护阀通启动异常,请确认服务器连接是否成功!", "设置", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
+                return;
+            }
+        }
+        private bool _SiTongFaKai = false;
+        private void btn_stfk_Click(object sender, EventArgs e)
+        {
+            var res = _serialPortClient.SendSiTongFaKai(ref _SiTongFaKai);
+            if (!res)
+            {
+                MessageBox.Show("四通阀开异常,请确认服务器连接是否成功!", "设置", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
+                return;
+            }
+        }
+
+
+        private void btn_ddk_MouseUp(object sender, MouseEventArgs e)
+        {
+            var res = _serialPortClient.SendDianDongKai(false);
+            if (!res)
+            {
+                MessageBox.Show("点动开异常,请确认服务器连接是否成功!", "设置", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
+                return;
+            }
+        }
+        private void btn_ddk_MouseDown(object sender, MouseEventArgs e)
+        {
+            var res = _serialPortClient.SendDianDongKai(true);
+            if (!res)
+            {
+                MessageBox.Show("点动开异常,请确认服务器连接是否成功!", "设置", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
+                return;
+            }
+        }
+
+        private void btn_ddg_MouseDown(object sender, MouseEventArgs e)
+        {
+            var res = _serialPortClient.SendDianDongGuan(true);
+            if (!res)
+            {
+                MessageBox.Show("水泵启动异常,请确认服务器连接是否成功!", "设置", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
+                return;
+            }
+        }
+
+        private void btn_ddg_MouseUp(object sender, MouseEventArgs e)
+        {
+            var res = _serialPortClient.SendDianDongGuan(false);
+            if (!res)
+            {
+                MessageBox.Show("水泵启动异常,请确认服务器连接是否成功!", "设置", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
+                return;
+            }
+        }
+
+
+
+        private bool _GuanDaoTou = false;
+        private void btn_gdt_Click(object sender, EventArgs e)
+        {
+            var res = _serialPortClient.SendGuanDaoTou(ref _GuanDaoTou);
+            if (!res)
+            {
+                MessageBox.Show("关到头异常,请确认服务器连接是否成功!", "设置", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
+                return;
+            }
+        }
+
+
     }
 }

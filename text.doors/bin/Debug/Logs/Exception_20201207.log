@@ -1,0 +1,62 @@
+------------------------------------------------------------
+2020-12-07 00:00:00,584 [1] - 获取-7488
+2020-12-07 00:00:01,549 [1] - 获取-7485
+2020-12-07 00:00:02,538 [1] - 获取-7476
+2020-12-07 00:00:03,594 [1] - 获取-7489
+2020-12-07 00:00:04,582 [1] - 获取-7491
+2020-12-07 00:00:05,558 [1] - 获取-7267
+2020-12-07 00:00:06,547 [1] - 获取-7181
+2020-12-07 00:00:07,591 [1] - 获取-7162
+2020-12-07 00:00:08,591 [1] - 获取-7184
+2020-12-07 00:00:09,818 [1] - 获取-7194
+2020-12-07 00:00:10,544 [1] - 获取-7200
+2020-12-07 00:00:11,543 [1] - 获取-7195
+2020-12-07 00:00:20,741 [1] - Modbus.SlaveException: 引发类型为“Modbus.SlaveException”的异常。
+Function Code: 131
+Exception Code: 2 - The data address received in the query is not an allowable address for the server (or slave). More specifically, the combination of reference number and transfer length is invalid. For a controller with 100 registers, the PDU addresses the first register as 0, and the last one as 99. If a request is submitted with a starting register address of 96 and a quantity of registers of 4, then this request will successfully operate (address-wise at least) on registers 96, 97, 98, 99. If a request is submitted with a starting register address of 96 and a quantity of registers of 5, then this request will fail with Exception Code 0x02 “Illegal Data Address” since it attempts to operate on registers 96, 97, 98, 99 and 100, and there is no register with address 100.
+   在 Modbus.IO.ModbusTransport.UnicastMessage[T](IModbusMessage message)
+   在 Modbus.Device.ModbusMaster.ReadRegisters(Byte functionCode, Byte slaveAddress, UInt16 startAddress, UInt16 numberOfPoints)
+   在 Modbus.Device.ModbusMaster.ReadHoldingRegisters(Byte slaveAddress, UInt16 startAddress, UInt16 numberOfPoints)
+   在 text.doors.Common.SerialPortClient.GetQiMiTimeStart(String ylType) 位置 E:\08-GitHub\jky-doors-3x-new\text.doors\Common\SerialPortClient.cs:行号 484
+2020-12-07 00:00:26,738 [1] - Modbus.SlaveException: 引发类型为“Modbus.SlaveException”的异常。
+Function Code: 131
+Exception Code: 2 - The data address received in the query is not an allowable address for the server (or slave). More specifically, the combination of reference number and transfer length is invalid. For a controller with 100 registers, the PDU addresses the first register as 0, and the last one as 99. If a request is submitted with a starting register address of 96 and a quantity of registers of 4, then this request will successfully operate (address-wise at least) on registers 96, 97, 98, 99. If a request is submitted with a starting register address of 96 and a quantity of registers of 5, then this request will fail with Exception Code 0x02 “Illegal Data Address” since it attempts to operate on registers 96, 97, 98, 99 and 100, and there is no register with address 100.
+   在 Modbus.IO.ModbusTransport.UnicastMessage[T](IModbusMessage message)
+   在 Modbus.Device.ModbusMaster.ReadRegisters(Byte functionCode, Byte slaveAddress, UInt16 startAddress, UInt16 numberOfPoints)
+   在 Modbus.Device.ModbusMaster.ReadHoldingRegisters(Byte slaveAddress, UInt16 startAddress, UInt16 numberOfPoints)
+   在 text.doors.Common.SerialPortClient.GetQiMiTimeStart(String ylType) 位置 E:\08-GitHub\jky-doors-3x-new\text.doors\Common\SerialPortClient.cs:行号 484
+2020-12-07 00:00:32,757 [1] - Modbus.SlaveException: 引发类型为“Modbus.SlaveException”的异常。
+Function Code: 131
+Exception Code: 2 - The data address received in the query is not an allowable address for the server (or slave). More specifically, the combination of reference number and transfer length is invalid. For a controller with 100 registers, the PDU addresses the first register as 0, and the last one as 99. If a request is submitted with a starting register address of 96 and a quantity of registers of 4, then this request will successfully operate (address-wise at least) on registers 96, 97, 98, 99. If a request is submitted with a starting register address of 96 and a quantity of registers of 5, then this request will fail with Exception Code 0x02 “Illegal Data Address” since it attempts to operate on registers 96, 97, 98, 99 and 100, and there is no register with address 100.
+   在 Modbus.IO.ModbusTransport.UnicastMessage[T](IModbusMessage message)
+   在 Modbus.Device.ModbusMaster.ReadRegisters(Byte functionCode, Byte slaveAddress, UInt16 startAddress, UInt16 numberOfPoints)
+   在 Modbus.Device.ModbusMaster.ReadHoldingRegisters(Byte slaveAddress, UInt16 startAddress, UInt16 numberOfPoints)
+   在 text.doors.Common.SerialPortClient.GetQiMiTimeStart(String ylType) 位置 E:\08-GitHub\jky-doors-3x-new\text.doors\Common\SerialPortClient.cs:行号 484
+2020-12-07 00:00:52,679 [1] - 获取-2814
+2020-12-07 00:00:53,597 [1] - Modbus.SlaveException: 引发类型为“Modbus.SlaveException”的异常。
+Function Code: 131
+Exception Code: 2 - The data address received in the query is not an allowable address for the server (or slave). More specifically, the combination of reference number and transfer length is invalid. For a controller with 100 registers, the PDU addresses the first register as 0, and the last one as 99. If a request is submitted with a starting register address of 96 and a quantity of registers of 4, then this request will successfully operate (address-wise at least) on registers 96, 97, 98, 99. If a request is submitted with a starting register address of 96 and a quantity of registers of 5, then this request will fail with Exception Code 0x02 “Illegal Data Address” since it attempts to operate on registers 96, 97, 98, 99 and 100, and there is no register with address 100.
+   在 Modbus.IO.ModbusTransport.UnicastMessage[T](IModbusMessage message)
+   在 Modbus.Device.ModbusMaster.ReadRegisters(Byte functionCode, Byte slaveAddress, UInt16 startAddress, UInt16 numberOfPoints)
+   在 Modbus.Device.ModbusMaster.ReadHoldingRegisters(Byte slaveAddress, UInt16 startAddress, UInt16 numberOfPoints)
+   在 text.doors.Common.SerialPortClient.GetQiMiTimeStart(String ylType) 位置 E:\08-GitHub\jky-doors-3x-new\text.doors\Common\SerialPortClient.cs:行号 484
+2020-12-07 00:01:02,739 [1] - Modbus.SlaveException: 引发类型为“Modbus.SlaveException”的异常。
+Function Code: 131
+Exception Code: 2 - The data address received in the query is not an allowable address for the server (or slave). More specifically, the combination of reference number and transfer length is invalid. For a controller with 100 registers, the PDU addresses the first register as 0, and the last one as 99. If a request is submitted with a starting register address of 96 and a quantity of registers of 4, then this request will successfully operate (address-wise at least) on registers 96, 97, 98, 99. If a request is submitted with a starting register address of 96 and a quantity of registers of 5, then this request will fail with Exception Code 0x02 “Illegal Data Address” since it attempts to operate on registers 96, 97, 98, 99 and 100, and there is no register with address 100.
+   在 Modbus.IO.ModbusTransport.UnicastMessage[T](IModbusMessage message)
+   在 Modbus.Device.ModbusMaster.ReadRegisters(Byte functionCode, Byte slaveAddress, UInt16 startAddress, UInt16 numberOfPoints)
+   在 Modbus.Device.ModbusMaster.ReadHoldingRegisters(Byte slaveAddress, UInt16 startAddress, UInt16 numberOfPoints)
+   在 text.doors.Common.SerialPortClient.GetQiMiTimeStart(String ylType) 位置 E:\08-GitHub\jky-doors-3x-new\text.doors\Common\SerialPortClient.cs:行号 484
+2020-12-07 00:01:08,750 [1] - Modbus.SlaveException: 引发类型为“Modbus.SlaveException”的异常。
+Function Code: 131
+Exception Code: 2 - The data address received in the query is not an allowable address for the server (or slave). More specifically, the combination of reference number and transfer length is invalid. For a controller with 100 registers, the PDU addresses the first register as 0, and the last one as 99. If a request is submitted with a starting register address of 96 and a quantity of registers of 4, then this request will successfully operate (address-wise at least) on registers 96, 97, 98, 99. If a request is submitted with a starting register address of 96 and a quantity of registers of 5, then this request will fail with Exception Code 0x02 “Illegal Data Address” since it attempts to operate on registers 96, 97, 98, 99 and 100, and there is no register with address 100.
+   在 Modbus.IO.ModbusTransport.UnicastMessage[T](IModbusMessage message)
+   在 Modbus.Device.ModbusMaster.ReadRegisters(Byte functionCode, Byte slaveAddress, UInt16 startAddress, UInt16 numberOfPoints)
+   在 Modbus.Device.ModbusMaster.ReadHoldingRegisters(Byte slaveAddress, UInt16 startAddress, UInt16 numberOfPoints)
+   在 text.doors.Common.SerialPortClient.GetQiMiTimeStart(String ylType) 位置 E:\08-GitHub\jky-doors-3x-new\text.doors\Common\SerialPortClient.cs:行号 484
+------------------------------------------------------------
+2020-12-07 00:01:28,481 [1] - 获取-5866
+2020-12-07 00:01:31,484 [1] - 获取-6048
+2020-12-07 00:01:32,409 [1] - 获取-6294
+2020-12-07 00:01:32,409 [1] - 获取-6329
+2020-12-07 00:01:32,931 [1] - 获取-6367

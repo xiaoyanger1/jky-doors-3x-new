@@ -41,7 +41,7 @@ namespace text.doors.Detection
         {
             string code = btn_JianYanBianHao.Text;
 
-            if (string.IsNullOrWhiteSpace(btn_GuiGeShuLiang.Text))
+            if (string.IsNullOrWhiteSpace(txt_jianceshuliang.Text))
             {
                 MessageBox.Show("请输入规格数量！", "警告！", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
                 return;
@@ -69,12 +69,12 @@ namespace text.doors.Detection
                     MessageBox.Show("设定完成！", "完成", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
                     //获取樘号
                     deleBottomTypeEvent(GetBottomType(true));
-                    DefaultBase.base_SpecCount = int.Parse(btn_GuiGeShuLiang.Text);
-                    DefaultBase.base_TestItem = cb_JianYanXiangMu.Text;
+                    DefaultBase.base_SpecCount = int.Parse(txt_jianceshuliang.Text);
+                    DefaultBase.base_TestItem = cb_JianCeXiangMu.Text;
                     DefaultBase.LockPoint = cbb_danshandansuodian.Text == "是" ? true : false;
 
                     int def = 0;
-                    int.TryParse(txt_ganjianchadu.Text, out def);
+                    int.TryParse(txt_ganjianchangdu.Text, out def);
 
                     DefaultBase.BarLength = def;
                     this.btn_add.Enabled = true;
@@ -134,9 +134,6 @@ namespace text.doors.Detection
 
 
         #region Info
-
-
-
         /// <summary>
         /// 绑定控件
         /// </summary>
@@ -147,75 +144,73 @@ namespace text.doors.Detection
                 DataTable dt = new DAL_dt_Settings().Getdt_SettingsByCode(_tempCode);
                 if (dt != null)
                 {
-                    btn_WeiTuoBianHao.Text = dt.Rows[0]["WeiTuoBianHao"].ToString();
-                    btn_WeiTuoDanWei.Text = dt.Rows[0]["WeiTuoDanWei"].ToString();
-                    btn_WeiTuoRen.Text = dt.Rows[0]["WeiTuoRen"].ToString();
-                    btn_YangPinMingCheng.Text = dt.Rows[0]["YangPinMingCheng"].ToString();
-                    cb_CaiYangFangShi.Text = dt.Rows[0]["CaiYangFangShi"].ToString();
-                    cb_JianYanXiangMu.Text = dt.Rows[0]["JianYanXiangMu"].ToString();
-                    btn_GuiGeXingHao.Text = dt.Rows[0]["GuiGeXingHao"].ToString();
-                    btn_GuiGeShuLiang.Text = dt.Rows[0]["GuiGeShuLiang"].ToString();
-                    btn_JianYanRiQi.Text = dt.Rows[0]["JianYanRiQi"].ToString();
-                    cb_KaiQiFangShi.Text = dt.Rows[0]["KaiQiFangShi"].ToString();
-                    btn_DaQiYaLi.Text = dt.Rows[0]["DaQiYaLi"].ToString();
-                    cb_BoLiPinZhong.Text = dt.Rows[0]["BoLiPinZhong"].ToString();
-                    btn_DangQianWenDu.Text = dt.Rows[0]["DangQianWenDu"].ToString();
-                    btn_BoLiHouDu.Text = dt.Rows[0]["BoLiHouDu"].ToString();
-                    btn_ZongMianJi.Text = dt.Rows[0]["ZongMianJi"].ToString();
-                    btn_ZuiDaBoLi.Text = dt.Rows[0]["ZuiDaBoLi"].ToString();
-                    btn_KaiQiFengChang.Text = dt.Rows[0]["KaiQiFengChang"].ToString();
-                    cb_BoLiMiFeng.Text = dt.Rows[0]["BoLiMiFeng"].ToString();
-                    cb_XiangQianFangShi.Text = dt.Rows[0]["XiangQianFangShi"].ToString();
-                    btn_ShuiMiDengJiSheJiZhi.Text = dt.Rows[0]["ShuiMiDengJiSheJiZhi"].ToString();
-                    cb_KuangShanMiFang.Text = dt.Rows[0]["KuangShanMiFang"].ToString();
-                    btn_QiMiZhengYaDanWeiFengChangSheJiZhi.Text = dt.Rows[0]["QiMiZhengYaDanWeiFengChangSheJiZhi"].ToString();
-                    btn_ZhengYaQiMiDengJiSheJiZhi.Text = dt.Rows[0]["ZhengYaQiMiDengJiSheJiZhi"].ToString();
-                    btn_QiMiFuYaDanWeiFengChangSheJiZhi.Text = dt.Rows[0]["QiMiFuYaDanWeiFengChangSheJiZhi"].ToString();
-                    btn_FuYaQiMiDengJiSheJiZhi.Text = dt.Rows[0]["FuYaQiMiDengJiSheJiZhi"].ToString();
-                    btn_ShuiMiSheJiZhi.Text = dt.Rows[0]["ShuiMiSheJiZhi"].ToString();
-                    btn_QiMiZhengYaDanWeiMianJiSheJiZhi.Text = dt.Rows[0]["QiMiZhengYaDanWeiMianJiSheJiZhi"].ToString();
-                    btn_QiMiFuYaDanWeiMianJiSheJiZhi.Text = dt.Rows[0]["QiMiFuYaDanWeiMianJiSheJiZhi"].ToString();
-                    cb_JianYanYiJu.Text = dt.Rows[0]["JianYanYiJu"].ToString();
-                    btn_GongChengMingCheng.Text = dt.Rows[0]["GongChengMingCheng"].ToString();
-                    btn_GongChengDiDian.Text = dt.Rows[0]["GongChengDiDian"].ToString();
-                    btn_ShengChanDanWei.Text = dt.Rows[0]["ShengChanDanWei"].ToString();
-                    btn_JianLiDanWei.Text = dt.Rows[0]["JianLiDanWei"].ToString();
-                    btn_JianZhengRen.Text = dt.Rows[0]["JianZhengRen"].ToString();
-                    btn_JianZhengHao.Text = dt.Rows[0]["JianZhengHao"].ToString();
-                    btn_ShiGongDanWei.Text = dt.Rows[0]["ShiGongDanWei"].ToString();
-                    btn_WuJinJianZhuangKuang.Text = dt.Rows[0]["WuJinJianZhuangKuang"].ToString();
-                    btn_SuLiaoChuangChenJinChiCun.Text = dt.Rows[0]["SuLiaoChuangChenJinChiCun"].ToString();
-                    btn_ShiFouJiaLuoSi.Text = dt.Rows[0]["ShiFouJiaLuoSi"].ToString();
-                    btn_XingCaiGuiGe.Text = dt.Rows[0]["XingCaiGuiGe"].ToString();
-                    btn_XingCaiBiHou.Text = dt.Rows[0]["XingCaiBiHou"].ToString();
-                    btn_XingCaiShengChanChang.Text = dt.Rows[0]["XingCaiShengChanChang"].ToString();
 
-                    txt_ganjianchadu.Text = dt.Rows[0]["GanJianChangDu"].ToString();
-                    txt_KangFengyadengjishejizhi.Text = dt.Rows[0]["KangFengYaDengJiSheJiZhi"].ToString();
-                    txt_kangfengyashejizhi.Text = dt.Rows[0]["KangFengYaSheJiZhi"].ToString();
-                    cbb_danshandansuodian.Text = dt.Rows[0]["DanShanDanSuoDian"].ToString();
+                    this.txt_WeiTuoBianHao.Text = dt.Rows[0]["weituobianhao"].ToString();
+                    this.txt_WeiTuoDanWei.Text = dt.Rows[0]["weituodanwei"].ToString();
+                    this.txt_dizhi.Text = dt.Rows[0]["dizhi"].ToString();
+                    this.txt_dianhua.Text = dt.Rows[0]["dianhua"].ToString();
+                    this.txt_chouyangriqi.Text = dt.Rows[0]["chouyangriqi"].ToString();
+                    this.txt_chouyangdidian.Text = dt.Rows[0]["chouyangdidian"].ToString();
+                    this.txt_gongchengmingcheng.Text = dt.Rows[0]["gongchengmingcheng"].ToString();
+                    this.txt_gongchengdidian.Text = dt.Rows[0]["gongchengdidian"].ToString();
+                    this.txt_shengchandanwei.Text = dt.Rows[0]["shengchandanwei"].ToString();
+                    this.cb_JianCeXiangMu.Text = dt.Rows[0]["jiancexiangmu"].ToString();
+                    this.txt_jiancedidian.Text = dt.Rows[0]["jiancedidian"].ToString();
+                    this.txt_JianCeRiQi.Text = dt.Rows[0]["jianceriqi"].ToString();
+                    this.txt_jianceshebei.Text = dt.Rows[0]["jianceshebei"].ToString();
+                    this.cb_jianceyiju.Text = dt.Rows[0]["jianceyiju"].ToString();
+
+                    this.txt_YangPinMingCheng.Text = dt.Rows[0]["yangpinmingcheng"].ToString();
+                    this.txt_yangpinshangbiao.Text = dt.Rows[0]["yangpinshangbiao"].ToString();
+                    this.txt_yangpinzhuangtai.Text = dt.Rows[0]["yangpinzhuangtai"].ToString();
+                    this.txt_GuiGeXingHao.Text = dt.Rows[0]["guigexinghao"].ToString();
+                    this.cb_KaiQiFangShi.Text = dt.Rows[0]["kaiqifangshi"].ToString();
+                    this.cb_mianbanpinzhong.Text = dt.Rows[0]["mianbanpinzhong"].ToString();
+                    this.txt_zuidamianban.Text = dt.Rows[0]["zuidamianban"].ToString();
+                    this.txt_mianbanhoudu.Text = dt.Rows[0]["mianbanhoudu"].ToString();
+                    this.cb_anzhuangfangshi.Text = dt.Rows[0]["anzhuangfangshi"].ToString();
+                    this.cb_mianbanxiangqian.Text = dt.Rows[0]["mianbanxiangqian"].ToString();
+                    this.cb_KuangShanMiFang.Text = dt.Rows[0]["kuangshanmifeng"].ToString();
+                    this.txt_wujinpeijian.Text = dt.Rows[0]["wujinpeijian"].ToString();
+                    this.txt_jianceshuliang.Text = dt.Rows[0]["jianceshuliang"].ToString();
+                    this.cb_DangQianDangHao.Text = dt.Rows[0]["dangqiandanghao"].ToString();
+
+                    this.txt_DangQianWenDu.Text = dt.Rows[0]["dangqianwendu"].ToString();
+                    this.txt_DaQiYaLi.Text = dt.Rows[0]["daqiyali"].ToString();
+                    this.txt_KaiQiFengChang.Text = dt.Rows[0]["kaiqifengchang"].ToString();
+                    this.txt_shijianmianji.Text = dt.Rows[0]["shijianmianji"].ToString();
+                    this.txt_ganjianchangdu.Text = dt.Rows[0]["ganjianchangdu"].ToString();
+                    this.txt_penlinshuiliang.Text = dt.Rows[0]["penlinshuiliang"].ToString();
+                    this.txt_qimidangweifengchangshejizhi.Text = dt.Rows[0]["qimidanweifengchangshejizhi"].ToString();
+                    this.txt_QiMiDanWeiMianJiSheJiZhi.Text = dt.Rows[0]["qimidanweimianjishejizhi"].ToString();
+                    this.txt_shuimijingyashejizhi.Text = dt.Rows[0]["shuimijingyashejizhi"].ToString();
+                    this.txt_shuimidongyashejizhi.Text = dt.Rows[0]["shuimidongyashejizhi"].ToString();
+                    this.txt_kangfengyazhengyashejizhi.Text = dt.Rows[0]["kangfengyazhengyashejizhi"].ToString();
+                    this.txt_kangfengyafuyashejizhi.Text = dt.Rows[0]["kangfengyafuyashejizhi"].ToString();
+                    this.cbb_danshandansuodian.Text = dt.Rows[0]["danshandansuodian"].ToString();
+
 
                     _tempCode = dt.Rows[0]["dt_Code"].ToString();
                     if (_tempTong == "")
                         _tempTong = dt.Rows[0]["info_DangH"].ToString();
                     cb_DangQianDangHao.Text = dt.Rows[0]["info_DangH"].ToString();
                     btn_JianYanBianHao.Text = dt.Rows[0]["dt_Code"].ToString();
-                    this.cb_JianYanXiangMu.Enabled = false;
-                    this.btn_GuiGeShuLiang.Enabled = false;
+                    this.cb_JianCeXiangMu.Enabled = false;
+                    this.txt_jianceshuliang.Enabled = false;
                 }
                 else
                 {
                     btn_JianYanBianHao.Text = DateTime.Now.ToString("yyyyMMdd") + "-01";
                 }
 
-                if (string.IsNullOrEmpty(btn_GuiGeShuLiang.Text))
+                if (string.IsNullOrEmpty(txt_jianceshuliang.Text))
                 {
-                    btn_GuiGeShuLiang.Text = "3";
+                    txt_jianceshuliang.Text = "3";
                 }
                 if (_temppressure != 0 && _temperature != 0)
                 {
-                    btn_DaQiYaLi.Text = _temppressure.ToString();
-                    btn_DangQianWenDu.Text = _temperature.ToString();
+                    txt_DaQiYaLi.Text = _temppressure.ToString();
+                    txt_DangQianWenDu.Text = _temperature.ToString();
                 }
             }
             catch (Exception ex)
@@ -231,52 +226,51 @@ namespace text.doors.Detection
             Model_dt_Settings model = new Model_dt_Settings();
             model.dt_Create = DateTime.Now;
             model.dt_Code = this.btn_JianYanBianHao.Text;
-            model.WeiTuoBianHao = this.btn_WeiTuoBianHao.Text;
-            model.WeiTuoDanWei = this.btn_WeiTuoDanWei.Text;
-            model.WeiTuoRen = this.btn_WeiTuoRen.Text;
-            model.YangPinMingCheng = this.btn_YangPinMingCheng.Text;
-            model.CaiYangFangShi = this.cb_CaiYangFangShi.Text;
-            model.JianYanXiangMu = this.cb_JianYanXiangMu.Text;
-            model.GuiGeXingHao = this.btn_GuiGeXingHao.Text;
-            model.GuiGeShuLiang = this.btn_GuiGeShuLiang.Text;
-            model.JianYanRiQi = this.btn_JianYanRiQi.Text;
-            model.KaiQiFangShi = this.cb_KaiQiFangShi.Text;
-            model.DaQiYaLi = this.btn_DaQiYaLi.Text;
-            model.BoLiPinZhong = this.cb_BoLiPinZhong.Text;
-            model.DangQianWenDu = this.btn_DangQianWenDu.Text;
-            model.BoLiHouDu = this.btn_BoLiHouDu.Text;
-            model.ZongMianJi = this.btn_ZongMianJi.Text;
-            model.ZuiDaBoLi = this.btn_ZuiDaBoLi.Text;
-            model.KaiQiFengChang = this.btn_KaiQiFengChang.Text;
-            model.BoLiMiFeng = this.cb_BoLiMiFeng.Text;
-            model.XiangQianFangShi = this.cb_XiangQianFangShi.Text;
-            model.ShuiMiDengJiSheJiZhi = this.btn_ShuiMiDengJiSheJiZhi.Text;
-            model.KuangShanMiFang = this.cb_KuangShanMiFang.Text;
-            model.QiMiZhengYaDanWeiFengChangSheJiZhi = this.btn_QiMiZhengYaDanWeiFengChangSheJiZhi.Text;
-            model.ZhengYaQiMiDengJiSheJiZhi = this.btn_ZhengYaQiMiDengJiSheJiZhi.Text;
-            model.QiMiFuYaDanWeiFengChangSheJiZhi = this.btn_QiMiFuYaDanWeiFengChangSheJiZhi.Text;
-            model.FuYaQiMiDengJiSheJiZhi = this.btn_FuYaQiMiDengJiSheJiZhi.Text;
-            model.ShuiMiSheJiZhi = this.btn_ShuiMiSheJiZhi.Text;
-            model.QiMiZhengYaDanWeiMianJiSheJiZhi = this.btn_QiMiZhengYaDanWeiMianJiSheJiZhi.Text;
-            model.QiMiFuYaDanWeiMianJiSheJiZhi = this.btn_QiMiFuYaDanWeiMianJiSheJiZhi.Text;
-            model.JianYanYiJu = this.cb_JianYanYiJu.Text;
-            model.GongChengMingCheng = this.btn_GongChengMingCheng.Text;
-            model.GongChengDiDian = this.btn_GongChengDiDian.Text;
-            model.ShengChanDanWei = this.btn_ShengChanDanWei.Text;
-            model.JianLiDanWei = this.btn_JianLiDanWei.Text;
-            model.JianZhengRen = this.btn_JianZhengRen.Text;
-            model.JianZhengHao = this.btn_JianZhengHao.Text;
-            model.ShiGongDanWei = this.btn_ShiGongDanWei.Text;
-            model.WuJinJianZhuangKuang = this.btn_WuJinJianZhuangKuang.Text;
-            model.SuLiaoChuangChenJinChiCun = this.btn_SuLiaoChuangChenJinChiCun.Text;
-            model.ShiFouJiaLuoSi = this.btn_ShiFouJiaLuoSi.Text;
-            model.XingCaiGuiGe = this.btn_XingCaiGuiGe.Text;
-            model.XingCaiBiHou = this.btn_XingCaiBiHou.Text;
-            model.XingCaiShengChanChang = this.btn_XingCaiShengChanChang.Text;
-            model.GanJianChangDu = this.txt_ganjianchadu.Text;
-            model.KangFengYaDengJiSheJiZhi = this.txt_KangFengyadengjishejizhi.Text;
-            model.KangFengYaSheJiZhi = this.txt_kangfengyashejizhi.Text;
-            model.DanShanDanSuoDian = this.cbb_danshandansuodian.Text;
+
+
+            model.weituobianhao = this.txt_WeiTuoBianHao.Text;
+            model.weituodanwei = this.txt_WeiTuoDanWei.Text;
+            model.dizhi = this.txt_dizhi.Text;
+            model.dianhua = this.txt_dianhua.Text;
+            model.chouyangriqi = this.txt_chouyangriqi.Text;
+            model.chouyangdidian = this.txt_chouyangdidian.Text;
+            model.gongchengmingcheng = this.txt_gongchengmingcheng.Text;
+            model.gongchengdidian = this.txt_gongchengdidian.Text;
+            model.shengchandanwei = this.txt_shengchandanwei.Text;
+            model.jiancexiangmu = this.cb_JianCeXiangMu.Text;
+            model.jiancedidian = this.txt_jiancedidian.Text;
+            model.jianceriqi = this.txt_JianCeRiQi.Text;
+            model.jianceshebei = this.txt_jianceshebei.Text;
+            model.jianceyiju = this.cb_jianceyiju.Text;
+
+            model.yangpinmingcheng = this.txt_YangPinMingCheng.Text;
+            model.yangpinshangbiao = this.txt_yangpinshangbiao.Text;
+            model.yangpinzhuangtai = this.txt_yangpinzhuangtai.Text;
+            model.guigexinghao = this.txt_GuiGeXingHao.Text;
+            model.kaiqifangshi = this.cb_KaiQiFangShi.Text;
+            model.mianbanpinzhong = this.cb_mianbanpinzhong.Text;
+            model.zuidamianban = this.txt_zuidamianban.Text;
+            model.mianbanhoudu = this.txt_mianbanhoudu.Text;
+            model.anzhuangfangshi = this.cb_anzhuangfangshi.Text;
+            model.mianbanxiangqian = this.cb_mianbanxiangqian.Text;
+            model.kuangshanmifeng = this.cb_KuangShanMiFang.Text;
+            model.wujinpeijian = this.txt_wujinpeijian.Text;
+            model.jianceshuliang = this.txt_jianceshuliang.Text;
+            model.dangqiandanghao = this.cb_DangQianDangHao.Text;
+
+            model.dangqianwendu = this.txt_DangQianWenDu.Text;
+            model.daqiyali = this.txt_DaQiYaLi.Text;
+            model.kaiqifengchang = this.txt_KaiQiFengChang.Text;
+            model.shijianmianji = this.txt_shijianmianji.Text;
+            model.ganjianchangdu = this.txt_ganjianchangdu.Text;
+            model.penlinshuiliang = this.txt_penlinshuiliang.Text;
+            model.qimidanweifengchangshejizhi = this.txt_qimidangweifengchangshejizhi.Text;
+            model.qimidanweimianjishejizhi = this.txt_QiMiDanWeiMianJiSheJiZhi.Text;
+            model.shuimijingyashejizhi = this.txt_shuimijingyashejizhi.Text;
+            model.shuimidongyashejizhi = this.txt_shuimidongyashejizhi.Text;
+            model.kangfengyazhengyashejizhi = this.txt_kangfengyazhengyashejizhi.Text;
+            model.kangfengyafuyashejizhi = this.txt_kangfengyafuyashejizhi.Text;
+            model.danshandansuodian = this.cbb_danshandansuodian.Text;
             return model;
         }
 
@@ -297,8 +291,8 @@ namespace text.doors.Detection
                 return;
             }
             btn_JianYanBianHao.Text = arr[0] + "-" + (int.Parse(arr[1]) + 1).ToString();
-            this.cb_JianYanXiangMu.Enabled = true;
-            this.btn_GuiGeShuLiang.Enabled = true;
+            this.cb_JianCeXiangMu.Enabled = true;
+            this.txt_jianceshuliang.Enabled = true;
             this.btn_add.Enabled = false;
             this.btn_select.Enabled = false;
             this.btn_delete.Enabled = false;
@@ -313,7 +307,7 @@ namespace text.doors.Detection
             try
             {
                 cb_DangQianDangHao.Items.Clear();
-                int count = int.Parse(btn_GuiGeShuLiang.Text);
+                int count = int.Parse(txt_jianceshuliang.Text);
                 for (int i = 1; i <= count; i++)
                 {
                     cb_DangQianDangHao.Items.Add("第" + i + "樘");
@@ -336,10 +330,10 @@ namespace text.doors.Detection
 
             try
             {
-                if (int.Parse(btn_GuiGeShuLiang.Text) > 3)
+                if (int.Parse(txt_jianceshuliang.Text) > 3)
                 {
                     MessageBox.Show("最大只能输入三樘", "警告！", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
-                    btn_GuiGeShuLiang.Text = "";
+                    txt_jianceshuliang.Text = "";
                     return;
                 }
             }
@@ -349,7 +343,7 @@ namespace text.doors.Detection
                 return;
             }
 
-            if (string.IsNullOrWhiteSpace(btn_GuiGeShuLiang.Text))
+            if (string.IsNullOrWhiteSpace(txt_jianceshuliang.Text))
             {
                 MessageBox.Show("请填写规格数量", "警告！", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
                 return;
@@ -394,6 +388,5 @@ namespace text.doors.Detection
             public bool LockPoint { get { return _isok; } }
         }
         #endregion
-
     }
 }

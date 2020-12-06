@@ -20,7 +20,7 @@ namespace text.doors.Detection
     public partial class WindPressureDetection : Form
     {
         private static Young.Core.Logger.ILog Logger = Young.Core.Logger.LoggerManager.Current();
-        private TCPClient _tcpClient;
+        private SerialPortClient _serialPortClient;
         //检验编号
         private string _tempCode = "";
         //当前樘号
@@ -41,10 +41,10 @@ namespace text.doors.Detection
         public WindPressureDetection()
         { }
 
-        public WindPressureDetection(TCPClient tcpClient, string tempCode, string tempTong)
+        public WindPressureDetection(SerialPortClient tcpClient, string tempCode, string tempTong)
         {
             InitializeComponent();
-            this._tcpClient = tcpClient;
+            this._serialPortClient = tcpClient;
             this._tempCode = tempCode;
             this._tempTong = tempTong;
 
@@ -247,16 +247,14 @@ namespace text.doors.Detection
 
         private void tim_PainPic_Tick(object sender, EventArgs e)
         {
-            if (_tcpClient.IsTCPLink)
+            if (_serialPortClient.IsSerialPortLink)
             {
                 var IsSeccess = false;
-                var c = _tcpClient.GetCYXS(ref IsSeccess);
+                var c = _serialPortClient.GetCYGXS(ref IsSeccess);
                 int value = int.Parse(c.ToString());
                 if (!IsSeccess)
                 {
-                    //todo
-                    // MessageBox.Show("获取差压异常--风压画图！", "警告！", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
-                    return;
+                   return;
                 }
                 AnimateSeries(this.tChart_qm, value);
             }
@@ -264,17 +262,17 @@ namespace text.doors.Detection
 
         private void btn_zyyb_Click(object sender, EventArgs e)
         {
-            if (!_tcpClient.IsTCPLink)
+            if (!_serialPortClient.IsSerialPortLink)
                 return;
 
-            var res = _tcpClient.Send_FY_Btn(BFMCommand.风压正压预备);
+            var res = _serialPortClient.Send_FY_Btn(BFMCommand.风压正压预备);
             if (!res)
             {
                 MessageBox.Show("正压预备异常！", "警告！", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
                 return;
             }
             var IsSeccess = false;
-            double yl = _tcpClient.Read_FY_Btn_SetValue(ref IsSeccess, "ZYYB");
+            double yl = _serialPortClient.Read_FY_Btn_SetValue(ref IsSeccess, "ZYYB");
             if (!IsSeccess)
             {
                 MessageBox.Show("读取设定值异常", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
@@ -291,10 +289,10 @@ namespace text.doors.Detection
         private void btn_zyks_Click(object sender, EventArgs e)
         {
             IsFirst = false;
-            if (!_tcpClient.IsTCPLink)
+            if (!_serialPortClient.IsSerialPortLink)
                 return;
 
-            var res = _tcpClient.Send_FY_Btn(BFMCommand.风压正压开始);
+            var res = _serialPortClient.Send_FY_Btn(BFMCommand.风压正压开始);
             if (!res)
             {
                 MessageBox.Show("正压开始异常！", "警告！", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
@@ -302,7 +300,7 @@ namespace text.doors.Detection
             }
 
             var IsSeccess = false;
-            double yl = _tcpClient.Read_FY_Btn_SetValue(ref IsSeccess, "ZYKS");
+            double yl = _serialPortClient.Read_FY_Btn_SetValue(ref IsSeccess, "ZYKS");
             if (!IsSeccess)
             {
                 MessageBox.Show("读取设定值异常", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
@@ -319,18 +317,18 @@ namespace text.doors.Detection
 
         private void btn_fyyb_Click(object sender, EventArgs e)
         {
-            if (!_tcpClient.IsTCPLink)
+            if (!_serialPortClient.IsSerialPortLink)
             {
                 return;
             }
-            var res = _tcpClient.Send_FY_Btn(BFMCommand.风压负压预备, false);
+            var res = _serialPortClient.Send_FY_Btn(BFMCommand.风压负压预备, false);
             if (!res)
             {
                 MessageBox.Show("负压预备异常！", "警告！", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
                 return;
             }
             var IsSeccess = false;
-            double yl = _tcpClient.Read_FY_Btn_SetValue(ref IsSeccess, "FYYB");
+            double yl = _serialPortClient.Read_FY_Btn_SetValue(ref IsSeccess, "FYYB");
             if (!IsSeccess)
             {
                 MessageBox.Show("读取设定值异常", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
@@ -346,18 +344,18 @@ namespace text.doors.Detection
         private void btn_fyks_Click(object sender, EventArgs e)
         {
             IsFirst = false;
-            if (!_tcpClient.IsTCPLink)
+            if (!_serialPortClient.IsSerialPortLink)
             {
                 return;
             }
-            var res = _tcpClient.Send_FY_Btn(BFMCommand.风压负压开始, false);
+            var res = _serialPortClient.Send_FY_Btn(BFMCommand.风压负压开始, false);
             if (!res)
             {
                 MessageBox.Show("负压开始异常！", "警告！", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
                 return;
             }
             var IsSeccess = false;
-            double yl = _tcpClient.Read_FY_Btn_SetValue(ref IsSeccess, "FYKS");
+            double yl = _serialPortClient.Read_FY_Btn_SetValue(ref IsSeccess, "FYKS");
             if (!IsSeccess)
             {
                 MessageBox.Show("读取设定值异常", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
@@ -574,7 +572,7 @@ namespace text.doors.Detection
 
         private void btn_zff_Click(object sender, EventArgs e)
         {
-            if (!_tcpClient.IsTCPLink)
+            if (!_serialPortClient.IsSerialPortLink)
                 return;
             this.tim_fy.Enabled = true;
             int value = 0;
@@ -584,7 +582,7 @@ namespace text.doors.Detection
             if (value == 0)
                 return;
 
-            var res = _tcpClient.Set_FY_Value(BFMCommand.正反复数值, BFMCommand.正反复, value);
+            var res = _serialPortClient.Set_FY_Value(BFMCommand.正反复数值, BFMCommand.正反复, value);
             if (!res)
             {
                 MessageBox.Show("正反复异常！", "警告！", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
@@ -597,7 +595,7 @@ namespace text.doors.Detection
 
         private void btn_fff_Click(object sender, EventArgs e)
         {
-            if (!_tcpClient.IsTCPLink)
+            if (!_serialPortClient.IsSerialPortLink)
                 return;
 
             this.tim_fy.Enabled = true;
@@ -606,7 +604,7 @@ namespace text.doors.Detection
 
             if (value == 0)
                 return;
-            var res = _tcpClient.Set_FY_Value(BFMCommand.负反复数值, BFMCommand.负反复, value, false);
+            var res = _serialPortClient.Set_FY_Value(BFMCommand.负反复数值, BFMCommand.负反复, value, false);
             if (!res)
             {
                 MessageBox.Show("负反复异常！", "警告！", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
@@ -619,7 +617,7 @@ namespace text.doors.Detection
 
         private void btn_zaq_Click(object sender, EventArgs e)
         {
-            if (!_tcpClient.IsTCPLink)
+            if (!_serialPortClient.IsSerialPortLink)
                 return;
 
             this.tim_fy.Enabled = true;
@@ -628,7 +626,7 @@ namespace text.doors.Detection
 
             if (value == 0)
                 return;
-            var res = _tcpClient.Set_FY_Value(BFMCommand.正安全数值, BFMCommand.正安全, value);
+            var res = _serialPortClient.Set_FY_Value(BFMCommand.正安全数值, BFMCommand.正安全, value);
             if (!res)
             {
                 MessageBox.Show("正安全异常！", "警告！", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
@@ -642,7 +640,7 @@ namespace text.doors.Detection
 
         private void btnfaq_Click(object sender, EventArgs e)
         {
-            if (!_tcpClient.IsTCPLink)
+            if (!_serialPortClient.IsSerialPortLink)
                 return;
 
             this.tim_fy.Enabled = true;
@@ -652,7 +650,7 @@ namespace text.doors.Detection
             if (value == 0)
                 return;
 
-            var res = _tcpClient.Set_FY_Value(BFMCommand.负安全数值, BFMCommand.负安全, value, false);
+            var res = _serialPortClient.Set_FY_Value(BFMCommand.负安全数值, BFMCommand.负安全, value, false);
             if (!res)
             {
                 MessageBox.Show("负安全异常！", "警告！", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
@@ -669,24 +667,24 @@ namespace text.doors.Detection
 
         private void btn_wygl_Click(object sender, EventArgs e)
         {
-            if (!_tcpClient.IsTCPLink)
+            if (!_serialPortClient.IsSerialPortLink)
             {
                 return;
             }
-            _tcpClient.SendWYGL();
+            _serialPortClient.SendWYGL();
         }
 
         private void tim_wyData_Tick(object sender, EventArgs e)
         {
-            if (_tcpClient.IsTCPLink)
+            if (_serialPortClient.IsSerialPortLink)
             {
                 var IsSeccess = true;
                 //抗风压
-                var displace1 = _tcpClient.GetDisplace1(ref IsSeccess).ToString();
+                var displace1 = _serialPortClient.GetDisplace1(ref IsSeccess).ToString();
                 if (!IsSeccess) return;
-                var displace2 = _tcpClient.GetDisplace2(ref IsSeccess).ToString();
+                var displace2 = _serialPortClient.GetDisplace2(ref IsSeccess).ToString();
                 if (!IsSeccess) return;
-                var displace3 = _tcpClient.GetDisplace3(ref IsSeccess).ToString();
+                var displace3 = _serialPortClient.GetDisplace3(ref IsSeccess).ToString();
                 if (!IsSeccess) return;
 
                 txt_wy1.Text = displace1.ToString();
@@ -704,12 +702,12 @@ namespace text.doors.Detection
 
         private void tim_fy_Tick(object sender, EventArgs e)
         {
-            if (!_tcpClient.IsTCPLink)
+            if (!_serialPortClient.IsSerialPortLink)
             {
                 return;
             }
             var IsSeccess = true;
-            var value = _tcpClient.GetCYXS(ref IsSeccess);
+            var value = _serialPortClient.GetCYGXS(ref IsSeccess);
             if (!IsSeccess)
                 return;
 
@@ -720,7 +718,7 @@ namespace text.doors.Detection
 
             if (windPressureTest == PublicEnum.WindPressureTest.FReady)
             {
-                double yl = _tcpClient.Read_FY_Btn_SetValue(ref IsSeccess, "FYYB");
+                double yl = _serialPortClient.Read_FY_Btn_SetValue(ref IsSeccess, "FYYB");
                 if (!IsSeccess)
                     return;
 
@@ -729,7 +727,7 @@ namespace text.doors.Detection
 
             if (windPressureTest == PublicEnum.WindPressureTest.ZReady)
             {
-                double yl = _tcpClient.Read_FY_Btn_SetValue(ref IsSeccess, "ZYYB");
+                double yl = _serialPortClient.Read_FY_Btn_SetValue(ref IsSeccess, "ZYYB");
                 if (!IsSeccess)
                     return;
 
@@ -739,7 +737,7 @@ namespace text.doors.Detection
 
             if (windPressureTest == PublicEnum.WindPressureTest.ZRepeatedly)
             {
-                double yl = _tcpClient.Read_FY_Btn_SetValue(ref IsSeccess, "ZFF");
+                double yl = _serialPortClient.Read_FY_Btn_SetValue(ref IsSeccess, "ZFF");
                 if (!IsSeccess)
                     return;
 
@@ -749,7 +747,7 @@ namespace text.doors.Detection
 
             if (windPressureTest == PublicEnum.WindPressureTest.FRepeatedly)
             {
-                double yl = _tcpClient.Read_FY_Btn_SetValue(ref IsSeccess, "FFF");
+                double yl = _serialPortClient.Read_FY_Btn_SetValue(ref IsSeccess, "FFF");
                 if (!IsSeccess)
                     return;
 
@@ -758,7 +756,7 @@ namespace text.doors.Detection
 
             if (windPressureTest == PublicEnum.WindPressureTest.ZSafety)
             {
-                double yl = _tcpClient.Read_FY_Btn_SetValue(ref IsSeccess, "ZAQ");
+                double yl = _serialPortClient.Read_FY_Btn_SetValue(ref IsSeccess, "ZAQ");
                 if (!IsSeccess)
                     return;
 
@@ -766,7 +764,7 @@ namespace text.doors.Detection
             }
             if (windPressureTest == PublicEnum.WindPressureTest.FSafety)
             {
-                double yl = _tcpClient.Read_FY_Btn_SetValue(ref IsSeccess, "FAQ");
+                double yl = _serialPortClient.Read_FY_Btn_SetValue(ref IsSeccess, "FAQ");
                 if (!IsSeccess)
                     return;
 
@@ -775,7 +773,7 @@ namespace text.doors.Detection
 
             if (windPressureTest == PublicEnum.WindPressureTest.FStart)
             {
-                double yl = _tcpClient.Read_FY_Btn_SetValue(ref IsSeccess, "FYKS");
+                double yl = _serialPortClient.Read_FY_Btn_SetValue(ref IsSeccess, "FYKS");
                 if (!IsSeccess)
                 {
                     MessageBox.Show("读取设定值异常", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
@@ -835,7 +833,7 @@ namespace text.doors.Detection
             }
             if (windPressureTest == PublicEnum.WindPressureTest.ZStart)
             {
-                double yl = _tcpClient.Read_FY_Btn_SetValue(ref IsSeccess, "ZYKS");
+                double yl = _serialPortClient.Read_FY_Btn_SetValue(ref IsSeccess, "ZYKS");
                 if (!IsSeccess)
                 {
                     MessageBox.Show("读取设定值异常", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
@@ -907,7 +905,7 @@ namespace text.doors.Detection
         private void tim_static_Tick(object sender, EventArgs e)
         {
             var common = windPressureTest == PublicEnum.WindPressureTest.ZStart ? BFMCommand.风压_正压是否计时 : BFMCommand.风压_负压是否计时;
-            var res = _tcpClient.Read_FY_Static_IsStart(common);
+            var res = _serialPortClient.Read_FY_Static_IsStart(common);
             if (!res)
                 return;
 
@@ -915,17 +913,17 @@ namespace text.doors.Detection
             if (staticIndex < 5)
             {
                 var IsSeccess = false;
-                double displace1 = _tcpClient.GetDisplace1(ref IsSeccess);
+                double displace1 = _serialPortClient.GetDisplace1(ref IsSeccess);
                 if (!IsSeccess)
                 {
                     return;
                 }
-                double displace2 = _tcpClient.GetDisplace2(ref IsSeccess);
+                double displace2 = _serialPortClient.GetDisplace2(ref IsSeccess);
                 if (!IsSeccess)
                 {
                     return;
                 }
-                double displace3 = _tcpClient.GetDisplace3(ref IsSeccess);
+                double displace3 = _serialPortClient.GetDisplace3(ref IsSeccess);
                 if (!IsSeccess)
                 {
                     return;
@@ -1038,7 +1036,7 @@ namespace text.doors.Detection
         private bool IsStart = false;
         private void tim_btnType_Tick(object sender, EventArgs e)
         {
-            if (!_tcpClient.IsTCPLink)
+            if (!_serialPortClient.IsSerialPortLink)
                 return;
 
             if (windPressureTest == null)
@@ -1047,7 +1045,7 @@ namespace text.doors.Detection
             var IsSeccess = false;
             if (windPressureTest == PublicEnum.WindPressureTest.ZReady)
             {
-                int value = _tcpClient.Read_FY_BtnType(BFMCommand.风压正压预备结束, ref IsSeccess);
+                int value = _serialPortClient.Read_FY_BtnType(BFMCommand.风压正压预备结束, ref IsSeccess);
                 if (!IsSeccess)
                 {
                     MessageBox.Show("风压正压预备结束状态异常", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
@@ -1063,7 +1061,7 @@ namespace text.doors.Detection
             }
             else if (windPressureTest == PublicEnum.WindPressureTest.ZStart)
             {
-                double value = _tcpClient.Read_FY_BtnType(BFMCommand.风压正压开始结束, ref IsSeccess);
+                double value = _serialPortClient.Read_FY_BtnType(BFMCommand.风压正压开始结束, ref IsSeccess);
 
                 if (!IsSeccess)
                 {
@@ -1081,7 +1079,7 @@ namespace text.doors.Detection
             }
             else if (windPressureTest == PublicEnum.WindPressureTest.FReady)
             {
-                int value = _tcpClient.Read_FY_BtnType(BFMCommand.风压负压预备结束, ref IsSeccess);
+                int value = _serialPortClient.Read_FY_BtnType(BFMCommand.风压负压预备结束, ref IsSeccess);
 
                 if (!IsSeccess)
                 {
@@ -1098,7 +1096,7 @@ namespace text.doors.Detection
             }
             else if (windPressureTest == PublicEnum.WindPressureTest.FStart)
             {
-                double value = _tcpClient.Read_FY_BtnType(BFMCommand.风压负压开始结束, ref IsSeccess);
+                double value = _serialPortClient.Read_FY_BtnType(BFMCommand.风压负压开始结束, ref IsSeccess);
 
                 if (!IsSeccess)
                 {
@@ -1115,7 +1113,7 @@ namespace text.doors.Detection
             }
             else if (windPressureTest == PublicEnum.WindPressureTest.ZRepeatedly)
             {
-                int value = _tcpClient.Read_FY_BtnType(BFMCommand.正反复结束, ref IsSeccess);
+                int value = _serialPortClient.Read_FY_BtnType(BFMCommand.正反复结束, ref IsSeccess);
                 if (!IsSeccess)
                 {
                     MessageBox.Show("正反复结束状态异常", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
@@ -1130,7 +1128,7 @@ namespace text.doors.Detection
             }
             else if (windPressureTest == PublicEnum.WindPressureTest.FRepeatedly)
             {
-                int value = _tcpClient.Read_FY_BtnType(BFMCommand.负反复结束, ref IsSeccess);
+                int value = _serialPortClient.Read_FY_BtnType(BFMCommand.负反复结束, ref IsSeccess);
                 if (!IsSeccess)
                 {
                     MessageBox.Show("负反复结束状态异常", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
@@ -1145,7 +1143,7 @@ namespace text.doors.Detection
             }
             else if (windPressureTest == PublicEnum.WindPressureTest.ZSafety)
             {
-                int value = _tcpClient.Read_FY_BtnType(BFMCommand.正安全结束, ref IsSeccess);
+                int value = _serialPortClient.Read_FY_BtnType(BFMCommand.正安全结束, ref IsSeccess);
                 if (!IsSeccess)
                 {
                     MessageBox.Show("正安全结束状态异常", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
@@ -1160,7 +1158,7 @@ namespace text.doors.Detection
             }
             else if (windPressureTest == PublicEnum.WindPressureTest.FSafety)
             {
-                int value = _tcpClient.Read_FY_BtnType(BFMCommand.负安全结束, ref IsSeccess);
+                int value = _serialPortClient.Read_FY_BtnType(BFMCommand.负安全结束, ref IsSeccess);
                 if (!IsSeccess)
                 {
                     MessageBox.Show("负安全结束状态异常", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
@@ -1221,7 +1219,7 @@ namespace text.doors.Detection
         /// </summary>
         private void Stop()
         {
-            var res = _tcpClient.Stop();
+            var res = _serialPortClient.Stop();
             if (!res)
                 MessageBox.Show("急停异常", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
         }
@@ -1230,7 +1228,7 @@ namespace text.doors.Detection
         {
             try
             {
-                if (_tcpClient.IsTCPLink)
+                if (_serialPortClient.IsSerialPortLink)
                 {
                     BindData();
                 }

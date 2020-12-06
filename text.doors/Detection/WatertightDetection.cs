@@ -26,7 +26,7 @@ namespace text.doors.Detection
     public partial class WatertightDetection : Form
     {
         private static Young.Core.Logger.ILog Logger = Young.Core.Logger.LoggerManager.Current();
-        private TCPClient _tcpClient;
+        private SerialPortClient _serialPortClient;
         //检验编号
         private string _tempCode = "";
         //当前樘号
@@ -47,14 +47,13 @@ namespace text.doors.Detection
         public DateTime dtnow { get; set; }
 
 
-        public WatertightDetection(TCPClient tcpClient, string tempCode, string tempTong)
+        public WatertightDetection(SerialPortClient serialPortClient, string tempCode, string tempTong)
         {
             InitializeComponent();
-            this._tcpClient = tcpClient;
+            this._serialPortClient = serialPortClient;
             this._tempCode = tempCode;
             this._tempTong = tempTong;
             Init();
-            // InitTimer();
 
         }
 
@@ -96,10 +95,12 @@ namespace text.doors.Detection
                     var remark = sm[0].sm_Remark;
                     var method = sm[0].Method;
 
-                    if (method == "稳定加压") {
+                    if (method == "稳定加压")
+                    {
                         this.rdb_wdjy.Checked = true;
                     }
-                    else if (method == "波动加压") {
+                    else if (method == "波动加压")
+                    {
                         this.rdb_bdjy.Checked = true;
                     }
                     else
@@ -313,7 +314,7 @@ namespace text.doors.Detection
 
             btn_ksbd.Enabled = false;
             btn_tzbd.Enabled = false;
-            _tcpClient.qiehuanTab(false);
+            _serialPortClient.qiehuanTab(false);
         }
 
         #endregion
@@ -338,9 +339,9 @@ namespace text.doors.Detection
 
         private void tim_PainPic_Tick(object sender, EventArgs e)
         {
-            if (_tcpClient.IsTCPLink)
+            if (_serialPortClient.IsSerialPortLink)
             {
-                var c = _tcpClient.GetCYXS(ref IsSeccess);
+                var c = _serialPortClient.GetCYGXS(ref IsSeccess);
                 int value = int.Parse(c.ToString());
                 if (!IsSeccess)
                 {
@@ -372,7 +373,7 @@ namespace text.doors.Detection
         /// </summary>
         private void Stop()
         {
-            var res = _tcpClient.Stop();
+            var res = _serialPortClient.Stop();
             if (!res)
                 MessageBox.Show("急停异常", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
         }
@@ -382,7 +383,7 @@ namespace text.doors.Detection
         /// </summary>
         private void StopBoDong()
         {
-            var res = _tcpClient.StopBoDong();
+            var res = _serialPortClient.StopBoDong();
             if (!res)
                 MessageBox.Show("急停异常", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
         }
@@ -419,7 +420,7 @@ namespace text.doors.Detection
             }
 
 
-            var res = _tcpClient.SendSMXXYJ();
+            var res = _serialPortClient.SendSMXXYJ();
             if (!res)
             {
                 MessageBox.Show("设置水密性下一级异常", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
@@ -443,7 +444,7 @@ namespace text.doors.Detection
         #region 水密性能检测按钮事件
         private void btn_ready_Click(object sender, EventArgs e)
         {
-            double yl = _tcpClient.GetSMYBSDYL(ref IsSeccess, "SMYB");
+            double yl = _serialPortClient.GetSMYBSDYL(ref IsSeccess, "SMYB");
             if (!IsSeccess)
             {
                 //MessageBox.Show("读取设定值异常", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
@@ -456,7 +457,7 @@ namespace text.doors.Detection
             this.btn_next.Enabled = false;
             this.btn_next.Enabled = false;
 
-            var res = _tcpClient.SetSMYB();
+            var res = _serialPortClient.SetSMYB();
             if (!res)
             {
                 MessageBox.Show("水密预备异常", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
@@ -473,7 +474,7 @@ namespace text.doors.Detection
             this.btn_next.Enabled = true;
             this.tim_upNext.Enabled = true;
             this.btn_ready.Enabled = false;
-            var res = _tcpClient.SendSMXKS();
+            var res = _serialPortClient.SendSMXKS();
             if (!res)
             {
                 MessageBox.Show("水密开始异常", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
@@ -516,7 +517,7 @@ namespace text.doors.Detection
             tim_upNext.Enabled = false;
 
             var value = int.Parse(txt_ycjy.Text);
-            var res = _tcpClient.SendSMYCJY(value);
+            var res = _serialPortClient.SendSMYCJY(value);
             if (!res)
             {
                 MessageBox.Show("设置水密依次加压异常", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
@@ -534,7 +535,7 @@ namespace text.doors.Detection
                 return;
             }
 
-            if (_tcpClient.IsTCPLink)
+            if (_serialPortClient.IsSerialPortLink)
             {
                 string TEMP = "";
                 if (waterTightPropertyTest == PublicEnum.WaterTightPropertyTest.Ready)
@@ -546,7 +547,7 @@ namespace text.doors.Detection
                 if (waterTightPropertyTest == PublicEnum.WaterTightPropertyTest.Next)
                     TEMP = "XYJ";
 
-                double yl = _tcpClient.GetSMYBSDYL(ref IsSeccess, TEMP);
+                double yl = _serialPortClient.GetSMYBSDYL(ref IsSeccess, TEMP);
 
                 if (!IsSeccess)
                 {
@@ -568,7 +569,7 @@ namespace text.doors.Detection
                         var minVal = 0;
                         var maxVal = 0;
 
-                        _tcpClient.GetCYXS_BODONG(ref IsSeccess, ref minVal, ref maxVal);
+                        _serialPortClient.GetCYXS_BODONG(ref IsSeccess, ref minVal, ref maxVal);
 
                         lbl_sdyl.Text = minVal.ToString();
                         lbl_max.Text = maxVal.ToString();
@@ -900,14 +901,12 @@ namespace text.doors.Detection
 
         private void tim_sm_Tick(object sender, EventArgs e)
         {
-            if (_tcpClient.IsTCPLink)
+            if (_serialPortClient.IsSerialPortLink)
             {
                 lbl_max.Visible = false;
-                var value = int.Parse(_tcpClient.GetCYXS(ref IsSeccess).ToString());
+                var value = int.Parse(_serialPortClient.GetCYGXS(ref IsSeccess).ToString());
                 if (!IsSeccess)
                 {
-                    //todo
-                    // MessageBox.Show("获取差压异常--水密！", "警告！", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
                     return;
                 }
                 lbldqyl.Text = value.ToString();
@@ -924,7 +923,7 @@ namespace text.doors.Detection
                         var minVal = 0;
                         var maxVal = 0;
 
-                        _tcpClient.GetCYXS_BODONG(ref IsSeccess, ref minVal, ref maxVal);
+                        _serialPortClient.GetCYXS_BODONG(ref IsSeccess, ref minVal, ref maxVal);
 
                         lbl_sdyl.Text = minVal.ToString();
                         lbl_max.Text = maxVal.ToString();
@@ -957,7 +956,7 @@ namespace text.doors.Detection
 
             tim_upNext.Enabled = false;
 
-            var res = _tcpClient.SendBoDongksjy(maxValue, minValue);
+            var res = _serialPortClient.SendBoDongksjy(maxValue, minValue);
             if (!res)
             {
                 MessageBox.Show("水密波动开始异常", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
@@ -985,12 +984,12 @@ namespace text.doors.Detection
 
         private void tim_getType_Tick(object sender, EventArgs e)
         {
-            if (_tcpClient.IsTCPLink)
+            if (_serialPortClient.IsSerialPortLink)
             {
                 //水密预备
                 if (waterTightPropertyTest == PublicEnum.WaterTightPropertyTest.Ready)
                 {
-                    int value = _tcpClient.GetSMYBJS(ref IsSeccess);
+                    int value = _serialPortClient.GetSMYBJS(ref IsSeccess);
 
                     if (!IsSeccess)
                     {
@@ -1006,70 +1005,6 @@ namespace text.doors.Detection
                         this.btn_next.Enabled = true;
                     }
                 }
-
-                //if (this.rdb_bdjy.Checked == true)
-                //{
-                //    if (waterTightPropertyTest == PublicEnum.WaterTightPropertyTest.Start || waterTightPropertyTest == PublicEnum.WaterTightPropertyTest.CycleLoading)
-                //    {
-                //        int value = _tcpClient.GetSMXYJJS_BD(ref IsSeccess);
-                //        if (!IsSeccess)
-                //        {
-                //            return;
-                //        }
-                //        if (value == 9)
-                //        {
-                //            waterTightPropertyTest = PublicEnum.WaterTightPropertyTest.Stop;
-                //            lbl_sdyl.Text = "0";
-
-                //            this.btn_upKpa.Enabled = true;
-                //            this.btn_ready.Enabled = true;
-                //            this.btn_start.Enabled = true;
-                //            this.btn_next.Enabled = true;
-                //        }
-                //    }
-                //}
-                //else
-                //{
-                //    //开始- 依次加压
-                //    if (waterTightPropertyTest == PublicEnum.WaterTightPropertyTest.Start || waterTightPropertyTest == PublicEnum.WaterTightPropertyTest.CycleLoading)
-                //    {
-                //        int value = _tcpClient.GetSMYBJS(ref IsSeccess);
-                //        if (!IsSeccess)
-                //        {
-                //            return;
-                //        }
-                //        if (value == 3)
-                //        {
-                //            waterTightPropertyTest = PublicEnum.WaterTightPropertyTest.Stop;
-                //            lbl_sdyl.Text = "0";
-
-                //            this.btn_upKpa.Enabled = true;
-                //            this.btn_ready.Enabled = true;
-                //            this.btn_start.Enabled = true;
-                //            this.btn_next.Enabled = true;
-                //        }
-                //    }
-                //}
-
-                ////波动加压
-                //if (waterTightPropertyTest == PublicEnum.WaterTightPropertyTest.SrartBD)
-                //{
-                //    int value = _tcpClient.GetSMJS_BD(ref IsSeccess);
-
-                //    if (!IsSeccess)
-                //    {
-                //        return;
-                //    }
-                //    if (value >= 8995)
-                //    {
-                //        waterTightPropertyTest = PublicEnum.WaterTightPropertyTest.Stop;
-                //        lbl_sdyl.Text = "0";
-                //        lbl_max.Text = "0";
-                //        this.btn_ready.Enabled = true;
-                //        this.btn_start.Enabled = true;
-                //        this.btn_next.Enabled = true;
-                //    }
-                //}
             }
         }
 
@@ -1081,11 +1016,11 @@ namespace text.doors.Detection
 
             if (this.rdb_bdjy.Checked == true)
             {
-                _tcpClient.qiehuanTab(true);
+                _serialPortClient.qiehuanTab(true);
             }
             else
             {
-                _tcpClient.qiehuanTab(false);
+                _serialPortClient.qiehuanTab(false);
             }
         }
 
@@ -1096,11 +1031,11 @@ namespace text.doors.Detection
             btn_tzbd.Enabled = false;
             if (this.rdb_bdjy.Checked == true)
             {
-                _tcpClient.qiehuanTab(true);
+                _serialPortClient.qiehuanTab(true);
             }
             else
             {
-                _tcpClient.qiehuanTab(false);
+                _serialPortClient.qiehuanTab(false);
             }
 
         }

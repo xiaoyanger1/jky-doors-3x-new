@@ -49,7 +49,20 @@ namespace text.doors.Default
 
 
         public const string 高压标0_交替型按钮 = "M66";
-        public const string 风速标0_交替型按钮 = "M66";
+        public const string 低压标0_交替型按钮 = "M65";
+
+        public const string 开关量控制 = "M92";
+
+        public const string 风机启动 = "M190";
+        public const string 水泵启动 = "M191";
+        public const string 保护阀通 = "M192";
+        public const string 四通阀开 = "M193";
+
+
+        public const string 点动开 = "M194";
+        public const string 点动关 = "M195";
+
+
         public const string 正压阀 = "M62";
         public const string 负压阀 = "M63";
         public const string 正压预备 = "M50";
@@ -60,18 +73,15 @@ namespace text.doors.Default
         public const string 水密性开始 = "M45";
         public const string 依次加压数值 = "D550";
         public const string 依次加压 = "M46";
-        //public const string 结束 = "M40";
         public const string 下一级 = "M42";
         public const string 急停 = "M120";
-        public const string 差压显示 = "D130";
+
+        public const string 差压高显示 = "D130";
+        public const string 差压低显示 = "D432";
+
         public const string 温度显示 = "D132";
         public const string 大气压力显示 = "D134";
-        public const string 风速显示 = "D136";
-        //public const string 差压标定后值 = "D130";
-        //public const string 温度标定值 = "D132";
-        //public const string 大气压力标定值 = "D134";
-        // public const string 风速标定值 = "D136";
-        // public const string 正负负压开始结束 = "T20";
+        public const string 风速显示 = "D90";
 
 
         public const string 正压预备结束 = "D30";
@@ -102,22 +112,48 @@ namespace text.doors.Default
         public const string 负压预备_设定值 = "D2002";
         public const string 负压开始_设定值 = "D2005";
 
-        public const string 正压100TimeStart = "T2";
-        public const string 正压150TimeStart = "T3";
-        public const string 正压_100TimeStart = "T4";
+        //todo:
+        public const string 正压10TimeStart = "T41";
+        public const string 正压30TimeStart = "T42";
+        public const string 正压50TimeStart = "T43";
+        public const string 正压70TimeStart = "T44";
+
+        public const string 正压100TimeStart = "T45";
+        public const string 正压150TimeStart = "T46";
+        public const string 正压_100TimeStart = "T47";
+
+        public const string 正压_70TimeStart = "T48";
+        public const string 正压_50TimeStart = "T49";
+        public const string 正压_30TimeStart = "T50";
+        public const string 正压_10TimeStart = "T51";
+
+
+
+        public const string 负压10TimeStart = "";
+        public const string 负压30TimeStart = "";
+        public const string 负压50TimeStart = "";
+        public const string 负压70TimeStart = "";
+
         public const string 负压100TimeStart = "T7";
         public const string 负压150TimeStart = "T8";
         public const string 负压_100TimeStart = "T9";
 
+        public const string 负压_70TimeStart = "";
+        public const string 负压_50TimeStart = "";
+        public const string 负压_30TimeStart = "";
+        public const string 负压_10TimeStart = "";
 
-        //public const string 水密设定压力 = "D2009";
-        //public const string 水密开始结束 = "T12";
+
+
 
 
         public const string 水密预备结束 = "D32";
         public const string 水密预备_设定值 = "D2008";
         public const string 水密开始_设定值 = "D2009";
         public const string 水密依次加压_设定值 = "D550";
+
+
+
 
 
 
@@ -156,14 +192,14 @@ namespace text.doors.Default
 
         #region 风压
 
-        //public const string 位移1 = "D410";
-        //public const string 位移2 = "D420";
-        //public const string 位移3 = "D430";
+        public const string 位移1 = "D410";
+        public const string 位移2 = "D420";
+        public const string 位移3 = "D430";
 
 
-        public const string 位移1 = "D440";
-        public const string 位移2 = "D442";
-        public const string 位移3 = "D444";
+        //public const string 位移1 = "D440";
+        //public const string 位移2 = "D442";
+        //public const string 位移3 = "D444";
 
         public const string 风压正压预备 = "M55";
         public const string 风压正压开始 = "M56";

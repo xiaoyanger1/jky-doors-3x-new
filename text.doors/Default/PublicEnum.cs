@@ -13,9 +13,17 @@ namespace text.doors.Default
         /// </summary>
         public enum Kpa_Level
         {
+            liter10,//升10 
+            liter30,//升30 
+            liter50,//升50 
+            liter70,//升70 
             liter100,//升100 
             liter150,//升150
-            drop100//降100
+            drop100,//降100
+            drop70,//降70
+            drop50,//降50
+            drop30,//降30
+            drop10//降10
         }
 
 

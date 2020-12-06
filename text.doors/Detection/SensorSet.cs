@@ -16,12 +16,12 @@ namespace text.doors.Detection
 {
     public partial class SensorSet : Form
     {
-        private TCPClient _tcpConnection;
-        public SensorSet(TCPClient tcpConnection)
+        private SerialPortClient _serialPortClient;
+        public SensorSet(SerialPortClient serialPortLink)
         {
             InitializeComponent();
             CreateViewItem();
-            _tcpConnection = tcpConnection;
+            _serialPortClient = serialPortLink;
         }
 
 
@@ -52,31 +52,31 @@ namespace text.doors.Detection
 
             if (name == "风速传感器      米/秒")
             {
-                res = _tcpConnection.GetFSXS(ref IsSuccess);
+                res = _serialPortClient.GetFSXS(ref IsSuccess);
             }
             if (name == "差压传感器      高 帕")
             {
-                res = _tcpConnection.GetCYXS(ref IsSuccess);
+                res = _serialPortClient.GetCYGXS(ref IsSuccess);
             }
             if (name == "温度传感器      ℃")
             {
-                res = _tcpConnection.GetWDXS(ref IsSuccess);
+                res = _serialPortClient.GetWDXS(ref IsSuccess);
             }
             if (name == "大气压力传感器 KPa")
             {
-                res = _tcpConnection.GetDQYLXS(ref IsSuccess);
+                res = _serialPortClient.GetDQYLXS(ref IsSuccess);
             }
             if (name == "位移传感器1      mm")
             {
-                res = _tcpConnection.GetDisplace1(ref IsSuccess);
+                res = _serialPortClient.GetDisplace1(ref IsSuccess);
             }
             if (name == "位移传感器2      mm")
             {
-                res = _tcpConnection.GetDisplace2(ref IsSuccess);
+                res = _serialPortClient.GetDisplace2(ref IsSuccess);
             }
             if (name == "位移传感器3      mm")
             {
-                res = _tcpConnection.GetDisplace3(ref IsSuccess);
+                res = _serialPortClient.GetDisplace3(ref IsSuccess);
             }
 
             lvi.Text = res.ToString();

@@ -36,6 +36,8 @@ namespace text.doors.Default
         /// </summary>
         public static bool LockPoint = false;
 
+        // public static bool IsSerialPortLink = false;
+
         /// <summary>
         /// 杆件长度
         /// </summary>

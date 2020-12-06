@@ -107,6 +107,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Common\SerialPortClient.cs" />
     <Compile Include="Detection\AirtightDetection.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -126,7 +127,6 @@
       <DependentUpon>About.cs</DependentUpon>
     </Compile>
     <Compile Include="Common\LAN.cs" />
-    <Compile Include="Common\TCPClient.cs" />
     <Compile Include="Common\Formula.cs" />
     <Compile Include="Default\DefaultBase.cs" />
     <Compile Include="Detection\TakePhotos.cs">
@@ -176,18 +176,6 @@
     </Compile>
     <Compile Include="Detection\DetectionSet.Designer.cs">
       <DependentUpon>DetectionSet.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Detection\ExportReport.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Detection\ExportReport.Designer.cs">
-      <DependentUpon>ExportReport.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Detection\RealTimeSurveillance.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Detection\RealTimeSurveillance.Designer.cs">
-      <DependentUpon>RealTimeSurveillance.cs</DependentUpon>
     </Compile>
     <Compile Include="Detection\Select_Code.cs">
       <SubType>Form</SubType>
@@ -242,17 +230,11 @@
     <EmbeddedResource Include="Detection\DetectionSet.resx">
       <DependentUpon>DetectionSet.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Detection\ExportReport.resx">
-      <DependentUpon>ExportReport.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Detection\TakePhotos.resx">
       <DependentUpon>TakePhotos.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Detection\PIDManager.resx">
       <DependentUpon>PIDManager.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Detection\RealTimeSurveillance.resx">
-      <DependentUpon>RealTimeSurveillance.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Detection\Select_Code.resx">
       <DependentUpon>Select_Code.cs</DependentUpon>

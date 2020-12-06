@@ -25,7 +25,7 @@ namespace text.doors.Detection
     public partial class AirtightDetection : Form
     {
         private static Young.Core.Logger.ILog Logger = Young.Core.Logger.LoggerManager.Current();
-        private TCPClient _tcpClient;
+        private SerialPortClient _serialPortClient;
         //检验编号
         private string _tempCode = "";
         //当前樘号
@@ -54,14 +54,15 @@ namespace text.doors.Detection
 
 
         public DateTime dtnow { get; set; }
-        public AirtightDetection() { 
-        
+        public AirtightDetection()
+        {
+            dgv_ll.Height = 410;
         }
 
-        public AirtightDetection(TCPClient tcpClient, string tempCode, string tempTong)
+        public AirtightDetection(SerialPortClient tcpClient, string tempCode, string tempTong)
         {
             InitializeComponent();
-            this._tcpClient = tcpClient;
+            this._serialPortClient = tcpClient;
             this._tempCode = tempCode;
             this._tempTong = tempTong;
 
@@ -111,7 +112,7 @@ namespace text.doors.Detection
         {
             List<Pressure> pressureList = new List<Pressure>();
             Formula slopeCompute = new Formula();
-            for (int i = 0; i < 3; i++)
+            for (int i = 0; i < 11; i++)
             {
                 Pressure model = new Pressure();
                 model.PressurePa = int.Parse(this.dgv_WindSpeed.Rows[i].Cells["PressurePa"].Value.ToString());
@@ -131,7 +132,7 @@ namespace text.doors.Detection
         {
             dgv_ll.DataSource = GetPressureFlow();
 
-            dgv_ll.Height = 115;
+            dgv_ll.Height = 410;
             dgv_ll.RowHeadersVisible = false;
             dgv_ll.AllowUserToResizeColumns = false;
             dgv_ll.AllowUserToResizeRows = false;
@@ -177,6 +178,44 @@ namespace text.doors.Detection
                     gv_list.Enabled = false;
                     foreach (var item in qm)
                     {
+
+                        Pressure model4 = new Pressure();
+                        model4.Pressure_F = string.IsNullOrWhiteSpace(item.qm_s_f_fj10) ? 0 : double.Parse(item.qm_s_f_fj10);
+                        model4.Pressure_F_Z = string.IsNullOrWhiteSpace(item.qm_s_f_zd10) ? 0 : double.Parse(item.qm_s_f_zd10);
+
+                        model4.Pressure_Z = string.IsNullOrWhiteSpace(item.qm_s_z_fj10) ? 0 : double.Parse(item.qm_s_z_fj10);
+                        model4.Pressure_Z_Z = string.IsNullOrWhiteSpace(item.qm_s_z_zd10) ? 0 : double.Parse(item.qm_s_z_zd10);
+                        model4.PressurePa = 10;
+                        pressureList.Add(model4);
+
+                        Pressure model5 = new Pressure();
+                        model5.Pressure_F = string.IsNullOrWhiteSpace(item.qm_s_f_fj30) ? 0 : double.Parse(item.qm_s_f_fj30);
+                        model5.Pressure_F_Z = string.IsNullOrWhiteSpace(item.qm_s_f_zd30) ? 0 : double.Parse(item.qm_s_f_zd30);
+
+                        model5.Pressure_Z = string.IsNullOrWhiteSpace(item.qm_s_z_fj30) ? 0 : double.Parse(item.qm_s_z_fj30);
+                        model5.Pressure_Z_Z = string.IsNullOrWhiteSpace(item.qm_s_z_zd30) ? 0 : double.Parse(item.qm_s_z_zd30);
+                        model5.PressurePa = 30;
+                        pressureList.Add(model5);
+
+                        Pressure model6 = new Pressure();
+                        model6.Pressure_F = string.IsNullOrWhiteSpace(item.qm_s_f_fj50) ? 0 : double.Parse(item.qm_s_f_fj50);
+                        model6.Pressure_F_Z = string.IsNullOrWhiteSpace(item.qm_s_f_zd50) ? 0 : double.Parse(item.qm_s_f_zd50);
+
+                        model6.Pressure_Z = string.IsNullOrWhiteSpace(item.qm_s_z_fj50) ? 0 : double.Parse(item.qm_s_z_fj50);
+                        model6.Pressure_Z_Z = string.IsNullOrWhiteSpace(item.qm_s_z_zd50) ? 0 : double.Parse(item.qm_s_z_zd50);
+                        model6.PressurePa = 50;
+                        pressureList.Add(model6);
+
+                        Pressure model7 = new Pressure();
+                        model7.Pressure_F = string.IsNullOrWhiteSpace(item.qm_s_f_fj70) ? 0 : double.Parse(item.qm_s_f_fj70);
+                        model7.Pressure_F_Z = string.IsNullOrWhiteSpace(item.qm_s_f_zd70) ? 0 : double.Parse(item.qm_s_f_zd70);
+
+                        model7.Pressure_Z = string.IsNullOrWhiteSpace(item.qm_s_z_fj70) ? 0 : double.Parse(item.qm_s_z_fj70);
+                        model7.Pressure_Z_Z = string.IsNullOrWhiteSpace(item.qm_s_z_zd70) ? 0 : double.Parse(item.qm_s_z_zd70);
+                        model7.PressurePa = 70;
+                        pressureList.Add(model7);
+
+
                         Pressure model1 = new Pressure();
                         model1.Pressure_F = string.IsNullOrWhiteSpace(item.qm_s_f_fj100) ? 0 : double.Parse(item.qm_s_f_fj100);
                         model1.Pressure_F_Z = string.IsNullOrWhiteSpace(item.qm_s_f_zd100) ? 0 : double.Parse(item.qm_s_f_zd100);
@@ -203,6 +242,42 @@ namespace text.doors.Detection
                         model3.Pressure_Z_Z = string.IsNullOrWhiteSpace(item.qm_j_z_zd100) ? 0 : double.Parse(item.qm_j_z_zd100);
                         model3.PressurePa = 100;
                         pressureList.Add(model3);
+
+                        Pressure model8 = new Pressure();
+                        model8.Pressure_F = string.IsNullOrWhiteSpace(item.qm_j_f_fj70) ? 0 : double.Parse(item.qm_j_f_fj70);
+                        model8.Pressure_F_Z = string.IsNullOrWhiteSpace(item.qm_j_f_zd70) ? 0 : double.Parse(item.qm_j_f_zd70);
+
+                        model8.Pressure_Z = string.IsNullOrWhiteSpace(item.qm_j_z_fj70) ? 0 : double.Parse(item.qm_j_z_fj70);
+                        model8.Pressure_Z_Z = string.IsNullOrWhiteSpace(item.qm_j_z_zd70) ? 0 : double.Parse(item.qm_j_z_zd70);
+                        model8.PressurePa = 100;
+                        pressureList.Add(model8);
+
+                        Pressure model9 = new Pressure();
+                        model9.Pressure_F = string.IsNullOrWhiteSpace(item.qm_j_f_fj50) ? 0 : double.Parse(item.qm_j_f_fj50);
+                        model9.Pressure_F_Z = string.IsNullOrWhiteSpace(item.qm_j_f_zd50) ? 0 : double.Parse(item.qm_j_f_zd50);
+
+                        model9.Pressure_Z = string.IsNullOrWhiteSpace(item.qm_j_z_fj50) ? 0 : double.Parse(item.qm_j_z_fj50);
+                        model9.Pressure_Z_Z = string.IsNullOrWhiteSpace(item.qm_j_z_zd50) ? 0 : double.Parse(item.qm_j_z_zd50);
+                        model9.PressurePa = 100;
+                        pressureList.Add(model9);
+
+                        Pressure model10 = new Pressure();
+                        model10.Pressure_F = string.IsNullOrWhiteSpace(item.qm_j_f_fj30) ? 0 : double.Parse(item.qm_j_f_fj30);
+                        model10.Pressure_F_Z = string.IsNullOrWhiteSpace(item.qm_j_f_zd30) ? 0 : double.Parse(item.qm_j_f_zd30);
+
+                        model10.Pressure_Z = string.IsNullOrWhiteSpace(item.qm_j_z_fj30) ? 0 : double.Parse(item.qm_j_z_fj30);
+                        model10.Pressure_Z_Z = string.IsNullOrWhiteSpace(item.qm_j_z_zd30) ? 0 : double.Parse(item.qm_j_z_zd30);
+                        model10.PressurePa = 100;
+                        pressureList.Add(model10);
+
+                        Pressure model11 = new Pressure();
+                        model11.Pressure_F = string.IsNullOrWhiteSpace(item.qm_j_f_fj10) ? 0 : double.Parse(item.qm_j_f_fj10);
+                        model11.Pressure_F_Z = string.IsNullOrWhiteSpace(item.qm_j_f_zd10) ? 0 : double.Parse(item.qm_j_f_zd10);
+
+                        model11.Pressure_Z = string.IsNullOrWhiteSpace(item.qm_j_z_fj10) ? 0 : double.Parse(item.qm_j_z_fj10);
+                        model11.Pressure_Z_Z = string.IsNullOrWhiteSpace(item.qm_j_z_zd10) ? 0 : double.Parse(item.qm_j_z_zd10);
+                        model11.PressurePa = 100;
+                        pressureList.Add(model11);
                     }
                 }
                 else
@@ -292,7 +367,7 @@ namespace text.doors.Detection
         private void QMchartInit()
         {
             dtnow = DateTime.Now;
-            qm_Line.GetVertAxis.SetMinMax(-300, 300);
+            qm_Line.GetVertAxis.SetMinMax(-600, 600);
         }
 
 
@@ -315,42 +390,38 @@ namespace text.doors.Detection
         /// <param name="e"></param>
         private void tim_qm_Tick(object sender, EventArgs e)
         {
-            if (_tcpClient.IsTCPLink)
+            if (_serialPortClient.IsSerialPortLink)
             {
-                var value = int.Parse(_tcpClient.GetCYXS(ref IsSeccess).ToString());
+                var value = int.Parse(_serialPortClient.GetCYDXS(ref IsSeccess).ToString());
                 if (!IsSeccess)
                 {
-                    //todo
-                    //MessageBox.Show("获取差压异常--气密！", "警告！", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
                     return;
                 }
                 lbl_dqyl.Text = value.ToString();
 
                 //读取设定值
-                if (airtightPropertyTest == PublicEnum.AirtightPropertyTest.ZStart)
-                {
-                    double yl = _tcpClient.GetZYYBYLZ(ref IsSeccess, "ZYKS");
-                    if (!IsSeccess)
-                    {
-                      //  MessageBox.Show("获取正压预备异常！", "警告！", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
-                        return;
-                    }
-                    lbl_setYL.Text = yl.ToString();
-                }
-                else if (airtightPropertyTest == PublicEnum.AirtightPropertyTest.FStart)
-                {
-                    double yl = _tcpClient.GetZYYBYLZ(ref IsSeccess, "FYKS");
-                    if (!IsSeccess)
-                    {
-                       // MessageBox.Show("获取负压开始异常！", "警告！", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
-                        return;
-                    }
-                    lbl_setYL.Text = "-" + yl.ToString();
-                }
-                else if (airtightPropertyTest == PublicEnum.AirtightPropertyTest.Stop)
-                {
-                    lbl_setYL.Text = "0";
-                }
+                //if (airtightPropertyTest == PublicEnum.AirtightPropertyTest.ZStart)
+                //{
+                //    double yl = _serialPortClient.GetZYYBYLZ(ref IsSeccess, "ZYKS");
+                //    if (!IsSeccess)
+                //    {
+                //        return;
+                //    }
+                //    lbl_setYL.Text = yl.ToString();
+                //}
+                //else if (airtightPropertyTest == PublicEnum.AirtightPropertyTest.FStart)
+                //{
+                //    double yl = _serialPortClient.GetZYYBYLZ(ref IsSeccess, "FYKS");
+                //    if (!IsSeccess)
+                //    {
+                //        return;
+                //    }
+                //    lbl_setYL.Text = "-" + yl.ToString();
+                //}
+                //else if (airtightPropertyTest == PublicEnum.AirtightPropertyTest.Stop)
+                //{
+                //    lbl_setYL.Text = "0";
+                //}
 
                 if (IsStart)
                 {
@@ -363,14 +434,12 @@ namespace text.doors.Detection
 
         private void tim_PainPic_Tick(object sender, EventArgs e)
         {
-            if (_tcpClient.IsTCPLink)
+            if (_serialPortClient.IsSerialPortLink)
             {
-                var c = _tcpClient.GetCYXS(ref IsSeccess);
+                var c = _serialPortClient.GetCYDXS(ref IsSeccess);
                 int value = int.Parse(c.ToString());
                 if (!IsSeccess)
                 {
-                    //todo
-                   // MessageBox.Show("获取差压压力异常！", "警告！", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
                     return;
                 }
 
@@ -383,12 +452,10 @@ namespace text.doors.Detection
         private void tim_Top10_Tick(object sender, EventArgs e)
         {
             gv_list.Enabled = true;
-                
-            var cyvalue = _tcpClient.GetCYXS(ref IsSeccess);
+
+            var cyvalue = _serialPortClient.GetCYDXS(ref IsSeccess);
             if (!IsSeccess)
             {
-                //todo
-              //  MessageBox.Show("获取差压异常--气密前十！", "警告！", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
                 return;
             }
 
@@ -396,7 +463,36 @@ namespace text.doors.Detection
             if (index > 8)
             {
                 //标记计时结束
-                if (kpa_Level == PublicEnum.Kpa_Level.liter100)
+                if (kpa_Level == PublicEnum.Kpa_Level.liter10)
+                {
+                    if (cyvalue > 0)
+                        Z_S_10Stop = false;
+                    else
+                        F_S_10Stop = false;
+                }
+                else if (kpa_Level == PublicEnum.Kpa_Level.liter30)
+                {
+                    if (cyvalue > 0)
+                        Z_S_30Stop = false;
+                    else
+                        F_S_30Stop = false;
+                }
+                else if (kpa_Level == PublicEnum.Kpa_Level.liter50)
+                {
+                    if (cyvalue > 0)
+                        Z_S_50Stop = false;
+                    else
+                        F_S_50Stop = false;
+                }
+                else if (kpa_Level == PublicEnum.Kpa_Level.liter70)
+                {
+                    if (cyvalue > 0)
+                        Z_S_70Stop = false;
+                    else
+                        F_S_70Stop = false;
+                }
+
+                else if (kpa_Level == PublicEnum.Kpa_Level.liter100)
                 {
                     if (cyvalue > 0)
                         Z_S_100Stop = false;
@@ -417,7 +513,34 @@ namespace text.doors.Detection
                     else
                         F_J_100Stop = false;
                 }
-
+                else if (kpa_Level == PublicEnum.Kpa_Level.drop70)
+                {
+                    if (cyvalue > 0)
+                        Z_J_70Stop = false;
+                    else
+                        F_J_70Stop = false;
+                }
+                else if (kpa_Level == PublicEnum.Kpa_Level.drop50)
+                {
+                    if (cyvalue > 0)
+                        Z_J_50Stop = false;
+                    else
+                        F_J_50Stop = false;
+                }
+                else if (kpa_Level == PublicEnum.Kpa_Level.drop30)
+                {
+                    if (cyvalue > 0)
+                        Z_J_30Stop = false;
+                    else
+                        F_J_30Stop = false;
+                }
+                else if (kpa_Level == PublicEnum.Kpa_Level.drop10)
+                {
+                    if (cyvalue > 0)
+                        Z_J_10Stop = false;
+                    else
+                        F_J_10Stop = false;
+                }
                 this.tim_Top10.Enabled = false;
                 index = 0;
                 gv_list.Enabled = false;
@@ -426,16 +549,43 @@ namespace text.doors.Detection
 
 
             //获取风速
-            var fsvalue = _tcpClient.GetFSXS(ref IsSeccess);
+            var fsvalue = _serialPortClient.GetFSXS(ref IsSeccess);
             if (!IsSeccess)
             {
-                //MessageBox.Show("获取风速异常！", "警告！", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
                 return;
             }
 
             if (rdb_fjstl.Checked)
             {
-                if (kpa_Level == PublicEnum.Kpa_Level.liter100)
+                if (kpa_Level == PublicEnum.Kpa_Level.liter10)
+                {
+                    if (cyvalue > 0)
+                        pressure.AddZYFJ(fsvalue, PublicEnum.Kpa_Level.liter10);
+                    else
+                        pressure.AddFYFJ(fsvalue, PublicEnum.Kpa_Level.liter10);
+                }
+                else if (kpa_Level == PublicEnum.Kpa_Level.liter30)
+                {
+                    if (cyvalue > 0)
+                        pressure.AddZYFJ(fsvalue, PublicEnum.Kpa_Level.liter30);
+                    else
+                        pressure.AddFYFJ(fsvalue, PublicEnum.Kpa_Level.liter30);
+                }
+                else if (kpa_Level == PublicEnum.Kpa_Level.liter50)
+                {
+                    if (cyvalue > 0)
+                        pressure.AddZYFJ(fsvalue, PublicEnum.Kpa_Level.liter50);
+                    else
+                        pressure.AddFYFJ(fsvalue, PublicEnum.Kpa_Level.liter50);
+                }
+                else if (kpa_Level == PublicEnum.Kpa_Level.liter70)
+                {
+                    if (cyvalue > 0)
+                        pressure.AddZYFJ(fsvalue, PublicEnum.Kpa_Level.liter70);
+                    else
+                        pressure.AddFYFJ(fsvalue, PublicEnum.Kpa_Level.liter70);
+                }
+                else if (kpa_Level == PublicEnum.Kpa_Level.liter100)
                 {
                     if (cyvalue > 0)
                         pressure.AddZYFJ(fsvalue, PublicEnum.Kpa_Level.liter100);
@@ -457,10 +607,66 @@ namespace text.doors.Detection
                     else
                         pressure.AddFYFJ(fsvalue, PublicEnum.Kpa_Level.drop100);
                 }
+                else if (kpa_Level == PublicEnum.Kpa_Level.drop100)
+                {
+                    if (cyvalue > 0)
+                        pressure.AddZYFJ(fsvalue, PublicEnum.Kpa_Level.drop70);
+                    else
+                        pressure.AddFYFJ(fsvalue, PublicEnum.Kpa_Level.drop70);
+                }
+                else if (kpa_Level == PublicEnum.Kpa_Level.drop50)
+                {
+                    if (cyvalue > 0)
+                        pressure.AddZYFJ(fsvalue, PublicEnum.Kpa_Level.drop50);
+                    else
+                        pressure.AddFYFJ(fsvalue, PublicEnum.Kpa_Level.drop50);
+                }
+                else if (kpa_Level == PublicEnum.Kpa_Level.drop30)
+                {
+                    if (cyvalue > 0)
+                        pressure.AddZYFJ(fsvalue, PublicEnum.Kpa_Level.drop30);
+                    else
+                        pressure.AddFYFJ(fsvalue, PublicEnum.Kpa_Level.drop30);
+                }
+                else if (kpa_Level == PublicEnum.Kpa_Level.drop10)
+                {
+                    if (cyvalue > 0)
+                        pressure.AddZYFJ(fsvalue, PublicEnum.Kpa_Level.drop10);
+                    else
+                        pressure.AddFYFJ(fsvalue, PublicEnum.Kpa_Level.drop10);
+                }
             }
             else if (rdb_zdstl.Checked)
             {
-                if (kpa_Level == PublicEnum.Kpa_Level.liter100)
+                if (kpa_Level == PublicEnum.Kpa_Level.liter10)
+                {
+                    if (cyvalue > 0)
+                        pressure.AddZYZD(fsvalue, PublicEnum.Kpa_Level.liter10);
+                    else
+                        pressure.AddFYZD(fsvalue, PublicEnum.Kpa_Level.liter10);
+                }
+                else if (kpa_Level == PublicEnum.Kpa_Level.liter30)
+                {
+                    if (cyvalue > 0)
+                        pressure.AddZYZD(fsvalue, PublicEnum.Kpa_Level.liter30);
+                    else
+                        pressure.AddFYZD(fsvalue, PublicEnum.Kpa_Level.liter30);
+                }
+                else if (kpa_Level == PublicEnum.Kpa_Level.liter50)
+                {
+                    if (cyvalue > 0)
+                        pressure.AddZYZD(fsvalue, PublicEnum.Kpa_Level.liter50);
+                    else
+                        pressure.AddFYZD(fsvalue, PublicEnum.Kpa_Level.liter50);
+                }
+                else if (kpa_Level == PublicEnum.Kpa_Level.liter70)
+                {
+                    if (cyvalue > 0)
+                        pressure.AddZYZD(fsvalue, PublicEnum.Kpa_Level.liter70);
+                    else
+                        pressure.AddFYZD(fsvalue, PublicEnum.Kpa_Level.liter70);
+                }
+                else if (kpa_Level == PublicEnum.Kpa_Level.liter100)
                 {
                     if (cyvalue > 0)
                         pressure.AddZYZD(fsvalue, PublicEnum.Kpa_Level.liter100);
@@ -482,6 +688,34 @@ namespace text.doors.Detection
                     else
                         pressure.AddFYZD(fsvalue, PublicEnum.Kpa_Level.drop100);
                 }
+                else if (kpa_Level == PublicEnum.Kpa_Level.drop70)
+                {
+                    if (cyvalue > 0)
+                        pressure.AddZYZD(fsvalue, PublicEnum.Kpa_Level.drop70);
+                    else
+                        pressure.AddFYZD(fsvalue, PublicEnum.Kpa_Level.drop70);
+                }
+                else if (kpa_Level == PublicEnum.Kpa_Level.drop50)
+                {
+                    if (cyvalue > 0)
+                        pressure.AddZYZD(fsvalue, PublicEnum.Kpa_Level.drop50);
+                    else
+                        pressure.AddFYZD(fsvalue, PublicEnum.Kpa_Level.drop50);
+                }
+                else if (kpa_Level == PublicEnum.Kpa_Level.drop30)
+                {
+                    if (cyvalue > 0)
+                        pressure.AddZYZD(fsvalue, PublicEnum.Kpa_Level.drop30);
+                    else
+                        pressure.AddFYZD(fsvalue, PublicEnum.Kpa_Level.drop30);
+                }
+                else if (kpa_Level == PublicEnum.Kpa_Level.drop10)
+                {
+                    if (cyvalue > 0)
+                        pressure.AddZYZD(fsvalue, PublicEnum.Kpa_Level.drop10);
+                    else
+                        pressure.AddFYZD(fsvalue, PublicEnum.Kpa_Level.drop10);
+                }
             }
         }
 
@@ -489,12 +723,30 @@ namespace text.doors.Detection
         /// 获取是否已经读取的压力状态
         /// </summary>
 
+        private bool Z_S_10Stop = true;//生正压10
+        private bool Z_S_30Stop = true;//生正压30 
+        private bool Z_S_50Stop = true;//生正压50 
+        private bool Z_S_70Stop = true;//生正压70 
         private bool Z_S_100Stop = true;//生正压100 
         private bool Z_S_150Stop = true;//生正压150
         private bool Z_J_100Stop = true;//降正压100
-        private bool F_S_100Stop = true;//生负压100s
+        private bool Z_J_70Stop = true;//降正压70
+        private bool Z_J_50Stop = true;//降正压50
+        private bool Z_J_30Stop = true;//降正压30
+        private bool Z_J_10Stop = true;//降正压10
+
+
+        private bool F_S_10Stop = true;//生负压10
+        private bool F_S_30Stop = true;//生负压30
+        private bool F_S_50Stop = true;//生负压50
+        private bool F_S_70Stop = true;//生负压70
+        private bool F_S_100Stop = true;//生负压100
         private bool F_S_150Stop = true;//生负压150
         private bool F_J_100Stop = true;//降负压100
+        private bool F_J_70Stop = true;//降负压70
+        private bool F_J_50Stop = true;//降负压50
+        private bool F_J_30Stop = true;//降负压30
+        private bool F_J_10Stop = true;//降负压10
 
         /// <summary>
         /// 设置添加数据状态
@@ -502,18 +754,44 @@ namespace text.doors.Detection
         /// <param name="value"></param>
         private void SetCurrType(int value)
         {
+            bool start = _serialPortClient.GetQiMiTimeStart("Z_S_10Stop");
+            if (start && Z_S_10Stop)
+            {
+                kpa_Level = PublicEnum.Kpa_Level.liter10;
+                tim_Top10.Enabled = true;
+                Z_S_10Stop = false;
+            }
 
-            bool start = _tcpClient.Get_Z_S100TimeStart();
+            start = _serialPortClient.GetQiMiTimeStart("Z_S_30Stop");
+            if (start && Z_S_30Stop)
+            {
+                kpa_Level = PublicEnum.Kpa_Level.liter30;
+                tim_Top10.Enabled = true;
+                Z_S_30Stop = false;
+            }
+            start = _serialPortClient.GetQiMiTimeStart("Z_S_50Stop");
+            if (start && Z_S_50Stop)
+            {
+                kpa_Level = PublicEnum.Kpa_Level.liter50;
+                tim_Top10.Enabled = true;
+                Z_S_50Stop = false;
+            }
+            start = _serialPortClient.GetQiMiTimeStart("Z_S_70Stop");
+            if (start && Z_S_70Stop)
+            {
+                kpa_Level = PublicEnum.Kpa_Level.liter70;
+                tim_Top10.Enabled = true;
+                Z_S_70Stop = false;
+            }
 
+            start = _serialPortClient.GetQiMiTimeStart("Z_S_100Stop");
             if (start && Z_S_100Stop)
             {
                 kpa_Level = PublicEnum.Kpa_Level.liter100;
                 tim_Top10.Enabled = true;
                 Z_S_100Stop = false;
             }
-
-            start = _tcpClient.Get_Z_S150PaTimeStart();
-
+            start = _serialPortClient.GetQiMiTimeStart("Z_S_150Stop");
             if (start && Z_S_150Stop)
             {
                 kpa_Level = PublicEnum.Kpa_Level.liter150;
@@ -521,8 +799,7 @@ namespace text.doors.Detection
                 Z_S_150Stop = false;
             }
 
-            start = _tcpClient.Get_Z_J100PaTimeStart();
-
+            start = _serialPortClient.GetQiMiTimeStart("Z_J_100Stop");
             if (start && Z_J_100Stop)
             {
                 Thread.Sleep(500);
@@ -530,10 +807,69 @@ namespace text.doors.Detection
                 tim_Top10.Enabled = true;
                 Z_J_100Stop = false;
             }
+            start = _serialPortClient.GetQiMiTimeStart("Z_J_70Stop");
+            if (start && Z_J_70Stop)
+            {
+                Thread.Sleep(500);
+                kpa_Level = PublicEnum.Kpa_Level.drop70;
+                tim_Top10.Enabled = true;
+                Z_J_70Stop = false;
+            }
+            start = _serialPortClient.GetQiMiTimeStart("Z_J_50Stop");
+            if (start && Z_J_50Stop)
+            {
+                Thread.Sleep(500);
+                kpa_Level = PublicEnum.Kpa_Level.drop50;
+                tim_Top10.Enabled = true;
+                Z_J_50Stop = false;
+            }
+            start = _serialPortClient.GetQiMiTimeStart("Z_J_30Stop");
+            if (start && Z_J_30Stop)
+            {
+                Thread.Sleep(500);
+                kpa_Level = PublicEnum.Kpa_Level.drop30;
+                tim_Top10.Enabled = true;
+                Z_J_30Stop = false;
+            }
+            start = _serialPortClient.GetQiMiTimeStart("Z_J_10Stop");
+            if (start && Z_J_10Stop)
+            {
+                Thread.Sleep(500);
+                kpa_Level = PublicEnum.Kpa_Level.drop10;
+                tim_Top10.Enabled = true;
+                Z_J_10Stop = false;
+            }
 
             //负压
-            start = _tcpClient.Get_F_S100PaTimeStart();
-
+            start = _serialPortClient.GetQiMiTimeStart("F_S_10Stop");
+            if (start && F_S_10Stop)
+            {
+                kpa_Level = PublicEnum.Kpa_Level.liter10;
+                tim_Top10.Enabled = true;
+                F_S_10Stop = false;
+            }
+            start = _serialPortClient.GetQiMiTimeStart("F_S_30Stop");
+            if (start && F_S_30Stop)
+            {
+                kpa_Level = PublicEnum.Kpa_Level.liter30;
+                tim_Top10.Enabled = true;
+                F_S_30Stop = false;
+            }
+            start = _serialPortClient.GetQiMiTimeStart("F_S_50Stop");
+            if (start && F_S_50Stop)
+            {
+                kpa_Level = PublicEnum.Kpa_Level.liter50;
+                tim_Top10.Enabled = true;
+                F_S_50Stop = false;
+            }
+            start = _serialPortClient.GetQiMiTimeStart("F_S_70Stop");
+            if (start && F_S_70Stop)
+            {
+                kpa_Level = PublicEnum.Kpa_Level.liter70;
+                tim_Top10.Enabled = true;
+                F_S_70Stop = false;
+            }
+            start = _serialPortClient.GetQiMiTimeStart("F_S_100Stop");
             if (start && F_S_100Stop)
             {
                 kpa_Level = PublicEnum.Kpa_Level.liter100;
@@ -541,16 +877,14 @@ namespace text.doors.Detection
                 F_S_100Stop = false;
             }
 
-            start = _tcpClient.Get_F_S150PaTimeStart();
-
+            start = _serialPortClient.GetQiMiTimeStart("F_S_150Stop");
             if (start && F_S_150Stop)
             {
                 kpa_Level = PublicEnum.Kpa_Level.liter150;
                 tim_Top10.Enabled = true;
                 F_S_150Stop = false;
             }
-            start = _tcpClient.Get_F_J100PaTimeStart();
-
+            start = _serialPortClient.GetQiMiTimeStart("F_J_100Stop");
             if (start && F_J_100Stop)
             {
                 Thread.Sleep(500);
@@ -558,6 +892,94 @@ namespace text.doors.Detection
                 tim_Top10.Enabled = true;
                 F_J_100Stop = false;
             }
+            start = _serialPortClient.GetQiMiTimeStart("F_J_70Stop");
+            if (start && F_J_70Stop)
+            {
+                Thread.Sleep(500);
+                kpa_Level = PublicEnum.Kpa_Level.drop70;
+                tim_Top10.Enabled = true;
+                F_J_70Stop = false;
+            }
+            start = _serialPortClient.GetQiMiTimeStart("F_J_50Stop");
+            if (start && F_J_50Stop)
+            {
+                Thread.Sleep(500);
+                kpa_Level = PublicEnum.Kpa_Level.drop50;
+                tim_Top10.Enabled = true;
+                F_J_50Stop = false;
+            }
+            start = _serialPortClient.GetQiMiTimeStart("F_J_30Stop");
+            if (start && F_J_30Stop)
+            {
+                Thread.Sleep(500);
+                kpa_Level = PublicEnum.Kpa_Level.drop30;
+                tim_Top10.Enabled = true;
+                F_J_30Stop = false;
+            }
+            start = _serialPortClient.GetQiMiTimeStart("F_J_10Stop");
+            if (start && F_J_10Stop)
+            {
+                Thread.Sleep(500);
+                kpa_Level = PublicEnum.Kpa_Level.drop10;
+                tim_Top10.Enabled = true;
+                F_J_10Stop = false;
+            }
+
+            //bool start = _serialPortClient.Get_Z_S100TimeStart();
+
+            //if (start && Z_S_100Stop)
+            //{
+            //    kpa_Level = PublicEnum.Kpa_Level.liter100;
+            //    tim_Top10.Enabled = true;
+            //    Z_S_100Stop = false;
+            //}
+
+            //start = _serialPortClient.Get_Z_S150PaTimeStart();
+
+            //if (start && Z_S_150Stop)
+            //{
+            //    kpa_Level = PublicEnum.Kpa_Level.liter150;
+            //    tim_Top10.Enabled = true;
+            //    Z_S_150Stop = false;
+            //}
+
+            //start = _serialPortClient.Get_Z_J100PaTimeStart();
+
+            //if (start && Z_J_100Stop)
+            //{
+            //    Thread.Sleep(500);
+            //    kpa_Level = PublicEnum.Kpa_Level.drop100;
+            //    tim_Top10.Enabled = true;
+            //    Z_J_100Stop = false;
+            //}
+
+            ////负压
+            //start = _serialPortClient.Get_F_S100PaTimeStart();
+
+            //if (start && F_S_100Stop)
+            //{
+            //    kpa_Level = PublicEnum.Kpa_Level.liter100;
+            //    tim_Top10.Enabled = true;
+            //    F_S_100Stop = false;
+            //}
+
+            //start = _serialPortClient.Get_F_S150PaTimeStart();
+
+            //if (start && F_S_150Stop)
+            //{
+            //    kpa_Level = PublicEnum.Kpa_Level.liter150;
+            //    tim_Top10.Enabled = true;
+            //    F_S_150Stop = false;
+            //}
+            //start = _serialPortClient.Get_F_J100PaTimeStart();
+
+            //if (start && F_J_100Stop)
+            //{
+            //    Thread.Sleep(500);
+            //    kpa_Level = PublicEnum.Kpa_Level.drop100;
+            //    tim_Top10.Enabled = true;
+            //    F_J_100Stop = false;
+            //}
         }
         #endregion
 
@@ -575,24 +997,24 @@ namespace text.doors.Detection
 
         private void btn_justready_Click(object sender, EventArgs e)
         {
-            if (!_tcpClient.IsTCPLink)
+            if (!_serialPortClient.IsSerialPortLink)
             {
                 MessageBox.Show("未连接服务器", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
                 return;
             }
 
-            double yl = _tcpClient.GetZYYBYLZ(ref IsSeccess, "ZYYB");
-            if (!IsSeccess)
-            {
-                MessageBox.Show("读取设定值异常", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
-                return;
-            }
-            lbl_setYL.Text = yl.ToString();
+            //double yl = _serialPortClient.GetZYYBYLZ(ref IsSeccess, "ZYYB");
+            //if (!IsSeccess)
+            //{
+            //    MessageBox.Show("读取设定值异常", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
+            //    return;
+            //}
+            //lbl_setYL.Text = yl.ToString();
 
             IsYB = true;
             DisableBtnType();
 
-            var res = _tcpClient.SetZYYB();
+            var res = _serialPortClient.SetZYYB();
             if (!res)
             {
                 MessageBox.Show("正压预备异常", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
@@ -607,7 +1029,7 @@ namespace text.doors.Detection
         /// </summary>
         private void Stop()
         {
-            var res = _tcpClient.Stop();
+            var res = _serialPortClient.Stop();
             if (!res)
                 MessageBox.Show("急停异常", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
         }
@@ -621,22 +1043,42 @@ namespace text.doors.Detection
         {
             IsFirst = false;
 
-            double yl = _tcpClient.GetZYYBYLZ(ref IsSeccess, "ZYKS");
-            if (!IsSeccess)
-            {
-                MessageBox.Show("读取设定值异常", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
-                return;
-            }
+            //double yl = _serialPortClient.GetZYYBYLZ(ref IsSeccess, "ZYKS");
+            //if (!IsSeccess)
+            //{
+            //    MessageBox.Show("读取设定值异常", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
+            //    return;
+            //}
+            //lbl_setYL.Text = yl.ToString();
 
             IsStart = true;
             DisableBtnType();
 
+            Z_S_10Stop = true;//生正压10
+            Z_S_30Stop = true;//生正压30 
+            Z_S_50Stop = true;//生正压50 
+            Z_S_70Stop = true;//生正压70 
             Z_S_100Stop = true;//生正压100 
             Z_S_150Stop = true;//生正压150
             Z_J_100Stop = true;//降正压100
-            F_S_100Stop = true;//生负压100s
+            Z_J_70Stop = true;//降正压70
+            Z_J_50Stop = true;//降正压50
+            Z_J_30Stop = true;//降正压30
+            Z_J_10Stop = true;//降正压10
+
+
+            F_S_10Stop = true;//生负压10
+            F_S_30Stop = true;//生负压30
+            F_S_50Stop = true;//生负压50
+            F_S_70Stop = true;//生负压70
+            F_S_100Stop = true;//生负压100
             F_S_150Stop = true;//生负压150
-            F_J_100Stop = true;//降负压1500
+            F_J_100Stop = true;//降负压100
+            F_J_70Stop = true;//降负压70
+            F_J_50Stop = true;//降负压50
+            F_J_30Stop = true;//降负压30
+            F_J_10Stop = true;//降负压10
+
 
             if (rdb_fjstl.Checked)
             {
@@ -647,32 +1089,32 @@ namespace text.doors.Detection
                 new Pressure().ClearZ_Z();
             }
 
-            _tcpClient.SendZYKS(ref IsSeccess);
+            _serialPortClient.SendZYKS(ref IsSeccess);
             if (!IsSeccess)
             {
                 MessageBox.Show("正压开始异常", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
                 return;
             }
 
-            lbl_setYL.Text = yl.ToString();
+         
 
             airtightPropertyTest = PublicEnum.AirtightPropertyTest.ZStart;
         }
 
         private void btn_loseready_Click(object sender, EventArgs e)
         {
-            double yl = _tcpClient.GetZYYBYLZ(ref IsSeccess, "FYYB");
-            if (!IsSeccess)
-            {
-                MessageBox.Show("读取设定值异常", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
-                return;
-            }
-            lbl_setYL.Text = "-" + yl.ToString();
+            //double yl = _serialPortClient.GetZYYBYLZ(ref IsSeccess, "FYYB");
+            //if (!IsSeccess)
+            //{
+            //    MessageBox.Show("读取设定值异常", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
+            //    return;
+            //}
+            //lbl_setYL.Text = "-" + yl.ToString();
 
 
             IsYB = true;
             DisableBtnType();
-            var res = _tcpClient.SendFYYB();
+            var res = _serialPortClient.SendFYYB();
             if (!res)
             {
                 MessageBox.Show("负压预备异常", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
@@ -714,23 +1156,41 @@ namespace text.doors.Detection
         {
 
             IsFirst = false;
-            double yl = _tcpClient.GetZYYBYLZ(ref IsSeccess, "FYKS");
-            if (!IsSeccess)
-            {
-               // MessageBox.Show("读取设定值异常", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
-                return;
-            }
-            lbl_setYL.Text = "-" + yl.ToString();
+            //double yl = _serialPortClient.GetZYYBYLZ(ref IsSeccess, "FYKS");
+            //if (!IsSeccess)
+            //{
+            //    return;
+            //}
+            //lbl_setYL.Text = "-" + yl.ToString();
 
             IsStart = true;
             DisableBtnType();
 
+
+            Z_S_10Stop = true;//生正压10
+            Z_S_30Stop = true;//生正压30 
+            Z_S_50Stop = true;//生正压50 
+            Z_S_70Stop = true;//生正压70 
             Z_S_100Stop = true;//生正压100 
             Z_S_150Stop = true;//生正压150
             Z_J_100Stop = true;//降正压100
-            F_S_100Stop = true;//生负压100s
+            Z_J_70Stop = true;//降正压70
+            Z_J_50Stop = true;//降正压50
+            Z_J_30Stop = true;//降正压30
+            Z_J_10Stop = true;//降正压10
+
+            F_S_10Stop = true;//生负压10
+            F_S_30Stop = true;//生负压30
+            F_S_50Stop = true;//生负压50
+            F_S_70Stop = true;//生负压70
+            F_S_100Stop = true;//生负压100
             F_S_150Stop = true;//生负压150
-            F_J_100Stop = true;//降负压1500
+            F_J_100Stop = true;//降负压100
+            F_J_70Stop = true;//降负压70
+            F_J_50Stop = true;//降负压50
+            F_J_30Stop = true;//降负压30
+            F_J_10Stop = true;//降负压10
+
 
             if (rdb_fjstl.Checked)
             {
@@ -740,7 +1200,7 @@ namespace text.doors.Detection
             {
                 new Pressure().ClearF_Z();
             }
-            var res = _tcpClient.SendFYKS();
+            var res = _serialPortClient.SendFYKS();
             if (!res)
             {
                 MessageBox.Show("负压开始异常", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
@@ -807,29 +1267,107 @@ namespace text.doors.Detection
                 }
             }
 
-            for (int i = 0; i < 3; i++)
+            for (int i = 0; i < 11; i++)
             {
                 if (i == 0)
+                {
+                    model.qm_s_z_fj10 = this.dgv_WindSpeed.Rows[i].Cells["Pressure_Z"].Value.ToString();
+                    model.qm_s_z_zd10 = this.dgv_WindSpeed.Rows[i].Cells["Pressure_Z_Z"].Value.ToString();
+                    model.qm_s_f_fj10 = this.dgv_WindSpeed.Rows[i].Cells["Pressure_F"].Value.ToString();
+                    model.qm_s_f_zd10 = this.dgv_WindSpeed.Rows[i].Cells["Pressure_F_Z"].Value.ToString();
+                }
+                if (i == 1)
+                {
+                    model.qm_s_z_fj30 = this.dgv_WindSpeed.Rows[i].Cells["Pressure_Z"].Value.ToString();
+                    model.qm_s_z_zd30 = this.dgv_WindSpeed.Rows[i].Cells["Pressure_Z_Z"].Value.ToString();
+                    model.qm_s_f_fj30 = this.dgv_WindSpeed.Rows[i].Cells["Pressure_F"].Value.ToString();
+                    model.qm_s_f_zd30 = this.dgv_WindSpeed.Rows[i].Cells["Pressure_F_Z"].Value.ToString();
+                }
+                if (i == 2)
+                {
+                    model.qm_s_z_fj50 = this.dgv_WindSpeed.Rows[i].Cells["Pressure_Z"].Value.ToString();
+                    model.qm_s_z_zd50 = this.dgv_WindSpeed.Rows[i].Cells["Pressure_Z_Z"].Value.ToString();
+                    model.qm_s_f_fj50 = this.dgv_WindSpeed.Rows[i].Cells["Pressure_F"].Value.ToString();
+                    model.qm_s_f_zd50 = this.dgv_WindSpeed.Rows[i].Cells["Pressure_F_Z"].Value.ToString();
+                }
+                if (i == 3)
+                {
+                    model.qm_s_z_fj70 = this.dgv_WindSpeed.Rows[i].Cells["Pressure_Z"].Value.ToString();
+                    model.qm_s_z_zd70 = this.dgv_WindSpeed.Rows[i].Cells["Pressure_Z_Z"].Value.ToString();
+                    model.qm_s_f_fj70 = this.dgv_WindSpeed.Rows[i].Cells["Pressure_F"].Value.ToString();
+                    model.qm_s_f_zd70 = this.dgv_WindSpeed.Rows[i].Cells["Pressure_F_Z"].Value.ToString();
+                }
+                if (i == 4)
                 {
                     model.qm_s_z_fj100 = this.dgv_WindSpeed.Rows[i].Cells["Pressure_Z"].Value.ToString();
                     model.qm_s_z_zd100 = this.dgv_WindSpeed.Rows[i].Cells["Pressure_Z_Z"].Value.ToString();
                     model.qm_s_f_fj100 = this.dgv_WindSpeed.Rows[i].Cells["Pressure_F"].Value.ToString();
                     model.qm_s_f_zd100 = this.dgv_WindSpeed.Rows[i].Cells["Pressure_F_Z"].Value.ToString();
                 }
-                else if (i == 1)
+                if (i == 5)
                 {
                     model.qm_s_z_fj150 = this.dgv_WindSpeed.Rows[i].Cells["Pressure_Z"].Value.ToString();
                     model.qm_s_z_zd150 = this.dgv_WindSpeed.Rows[i].Cells["Pressure_Z_Z"].Value.ToString();
                     model.qm_s_f_fj150 = this.dgv_WindSpeed.Rows[i].Cells["Pressure_F"].Value.ToString();
                     model.qm_s_f_zd150 = this.dgv_WindSpeed.Rows[i].Cells["Pressure_F_Z"].Value.ToString();
                 }
-                else if (i == 2)
+                if (i == 6)
                 {
                     model.qm_j_z_fj100 = this.dgv_WindSpeed.Rows[i].Cells["Pressure_Z"].Value.ToString();
                     model.qm_j_z_zd100 = this.dgv_WindSpeed.Rows[i].Cells["Pressure_Z_Z"].Value.ToString();
                     model.qm_j_f_fj100 = this.dgv_WindSpeed.Rows[i].Cells["Pressure_F"].Value.ToString();
                     model.qm_j_f_zd100 = this.dgv_WindSpeed.Rows[i].Cells["Pressure_F_Z"].Value.ToString();
                 }
+                if (i == 7)
+                {
+                    model.qm_j_z_fj70 = this.dgv_WindSpeed.Rows[i].Cells["Pressure_Z"].Value.ToString();
+                    model.qm_j_z_zd70 = this.dgv_WindSpeed.Rows[i].Cells["Pressure_Z_Z"].Value.ToString();
+                    model.qm_j_f_fj70 = this.dgv_WindSpeed.Rows[i].Cells["Pressure_F"].Value.ToString();
+                    model.qm_j_f_zd70 = this.dgv_WindSpeed.Rows[i].Cells["Pressure_F_Z"].Value.ToString();
+                }
+                if (i == 8)
+                {
+                    model.qm_j_z_fj50 = this.dgv_WindSpeed.Rows[i].Cells["Pressure_Z"].Value.ToString();
+                    model.qm_j_z_zd50 = this.dgv_WindSpeed.Rows[i].Cells["Pressure_Z_Z"].Value.ToString();
+                    model.qm_j_f_fj50 = this.dgv_WindSpeed.Rows[i].Cells["Pressure_F"].Value.ToString();
+                    model.qm_j_f_zd50 = this.dgv_WindSpeed.Rows[i].Cells["Pressure_F_Z"].Value.ToString();
+                }
+                if (i == 9)
+                {
+                    model.qm_j_z_fj30 = this.dgv_WindSpeed.Rows[i].Cells["Pressure_Z"].Value.ToString();
+                    model.qm_j_z_zd30 = this.dgv_WindSpeed.Rows[i].Cells["Pressure_Z_Z"].Value.ToString();
+                    model.qm_j_f_fj30 = this.dgv_WindSpeed.Rows[i].Cells["Pressure_F"].Value.ToString();
+                    model.qm_j_f_zd30 = this.dgv_WindSpeed.Rows[i].Cells["Pressure_F_Z"].Value.ToString();
+                }
+                if (i == 10)
+                {
+                    model.qm_j_z_fj10 = this.dgv_WindSpeed.Rows[i].Cells["Pressure_Z"].Value.ToString();
+                    model.qm_j_z_zd10 = this.dgv_WindSpeed.Rows[i].Cells["Pressure_Z_Z"].Value.ToString();
+                    model.qm_j_f_fj10 = this.dgv_WindSpeed.Rows[i].Cells["Pressure_F"].Value.ToString();
+                    model.qm_j_f_zd10 = this.dgv_WindSpeed.Rows[i].Cells["Pressure_F_Z"].Value.ToString();
+                }
+
+                //if (i == 0)
+                //{
+                //    model.qm_s_z_fj100 = this.dgv_WindSpeed.Rows[i].Cells["Pressure_Z"].Value.ToString();
+                //    model.qm_s_z_zd100 = this.dgv_WindSpeed.Rows[i].Cells["Pressure_Z_Z"].Value.ToString();
+                //    model.qm_s_f_fj100 = this.dgv_WindSpeed.Rows[i].Cells["Pressure_F"].Value.ToString();
+                //    model.qm_s_f_zd100 = this.dgv_WindSpeed.Rows[i].Cells["Pressure_F_Z"].Value.ToString();
+                //}
+                //else if (i == 1)
+                //{
+                //    model.qm_s_z_fj150 = this.dgv_WindSpeed.Rows[i].Cells["Pressure_Z"].Value.ToString();
+                //    model.qm_s_z_zd150 = this.dgv_WindSpeed.Rows[i].Cells["Pressure_Z_Z"].Value.ToString();
+                //    model.qm_s_f_fj150 = this.dgv_WindSpeed.Rows[i].Cells["Pressure_F"].Value.ToString();
+                //    model.qm_s_f_zd150 = this.dgv_WindSpeed.Rows[i].Cells["Pressure_F_Z"].Value.ToString();
+                //}
+                //else if (i == 2)
+                //{
+                //    model.qm_j_z_fj100 = this.dgv_WindSpeed.Rows[i].Cells["Pressure_Z"].Value.ToString();
+                //    model.qm_j_z_zd100 = this.dgv_WindSpeed.Rows[i].Cells["Pressure_Z_Z"].Value.ToString();
+                //    model.qm_j_f_fj100 = this.dgv_WindSpeed.Rows[i].Cells["Pressure_F"].Value.ToString();
+                //    model.qm_j_f_zd100 = this.dgv_WindSpeed.Rows[i].Cells["Pressure_F_Z"].Value.ToString();
+                //}
             }
             return dal.Add(model);
         }
@@ -855,7 +1393,7 @@ namespace text.doors.Detection
                 kPa = double.Parse(dt.Rows[0]["DaQiYaLi"].ToString());
                 tempTemperature = double.Parse(dt.Rows[0]["DangQianWenDu"].ToString());
                 stitchLength = double.Parse(dt.Rows[0]["KaiQiFengChang"].ToString());
-                sumArea = double.Parse(dt.Rows[0]["ZongMianJi"].ToString());
+                sumArea = double.Parse(dt.Rows[0]["shijianmianji"].ToString());
             }
             var pressureFlow = GetPressureFlow();
             zFc = Formula.GetIndexStitchLengthAndArea(pressureFlow[0].Pressure_Z_Z, pressureFlow[0].Pressure_Z, pressureFlow[2].Pressure_Z_Z, pressureFlow[2].Pressure_Z, true, kPa, tempTemperature, stitchLength, sumArea);
@@ -876,7 +1414,7 @@ namespace text.doors.Detection
             this.btn_datadispose.Enabled = true;
             this.btn_juststart.Enabled = true;
             this.tim_Top10.Enabled = false;
-            lbl_setYL.Text = "0";
+            //lbl_setYL.Text = "0";
             BindWindSpeedBase();
             BindFlowBase();
             airtightPropertyTest = PublicEnum.AirtightPropertyTest.Stop;
@@ -889,33 +1427,31 @@ namespace text.doors.Detection
         /// <param name="e"></param>
         private void tim_getType_Tick(object sender, EventArgs e)
         {
-            if (_tcpClient.IsTCPLink)
+            if (_serialPortClient.IsSerialPortLink)
             {
                 if (airtightPropertyTest == null) { return; }
 
                 if (airtightPropertyTest == PublicEnum.AirtightPropertyTest.ZReady)
                 {
-                    int value = _tcpClient.GetZYYBJS(ref IsSeccess);
+                    int value = _serialPortClient.GetZYYBJS(ref IsSeccess);
 
                     if (!IsSeccess)
                     {
-                        //MessageBox.Show("正压预备结束状态异常", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
                         return;
                     }
                     if (value == 3)
                     {
                         airtightPropertyTest = PublicEnum.AirtightPropertyTest.Stop;
-                        lbl_setYL.Text = "0";
+                        //lbl_setYL.Text = "0";
                         OpenBtnType();
                     }
                 }
                 if (airtightPropertyTest == PublicEnum.AirtightPropertyTest.ZStart)
                 {
-                    double value = _tcpClient.GetZYKSJS(ref IsSeccess);
+                    double value = _serialPortClient.GetZYKSJS(ref IsSeccess);
 
                     if (!IsSeccess)
                     {
-                       // MessageBox.Show("正压开始结束状态异常", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
                         return;
                     }
                     if (value >= 15)
@@ -923,31 +1459,30 @@ namespace text.doors.Detection
                         airtightPropertyTest = PublicEnum.AirtightPropertyTest.Stop;
                         IsStart = false;
                         Thread.Sleep(1000);
-                        lbl_setYL.Text = "0";
+                        //lbl_setYL.Text = "0";
                         OpenBtnType();
                     }
                 }
 
                 if (airtightPropertyTest == PublicEnum.AirtightPropertyTest.FReady)
                 {
-                    int value = _tcpClient.GetFYYBJS(ref IsSeccess);
+                    int value = _serialPortClient.GetFYYBJS(ref IsSeccess);
 
                     if (!IsSeccess)
                     {
-                     //   MessageBox.Show("负压预备结束状态异常", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
                         return;
                     }
                     if (value == 3)
                     {
                         airtightPropertyTest = PublicEnum.AirtightPropertyTest.Stop;
-                        lbl_setYL.Text = "0";
+                        //lbl_setYL.Text = "0";
                         OpenBtnType();
                     }
                 }
 
                 if (airtightPropertyTest == PublicEnum.AirtightPropertyTest.FStart)
                 {
-                    double value = _tcpClient.GetFYKSJS(ref IsSeccess);
+                    double value = _serialPortClient.GetFYKSJS(ref IsSeccess);
 
                     if (!IsSeccess)
                     {
@@ -958,7 +1493,7 @@ namespace text.doors.Detection
                     {
                         IsStart = false;
                         Thread.Sleep(1000);
-                        lbl_setYL.Text = "0";
+                        //lbl_setYL.Text = "0";
                         OpenBtnType();
                     }
                 }
@@ -969,7 +1504,7 @@ namespace text.doors.Detection
         {
             try
             {
-                if (_tcpClient.IsTCPLink)
+                if (_serialPortClient.IsSerialPortLink)
                 {
                     BindWindSpeedBase();
                     BindFlowBase();
