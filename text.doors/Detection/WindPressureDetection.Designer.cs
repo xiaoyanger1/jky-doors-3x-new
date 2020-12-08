@@ -29,9 +29,11 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(WindPressureDetection));
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.btn_gbjc = new System.Windows.Forms.Button();
+            this.txt_gbjc = new System.Windows.Forms.TextBox();
+            this.label29 = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
             this.label28 = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
@@ -56,6 +58,14 @@
             this.label18 = new System.Windows.Forms.Label();
             this.txt_desc = new System.Windows.Forms.TextBox();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
+            this.txt_fpmax = new System.Windows.Forms.TextBox();
+            this.btn_fpmax = new System.Windows.Forms.Button();
+            this.label32 = new System.Windows.Forms.Label();
+            this.label33 = new System.Windows.Forms.Label();
+            this.txt_zpmax = new System.Windows.Forms.TextBox();
+            this.btn_zpmax = new System.Windows.Forms.Button();
+            this.label30 = new System.Windows.Forms.Label();
+            this.label31 = new System.Windows.Forms.Label();
             this.txt_f_p3 = new System.Windows.Forms.TextBox();
             this.btn_zaq = new System.Windows.Forms.Button();
             this.txt_p3 = new System.Windows.Forms.TextBox();
@@ -109,17 +119,6 @@
             this.tim_view = new System.Windows.Forms.Timer(this.components);
             this.char_cms_click = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.btn_gbjc = new System.Windows.Forms.Button();
-            this.txt_gbjc = new System.Windows.Forms.TextBox();
-            this.label29 = new System.Windows.Forms.Label();
-            this.txt_zpmax = new System.Windows.Forms.TextBox();
-            this.btn_zpmax = new System.Windows.Forms.Button();
-            this.label30 = new System.Windows.Forms.Label();
-            this.label31 = new System.Windows.Forms.Label();
-            this.txt_fpmax = new System.Windows.Forms.TextBox();
-            this.btn_fpmax = new System.Windows.Forms.Button();
-            this.label32 = new System.Windows.Forms.Label();
-            this.label33 = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -172,6 +171,33 @@
             this.tabPage1.Size = new System.Drawing.Size(1111, 750);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "抗风压检测";
+            // 
+            // btn_gbjc
+            // 
+            this.btn_gbjc.Location = new System.Drawing.Point(912, 109);
+            this.btn_gbjc.Name = "btn_gbjc";
+            this.btn_gbjc.Size = new System.Drawing.Size(75, 23);
+            this.btn_gbjc.TabIndex = 58;
+            this.btn_gbjc.Text = "改变级差";
+            this.btn_gbjc.UseVisualStyleBackColor = true;
+            this.btn_gbjc.Click += new System.EventHandler(this.btn_gbjc_Click);
+            // 
+            // txt_gbjc
+            // 
+            this.txt_gbjc.Location = new System.Drawing.Point(1003, 111);
+            this.txt_gbjc.Name = "txt_gbjc";
+            this.txt_gbjc.Size = new System.Drawing.Size(61, 21);
+            this.txt_gbjc.TabIndex = 57;
+            this.txt_gbjc.Text = "0";
+            // 
+            // label29
+            // 
+            this.label29.AutoSize = true;
+            this.label29.Location = new System.Drawing.Point(1068, 116);
+            this.label29.Name = "label29";
+            this.label29.Size = new System.Drawing.Size(17, 12);
+            this.label29.TabIndex = 56;
+            this.label29.Text = "Pa";
             // 
             // panel2
             // 
@@ -472,6 +498,78 @@
             this.groupBox5.TabIndex = 24;
             this.groupBox5.TabStop = false;
             this.groupBox5.Text = "安全检测";
+            // 
+            // txt_fpmax
+            // 
+            this.txt_fpmax.Location = new System.Drawing.Point(36, 102);
+            this.txt_fpmax.Name = "txt_fpmax";
+            this.txt_fpmax.Size = new System.Drawing.Size(55, 21);
+            this.txt_fpmax.TabIndex = 48;
+            this.txt_fpmax.Text = "0";
+            // 
+            // btn_fpmax
+            // 
+            this.btn_fpmax.Location = new System.Drawing.Point(119, 104);
+            this.btn_fpmax.Name = "btn_fpmax";
+            this.btn_fpmax.Size = new System.Drawing.Size(75, 23);
+            this.btn_fpmax.TabIndex = 45;
+            this.btn_fpmax.Text = "负Pmax";
+            this.btn_fpmax.UseVisualStyleBackColor = true;
+            this.btn_fpmax.Click += new System.EventHandler(this.btn_fpmax_Click);
+            // 
+            // label32
+            // 
+            this.label32.AutoSize = true;
+            this.label32.Location = new System.Drawing.Point(94, 107);
+            this.label32.Name = "label32";
+            this.label32.Size = new System.Drawing.Size(17, 12);
+            this.label32.TabIndex = 47;
+            this.label32.Text = "Pa";
+            // 
+            // label33
+            // 
+            this.label33.AutoSize = true;
+            this.label33.Location = new System.Drawing.Point(-1, 106);
+            this.label33.Name = "label33";
+            this.label33.Size = new System.Drawing.Size(35, 12);
+            this.label33.TabIndex = 46;
+            this.label33.Text = "-Pmax";
+            // 
+            // txt_zpmax
+            // 
+            this.txt_zpmax.Location = new System.Drawing.Point(36, 75);
+            this.txt_zpmax.Name = "txt_zpmax";
+            this.txt_zpmax.Size = new System.Drawing.Size(55, 21);
+            this.txt_zpmax.TabIndex = 44;
+            this.txt_zpmax.Text = "0";
+            // 
+            // btn_zpmax
+            // 
+            this.btn_zpmax.Location = new System.Drawing.Point(119, 77);
+            this.btn_zpmax.Name = "btn_zpmax";
+            this.btn_zpmax.Size = new System.Drawing.Size(75, 23);
+            this.btn_zpmax.TabIndex = 41;
+            this.btn_zpmax.Text = "正Pmax";
+            this.btn_zpmax.UseVisualStyleBackColor = true;
+            this.btn_zpmax.Click += new System.EventHandler(this.btn_zpmax_Click);
+            // 
+            // label30
+            // 
+            this.label30.AutoSize = true;
+            this.label30.Location = new System.Drawing.Point(94, 80);
+            this.label30.Name = "label30";
+            this.label30.Size = new System.Drawing.Size(17, 12);
+            this.label30.TabIndex = 43;
+            this.label30.Text = "Pa";
+            // 
+            // label31
+            // 
+            this.label31.AutoSize = true;
+            this.label31.Location = new System.Drawing.Point(5, 79);
+            this.label31.Name = "label31";
+            this.label31.Size = new System.Drawing.Size(29, 12);
+            this.label31.TabIndex = 42;
+            this.label31.Text = "Pmax";
             // 
             // txt_f_p3
             // 
@@ -929,7 +1027,7 @@
             // tim_PainPic
             // 
             this.tim_PainPic.Enabled = true;
-            this.tim_PainPic.Interval = 800;
+            this.tim_PainPic.Interval = 500;
             this.tim_PainPic.Tick += new System.EventHandler(this.tim_PainPic_Tick);
             // 
             // tim_wyData
@@ -970,105 +1068,6 @@
             this.toolStripMenuItem1.Size = new System.Drawing.Size(124, 22);
             this.toolStripMenuItem1.Text = "导出图片";
             this.toolStripMenuItem1.Click += new System.EventHandler(this.toolStripMenuItem1_Click);
-            // 
-            // btn_gbjc
-            // 
-            this.btn_gbjc.Location = new System.Drawing.Point(912, 109);
-            this.btn_gbjc.Name = "btn_gbjc";
-            this.btn_gbjc.Size = new System.Drawing.Size(75, 23);
-            this.btn_gbjc.TabIndex = 58;
-            this.btn_gbjc.Text = "改变级差";
-            this.btn_gbjc.UseVisualStyleBackColor = true;
-            this.btn_gbjc.Click += new System.EventHandler(this.btn_gbjc_Click);
-            // 
-            // txt_gbjc
-            // 
-            this.txt_gbjc.Location = new System.Drawing.Point(1003, 111);
-            this.txt_gbjc.Name = "txt_gbjc";
-            this.txt_gbjc.Size = new System.Drawing.Size(61, 21);
-            this.txt_gbjc.TabIndex = 57;
-            this.txt_gbjc.Text = "0";
-            // 
-            // label29
-            // 
-            this.label29.AutoSize = true;
-            this.label29.Location = new System.Drawing.Point(1068, 116);
-            this.label29.Name = "label29";
-            this.label29.Size = new System.Drawing.Size(17, 12);
-            this.label29.TabIndex = 56;
-            this.label29.Text = "Pa";
-            // 
-            // txt_zpmax
-            // 
-            this.txt_zpmax.Location = new System.Drawing.Point(36, 75);
-            this.txt_zpmax.Name = "txt_zpmax";
-            this.txt_zpmax.Size = new System.Drawing.Size(55, 21);
-            this.txt_zpmax.TabIndex = 44;
-            this.txt_zpmax.Text = "0";
-            // 
-            // btn_zpmax
-            // 
-            this.btn_zpmax.Location = new System.Drawing.Point(119, 77);
-            this.btn_zpmax.Name = "btn_zpmax";
-            this.btn_zpmax.Size = new System.Drawing.Size(75, 23);
-            this.btn_zpmax.TabIndex = 41;
-            this.btn_zpmax.Text = "正Pmax";
-            this.btn_zpmax.UseVisualStyleBackColor = true;
-            this.btn_zpmax.Click += new System.EventHandler(this.btn_zpmax_Click);
-            // 
-            // label30
-            // 
-            this.label30.AutoSize = true;
-            this.label30.Location = new System.Drawing.Point(94, 80);
-            this.label30.Name = "label30";
-            this.label30.Size = new System.Drawing.Size(17, 12);
-            this.label30.TabIndex = 43;
-            this.label30.Text = "Pa";
-            // 
-            // label31
-            // 
-            this.label31.AutoSize = true;
-            this.label31.Location = new System.Drawing.Point(5, 79);
-            this.label31.Name = "label31";
-            this.label31.Size = new System.Drawing.Size(29, 12);
-            this.label31.TabIndex = 42;
-            this.label31.Text = "Pmax";
-            // 
-            // txt_fpmax
-            // 
-            this.txt_fpmax.Location = new System.Drawing.Point(36, 102);
-            this.txt_fpmax.Name = "txt_fpmax";
-            this.txt_fpmax.Size = new System.Drawing.Size(55, 21);
-            this.txt_fpmax.TabIndex = 48;
-            this.txt_fpmax.Text = "0";
-            // 
-            // btn_fpmax
-            // 
-            this.btn_fpmax.Location = new System.Drawing.Point(119, 104);
-            this.btn_fpmax.Name = "btn_fpmax";
-            this.btn_fpmax.Size = new System.Drawing.Size(75, 23);
-            this.btn_fpmax.TabIndex = 45;
-            this.btn_fpmax.Text = "负Pmax";
-            this.btn_fpmax.UseVisualStyleBackColor = true;
-            this.btn_fpmax.Click += new System.EventHandler(this.btn_fpmax_Click);
-            // 
-            // label32
-            // 
-            this.label32.AutoSize = true;
-            this.label32.Location = new System.Drawing.Point(94, 107);
-            this.label32.Name = "label32";
-            this.label32.Size = new System.Drawing.Size(17, 12);
-            this.label32.TabIndex = 47;
-            this.label32.Text = "Pa";
-            // 
-            // label33
-            // 
-            this.label33.AutoSize = true;
-            this.label33.Location = new System.Drawing.Point(-1, 106);
-            this.label33.Name = "label33";
-            this.label33.Size = new System.Drawing.Size(35, 12);
-            this.label33.TabIndex = 46;
-            this.label33.Text = "-Pmax";
             // 
             // WindPressureDetection
             // 

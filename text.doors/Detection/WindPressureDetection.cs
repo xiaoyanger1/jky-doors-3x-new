@@ -654,13 +654,10 @@ namespace text.doors.Detection
         {
             if (!_serialPortClient.sp.IsOpen)
                 return;
-            var IsSeccess = true;
             //抗风压
             var displace1 = _serialPortClient.GetDisplace1();
             var displace2 = _serialPortClient.GetDisplace2();
-            if (!IsSeccess) return;
             var displace3 = _serialPortClient.GetDisplace3();
-            if (!IsSeccess) return;
 
             txt_wy1.Text = displace1.ToString();
             txt_wy2.Text = displace2.ToString();
