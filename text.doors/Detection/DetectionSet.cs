@@ -81,6 +81,7 @@ namespace text.doors.Detection
                     this.btn_select.Enabled = true;
                     this.btn_delete.Enabled = true;
                     this.btn_Ok.Enabled = true;
+
                     this.Close();
                 }
             }

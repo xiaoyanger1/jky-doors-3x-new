@@ -13,6 +13,11 @@ namespace text.doors.Model.DataBase
         /// 樘号
         /// </summary>
         public string info_DangH { get; set; }
+
+        /// <summary>
+        /// 测试次数
+        /// </summary>
+        public int testcount { get; set; }
         /// <summary>
         /// 正压缝长
         /// </summary>

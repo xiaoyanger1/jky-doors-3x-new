@@ -161,6 +161,21 @@ namespace text.doors
         /// </summary>
         private void ShowDetectionSet()
         {
+            if (pl_showItem.Controls.Count > 0)
+            {
+                foreach (Control con in this.pl_showItem.Controls)
+                {
+                    if (con is DetectionSet)
+                    {
+                    }
+                    else
+                    {
+                        ((Form)con).Close();
+                    }
+                }
+
+            }
+
             this.pl_showItem.Controls.Clear();
             DetectionSet ds = new DetectionSet(_temperature, _temppressure, _tempCode, _tempTong);
             ds.deleBottomTypeEvent += new DetectionSet.deleBottomType(SelectDangHao);
@@ -175,8 +190,22 @@ namespace text.doors
         /// </summary>
         private void ShowWatertightDetection()
         {
-            WatertightDetection rts = new WatertightDetection(_serialPortClient, _tempCode, _tempTong);
+            if (pl_showItem.Controls.Count > 0)
+            {
+                foreach (Control con in this.pl_showItem.Controls)
+                {
+                    if (con is DetectionSet)
+                    {
+                    }
+                    else
+                    {
+                        ((Form)con).Close();
+                    }
+                }
+            }
             this.pl_showItem.Controls.Clear();
+            WatertightDetection rts = new WatertightDetection(_serialPortClient, _tempCode, _tempTong);
+
             rts.TopLevel = false;
             rts.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             rts.Parent = this.pl_showItem;
@@ -187,8 +216,22 @@ namespace text.doors
         /// </summary>
         private void ShowAirtightDetection()
         {
-            AirtightDetection rts = new AirtightDetection(_serialPortClient, _tempCode, _tempTong);
+            if (pl_showItem.Controls.Count > 0)
+            {
+                foreach (Control con in this.pl_showItem.Controls)
+                {
+                    if (con is DetectionSet)
+                    {
+                    }
+                    else
+                    {
+                        ((Form)con).Close();
+                    }
+                }
+            }
             this.pl_showItem.Controls.Clear();
+
+            AirtightDetection rts = new AirtightDetection(_serialPortClient, _tempCode, _tempTong);
             rts.TopLevel = false;
             rts.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             rts.Parent = this.pl_showItem;
@@ -200,6 +243,21 @@ namespace text.doors
         /// </summary>
         private void ShowWindPressure()
         {
+            if (pl_showItem.Controls.Count > 0)
+            {
+                foreach (Control con in this.pl_showItem.Controls)
+                {
+                    if (con is DetectionSet)
+                    {
+                    }
+                    else
+                    {
+                        ((Form)con).Close();
+                    }
+                }
+            }
+            this.pl_showItem.Controls.Clear();
+
             WindPressureDetection rts = new WindPressureDetection(_serialPortClient, _tempCode, _tempTong);
             this.pl_showItem.Controls.Clear();
             rts.TopLevel = false;

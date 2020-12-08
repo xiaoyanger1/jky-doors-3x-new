@@ -67,6 +67,9 @@ namespace text.doors.Model
             Pressure_Z_Z = 0.00;
             Pressure_F = 0.00;
             Pressure_F_Z = 0.00;
+
+
+
         }
 
         public List<Pressure> ClearZ_F()
@@ -142,6 +145,8 @@ namespace text.doors.Model
             return GetPressure();
         }
 
+        //实验次数
+        public int TestCount { get; set; }
 
 
         //压力pa

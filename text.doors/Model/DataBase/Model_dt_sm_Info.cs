@@ -9,6 +9,11 @@ namespace text.doors.Model.DataBase
     public class Model_dt_sm_Info
     {
         public string dt_Code { get; set; }
+
+        /// <summary>
+        /// 樘号描述
+        /// </summary>
+        public int testcount { get; set; }
         /// <summary>
         /// 樘号描述
         /// </summary>

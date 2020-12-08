@@ -169,5 +169,11 @@ namespace text.doors.Default
             水密性能及抗风压性能检测
         }
 
+        public enum QM_TestCount
+        {
+            第一次 = 1,
+            第二次 = 2
+        }
+
     }
 }

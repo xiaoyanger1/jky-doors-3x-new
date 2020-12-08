@@ -21,7 +21,7 @@ namespace text.doors.dal
         public bool Add(Model_dt_qm_Info model)
         {
             //删除结果
-            SQLiteHelper.ExecuteNonQuery("delete from dt_qm_Info where dt_Code='" + model.dt_Code + "' and info_DangH = '" + model.info_DangH + "'");
+            SQLiteHelper.ExecuteNonQuery("delete from dt_qm_Info where testcount= " + model.testcount + "  and dt_Code='" + model.dt_Code + "' and info_DangH = '" + model.info_DangH + "'");
 
             var sql = string.Format(@"insert into dt_qm_Info (dt_Code,info_DangH,qm_Z_FC,qm_F_FC,qm_Z_MJ,qm_F_MJ,
                         qm_s_z_fj10  ,
@@ -70,10 +70,10 @@ namespace text.doors.dal
                         qm_j_f_zd70  ,
                         qm_j_f_zd50  ,
                         qm_j_f_zd30  ,
-                        qm_j_f_zd10     
+                        qm_j_f_zd10  ,
                         ) 
                 values('{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}','{9}','{10}','{11}','{12}','{13}','{14}','{15}','{16}','{17}','{18}','{19}','{20}','{21}','{22}','{23}','{24}','{25}','{26}','{27}'
-                      ,'{28}','{29}','{30}','{31}','{32}','{33}','{34}','{35}','{36}','{37}','{38}','{39}','{40}','{41}','{42}','{43}','{44}','{45}','{46}','{47}','{48}','{49}')",
+                      ,'{28}','{29}','{30}','{31}','{32}','{33}','{34}','{35}','{36}','{37}','{38}','{39}','{40}','{41}','{42}','{43}','{44}','{45}','{46}','{47}','{48}','{49}',{50})",
                  model.dt_Code, model.info_DangH, model.qm_Z_FC, model.qm_F_FC, model.qm_Z_MJ, model.qm_F_MJ,
                  model.qm_s_z_fj10,
                  model.qm_s_z_fj30,
@@ -121,8 +121,8 @@ namespace text.doors.dal
                  model.qm_j_f_zd70,
                  model.qm_j_f_zd50,
                  model.qm_j_f_zd30,
-                 model.qm_j_f_zd10
-
+                 model.qm_j_f_zd10,
+                 model.testcount
                  );
             var res = SQLiteHelper.ExecuteNonQuery(sql) > 0 ? true : false;
             if (res)
@@ -141,7 +141,7 @@ namespace text.doors.dal
                 var sql = "";
                 foreach (var item in settings.dt_sm_Info)
                 {
-                    sql += $"update  dt_sm_Info set sm_PaDesc = '{item.sm_PaDesc}', sm_Pa='{item.sm_Pa}', sm_Remark='{item.sm_Remark}' where dt_Code ='{item.dt_Code}' and info_DangH='{item.info_DangH}';    ";
+                    sql += $"update  dt_sm_Info set sm_PaDesc = '{item.sm_PaDesc}', sm_Pa='{item.sm_Pa}', sm_Remark='{item.sm_Remark}' where dt_Code ='{item.dt_Code}' and info_DangH='{item.info_DangH}';";
                 }
                 SQLiteHelper.ExecuteNonQuery(sql);
             }
