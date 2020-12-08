@@ -1796,12 +1796,14 @@ namespace text.doors.Detection
 
         private void btn_ycjy_z_Click(object sender, EventArgs e)
         {
-            this.txt_ycjy_z.Enabled = true;
+            this.btn_ycjy_z.Enabled = false;
             int value = 0;
             int.TryParse(txt_ycjy_z.Text, out value);
 
-            if (value == 0)
+            if (value == 0) {
+                this.btn_ycjy_z.Enabled = true;
                 return;
+            }
             var res = _serialPortClient.Set_FY_Value(BFMCommand.正依次加压值, BFMCommand.正依次加压, value);
             if (!res)
             {
@@ -1810,16 +1812,21 @@ namespace text.doors.Detection
             }
 
             airtightPropertyTest = PublicEnum.AirtightPropertyTest.ZYCJY;
+            this.btn_ycjy_z.Enabled = true;
         }
 
         private void btn_ycjyf_Click(object sender, EventArgs e)
         {
-            this.btn_ycjyf.Enabled = true;
+            this.btn_ycjyf.Enabled = false;
             int value = 0;
-            int.TryParse(btn_ycjyf.Text, out value);
 
-            if (value == 0)
+            int.TryParse(txt_ycjy_f.Text, out value);
+
+            if (value == 0) {
+                this.btn_ycjyf.Enabled = true;
                 return;
+            }
+               
             var res = _serialPortClient.Set_FY_Value(BFMCommand.负依次加压值, BFMCommand.负依次加压, value);
             if (!res)
             {
@@ -1827,6 +1834,7 @@ namespace text.doors.Detection
                 return;
             }
             airtightPropertyTest = PublicEnum.AirtightPropertyTest.FYCJY;
+            this.btn_ycjyf.Enabled = true;
         }
 
         private void tim_getsjz_Tick(object sender, EventArgs e)

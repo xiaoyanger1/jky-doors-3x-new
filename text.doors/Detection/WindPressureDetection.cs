@@ -110,7 +110,7 @@ namespace text.doors.Detection
         private void FYchartInit()
         {
             dtnow = DateTime.Now;
-            qm_Line.GetVertAxis.SetMinMax(-5000, 5000);
+            qm_Line.GetVertAxis.SetMinMax(-8000, 8000);
         }
 
         private void BindData()

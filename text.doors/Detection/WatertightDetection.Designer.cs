@@ -207,7 +207,7 @@
             this.groupBox10.Controls.Add(this.lbl_smjc);
             this.groupBox10.Location = new System.Drawing.Point(8, 18);
             this.groupBox10.Name = "groupBox10";
-            this.groupBox10.Size = new System.Drawing.Size(853, 75);
+            this.groupBox10.Size = new System.Drawing.Size(853, 61);
             this.groupBox10.TabIndex = 18;
             this.groupBox10.TabStop = false;
             this.groupBox10.Text = "状态";
@@ -216,7 +216,7 @@
             // 
             this.lbldqyl.AutoSize = true;
             this.lbldqyl.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.lbldqyl.Location = new System.Drawing.Point(704, 34);
+            this.lbldqyl.Location = new System.Drawing.Point(704, 25);
             this.lbldqyl.Name = "lbldqyl";
             this.lbldqyl.Size = new System.Drawing.Size(17, 16);
             this.lbldqyl.TabIndex = 29;
@@ -226,7 +226,7 @@
             // 
             this.label19.AutoSize = true;
             this.label19.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.label19.Location = new System.Drawing.Point(528, 34);
+            this.label19.Location = new System.Drawing.Point(528, 25);
             this.label19.Name = "label19";
             this.label19.Size = new System.Drawing.Size(144, 16);
             this.label19.TabIndex = 27;
@@ -236,7 +236,7 @@
             // 
             this.lbl_smjc.AutoSize = true;
             this.lbl_smjc.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.lbl_smjc.Location = new System.Drawing.Point(77, 34);
+            this.lbl_smjc.Location = new System.Drawing.Point(77, 25);
             this.lbl_smjc.Name = "lbl_smjc";
             this.lbl_smjc.Size = new System.Drawing.Size(257, 16);
             this.lbl_smjc.TabIndex = 25;
@@ -245,7 +245,7 @@
             // groupBox8
             // 
             this.groupBox8.Controls.Add(this.tChart_sm);
-            this.groupBox8.Location = new System.Drawing.Point(8, 99);
+            this.groupBox8.Location = new System.Drawing.Point(8, 89);
             this.groupBox8.Name = "groupBox8";
             this.groupBox8.Size = new System.Drawing.Size(853, 524);
             this.groupBox8.TabIndex = 6;
@@ -341,7 +341,7 @@
             this.tChart_sm.Panel.MarginRight = 2D;
             this.tChart_sm.Panel.MarginTop = 0D;
             this.tChart_sm.Series.Add(this.sm_Line);
-            this.tChart_sm.Size = new System.Drawing.Size(840, 459);
+            this.tChart_sm.Size = new System.Drawing.Size(840, 434);
             this.tChart_sm.TabIndex = 0;
             this.tChart_sm.MouseDown += new System.Windows.Forms.MouseEventHandler(this.tChart_sm_MouseDown);
             // 
@@ -414,7 +414,7 @@
             this.groupBox4.Controls.Add(this.btn_start);
             this.groupBox4.Controls.Add(this.btn_ready);
             this.groupBox4.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.groupBox4.Location = new System.Drawing.Point(868, 572);
+            this.groupBox4.Location = new System.Drawing.Point(868, 569);
             this.groupBox4.Name = "groupBox4";
             this.groupBox4.Size = new System.Drawing.Size(282, 52);
             this.groupBox4.TabIndex = 2;
