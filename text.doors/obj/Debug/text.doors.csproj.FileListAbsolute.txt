@@ -104,9 +104,6 @@ E:\08-GitHub\jky-doors-3x-liu\text.doors\obj\Debug\text.doors.csproj.CoreCompile
 E:\08-GitHub\jky-doors-3x-liu\text.doors\obj\Debug\text.doors.csproj.CopyComplete
 E:\08-GitHub\jky-doors-3x-liu\text.doors\obj\Debug\门窗现场三性检测.exe
 E:\08-GitHub\jky-doors-3x-liu\text.doors\obj\Debug\门窗现场三性检测.pdb
-E:\08-GitHub\jky-doors-3x-new\text.doors\bin\Debug\门窗现场三性检测.exe.config
-E:\08-GitHub\jky-doors-3x-new\text.doors\bin\Debug\门窗现场三性检测.exe
-E:\08-GitHub\jky-doors-3x-new\text.doors\bin\Debug\门窗现场三性检测.pdb
 E:\08-GitHub\jky-doors-3x-new\text.doors\bin\Debug\AForge.Controls.dll
 E:\08-GitHub\jky-doors-3x-new\text.doors\bin\Debug\AForge.dll
 E:\08-GitHub\jky-doors-3x-new\text.doors\bin\Debug\AForge.Imaging.dll
@@ -153,5 +150,8 @@ E:\08-GitHub\jky-doors-3x-new\text.doors\obj\Debug\text.doors.UpdatePassWord.res
 E:\08-GitHub\jky-doors-3x-new\text.doors\obj\Debug\text.doors.csproj.GenerateResource.cache
 E:\08-GitHub\jky-doors-3x-new\text.doors\obj\Debug\text.doors.csproj.CoreCompileInputs.cache
 E:\08-GitHub\jky-doors-3x-new\text.doors\obj\Debug\text.doors.csproj.CopyComplete
-E:\08-GitHub\jky-doors-3x-new\text.doors\obj\Debug\门窗现场三性检测.exe
-E:\08-GitHub\jky-doors-3x-new\text.doors\obj\Debug\门窗现场三性检测.pdb
+E:\08-GitHub\jky-doors-3x-new\text.doors\bin\Debug\建筑外门窗物理性能检测系统.exe.config
+E:\08-GitHub\jky-doors-3x-new\text.doors\bin\Debug\建筑外门窗物理性能检测系统.exe
+E:\08-GitHub\jky-doors-3x-new\text.doors\bin\Debug\建筑外门窗物理性能检测系统.pdb
+E:\08-GitHub\jky-doors-3x-new\text.doors\obj\Debug\建筑外门窗物理性能检测系统.exe
+E:\08-GitHub\jky-doors-3x-new\text.doors\obj\Debug\建筑外门窗物理性能检测系统.pdb

@@ -10,6 +10,7 @@ namespace text.doors.Model.DataBase
     {
         public string dt_Code { get; set; }
         public string info_DangH { get; set; }
+        public int defJC { get; set; }
 
         public string z_one_250 { get; set; }
         public string z_one_500 { get; set; }

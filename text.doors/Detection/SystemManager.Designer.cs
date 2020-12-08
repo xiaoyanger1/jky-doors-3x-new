@@ -65,7 +65,7 @@
             this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.Location = new System.Drawing.Point(27, 26);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(315, 207);
+            this.groupBox1.Size = new System.Drawing.Size(315, 253);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "系统设置";
@@ -74,7 +74,7 @@
             // 
             this.cb_ProtName.FormattingEnabled = true;
             this.cb_ProtName.Location = new System.Drawing.Point(121, 20);
-            this.cb_ProtName.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.cb_ProtName.Margin = new System.Windows.Forms.Padding(2);
             this.cb_ProtName.Name = "cb_ProtName";
             this.cb_ProtName.Size = new System.Drawing.Size(101, 20);
             this.cb_ProtName.TabIndex = 185;
@@ -135,7 +135,7 @@
             // 
             // btn_save
             // 
-            this.btn_save.Location = new System.Drawing.Point(235, 166);
+            this.btn_save.Location = new System.Drawing.Point(121, 204);
             this.btn_save.Name = "btn_save";
             this.btn_save.Size = new System.Drawing.Size(75, 23);
             this.btn_save.TabIndex = 2;
@@ -200,7 +200,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(373, 242);
+            this.ClientSize = new System.Drawing.Size(373, 291);
             this.Controls.Add(this.groupBox1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "SystemManager";

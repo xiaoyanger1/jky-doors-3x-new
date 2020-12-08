@@ -49,6 +49,7 @@ namespace text.doors
 
         public MainForm()
         {
+            
             InitializeComponent();
 
             //ExamineLAN();
@@ -292,13 +293,13 @@ namespace text.doors
                 lbl_cydcgq.Text = diffPressD.ToString();
 
                 //抗风压
-                var displace1 = _serialPortClient.GetDisplace1();
-                var displace2 = _serialPortClient.GetDisplace2();
-                var displace3 = _serialPortClient.GetDisplace3();
+                //var displace1 = _serialPortClient.GetDisplace1();
+                //var displace2 = _serialPortClient.GetDisplace2();
+                //var displace3 = _serialPortClient.GetDisplace3();
 
-                lbl_Displace1.Text = displace1.ToString();
-                lbl_Displace2.Text = displace2.ToString();
-                lbl_Displace3.Text = displace3.ToString();
+                //lbl_Displace1.Text = displace1.ToString();
+                //lbl_Displace2.Text = displace2.ToString();
+                //lbl_Displace3.Text = displace3.ToString();
 
                 #endregion
 
@@ -615,10 +616,9 @@ namespace text.doors
 
         }
 
-        private bool _KaiGuanLiangKongZhiStat = false;
         private void btn_kglkz_Click(object sender, EventArgs e)
         {
-            if (!_serialPortClient.Sendkglkz(ref _KaiGuanLiangKongZhiStat))
+            if (!_serialPortClient.Sendkglkz())
             {
                 MessageBox.Show("开关量控制异常,请确认服务器连接是否成功!", "设置", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
             }

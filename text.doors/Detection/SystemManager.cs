@@ -56,6 +56,11 @@ namespace text.doors.Detection
             SaveConfig(this.txt_Parity.Text, "Parity");
             SaveConfig(this.txt_StopBits.Text, "StopBits");
             SaveConfig(this.txt_PipeDiameter.Text, "PipeDiameter");
+
+
+            MessageBox.Show("保存成功,请重启软件", "风机", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
+            Application.Exit();
+
         }
 
         private string GetConfigSetting(string value)

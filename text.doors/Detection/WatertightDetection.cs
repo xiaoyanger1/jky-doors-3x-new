@@ -936,7 +936,7 @@ namespace text.doors.Detection
         private void txt_zgfy_KeyPress(object sender, KeyPressEventArgs e)
         {
             try
-            {   
+            {
                 int zgfy = int.Parse(txt_zgfy.Text);
                 CheckValue = zgfy;
             }
@@ -965,14 +965,9 @@ namespace text.doors.Detection
             model.sm_PaDesc = CheckPosition + "," + CheckProblem;
             model.sm_Remark = txt_desc.Text;
 
-            if (this.tabControl1.SelectedTab.Name == "水密")
-            {
-                model.testcount = 1;
-            }
-            else if (this.tabControl1.SelectedTab.Name == "重复水密")
-            {
-                model.testcount = 2;
-            }
+
+            model.testcount = 1;
+
 
             if (this.rdb_bdjy.Checked == true)
             {
@@ -1398,9 +1393,35 @@ namespace text.doors.Detection
             txt_zgfy_cf.Text = CheckValue.ToString();
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void btn_1sjcl_Click(object sender, EventArgs e)
         {
+            if (string.IsNullOrWhiteSpace(CheckPosition) || string.IsNullOrWhiteSpace(CheckProblem))
+            {
+                MessageBox.Show("选择失去焦点，请重新选择检测记录！", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
+                return;
+            }
+            Model_dt_sm_Info model = new Model_dt_sm_Info();
+            model.dt_Code = _tempCode;
+            model.info_DangH = _tempTong;
+            model.sm_Pa = CheckValue.ToString();
+            model.sm_PaDesc = CheckPosition + "," + CheckProblem;
+            model.sm_Remark = txt_desc_cf.Text;
+            model.testcount = 2;
 
+
+            if (this.rdb_bdjy.Checked == true)
+            {
+                model.Method = "波动加压";
+            }
+            else
+            {
+                model.Method = "稳定加压";
+            }
+
+            if (new DAL_dt_sm_Info().Add(model))
+            {
+                MessageBox.Show("处理成功！", "完成", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
+            }
         }
     }
 }

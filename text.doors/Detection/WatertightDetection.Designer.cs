@@ -106,7 +106,7 @@
             this.cbb_2_600Pa_cf = new System.Windows.Forms.ComboBox();
             this.label6 = new System.Windows.Forms.Label();
             this.txt_zgfy_cf = new System.Windows.Forms.TextBox();
-            this.button1 = new System.Windows.Forms.Button();
+            this.btn_1sjcl = new System.Windows.Forms.Button();
             this.label7 = new System.Windows.Forms.Label();
             this.label21 = new System.Windows.Forms.Label();
             this.label22 = new System.Windows.Forms.Label();
@@ -341,7 +341,7 @@
             this.tChart_sm.Panel.MarginRight = 2D;
             this.tChart_sm.Panel.MarginTop = 0D;
             this.tChart_sm.Series.Add(this.sm_Line);
-            this.tChart_sm.Size = new System.Drawing.Size(840, 495);
+            this.tChart_sm.Size = new System.Drawing.Size(840, 459);
             this.tChart_sm.TabIndex = 0;
             this.tChart_sm.MouseDown += new System.Windows.Forms.MouseEventHandler(this.tChart_sm_MouseDown);
             // 
@@ -1292,7 +1292,7 @@
             this.重复水密.Controls.Add(this.cbb_2_600Pa_cf);
             this.重复水密.Controls.Add(this.label6);
             this.重复水密.Controls.Add(this.txt_zgfy_cf);
-            this.重复水密.Controls.Add(this.button1);
+            this.重复水密.Controls.Add(this.btn_1sjcl);
             this.重复水密.Controls.Add(this.label7);
             this.重复水密.Controls.Add(this.label21);
             this.重复水密.Controls.Add(this.label22);
@@ -1337,7 +1337,7 @@
             // groupBox1
             // 
             this.groupBox1.Controls.Add(this.txt_desc_cf);
-            this.groupBox1.Location = new System.Drawing.Point(6, 320);
+            this.groupBox1.Location = new System.Drawing.Point(8, 321);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(255, 92);
             this.groupBox1.TabIndex = 30;
@@ -1363,7 +1363,7 @@
             "△局部少量喷溅",
             "▲喷溅出窗试件界面",
             "●水溢出窗试件界面"});
-            this.cbb_2_600Pa_cf.Location = new System.Drawing.Point(146, 230);
+            this.cbb_2_600Pa_cf.Location = new System.Drawing.Point(145, 231);
             this.cbb_2_600Pa_cf.Name = "cbb_2_600Pa_cf";
             this.cbb_2_600Pa_cf.Size = new System.Drawing.Size(114, 20);
             this.cbb_2_600Pa_cf.TabIndex = 84;
@@ -1373,7 +1373,7 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(3, 37);
+            this.label6.Location = new System.Drawing.Point(2, 38);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(47, 12);
             this.label6.TabIndex = 103;
@@ -1381,27 +1381,27 @@
             // 
             // txt_zgfy_cf
             // 
-            this.txt_zgfy_cf.Location = new System.Drawing.Point(132, 291);
+            this.txt_zgfy_cf.Location = new System.Drawing.Point(131, 292);
             this.txt_zgfy_cf.Name = "txt_zgfy_cf";
             this.txt_zgfy_cf.Size = new System.Drawing.Size(42, 21);
             this.txt_zgfy_cf.TabIndex = 67;
             this.txt_zgfy_cf.Text = "0";
             // 
-            // button1
+            // btn_1sjcl
             // 
-            this.button1.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.button1.Location = new System.Drawing.Point(197, 291);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(67, 23);
-            this.button1.TabIndex = 69;
-            this.button1.Text = "数据处理";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.btn_1sjcl.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.btn_1sjcl.Location = new System.Drawing.Point(196, 292);
+            this.btn_1sjcl.Name = "btn_1sjcl";
+            this.btn_1sjcl.Size = new System.Drawing.Size(67, 23);
+            this.btn_1sjcl.TabIndex = 69;
+            this.btn_1sjcl.Text = "数据处理";
+            this.btn_1sjcl.UseVisualStyleBackColor = true;
+            this.btn_1sjcl.Click += new System.EventHandler(this.btn_1sjcl_Click);
             // 
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(3, 258);
+            this.label7.Location = new System.Drawing.Point(2, 259);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(47, 12);
             this.label7.TabIndex = 102;
@@ -1411,7 +1411,7 @@
             // 
             this.label21.AutoSize = true;
             this.label21.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.label21.Location = new System.Drawing.Point(6, 296);
+            this.label21.Location = new System.Drawing.Point(5, 297);
             this.label21.Name = "label21";
             this.label21.Size = new System.Drawing.Size(125, 12);
             this.label21.TabIndex = 68;
@@ -1420,7 +1420,7 @@
             // label22
             // 
             this.label22.AutoSize = true;
-            this.label22.Location = new System.Drawing.Point(3, 232);
+            this.label22.Location = new System.Drawing.Point(2, 233);
             this.label22.Name = "label22";
             this.label22.Size = new System.Drawing.Size(47, 12);
             this.label22.TabIndex = 101;
@@ -1429,7 +1429,7 @@
             // label23
             // 
             this.label23.AutoSize = true;
-            this.label23.Location = new System.Drawing.Point(176, 297);
+            this.label23.Location = new System.Drawing.Point(175, 298);
             this.label23.Name = "label23";
             this.label23.Size = new System.Drawing.Size(19, 12);
             this.label23.TabIndex = 70;
@@ -1438,7 +1438,7 @@
             // label24
             // 
             this.label24.AutoSize = true;
-            this.label24.Location = new System.Drawing.Point(3, 207);
+            this.label24.Location = new System.Drawing.Point(2, 208);
             this.label24.Name = "label24";
             this.label24.Size = new System.Drawing.Size(47, 12);
             this.label24.TabIndex = 100;
@@ -1463,7 +1463,7 @@
             "铰链安装",
             "执手安装",
             "五金安装"});
-            this.cbb_1_700Pa_cf.Location = new System.Drawing.Point(51, 255);
+            this.cbb_1_700Pa_cf.Location = new System.Drawing.Point(50, 256);
             this.cbb_1_700Pa_cf.Name = "cbb_1_700Pa_cf";
             this.cbb_1_700Pa_cf.Size = new System.Drawing.Size(93, 20);
             this.cbb_1_700Pa_cf.TabIndex = 71;
@@ -1472,7 +1472,7 @@
             // label25
             // 
             this.label25.AutoSize = true;
-            this.label25.Location = new System.Drawing.Point(3, 181);
+            this.label25.Location = new System.Drawing.Point(2, 182);
             this.label25.Name = "label25";
             this.label25.Size = new System.Drawing.Size(47, 12);
             this.label25.TabIndex = 99;
@@ -1497,7 +1497,7 @@
             "铰链安装",
             "执手安装",
             "五金安装"});
-            this.cbb_1_600Pa_cf.Location = new System.Drawing.Point(51, 229);
+            this.cbb_1_600Pa_cf.Location = new System.Drawing.Point(50, 230);
             this.cbb_1_600Pa_cf.Name = "cbb_1_600Pa_cf";
             this.cbb_1_600Pa_cf.Size = new System.Drawing.Size(93, 20);
             this.cbb_1_600Pa_cf.TabIndex = 72;
@@ -1506,7 +1506,7 @@
             // label26
             // 
             this.label26.AutoSize = true;
-            this.label26.Location = new System.Drawing.Point(3, 157);
+            this.label26.Location = new System.Drawing.Point(2, 158);
             this.label26.Name = "label26";
             this.label26.Size = new System.Drawing.Size(47, 12);
             this.label26.TabIndex = 98;
@@ -1531,7 +1531,7 @@
             "铰链安装",
             "执手安装",
             "五金安装"});
-            this.cbb_1_500Pa_cf.Location = new System.Drawing.Point(51, 204);
+            this.cbb_1_500Pa_cf.Location = new System.Drawing.Point(50, 205);
             this.cbb_1_500Pa_cf.Name = "cbb_1_500Pa_cf";
             this.cbb_1_500Pa_cf.Size = new System.Drawing.Size(93, 20);
             this.cbb_1_500Pa_cf.TabIndex = 73;
@@ -1540,7 +1540,7 @@
             // label27
             // 
             this.label27.AutoSize = true;
-            this.label27.Location = new System.Drawing.Point(3, 132);
+            this.label27.Location = new System.Drawing.Point(2, 133);
             this.label27.Name = "label27";
             this.label27.Size = new System.Drawing.Size(47, 12);
             this.label27.TabIndex = 97;
@@ -1565,7 +1565,7 @@
             "铰链安装",
             "执手安装",
             "五金安装"});
-            this.cbb_1_400Pa_cf.Location = new System.Drawing.Point(51, 179);
+            this.cbb_1_400Pa_cf.Location = new System.Drawing.Point(50, 180);
             this.cbb_1_400Pa_cf.Name = "cbb_1_400Pa_cf";
             this.cbb_1_400Pa_cf.Size = new System.Drawing.Size(93, 20);
             this.cbb_1_400Pa_cf.TabIndex = 74;
@@ -1574,7 +1574,7 @@
             // label28
             // 
             this.label28.AutoSize = true;
-            this.label28.Location = new System.Drawing.Point(3, 108);
+            this.label28.Location = new System.Drawing.Point(2, 109);
             this.label28.Name = "label28";
             this.label28.Size = new System.Drawing.Size(47, 12);
             this.label28.TabIndex = 96;
@@ -1599,7 +1599,7 @@
             "铰链安装",
             "执手安装",
             "五金安装"});
-            this.cbb_1_350Pa_cf.Location = new System.Drawing.Point(51, 154);
+            this.cbb_1_350Pa_cf.Location = new System.Drawing.Point(50, 155);
             this.cbb_1_350Pa_cf.Name = "cbb_1_350Pa_cf";
             this.cbb_1_350Pa_cf.Size = new System.Drawing.Size(93, 20);
             this.cbb_1_350Pa_cf.TabIndex = 75;
@@ -1608,7 +1608,7 @@
             // label29
             // 
             this.label29.AutoSize = true;
-            this.label29.Location = new System.Drawing.Point(3, 84);
+            this.label29.Location = new System.Drawing.Point(2, 85);
             this.label29.Name = "label29";
             this.label29.Size = new System.Drawing.Size(47, 12);
             this.label29.TabIndex = 95;
@@ -1633,7 +1633,7 @@
             "铰链安装",
             "执手安装",
             "五金安装"});
-            this.cbb_1_300Pa_cf.Location = new System.Drawing.Point(51, 129);
+            this.cbb_1_300Pa_cf.Location = new System.Drawing.Point(50, 130);
             this.cbb_1_300Pa_cf.Name = "cbb_1_300Pa_cf";
             this.cbb_1_300Pa_cf.Size = new System.Drawing.Size(93, 20);
             this.cbb_1_300Pa_cf.TabIndex = 76;
@@ -1642,7 +1642,7 @@
             // label30
             // 
             this.label30.AutoSize = true;
-            this.label30.Location = new System.Drawing.Point(3, 57);
+            this.label30.Location = new System.Drawing.Point(2, 58);
             this.label30.Name = "label30";
             this.label30.Size = new System.Drawing.Size(47, 12);
             this.label30.TabIndex = 94;
@@ -1667,7 +1667,7 @@
             "铰链安装",
             "执手安装",
             "五金安装"});
-            this.cbb_1_250Pa_cf.Location = new System.Drawing.Point(51, 105);
+            this.cbb_1_250Pa_cf.Location = new System.Drawing.Point(50, 106);
             this.cbb_1_250Pa_cf.Name = "cbb_1_250Pa_cf";
             this.cbb_1_250Pa_cf.Size = new System.Drawing.Size(93, 20);
             this.cbb_1_250Pa_cf.TabIndex = 77;
@@ -1676,7 +1676,7 @@
             // label31
             // 
             this.label31.AutoSize = true;
-            this.label31.Location = new System.Drawing.Point(14, 13);
+            this.label31.Location = new System.Drawing.Point(13, 14);
             this.label31.Name = "label31";
             this.label31.Size = new System.Drawing.Size(33, 12);
             this.label31.TabIndex = 93;
@@ -1693,7 +1693,7 @@
             "△局部少量喷溅",
             "▲喷溅出窗试件界面",
             "●水溢出窗试件界面"});
-            this.cbb_2_0Pa_cf.Location = new System.Drawing.Point(146, 11);
+            this.cbb_2_0Pa_cf.Location = new System.Drawing.Point(145, 12);
             this.cbb_2_0Pa_cf.Name = "cbb_2_0Pa_cf";
             this.cbb_2_0Pa_cf.Size = new System.Drawing.Size(114, 20);
             this.cbb_2_0Pa_cf.TabIndex = 78;
@@ -1711,7 +1711,7 @@
             "△局部少量喷溅",
             "▲喷溅出窗试件界面",
             "●水溢出窗试件界面"});
-            this.cbb_2_100Pa_cf.Location = new System.Drawing.Point(146, 35);
+            this.cbb_2_100Pa_cf.Location = new System.Drawing.Point(145, 36);
             this.cbb_2_100Pa_cf.Name = "cbb_2_100Pa_cf";
             this.cbb_2_100Pa_cf.Size = new System.Drawing.Size(114, 20);
             this.cbb_2_100Pa_cf.TabIndex = 92;
@@ -1737,7 +1737,7 @@
             "铰链安装",
             "执手安装",
             "五金安装"});
-            this.cbb_1_200Pa_cf.Location = new System.Drawing.Point(51, 81);
+            this.cbb_1_200Pa_cf.Location = new System.Drawing.Point(50, 82);
             this.cbb_1_200Pa_cf.Name = "cbb_1_200Pa_cf";
             this.cbb_1_200Pa_cf.Size = new System.Drawing.Size(93, 20);
             this.cbb_1_200Pa_cf.TabIndex = 79;
@@ -1754,7 +1754,7 @@
             "△局部少量喷溅",
             "▲喷溅出窗试件界面",
             "●水溢出窗试件界面"});
-            this.cbb_2_150Pa_cf.Location = new System.Drawing.Point(146, 58);
+            this.cbb_2_150Pa_cf.Location = new System.Drawing.Point(145, 59);
             this.cbb_2_150Pa_cf.Name = "cbb_2_150Pa_cf";
             this.cbb_2_150Pa_cf.Size = new System.Drawing.Size(114, 20);
             this.cbb_2_150Pa_cf.TabIndex = 91;
@@ -1780,7 +1780,7 @@
             "铰链安装",
             "执手安装",
             "五金安装"});
-            this.cbb_1_150Pa_cf.Location = new System.Drawing.Point(51, 57);
+            this.cbb_1_150Pa_cf.Location = new System.Drawing.Point(50, 58);
             this.cbb_1_150Pa_cf.Name = "cbb_1_150Pa_cf";
             this.cbb_1_150Pa_cf.Size = new System.Drawing.Size(93, 20);
             this.cbb_1_150Pa_cf.TabIndex = 80;
@@ -1797,7 +1797,7 @@
             "△局部少量喷溅",
             "▲喷溅出窗试件界面",
             "●水溢出窗试件界面"});
-            this.cbb_2_200Pa_cf.Location = new System.Drawing.Point(146, 82);
+            this.cbb_2_200Pa_cf.Location = new System.Drawing.Point(145, 83);
             this.cbb_2_200Pa_cf.Name = "cbb_2_200Pa_cf";
             this.cbb_2_200Pa_cf.Size = new System.Drawing.Size(114, 20);
             this.cbb_2_200Pa_cf.TabIndex = 90;
@@ -1823,7 +1823,7 @@
             "铰链安装",
             "执手安装",
             "五金安装"});
-            this.cbb_1_100Pa_cf.Location = new System.Drawing.Point(51, 34);
+            this.cbb_1_100Pa_cf.Location = new System.Drawing.Point(50, 35);
             this.cbb_1_100Pa_cf.Name = "cbb_1_100Pa_cf";
             this.cbb_1_100Pa_cf.Size = new System.Drawing.Size(93, 20);
             this.cbb_1_100Pa_cf.TabIndex = 81;
@@ -1840,7 +1840,7 @@
             "△局部少量喷溅",
             "▲喷溅出窗试件界面",
             "●水溢出窗试件界面"});
-            this.cbb_2_250Pa_cf.Location = new System.Drawing.Point(146, 106);
+            this.cbb_2_250Pa_cf.Location = new System.Drawing.Point(145, 107);
             this.cbb_2_250Pa_cf.Name = "cbb_2_250Pa_cf";
             this.cbb_2_250Pa_cf.Size = new System.Drawing.Size(114, 20);
             this.cbb_2_250Pa_cf.TabIndex = 89;
@@ -1866,7 +1866,7 @@
             "铰链安装",
             "执手安装",
             "五金安装"});
-            this.cbb_1_0Pa_cf.Location = new System.Drawing.Point(51, 10);
+            this.cbb_1_0Pa_cf.Location = new System.Drawing.Point(50, 11);
             this.cbb_1_0Pa_cf.Name = "cbb_1_0Pa_cf";
             this.cbb_1_0Pa_cf.Size = new System.Drawing.Size(93, 20);
             this.cbb_1_0Pa_cf.TabIndex = 82;
@@ -1883,7 +1883,7 @@
             "△局部少量喷溅",
             "▲喷溅出窗试件界面",
             "●水溢出窗试件界面"});
-            this.cbb_2_300Pa_cf.Location = new System.Drawing.Point(146, 130);
+            this.cbb_2_300Pa_cf.Location = new System.Drawing.Point(145, 131);
             this.cbb_2_300Pa_cf.Name = "cbb_2_300Pa_cf";
             this.cbb_2_300Pa_cf.Size = new System.Drawing.Size(114, 20);
             this.cbb_2_300Pa_cf.TabIndex = 88;
@@ -1901,7 +1901,7 @@
             "△局部少量喷溅",
             "▲喷溅出窗试件界面",
             "●水溢出窗试件界面"});
-            this.cbb_2_700Pa_cf.Location = new System.Drawing.Point(146, 256);
+            this.cbb_2_700Pa_cf.Location = new System.Drawing.Point(145, 257);
             this.cbb_2_700Pa_cf.Name = "cbb_2_700Pa_cf";
             this.cbb_2_700Pa_cf.Size = new System.Drawing.Size(114, 20);
             this.cbb_2_700Pa_cf.TabIndex = 83;
@@ -1919,7 +1919,7 @@
             "△局部少量喷溅",
             "▲喷溅出窗试件界面",
             "●水溢出窗试件界面"});
-            this.cbb_2_350Pa_cf.Location = new System.Drawing.Point(146, 155);
+            this.cbb_2_350Pa_cf.Location = new System.Drawing.Point(145, 156);
             this.cbb_2_350Pa_cf.Name = "cbb_2_350Pa_cf";
             this.cbb_2_350Pa_cf.Size = new System.Drawing.Size(114, 20);
             this.cbb_2_350Pa_cf.TabIndex = 87;
@@ -1937,7 +1937,7 @@
             "△局部少量喷溅",
             "▲喷溅出窗试件界面",
             "●水溢出窗试件界面"});
-            this.cbb_2_500Pa_cf.Location = new System.Drawing.Point(146, 205);
+            this.cbb_2_500Pa_cf.Location = new System.Drawing.Point(145, 206);
             this.cbb_2_500Pa_cf.Name = "cbb_2_500Pa_cf";
             this.cbb_2_500Pa_cf.Size = new System.Drawing.Size(114, 20);
             this.cbb_2_500Pa_cf.TabIndex = 85;
@@ -1955,7 +1955,7 @@
             "△局部少量喷溅",
             "▲喷溅出窗试件界面",
             "●水溢出窗试件界面"});
-            this.cbb_2_400Pa_cf.Location = new System.Drawing.Point(146, 180);
+            this.cbb_2_400Pa_cf.Location = new System.Drawing.Point(145, 181);
             this.cbb_2_400Pa_cf.Name = "cbb_2_400Pa_cf";
             this.cbb_2_400Pa_cf.Size = new System.Drawing.Size(114, 20);
             this.cbb_2_400Pa_cf.TabIndex = 86;
@@ -2008,6 +2008,7 @@
             // tim_getType
             // 
             this.tim_getType.Enabled = true;
+            this.tim_getType.Interval = 500;
             this.tim_getType.Tick += new System.EventHandler(this.tim_getType_Tick);
             // 
             // WatertightDetection
@@ -2127,7 +2128,7 @@
         private System.Windows.Forms.ComboBox cbb_2_600Pa_cf;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.TextBox txt_zgfy_cf;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button btn_1sjcl;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label label21;
         private System.Windows.Forms.Label label22;

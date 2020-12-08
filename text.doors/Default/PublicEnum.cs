@@ -23,7 +23,9 @@ namespace text.doors.Default
             drop70,//降70
             drop50,//降50
             drop30,//降30
-            drop10//降10
+            drop10,//降10
+
+            YCJY,//依次加压
         }
 
 
@@ -79,6 +81,8 @@ namespace text.doors.Default
             ZStart,//正压开始
             FReady,//负压预备
             FStart,//负压开始
+            ZYCJY,//正依次加压
+            FYCJY,//正依次加压
             Stop//停止
         }
 

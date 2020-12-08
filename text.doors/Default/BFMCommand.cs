@@ -79,6 +79,9 @@ namespace text.doors.Default
         public const string 负压开始_设定值 = "D2005";
 
         //todo:
+
+        public const string 正压依次加压 = "T0";
+
         public const string 正压10TimeStart = "T41";
         public const string 正压30TimeStart = "T42";
         public const string 正压50TimeStart = "T43";
@@ -95,6 +98,7 @@ namespace text.doors.Default
 
 
 
+        public const string 负压依次加压 = "T2";
         public const string 负压10TimeStart = "T61";
         public const string 负压30TimeStart = "T62";
         public const string 负压50TimeStart = "T63";
@@ -125,6 +129,14 @@ namespace text.doors.Default
         public const string 正PMAX值 = "D590";
      
         public const string 负PMAX值 = "D592";
+
+
+
+        public const string 正依次加压= "M34";
+        public const string 负依次加压 = "M35";
+        public const string 正依次加压值 = "D260";
+        public const string 负依次加压值 = "D280";
+
 
 
         #region  波动加压
@@ -162,14 +174,14 @@ namespace text.doors.Default
 
         #region 风压
 
-        public const string 位移1 = "D410";
-        public const string 位移2 = "D420";
-        public const string 位移3 = "D430";
+        //public const string 位移1 = "D410";
+        //public const string 位移2 = "D420";
+        //public const string 位移3 = "D430";
 
+        public const string 位移1 = "D440";
+        public const string 位移2 = "D442";
+        public const string 位移3 = "D444";
 
-        //public const string 位移1 = "D440";
-        //public const string 位移2 = "D442";
-        //public const string 位移3 = "D444";
 
         public const string 风压正压预备 = "M55";
         public const string 风压正压开始 = "M56";
@@ -204,6 +216,8 @@ namespace text.doors.Default
         public const string 负反复 = "M81";
         public const string 正安全 = "M82";
         public const string 负安全 = "M83";
+
+
         #endregion
 
 

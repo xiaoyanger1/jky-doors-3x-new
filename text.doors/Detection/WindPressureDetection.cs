@@ -29,7 +29,12 @@ namespace text.doors.Detection
         public DateTime dtnow { get; set; }
 
 
-        private bool IsFirst = true;
+        //private bool IsFirst = true;
+
+        private List<int> KFYPa = new List<int>();
+
+
+        private static int _CYGXS = 0;
 
 
         public List<WindPressureDGV> windPressureDGV = new List<WindPressureDGV>();
@@ -59,7 +64,21 @@ namespace text.doors.Detection
                 rdb_DWDD3.Enabled = true;
             }
 
+            txt_gbjc.Text = _serialPortClient.GetKFYjC().ToString();
+
+
+            var value = int.Parse(txt_gbjc.Text);
+            KFYPa = new List<int>();
+            for (int i = 1; i < 9; i++)
+            {
+                KFYPa.Add((value * i));
+            }
             BindData();
+
+          
+
+
+
             BindSetPressure();
             FYchartInit();
         }
@@ -94,67 +113,64 @@ namespace text.doors.Detection
             qm_Line.GetVertAxis.SetMinMax(-5000, 5000);
         }
 
-
-        private List<string> KFYPa = new List<string>() { "250", "500", "750", "1000", "1250", "1500", "1750", "2000" };
-
         private void BindData()
         {
             #region 绑定
 
             dgv_WindPressure.DataSource = GetWindPressureDGV();
-            dgv_WindPressure.Height = 215;
+            //dgv_WindPressure.Height = 215;
             dgv_WindPressure.RowHeadersVisible = false;
             dgv_WindPressure.AllowUserToResizeColumns = false;
             dgv_WindPressure.AllowUserToResizeRows = false;
 
             dgv_WindPressure.Columns[0].HeaderText = "国际检测";
-            dgv_WindPressure.Columns[0].Width = 75;
+            dgv_WindPressure.Columns[0].Width = 85;
             dgv_WindPressure.Columns[0].ReadOnly = true;
             dgv_WindPressure.Columns[0].DataPropertyName = "Pa";
 
 
             dgv_WindPressure.Columns[1].HeaderText = "位移1";
-            dgv_WindPressure.Columns[1].Width = 72;
+            dgv_WindPressure.Columns[1].Width = 75;
             dgv_WindPressure.Columns[1].DataPropertyName = "zwy1";
 
 
             dgv_WindPressure.Columns[2].HeaderText = "位移2";
-            dgv_WindPressure.Columns[2].Width = 72;
+            dgv_WindPressure.Columns[2].Width = 75;
             dgv_WindPressure.Columns[2].DataPropertyName = "zwy2";
 
             dgv_WindPressure.Columns[3].HeaderText = "位移3";
-            dgv_WindPressure.Columns[3].Width = 72;
+            dgv_WindPressure.Columns[3].Width = 75;
             dgv_WindPressure.Columns[3].DataPropertyName = "zwy3";
 
             dgv_WindPressure.Columns[4].HeaderText = "挠度";
-            dgv_WindPressure.Columns[4].Width = 72;
+            dgv_WindPressure.Columns[4].Width = 75;
             dgv_WindPressure.Columns[4].DataPropertyName = "zzd";
 
             dgv_WindPressure.Columns[5].HeaderText = "l/X";
-            dgv_WindPressure.Columns[5].Width = 72;
+            dgv_WindPressure.Columns[5].Width = 75;
             dgv_WindPressure.Columns[5].DataPropertyName = "zlx";
 
 
 
             dgv_WindPressure.Columns[6].HeaderText = "位移1";
-            dgv_WindPressure.Columns[6].Width = 72;
+            dgv_WindPressure.Columns[6].Width = 75;
             dgv_WindPressure.Columns[6].DataPropertyName = "fwy1";
 
 
             dgv_WindPressure.Columns[7].HeaderText = "位移2";
-            dgv_WindPressure.Columns[7].Width = 72;
+            dgv_WindPressure.Columns[7].Width = 74;
             dgv_WindPressure.Columns[7].DataPropertyName = "fwy2";
 
             dgv_WindPressure.Columns[8].HeaderText = "位移3";
-            dgv_WindPressure.Columns[8].Width = 72;
+            dgv_WindPressure.Columns[8].Width = 75;
             dgv_WindPressure.Columns[8].DataPropertyName = "fwy3";
 
             dgv_WindPressure.Columns[9].HeaderText = "挠度";
-            dgv_WindPressure.Columns[9].Width = 72;
+            dgv_WindPressure.Columns[9].Width = 75;
             dgv_WindPressure.Columns[9].DataPropertyName = "fzd";
 
             dgv_WindPressure.Columns[10].HeaderText = "l/X";
-            dgv_WindPressure.Columns[10].Width = 72;
+            dgv_WindPressure.Columns[10].Width = 75;
             dgv_WindPressure.Columns[10].DataPropertyName = "flx";
 
 
@@ -176,14 +192,17 @@ namespace text.doors.Detection
 
         private List<WindPressureDGV> GetWindPressureDGV()
         {
-            if (!IsFirst)
-            {
-                return windPressureDGV;
-            }
+            //if (!IsFirst)
+            //{
+            //    return windPressureDGV;
+            //}
             var dt = new DAL_dt_kfy_Info().GetkfyByCodeAndTong(_tempCode, _tempTong);
             if (dt != null && dt.Rows.Count > 0)
             {
                 DataRow dr = dt.Rows[0];
+
+                //极差
+                txt_gbjc.Text = dr["defJC"].ToString();
 
                 //绑定锁点
                 if (dr["CheckLock"].ToString() == "1")
@@ -235,6 +254,49 @@ namespace text.doors.Detection
                         flx = 0,
                     });
                 }
+                windPressureDGV.Add(new WindPressureDGV()
+                {
+                    Pa = "P3阶段",
+                    zwy1 = 0,
+                    zwy2 = 0,
+                    zwy3 = 0,
+                    zzd = 0,
+                    zlx = 0,
+                    fwy1 = 0,
+                    fwy2 = 0,
+                    fwy3 = 0,
+                    fzd = 0,
+                    flx = 0,
+                });
+                windPressureDGV.Add(new WindPressureDGV()
+                {
+                    Pa = "P3残余变形",
+                    zwy1 = 0,
+                    zwy2 = 0,
+                    zwy3 = 0,
+                    zzd = 0,
+                    zlx = 0,
+                    fwy1 = 0,
+                    fwy2 = 0,
+                    fwy3 = 0,
+                    fzd = 0,
+                    flx = 0,
+                });
+                windPressureDGV.Add(new WindPressureDGV()
+                {
+                    Pa = "PMax/残余变形",
+                    zwy1 = 0,
+                    zwy2 = 0,
+                    zwy3 = 0,
+                    zzd = 0,
+                    zlx = 0,
+                    fwy1 = 0,
+                    fwy2 = 0,
+                    fwy3 = 0,
+                    fzd = 0,
+                    flx = 0,
+                });
+
             }
             return windPressureDGV;
         }
@@ -250,14 +312,10 @@ namespace text.doors.Detection
             if (!_serialPortClient.sp.IsOpen)
                 return;
 
-            var IsSeccess = false;
-            var c = _serialPortClient.GetCYGXS();
-            int value = int.Parse(c.ToString());
-            if (!IsSeccess)
-            {
-                return;
-            }
-            AnimateSeries(this.tChart_qm, value);
+            //var c = _serialPortClient.GetCYGXS();
+            //int value = int.Parse(c.ToString());
+
+            AnimateSeries(this.tChart_qm, _CYGXS);
         }
 
 
@@ -284,7 +342,7 @@ namespace text.doors.Detection
 
         private void btn_zyks_Click(object sender, EventArgs e)
         {
-            IsFirst = false;
+            //IsFirst = false;
             if (!_serialPortClient.sp.IsOpen)
                 return;
 
@@ -327,7 +385,7 @@ namespace text.doors.Detection
 
         private void btn_fyks_Click(object sender, EventArgs e)
         {
-            IsFirst = false;
+            //IsFirst = false;
             if (!_serialPortClient.sp.IsOpen)
                 return;
 
@@ -349,6 +407,8 @@ namespace text.doors.Detection
 
         private void btn_datahandle_Click(object sender, EventArgs e)
         {
+
+            var defPa = int.Parse(txt_gbjc.Text);
 
             foreach (var item in windPressureDGV)
             {
@@ -387,13 +447,13 @@ namespace text.doors.Detection
 
             var zone = new WindPressureDGV();
             var ztwo = new WindPressureDGV();
-            zone = windPressureDGV.Find(t => t.Pa == (zdefPa - 250) + "Pa");
+            zone = windPressureDGV.Find(t => t.Pa == (zdefPa - defPa) + "Pa");
             ztwo = windPressureDGV.Find(t => t.Pa == zdefPa + "Pa");
             if (zone != null || ztwo != null)
             {
                 var x1 = float.Parse(zone.zzd.ToString());
                 var x2 = float.Parse(ztwo.zzd.ToString());
-                var y1 = zdefPa - 250;
+                var y1 = zdefPa - defPa;
                 var y2 = zdefPa;
 
                 var p = Calculate(x1, x2, y1, y2);
@@ -405,13 +465,13 @@ namespace text.doors.Detection
 
             var fone = new WindPressureDGV();
             var ftwo = new WindPressureDGV();
-            fone = windPressureDGV.Find(t => t.Pa == (fdefPa - 250) + "Pa");
+            fone = windPressureDGV.Find(t => t.Pa == (fdefPa - defPa) + "Pa");
             ftwo = windPressureDGV.Find(t => t.Pa == fdefPa + "Pa");
             if (zone != null || ztwo != null)
             {
                 var _x1 = float.Parse(fone.fzd.ToString());
                 var _x2 = float.Parse(ftwo.fzd.ToString());
-                var y1 = fdefPa - 250;
+                var y1 = fdefPa - defPa;
                 var y2 = fdefPa;
                 var _p = Calculate(_x1, _x2, y1, y2);
                 txt_f_p1.Text = Math.Round(_p, 0).ToString();
@@ -612,8 +672,6 @@ namespace text.doors.Detection
             }
             windPressureTest = PublicEnum.WindPressureTest.ZSafety;
             DisableBtnType();
-
-
         }
 
         private void btnfaq_Click(object sender, EventArgs e)
@@ -662,7 +720,6 @@ namespace text.doors.Detection
             txt_wy1.Text = displace1.ToString();
             txt_wy2.Text = displace2.ToString();
             txt_wy3.Text = displace3.ToString();
-
         }
 
         /// <summary>
@@ -677,170 +734,37 @@ namespace text.doors.Detection
             if (!_serialPortClient.sp.IsOpen)
                 return;
 
-            var value = _serialPortClient.GetCYGXS();
+            _CYGXS = _serialPortClient.GetCYGXS();
 
-
-            lbl_dqyl.Text = value.ToString();
+            lbl_dqyl.Text = _CYGXS.ToString();
 
             if (!IsOk)
                 return;
 
-            //if (windPressureTest == PublicEnum.WindPressureTest.FReady)
-            //{
-            //    double yl = _serialPortClient.Read_FY_Btn_SetValue("FYYB");
-
-
-            //    lbl_setYL.Text = "-" + yl.ToString();
-            //}
-
-            //if (windPressureTest == PublicEnum.WindPressureTest.ZReady)
-            //{
-            //    double yl = _serialPortClient.Read_FY_Btn_SetValue("ZYYB");
-
-
-            //    lbl_setYL.Text = yl.ToString();
-            //}
-
-
-            //if (windPressureTest == PublicEnum.WindPressureTest.ZRepeatedly)
-            //{
-            //    double yl = _serialPortClient.Read_FY_Btn_SetValue("ZFF");
-
-            //    lbl_setYL.Text = yl.ToString();
-            //}
-
-
-            //if (windPressureTest == PublicEnum.WindPressureTest.FRepeatedly)
-            //{
-            //    double yl = _serialPortClient.Read_FY_Btn_SetValue("FFF");
-
-            //    lbl_setYL.Text = "-" + yl.ToString();
-            //}
-
-            //if (windPressureTest == PublicEnum.WindPressureTest.ZSafety)
-            //{
-            //    double yl = _serialPortClient.Read_FY_Btn_SetValue("ZAQ");
-
-            //    lbl_setYL.Text = yl.ToString();
-            //}
-            //if (windPressureTest == PublicEnum.WindPressureTest.FSafety)
-            //{
-            //    double yl = _serialPortClient.Read_FY_Btn_SetValue("FAQ");
-
-
-            //    lbl_setYL.Text = "-" + yl.ToString();
-            //}
-
             if (windPressureTest == PublicEnum.WindPressureTest.FStart)
             {
-                //double yl = _serialPortClient.Read_FY_Btn_SetValue("FYKS");
-
-                //lbl_setYL.Text = "-" + yl.ToString();
-
-                if (value <= -250 && value >= -255 && !complete.Exists(t => t.ToString() == "-250"))
+                for (int i = 0; i < 8; i++)
                 {
-                    complete.Add(-250);
-                    currentkPa = 250;
-                    tim_static.Enabled = true;
-                }
-                else if (value <= -500 && value >= -505 && !complete.Exists(t => t.ToString() == "-500"))
-                {
-                    complete.Add(-500);
-                    currentkPa = 500;
-                    tim_static.Enabled = true;
+                    if (_CYGXS >= -(KFYPa[i] - 10) && _CYGXS <= -(KFYPa[i] + 10) && !complete.Exists(t => t == KFYPa[i]))
+                    {
+                        complete.Add(KFYPa[i]);
+                        currentkPa = KFYPa[i];
+                        tim_static.Enabled = true;
+                    }
                 }
 
-                if (value <= -750 && value >= -755 && !complete.Exists(t => t.ToString() == "-750"))
-                {
-                    complete.Add(-750);
-                    currentkPa = 750;
-                    tim_static.Enabled = true;
-                }
-                else if (value <= -1000 && value >= -1005 && !complete.Exists(t => t.ToString() == "-1000"))
-                {
-                    complete.Add(-1000);
-                    currentkPa = 1000;
-                    tim_static.Enabled = true;
-                }
-                else if (value <= -1250 && value >= -1255 && !complete.Exists(t => t.ToString() == "-1250"))
-                {
-                    complete.Add(-1250);
-                    currentkPa = 1250;
-                    tim_static.Enabled = true;
-                }
-                else if (value <= -1500 && value >= -1505 && !complete.Exists(t => t.ToString() == "-1500"))
-                {
-                    complete.Add(-1500);
-                    currentkPa = 1500;
-                    tim_static.Enabled = true;
-                }
-                else if (value <= -1750 && value >= -1755 && !complete.Exists(t => t.ToString() == "-1750"))
-                {
-                    complete.Add(-1750);
-                    currentkPa = 1750;
-                    tim_static.Enabled = true;
-                }
-                else if (value <= -2000 && value >= -2005 && !complete.Exists(t => t.ToString() == "-2000"))
-                {
-                    complete.Add(-2000);
-                    currentkPa = 2000;
-                    tim_static.Enabled = true;
-                }
             }
             if (windPressureTest == PublicEnum.WindPressureTest.ZStart)
             {
-                //double yl = _serialPortClient.Read_FY_Btn_SetValue("ZYKS");
 
-                //lbl_setYL.Text = yl.ToString();
-
-                if (value >= 250 && value <= 255 && !complete.Exists(t => t.ToString() == "250"))
+                for (int i = 0; i < 8; i++)
                 {
-                    complete.Add(250);
-                    currentkPa = 250;
-                    tim_static.Enabled = true;
-                }
-                else if (value >= 500 && value <= 505 && !complete.Exists(t => t.ToString() == "500"))
-                {
-                    complete.Add(500);
-                    currentkPa = 500;
-                    tim_static.Enabled = true;
-                }
-
-                if (value >= 750 && value <= 755 && !complete.Exists(t => t.ToString() == "750"))
-                {
-                    complete.Add(750);
-                    currentkPa = 750;
-                    tim_static.Enabled = true;
-                }
-                else if (value >= 1000 && value <= 1005 && !complete.Exists(t => t.ToString() == "1000"))
-                {
-                    complete.Add(1000);
-                    currentkPa = 1000;
-                    tim_static.Enabled = true;
-                }
-                else if (value >= 1250 && value <= 1255 && !complete.Exists(t => t.ToString() == "1250"))
-                {
-                    complete.Add(1250);
-                    currentkPa = 1250;
-                    tim_static.Enabled = true;
-                }
-                else if (value >= 1500 && value <= 1505 && !complete.Exists(t => t.ToString() == "1500"))
-                {
-                    complete.Add(1500);
-                    currentkPa = 1500;
-                    tim_static.Enabled = true;
-                }
-                else if (value >= 1750 && value <= 1755 && !complete.Exists(t => t.ToString() == "1750"))
-                {
-                    complete.Add(1750);
-                    currentkPa = 1750;
-                    tim_static.Enabled = true;
-                }
-                else if (value >= 2000 && value <= 2005 && !complete.Exists(t => t.ToString() == "2000"))
-                {
-                    complete.Add(2000);
-                    currentkPa = 2000;
-                    tim_static.Enabled = true;
+                    if (_CYGXS >= KFYPa[i] - 10 && _CYGXS <= (KFYPa[i] + 10) && !complete.Exists(t => t == KFYPa[i]))
+                    {
+                        complete.Add(KFYPa[i]);
+                        currentkPa = KFYPa[i];
+                        tim_static.Enabled = true;
+                    }
                 }
             }
         }
@@ -856,6 +780,8 @@ namespace text.doors.Detection
         /// <param name="e"></param>
         private void tim_static_Tick(object sender, EventArgs e)
         {
+            var defPa = int.Parse(txt_gbjc.Text);
+
             var common = windPressureTest == PublicEnum.WindPressureTest.ZStart ? BFMCommand.风压_正压是否计时 : BFMCommand.风压_负压是否计时;
             var res = _serialPortClient.Read_FY_Static_IsStart(common);
             if (!res)
@@ -864,22 +790,9 @@ namespace text.doors.Detection
             IsOk = false;
             if (staticIndex < 5)
             {
-                var IsSeccess = false;
                 double displace1 = _serialPortClient.GetDisplace1();
-                if (!IsSeccess)
-                {
-                    return;
-                }
                 double displace2 = _serialPortClient.GetDisplace2();
-                if (!IsSeccess)
-                {
-                    return;
-                }
                 double displace3 = _serialPortClient.GetDisplace3();
-                if (!IsSeccess)
-                {
-                    return;
-                }
 
                 average.Add(new Tuple<double, double, double>(displace1, displace2, displace3));
             }
@@ -924,13 +837,13 @@ namespace text.doors.Detection
                     var one = new WindPressureDGV();
                     var two = new WindPressureDGV();
 
-                    one = windPressureDGV.Find(t => t.Pa == (currentkPa - 250) + "Pa");
+                    one = windPressureDGV.Find(t => t.Pa == (currentkPa - defPa) + "Pa");
                     two = windPressureDGV.Find(t => t.Pa == currentkPa + "Pa");
-                    if (one != null || two != null)
+                    if (one != null && two != null)
                     {
                         var x1 = windPressureTest == PublicEnum.WindPressureTest.ZStart ? float.Parse(one.zzd.ToString()) : float.Parse(one.fzd.ToString());
                         var x2 = windPressureTest == PublicEnum.WindPressureTest.ZStart ? float.Parse(two.zzd.ToString()) : float.Parse(two.fzd.ToString());
-                        var y1 = currentkPa - 250;
+                        var y1 = currentkPa - defPa;
                         var y2 = currentkPa;
 
 
@@ -1256,6 +1169,23 @@ namespace text.doors.Detection
                               1,
                               ButtonBorderStyle.Solid);
         }
+        private void panel3_Paint(object sender, PaintEventArgs e)
+        {
+            ControlPaint.DrawBorder(e.Graphics,
+                            this.panel2.ClientRectangle,
+                           Color.Black,
+                            1,
+                            ButtonBorderStyle.Solid,
+                            Color.Black,
+                            1,
+                            ButtonBorderStyle.Solid,
+                            Color.Black,
+                            1,
+                            ButtonBorderStyle.Solid,
+                            Color.Black,
+                            1,
+                            ButtonBorderStyle.Solid);
+        }
 
         private void dgv_WindPressure_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
@@ -1279,6 +1209,14 @@ namespace text.doors.Detection
             {
                 MessageBox.Show("改变级差异常", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
             }
+
+            KFYPa = new List<int>();
+            for (int i = 1; i < 9; i++)
+            {
+                KFYPa.Add((value * i));
+            }
+            windPressureDGV = new List<WindPressureDGV>();
+            BindData();
         }
 
         private void btn_zpmax_Click(object sender, EventArgs e)
@@ -1305,5 +1243,7 @@ namespace text.doors.Detection
                 return;
             }
         }
+
+      
     }
 }

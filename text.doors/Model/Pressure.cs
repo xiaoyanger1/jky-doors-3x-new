@@ -24,6 +24,7 @@ namespace text.doors.Model
             ZYFJ50 = new List<double>();
             ZYFJ30 = new List<double>();
             ZYFJ10 = new List<double>();
+            ZYFJ_YCJY = new List<double>();
 
 
             ZYZD_10 = new List<double>();
@@ -37,6 +38,7 @@ namespace text.doors.Model
             ZYZD50 = new List<double>();
             ZYZD30 = new List<double>();
             ZYZD10 = new List<double>();
+            ZYZD_YCJY = new List<double>();
 
             FYFJ_10 = new List<double>();
             FYFJ_30 = new List<double>();
@@ -49,6 +51,7 @@ namespace text.doors.Model
             FYFJ50 = new List<double>();
             FYFJ30 = new List<double>();
             FYFJ10 = new List<double>();
+            FYFJ_YCJY = new List<double>();
 
             FYZD_10 = new List<double>();
             FYZD_30 = new List<double>();
@@ -61,8 +64,9 @@ namespace text.doors.Model
             FYZD50 = new List<double>();
             FYZD30 = new List<double>();
             FYZD10 = new List<double>();
+            FYZD_YCJY = new List<double>();
 
-            PressurePa = 0;
+            PressurePa = "0";
             Pressure_Z = 0.00;
             Pressure_Z_Z = 0.00;
             Pressure_F = 0.00;
@@ -74,7 +78,6 @@ namespace text.doors.Model
 
         public List<Pressure> ClearZ_F()
         {
-
             ZYFJ_10 = new List<double>();
             ZYFJ_30 = new List<double>();
             ZYFJ_50 = new List<double>();
@@ -86,6 +89,7 @@ namespace text.doors.Model
             ZYFJ50 = new List<double>();
             ZYFJ30 = new List<double>();
             ZYFJ10 = new List<double>();
+            ZYFJ_YCJY = new List<double>();
 
 
             Pressure_Z = 0;
@@ -106,6 +110,7 @@ namespace text.doors.Model
             ZYZD50 = new List<double>();
             ZYZD30 = new List<double>();
             ZYZD10 = new List<double>();
+            ZYZD_YCJY = new List<double>();
 
             Pressure_Z_Z = 0.00;
             return GetPressure();
@@ -123,6 +128,7 @@ namespace text.doors.Model
             FYFJ50 = new List<double>();
             FYFJ30 = new List<double>();
             FYFJ10 = new List<double>();
+            FYFJ_YCJY = new List<double>();
 
             Pressure_F = 0.00;
             return GetPressure();
@@ -141,16 +147,18 @@ namespace text.doors.Model
             FYZD50 = new List<double>();
             FYZD30 = new List<double>();
             FYZD10 = new List<double>();
+            FYZD_YCJY = new List<double>();
+
             Pressure_F_Z = 0.00;
             return GetPressure();
         }
 
-        //实验次数
-        public int TestCount { get; set; }
+        ////实验次数
+        //public int TestCount { get; set; }
 
 
         //压力pa
-        public int PressurePa { get; set; }
+        public string PressurePa { get; set; }
         //正压附加
         public double Pressure_Z { get; set; }
         //正压总的
@@ -176,6 +184,7 @@ namespace text.doors.Model
         private List<double> ZYFJ50 = new List<double>();
         private List<double> ZYFJ30 = new List<double>();
         private List<double> ZYFJ10 = new List<double>();
+        private List<double> ZYFJ_YCJY = new List<double>();
 
         /// <summary>
         /// 正压总的
@@ -192,6 +201,7 @@ namespace text.doors.Model
         private List<double> ZYZD50 = new List<double>();
         private List<double> ZYZD30 = new List<double>();
         private List<double> ZYZD10 = new List<double>();
+        private List<double> ZYZD_YCJY = new List<double>();
 
         /// <summary>
         /// 负压附加
@@ -208,6 +218,7 @@ namespace text.doors.Model
         private List<double> FYFJ50 = new List<double>();
         private List<double> FYFJ30 = new List<double>();
         private List<double> FYFJ10 = new List<double>();
+        private List<double> FYFJ_YCJY = new List<double>();
         /// <summary>
         /// 负压总的
         /// </summary>
@@ -223,6 +234,9 @@ namespace text.doors.Model
         private List<double> FYZD50 = new List<double>();
         private List<double> FYZD30 = new List<double>();
         private List<double> FYZD10 = new List<double>();
+        private List<double> FYZD_YCJY = new List<double>();
+
+
 
 
         /// <summary>
@@ -243,10 +257,9 @@ namespace text.doors.Model
             AddYL50(list);
             AddYL30(list);
             AddYL10(list);
+            AddYCJY(list);
             return list;
         }
-
-
 
 
         /// <summary>
@@ -278,6 +291,8 @@ namespace text.doors.Model
                 ZYFJ30.Add(data);
             if (fs == PublicEnum.Kpa_Level.drop10)
                 ZYFJ10.Add(data);
+            if (fs == PublicEnum.Kpa_Level.YCJY)
+                ZYFJ_YCJY.Add(data);
         }
 
         /// <summary>
@@ -309,6 +324,8 @@ namespace text.doors.Model
                 ZYZD30.Add(data);
             if (fs == PublicEnum.Kpa_Level.drop10)
                 ZYZD10.Add(data);
+            if (fs == PublicEnum.Kpa_Level.YCJY)
+                ZYZD_YCJY.Add(data);
         }
 
         /// <summary>
@@ -340,7 +357,20 @@ namespace text.doors.Model
                 FYFJ30.Add(data);
             if (fs == PublicEnum.Kpa_Level.drop10)
                 FYFJ10.Add(data);
+            if (fs == PublicEnum.Kpa_Level.YCJY)
+                FYFJ_YCJY.Add(data);
         }
+
+        ///// <summary>
+        ///// 依次加压(负压附加)
+        ///// </summary>
+        ///// <param name="data"></param>
+        ///// <param name="fs">风速枚举</param>
+        //public void AddYCJY(double data, PublicEnum.Kpa_Level fs)
+        //{
+        //    if (fs == PublicEnum.Kpa_Level.YCJY)
+        //        AddYCJY.Add(data);
+        //}
 
         /// <summary>
         /// 增加风速数据(负压总的)
@@ -371,6 +401,8 @@ namespace text.doors.Model
                 FYZD30.Add(data);
             if (fs == PublicEnum.Kpa_Level.drop10)
                 FYZD10.Add(data);
+            if (fs == PublicEnum.Kpa_Level.YCJY)
+                FYZD_YCJY.Add(data);
         }
 
         /// <summary>
@@ -380,7 +412,7 @@ namespace text.doors.Model
         private void AddYL_10(List<Pressure> list)
         {
             Pressure model = new Pressure();
-            model.PressurePa = 10;
+            model.PressurePa = "10";
             model.Pressure_Z = ZYFJ_10.Count() == 0 ? 0 : Math.Round(ZYFJ_10.Sum(t => t) / ZYFJ_10.Count(), 2);
             model.Pressure_Z_Z = ZYZD_10.Count() == 0 ? 0 : Math.Round(ZYZD_10.Sum(t => t) / ZYZD_10.Count(), 2);
             model.Pressure_F = FYFJ_10.Count() == 0 ? 0 : Math.Round(FYFJ_10.Sum(t => t) / FYFJ_10.Count(), 2);
@@ -395,7 +427,7 @@ namespace text.doors.Model
         private void AddYL_30(List<Pressure> list)
         {
             Pressure model = new Pressure();
-            model.PressurePa = 30;
+            model.PressurePa = "30";
             model.Pressure_Z = ZYFJ_30.Count() == 0 ? 0 : Math.Round(ZYFJ_30.Sum(t => t) / ZYFJ_30.Count(), 2);
             model.Pressure_Z_Z = ZYZD_30.Count() == 0 ? 0 : Math.Round(ZYZD_30.Sum(t => t) / ZYZD_30.Count(), 2);
             model.Pressure_F = FYFJ_30.Count() == 0 ? 0 : Math.Round(FYFJ_30.Sum(t => t) / FYFJ_30.Count(), 2);
@@ -410,7 +442,7 @@ namespace text.doors.Model
         private void AddYL_50(List<Pressure> list)
         {
             Pressure model = new Pressure();
-            model.PressurePa = 50;
+            model.PressurePa = "50";
             model.Pressure_Z = ZYFJ_50.Count() == 0 ? 0 : Math.Round(ZYFJ_50.Sum(t => t) / ZYFJ_50.Count(), 2);
             model.Pressure_Z_Z = ZYZD_50.Count() == 0 ? 0 : Math.Round(ZYZD_50.Sum(t => t) / ZYZD_50.Count(), 2);
             model.Pressure_F = FYFJ_50.Count() == 0 ? 0 : Math.Round(FYFJ_50.Sum(t => t) / FYFJ_50.Count(), 2);
@@ -424,7 +456,7 @@ namespace text.doors.Model
         private void AddYL_70(List<Pressure> list)
         {
             Pressure model = new Pressure();
-            model.PressurePa = 70;
+            model.PressurePa = "70";
             model.Pressure_Z = ZYFJ_70.Count() == 0 ? 0 : Math.Round(ZYFJ_70.Sum(t => t) / ZYFJ_70.Count(), 2);
             model.Pressure_Z_Z = ZYZD_70.Count() == 0 ? 0 : Math.Round(ZYZD_70.Sum(t => t) / ZYZD_70.Count(), 2);
             model.Pressure_F = FYFJ_70.Count() == 0 ? 0 : Math.Round(FYFJ_70.Sum(t => t) / FYFJ_70.Count(), 2);
@@ -438,7 +470,7 @@ namespace text.doors.Model
         private void AddYL_100(List<Pressure> list)
         {
             Pressure model = new Pressure();
-            model.PressurePa = 100;
+            model.PressurePa = "100";
             model.Pressure_Z = ZYFJ_100.Count() == 0 ? 0 : Math.Round(ZYFJ_100.Sum(t => t) / ZYFJ_100.Count(), 2);
             model.Pressure_Z_Z = ZYZD_100.Count() == 0 ? 0 : Math.Round(ZYZD_100.Sum(t => t) / ZYZD_100.Count(), 2);
             model.Pressure_F = FYFJ_100.Count() == 0 ? 0 : Math.Round(FYFJ_100.Sum(t => t) / FYFJ_100.Count(), 2);
@@ -453,7 +485,7 @@ namespace text.doors.Model
         private void AddYL150(List<Pressure> list)
         {
             Pressure model = new Pressure();
-            model.PressurePa = 150;
+            model.PressurePa = "150";
             model.Pressure_Z = ZYFJ150.Count() == 0 ? 0 : Math.Round(ZYFJ150.Sum(t => t) / ZYFJ150.Count(), 2);
             model.Pressure_Z_Z = ZYZD150.Count() == 0 ? 0 : Math.Round(ZYZD150.Sum(t => t) / ZYZD150.Count(), 2);
             model.Pressure_F = FYFJ150.Count() == 0 ? 0 : Math.Round(FYFJ150.Sum(t => t) / FYFJ150.Count(), 2);
@@ -468,7 +500,7 @@ namespace text.doors.Model
         private void AddYL100(List<Pressure> list)
         {
             Pressure model = new Pressure();
-            model.PressurePa = 100;
+            model.PressurePa = "100";
             model.Pressure_Z = ZYFJ100.Count() == 0 ? 0 : Math.Round(ZYFJ100.Sum(t => t) / ZYFJ100.Count(), 2);
             model.Pressure_Z_Z = ZYZD100.Count() == 0 ? 0 : Math.Round(ZYZD100.Sum(t => t) / ZYZD100.Count(), 2);
             model.Pressure_F = FYFJ100.Count() == 0 ? 0 : Math.Round(FYFJ100.Sum(t => t) / FYFJ100.Count(), 2);
@@ -482,7 +514,7 @@ namespace text.doors.Model
         private void AddYL70(List<Pressure> list)
         {
             Pressure model = new Pressure();
-            model.PressurePa = 70;
+            model.PressurePa = "70";
             model.Pressure_Z = ZYFJ70.Count() == 0 ? 0 : Math.Round(ZYFJ70.Sum(t => t) / ZYFJ70.Count(), 2);
             model.Pressure_Z_Z = ZYZD70.Count() == 0 ? 0 : Math.Round(ZYZD70.Sum(t => t) / ZYZD70.Count(), 2);
             model.Pressure_F = FYFJ70.Count() == 0 ? 0 : Math.Round(FYFJ70.Sum(t => t) / FYFJ70.Count(), 2);
@@ -497,7 +529,7 @@ namespace text.doors.Model
         private void AddYL50(List<Pressure> list)
         {
             Pressure model = new Pressure();
-            model.PressurePa = 50;
+            model.PressurePa = "50";
             model.Pressure_Z = ZYFJ50.Count() == 0 ? 0 : Math.Round(ZYFJ50.Sum(t => t) / ZYFJ50.Count(), 2);
             model.Pressure_Z_Z = ZYZD50.Count() == 0 ? 0 : Math.Round(ZYZD50.Sum(t => t) / ZYZD50.Count(), 2);
             model.Pressure_F = FYFJ50.Count() == 0 ? 0 : Math.Round(FYFJ50.Sum(t => t) / FYFJ50.Count(), 2);
@@ -512,7 +544,7 @@ namespace text.doors.Model
         private void AddYL30(List<Pressure> list)
         {
             Pressure model = new Pressure();
-            model.PressurePa = 30;
+            model.PressurePa = "30";
             model.Pressure_Z = ZYFJ30.Count() == 0 ? 0 : Math.Round(ZYFJ30.Sum(t => t) / ZYFJ30.Count(), 2);
             model.Pressure_Z_Z = ZYZD30.Count() == 0 ? 0 : Math.Round(ZYZD30.Sum(t => t) / ZYZD30.Count(), 2);
             model.Pressure_F = FYFJ30.Count() == 0 ? 0 : Math.Round(FYFJ30.Sum(t => t) / FYFJ30.Count(), 2);
@@ -527,11 +559,28 @@ namespace text.doors.Model
         private void AddYL10(List<Pressure> list)
         {
             Pressure model = new Pressure();
-            model.PressurePa = 10;
+            model.PressurePa = "10";
             model.Pressure_Z = ZYFJ10.Count() == 0 ? 0 : Math.Round(ZYFJ10.Sum(t => t) / ZYFJ10.Count(), 2);
             model.Pressure_Z_Z = ZYZD10.Count() == 0 ? 0 : Math.Round(ZYZD10.Sum(t => t) / ZYZD10.Count(), 2);
             model.Pressure_F = FYFJ10.Count() == 0 ? 0 : Math.Round(FYFJ10.Sum(t => t) / FYFJ10.Count(), 2);
             model.Pressure_F_Z = FYZD10.Count() == 0 ? 0 : Math.Round(FYZD10.Sum(t => t) / FYZD10.Count(), 2);
+            list.Add(model);
+        }
+
+
+
+        /// <summary>
+        /// 增加设计值
+        /// </summary>
+        /// <param name="list"></param>
+        private void AddYCJY(List<Pressure> list)
+        {
+            Pressure model = new Pressure();
+            model.PressurePa = "设计值";
+            model.Pressure_Z = ZYFJ_YCJY.Count() == 0 ? 0 : Math.Round(ZYFJ_YCJY.Sum(t => t) / ZYFJ_YCJY.Count(), 2);
+            model.Pressure_Z_Z = ZYZD_YCJY.Count() == 0 ? 0 : Math.Round(ZYZD_YCJY.Sum(t => t) / ZYZD_YCJY.Count(), 2);
+            model.Pressure_F = FYFJ_YCJY.Count() == 0 ? 0 : Math.Round(FYFJ_YCJY.Sum(t => t) / FYFJ_YCJY.Count(), 2);
+            model.Pressure_F_Z = FYZD_YCJY.Count() == 0 ? 0 : Math.Round(FYZD_YCJY.Sum(t => t) / FYZD_YCJY.Count(), 2);
             list.Add(model);
         }
     }

@@ -162,7 +162,7 @@ namespace text.doors.Common
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
-        public double MathFlow(double value)
+        public static double MathFlow(double value)
         {
             if (value == 0)
             {

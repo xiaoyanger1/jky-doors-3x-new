@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(WindPressureDetection));
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.btn_gbjc = new System.Windows.Forms.Button();
@@ -44,14 +45,6 @@
             this.groupBox7 = new System.Windows.Forms.GroupBox();
             this.txt_lx = new System.Windows.Forms.TextBox();
             this.label26 = new System.Windows.Forms.Label();
-            this.groupBox6 = new System.Windows.Forms.GroupBox();
-            this.label20 = new System.Windows.Forms.Label();
-            this.label25 = new System.Windows.Forms.Label();
-            this.label19 = new System.Windows.Forms.Label();
-            this.label24 = new System.Windows.Forms.Label();
-            this.label21 = new System.Windows.Forms.Label();
-            this.label23 = new System.Windows.Forms.Label();
-            this.label22 = new System.Windows.Forms.Label();
             this.dgv_WindPressure = new System.Windows.Forms.DataGridView();
             this.button11 = new System.Windows.Forms.Button();
             this.button12 = new System.Windows.Forms.Button();
@@ -119,12 +112,13 @@
             this.tim_view = new System.Windows.Forms.Timer(this.components);
             this.char_cms_click = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.panel3 = new System.Windows.Forms.Panel();
+            this.label19 = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.panel1.SuspendLayout();
             this.groupBox7.SuspendLayout();
-            this.groupBox6.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgv_WindPressure)).BeginInit();
             this.groupBox5.SuspendLayout();
             this.groupBox4.SuspendLayout();
@@ -132,6 +126,7 @@
             this.groupBox2.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.char_cms_click.SuspendLayout();
+            this.panel3.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabControl1
@@ -140,12 +135,13 @@
             this.tabControl1.Location = new System.Drawing.Point(0, 0);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(1119, 776);
+            this.tabControl1.Size = new System.Drawing.Size(1119, 787);
             this.tabControl1.TabIndex = 0;
             // 
             // tabPage1
             // 
             this.tabPage1.BackColor = System.Drawing.Color.White;
+            this.tabPage1.Controls.Add(this.panel3);
             this.tabPage1.Controls.Add(this.btn_gbjc);
             this.tabPage1.Controls.Add(this.txt_gbjc);
             this.tabPage1.Controls.Add(this.label29);
@@ -154,7 +150,6 @@
             this.tabPage1.Controls.Add(this.btn_stop);
             this.tabPage1.Controls.Add(this.tChart_qm);
             this.tabPage1.Controls.Add(this.groupBox7);
-            this.tabPage1.Controls.Add(this.groupBox6);
             this.tabPage1.Controls.Add(this.dgv_WindPressure);
             this.tabPage1.Controls.Add(this.button11);
             this.tabPage1.Controls.Add(this.button12);
@@ -168,13 +163,13 @@
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(1111, 750);
+            this.tabPage1.Size = new System.Drawing.Size(1111, 761);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "抗风压检测";
             // 
             // btn_gbjc
             // 
-            this.btn_gbjc.Location = new System.Drawing.Point(912, 109);
+            this.btn_gbjc.Location = new System.Drawing.Point(888, 111);
             this.btn_gbjc.Name = "btn_gbjc";
             this.btn_gbjc.Size = new System.Drawing.Size(75, 23);
             this.btn_gbjc.TabIndex = 58;
@@ -184,11 +179,11 @@
             // 
             // txt_gbjc
             // 
-            this.txt_gbjc.Location = new System.Drawing.Point(1003, 111);
+            this.txt_gbjc.Location = new System.Drawing.Point(997, 111);
             this.txt_gbjc.Name = "txt_gbjc";
             this.txt_gbjc.Size = new System.Drawing.Size(61, 21);
             this.txt_gbjc.TabIndex = 57;
-            this.txt_gbjc.Text = "0";
+            this.txt_gbjc.Text = "250";
             // 
             // label29
             // 
@@ -202,9 +197,9 @@
             // panel2
             // 
             this.panel2.Controls.Add(this.label28);
-            this.panel2.Location = new System.Drawing.Point(494, 360);
+            this.panel2.Location = new System.Drawing.Point(467, 360);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(364, 23);
+            this.panel2.Size = new System.Drawing.Size(391, 23);
             this.panel2.TabIndex = 55;
             this.panel2.Paint += new System.Windows.Forms.PaintEventHandler(this.panel2_Paint);
             // 
@@ -220,9 +215,9 @@
             // panel1
             // 
             this.panel1.Controls.Add(this.label27);
-            this.panel1.Location = new System.Drawing.Point(136, 360);
+            this.panel1.Location = new System.Drawing.Point(92, 360);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(359, 23);
+            this.panel1.Size = new System.Drawing.Size(378, 23);
             this.panel1.TabIndex = 54;
             this.panel1.Paint += new System.Windows.Forms.PaintEventHandler(this.panel1_Paint);
             // 
@@ -237,7 +232,7 @@
             // 
             // btn_stop
             // 
-            this.btn_stop.Location = new System.Drawing.Point(880, 707);
+            this.btn_stop.Location = new System.Drawing.Point(880, 717);
             this.btn_stop.Name = "btn_stop";
             this.btn_stop.Size = new System.Drawing.Size(66, 33);
             this.btn_stop.TabIndex = 53;
@@ -322,9 +317,9 @@
             // 
             this.groupBox7.Controls.Add(this.txt_lx);
             this.groupBox7.Controls.Add(this.label26);
-            this.groupBox7.Location = new System.Drawing.Point(897, 66);
+            this.groupBox7.Location = new System.Drawing.Point(876, 66);
             this.groupBox7.Name = "groupBox7";
-            this.groupBox7.Size = new System.Drawing.Size(200, 39);
+            this.groupBox7.Size = new System.Drawing.Size(221, 39);
             this.groupBox7.TabIndex = 29;
             this.groupBox7.TabStop = false;
             this.groupBox7.Text = "L/X";
@@ -346,101 +341,22 @@
             this.label26.TabIndex = 29;
             this.label26.Text = "l/X:";
             // 
-            // groupBox6
-            // 
-            this.groupBox6.Controls.Add(this.label20);
-            this.groupBox6.Controls.Add(this.label25);
-            this.groupBox6.Controls.Add(this.label19);
-            this.groupBox6.Controls.Add(this.label24);
-            this.groupBox6.Controls.Add(this.label21);
-            this.groupBox6.Controls.Add(this.label23);
-            this.groupBox6.Controls.Add(this.label22);
-            this.groupBox6.Location = new System.Drawing.Point(19, 599);
-            this.groupBox6.Name = "groupBox6";
-            this.groupBox6.Size = new System.Drawing.Size(839, 148);
-            this.groupBox6.TabIndex = 51;
-            this.groupBox6.TabStop = false;
-            this.groupBox6.Text = "注：";
-            // 
-            // label20
-            // 
-            this.label20.AutoSize = true;
-            this.label20.Location = new System.Drawing.Point(45, 30);
-            this.label20.Name = "label20";
-            this.label20.Size = new System.Drawing.Size(227, 12);
-            this.label20.TabIndex = 45;
-            this.label20.Text = "2.I/X表示杆件得相对面法线挠度得倒数；";
-            // 
-            // label25
-            // 
-            this.label25.AutoSize = true;
-            this.label25.Location = new System.Drawing.Point(56, 128);
-            this.label25.Name = "label25";
-            this.label25.Size = new System.Drawing.Size(503, 12);
-            this.label25.TabIndex = 50;
-            this.label25.Text = "面板为单层玻璃或夹层玻璃的，为杆件长度的1/250，面板为中空玻璃的，为杆件长度的1/375.";
-            // 
-            // label19
-            // 
-            this.label19.AutoSize = true;
-            this.label19.Location = new System.Drawing.Point(45, 12);
-            this.label19.Name = "label19";
-            this.label19.Size = new System.Drawing.Size(149, 12);
-            this.label19.TabIndex = 44;
-            this.label19.Text = "1.位移和挠度得单位：毫米";
-            // 
-            // label24
-            // 
-            this.label24.AutoSize = true;
-            this.label24.Location = new System.Drawing.Point(45, 109);
-            this.label24.Name = "label24";
-            this.label24.Size = new System.Drawing.Size(575, 12);
-            this.label24.TabIndex = 49;
-            this.label24.Text = "4.如按铝合金门窗的产品标准检测，根据GB/T 8478-2008之表9，变形检测最大面法线挠度应符合以下规定：";
-            // 
-            // label21
-            // 
-            this.label21.AutoSize = true;
-            this.label21.Location = new System.Drawing.Point(45, 48);
-            this.label21.Name = "label21";
-            this.label21.Size = new System.Drawing.Size(401, 12);
-            this.label21.TabIndex = 46;
-            this.label21.Text = "3.按GB/T  7106-2008之表7，菱形检测最大面积法线挠度应符合下列规定；";
-            // 
-            // label23
-            // 
-            this.label23.AutoSize = true;
-            this.label23.Location = new System.Drawing.Point(56, 88);
-            this.label23.Name = "label23";
-            this.label23.Size = new System.Drawing.Size(335, 12);
-            this.label23.TabIndex = 48;
-            this.label23.Text = "试件为单扇单锁点的则变形检测时的最大菱形不应大于10毫米;";
-            // 
-            // label22
-            // 
-            this.label22.AutoSize = true;
-            this.label22.Location = new System.Drawing.Point(56, 69);
-            this.label22.Name = "label22";
-            this.label22.Size = new System.Drawing.Size(743, 12);
-            this.label22.TabIndex = 47;
-            this.label22.Text = "面板为单层玻璃货夹层玻璃得，为杆件长度得1/300，面板为中控玻璃的，为杆件长度的1/450，面板为单扇固定扇的，为杆件长度得1/150，";
-            // 
             // dgv_WindPressure
             // 
             this.dgv_WindPressure.AllowUserToResizeColumns = false;
             this.dgv_WindPressure.AllowUserToResizeRows = false;
             this.dgv_WindPressure.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgv_WindPressure.Location = new System.Drawing.Point(56, 383);
+            this.dgv_WindPressure.Location = new System.Drawing.Point(19, 385);
             this.dgv_WindPressure.Name = "dgv_WindPressure";
             this.dgv_WindPressure.RowTemplate.Height = 23;
-            this.dgv_WindPressure.Size = new System.Drawing.Size(802, 220);
+            this.dgv_WindPressure.Size = new System.Drawing.Size(840, 300);
             this.dgv_WindPressure.TabIndex = 43;
             this.dgv_WindPressure.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgv_WindPressure_CellContentClick);
             this.dgv_WindPressure.CellPainting += new System.Windows.Forms.DataGridViewCellPaintingEventHandler(this.dgv_WindPressure_CellPainting);
             // 
             // button11
             // 
-            this.button11.Location = new System.Drawing.Point(952, 709);
+            this.button11.Location = new System.Drawing.Point(952, 719);
             this.button11.Name = "button11";
             this.button11.Size = new System.Drawing.Size(62, 30);
             this.button11.TabIndex = 41;
@@ -450,7 +366,7 @@
             // 
             // button12
             // 
-            this.button12.Location = new System.Drawing.Point(1029, 708);
+            this.button12.Location = new System.Drawing.Point(1029, 718);
             this.button12.Name = "button12";
             this.button12.Size = new System.Drawing.Size(65, 30);
             this.button12.TabIndex = 42;
@@ -460,7 +376,7 @@
             // label18
             // 
             this.label18.AutoSize = true;
-            this.label18.Location = new System.Drawing.Point(892, 572);
+            this.label18.Location = new System.Drawing.Point(878, 582);
             this.label18.Name = "label18";
             this.label18.Size = new System.Drawing.Size(89, 12);
             this.label18.TabIndex = 26;
@@ -468,10 +384,10 @@
             // 
             // txt_desc
             // 
-            this.txt_desc.Location = new System.Drawing.Point(894, 590);
+            this.txt_desc.Location = new System.Drawing.Point(876, 600);
             this.txt_desc.Multiline = true;
             this.txt_desc.Name = "txt_desc";
-            this.txt_desc.Size = new System.Drawing.Size(200, 109);
+            this.txt_desc.Size = new System.Drawing.Size(218, 109);
             this.txt_desc.TabIndex = 25;
             // 
             // groupBox5
@@ -492,16 +408,16 @@
             this.groupBox5.Controls.Add(this.label17);
             this.groupBox5.Controls.Add(this.label15);
             this.groupBox5.Controls.Add(this.label16);
-            this.groupBox5.Location = new System.Drawing.Point(896, 432);
+            this.groupBox5.Location = new System.Drawing.Point(876, 437);
             this.groupBox5.Name = "groupBox5";
-            this.groupBox5.Size = new System.Drawing.Size(200, 137);
+            this.groupBox5.Size = new System.Drawing.Size(220, 137);
             this.groupBox5.TabIndex = 24;
             this.groupBox5.TabStop = false;
             this.groupBox5.Text = "安全检测";
             // 
             // txt_fpmax
             // 
-            this.txt_fpmax.Location = new System.Drawing.Point(36, 102);
+            this.txt_fpmax.Location = new System.Drawing.Point(42, 102);
             this.txt_fpmax.Name = "txt_fpmax";
             this.txt_fpmax.Size = new System.Drawing.Size(55, 21);
             this.txt_fpmax.TabIndex = 48;
@@ -509,7 +425,7 @@
             // 
             // btn_fpmax
             // 
-            this.btn_fpmax.Location = new System.Drawing.Point(119, 104);
+            this.btn_fpmax.Location = new System.Drawing.Point(125, 104);
             this.btn_fpmax.Name = "btn_fpmax";
             this.btn_fpmax.Size = new System.Drawing.Size(75, 23);
             this.btn_fpmax.TabIndex = 45;
@@ -520,7 +436,7 @@
             // label32
             // 
             this.label32.AutoSize = true;
-            this.label32.Location = new System.Drawing.Point(94, 107);
+            this.label32.Location = new System.Drawing.Point(100, 107);
             this.label32.Name = "label32";
             this.label32.Size = new System.Drawing.Size(17, 12);
             this.label32.TabIndex = 47;
@@ -529,7 +445,7 @@
             // label33
             // 
             this.label33.AutoSize = true;
-            this.label33.Location = new System.Drawing.Point(-1, 106);
+            this.label33.Location = new System.Drawing.Point(5, 106);
             this.label33.Name = "label33";
             this.label33.Size = new System.Drawing.Size(35, 12);
             this.label33.TabIndex = 46;
@@ -537,7 +453,7 @@
             // 
             // txt_zpmax
             // 
-            this.txt_zpmax.Location = new System.Drawing.Point(36, 75);
+            this.txt_zpmax.Location = new System.Drawing.Point(42, 75);
             this.txt_zpmax.Name = "txt_zpmax";
             this.txt_zpmax.Size = new System.Drawing.Size(55, 21);
             this.txt_zpmax.TabIndex = 44;
@@ -545,7 +461,7 @@
             // 
             // btn_zpmax
             // 
-            this.btn_zpmax.Location = new System.Drawing.Point(119, 77);
+            this.btn_zpmax.Location = new System.Drawing.Point(125, 77);
             this.btn_zpmax.Name = "btn_zpmax";
             this.btn_zpmax.Size = new System.Drawing.Size(75, 23);
             this.btn_zpmax.TabIndex = 41;
@@ -556,7 +472,7 @@
             // label30
             // 
             this.label30.AutoSize = true;
-            this.label30.Location = new System.Drawing.Point(94, 80);
+            this.label30.Location = new System.Drawing.Point(100, 80);
             this.label30.Name = "label30";
             this.label30.Size = new System.Drawing.Size(17, 12);
             this.label30.TabIndex = 43;
@@ -565,7 +481,7 @@
             // label31
             // 
             this.label31.AutoSize = true;
-            this.label31.Location = new System.Drawing.Point(5, 79);
+            this.label31.Location = new System.Drawing.Point(11, 79);
             this.label31.Name = "label31";
             this.label31.Size = new System.Drawing.Size(29, 12);
             this.label31.TabIndex = 42;
@@ -573,7 +489,7 @@
             // 
             // txt_f_p3
             // 
-            this.txt_f_p3.Location = new System.Drawing.Point(36, 48);
+            this.txt_f_p3.Location = new System.Drawing.Point(42, 48);
             this.txt_f_p3.Name = "txt_f_p3";
             this.txt_f_p3.Size = new System.Drawing.Size(55, 21);
             this.txt_f_p3.TabIndex = 39;
@@ -581,7 +497,7 @@
             // 
             // btn_zaq
             // 
-            this.btn_zaq.Location = new System.Drawing.Point(119, 20);
+            this.btn_zaq.Location = new System.Drawing.Point(125, 20);
             this.btn_zaq.Name = "btn_zaq";
             this.btn_zaq.Size = new System.Drawing.Size(75, 23);
             this.btn_zaq.TabIndex = 27;
@@ -591,7 +507,7 @@
             // 
             // txt_p3
             // 
-            this.txt_p3.Location = new System.Drawing.Point(36, 21);
+            this.txt_p3.Location = new System.Drawing.Point(42, 21);
             this.txt_p3.Name = "txt_p3";
             this.txt_p3.Size = new System.Drawing.Size(55, 21);
             this.txt_p3.TabIndex = 40;
@@ -599,7 +515,7 @@
             // 
             // btnfaq
             // 
-            this.btnfaq.Location = new System.Drawing.Point(119, 47);
+            this.btnfaq.Location = new System.Drawing.Point(125, 47);
             this.btnfaq.Name = "btnfaq";
             this.btnfaq.Size = new System.Drawing.Size(75, 23);
             this.btnfaq.TabIndex = 28;
@@ -610,7 +526,7 @@
             // label14
             // 
             this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(94, 53);
+            this.label14.Location = new System.Drawing.Point(100, 53);
             this.label14.Name = "label14";
             this.label14.Size = new System.Drawing.Size(17, 12);
             this.label14.TabIndex = 38;
@@ -619,7 +535,7 @@
             // label17
             // 
             this.label17.AutoSize = true;
-            this.label17.Location = new System.Drawing.Point(18, 25);
+            this.label17.Location = new System.Drawing.Point(24, 25);
             this.label17.Name = "label17";
             this.label17.Size = new System.Drawing.Size(17, 12);
             this.label17.TabIndex = 35;
@@ -628,7 +544,7 @@
             // label15
             // 
             this.label15.AutoSize = true;
-            this.label15.Location = new System.Drawing.Point(94, 26);
+            this.label15.Location = new System.Drawing.Point(100, 26);
             this.label15.Name = "label15";
             this.label15.Size = new System.Drawing.Size(17, 12);
             this.label15.TabIndex = 37;
@@ -637,7 +553,7 @@
             // label16
             // 
             this.label16.AutoSize = true;
-            this.label16.Location = new System.Drawing.Point(10, 52);
+            this.label16.Location = new System.Drawing.Point(16, 52);
             this.label16.Name = "label16";
             this.label16.Size = new System.Drawing.Size(23, 12);
             this.label16.TabIndex = 36;
@@ -653,16 +569,16 @@
             this.groupBox4.Controls.Add(this.label10);
             this.groupBox4.Controls.Add(this.txt_f_p2);
             this.groupBox4.Controls.Add(this.txt_p2);
-            this.groupBox4.Location = new System.Drawing.Point(894, 342);
+            this.groupBox4.Location = new System.Drawing.Point(876, 347);
             this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(200, 84);
+            this.groupBox4.Size = new System.Drawing.Size(218, 84);
             this.groupBox4.TabIndex = 23;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "反复检测";
             // 
             // btn_zff
             // 
-            this.btn_zff.Location = new System.Drawing.Point(119, 20);
+            this.btn_zff.Location = new System.Drawing.Point(121, 20);
             this.btn_zff.Name = "btn_zff";
             this.btn_zff.Size = new System.Drawing.Size(75, 23);
             this.btn_zff.TabIndex = 25;
@@ -672,7 +588,7 @@
             // 
             // btn_fff
             // 
-            this.btn_fff.Location = new System.Drawing.Point(119, 50);
+            this.btn_fff.Location = new System.Drawing.Point(121, 50);
             this.btn_fff.Name = "btn_fff";
             this.btn_fff.Size = new System.Drawing.Size(75, 23);
             this.btn_fff.TabIndex = 26;
@@ -683,7 +599,7 @@
             // label13
             // 
             this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(18, 26);
+            this.label13.Location = new System.Drawing.Point(20, 26);
             this.label13.Name = "label13";
             this.label13.Size = new System.Drawing.Size(17, 12);
             this.label13.TabIndex = 29;
@@ -692,7 +608,7 @@
             // label12
             // 
             this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(10, 53);
+            this.label12.Location = new System.Drawing.Point(12, 53);
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(23, 12);
             this.label12.TabIndex = 30;
@@ -701,7 +617,7 @@
             // label11
             // 
             this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(94, 27);
+            this.label11.Location = new System.Drawing.Point(96, 27);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(17, 12);
             this.label11.TabIndex = 31;
@@ -710,7 +626,7 @@
             // label10
             // 
             this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(94, 54);
+            this.label10.Location = new System.Drawing.Point(96, 54);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(17, 12);
             this.label10.TabIndex = 32;
@@ -718,7 +634,7 @@
             // 
             // txt_f_p2
             // 
-            this.txt_f_p2.Location = new System.Drawing.Point(36, 49);
+            this.txt_f_p2.Location = new System.Drawing.Point(38, 49);
             this.txt_f_p2.Name = "txt_f_p2";
             this.txt_f_p2.Size = new System.Drawing.Size(55, 21);
             this.txt_f_p2.TabIndex = 33;
@@ -726,7 +642,7 @@
             // 
             // txt_p2
             // 
-            this.txt_p2.Location = new System.Drawing.Point(36, 22);
+            this.txt_p2.Location = new System.Drawing.Point(38, 22);
             this.txt_p2.Name = "txt_p2";
             this.txt_p2.Size = new System.Drawing.Size(55, 21);
             this.txt_p2.TabIndex = 34;
@@ -752,9 +668,9 @@
             this.groupBox3.Controls.Add(this.label1);
             this.groupBox3.Controls.Add(this.btn_zyks);
             this.groupBox3.Controls.Add(this.btn_zyyb);
-            this.groupBox3.Location = new System.Drawing.Point(896, 138);
+            this.groupBox3.Location = new System.Drawing.Point(876, 138);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(200, 198);
+            this.groupBox3.Size = new System.Drawing.Size(220, 198);
             this.groupBox3.TabIndex = 22;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "变形监测";
@@ -926,9 +842,9 @@
             // 
             this.groupBox2.Controls.Add(this.rdb_DWDD3);
             this.groupBox2.Controls.Add(this.rdb_DWDD1);
-            this.groupBox2.Location = new System.Drawing.Point(896, 9);
+            this.groupBox2.Location = new System.Drawing.Point(876, 9);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(200, 47);
+            this.groupBox2.Size = new System.Drawing.Size(220, 47);
             this.groupBox2.TabIndex = 21;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "单扇单锁点位移选择";
@@ -1027,13 +943,13 @@
             // tim_PainPic
             // 
             this.tim_PainPic.Enabled = true;
-            this.tim_PainPic.Interval = 500;
+            this.tim_PainPic.Interval = 800;
             this.tim_PainPic.Tick += new System.EventHandler(this.tim_PainPic_Tick);
             // 
             // tim_wyData
             // 
             this.tim_wyData.Enabled = true;
-            this.tim_wyData.Interval = 500;
+            this.tim_wyData.Interval = 1000;
             this.tim_wyData.Tick += new System.EventHandler(this.tim_wyData_Tick);
             // 
             // tim_fy
@@ -1043,11 +959,12 @@
             // tim_btnType
             // 
             this.tim_btnType.Enabled = true;
+            this.tim_btnType.Interval = 500;
             this.tim_btnType.Tick += new System.EventHandler(this.tim_btnType_Tick);
             // 
             // tim_static
             // 
-            this.tim_static.Interval = 1000;
+            this.tim_static.Interval = 500;
             this.tim_static.Tick += new System.EventHandler(this.tim_static_Tick);
             // 
             // tim_view
@@ -1069,6 +986,24 @@
             this.toolStripMenuItem1.Text = "导出图片";
             this.toolStripMenuItem1.Click += new System.EventHandler(this.toolStripMenuItem1_Click);
             // 
+            // panel3
+            // 
+            this.panel3.Controls.Add(this.label19);
+            this.panel3.Location = new System.Drawing.Point(19, 360);
+            this.panel3.Name = "panel3";
+            this.panel3.Size = new System.Drawing.Size(72, 23);
+            this.panel3.TabIndex = 55;
+            this.panel3.Paint += new System.Windows.Forms.PaintEventHandler(this.panel3_Paint);
+            // 
+            // label19
+            // 
+            this.label19.AutoSize = true;
+            this.label19.Location = new System.Drawing.Point(157, 2);
+            this.label19.Name = "label19";
+            this.label19.Size = new System.Drawing.Size(29, 12);
+            this.label19.TabIndex = 0;
+            this.label19.Text = "正压";
+            // 
             // WindPressureDetection
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -1087,8 +1022,6 @@
             this.panel1.PerformLayout();
             this.groupBox7.ResumeLayout(false);
             this.groupBox7.PerformLayout();
-            this.groupBox6.ResumeLayout(false);
-            this.groupBox6.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgv_WindPressure)).EndInit();
             this.groupBox5.ResumeLayout(false);
             this.groupBox5.PerformLayout();
@@ -1101,6 +1034,8 @@
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.char_cms_click.ResumeLayout(false);
+            this.panel3.ResumeLayout(false);
+            this.panel3.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -1157,15 +1092,7 @@
         private System.Windows.Forms.TextBox txt_p2;
         private System.Windows.Forms.Label label18;
         private System.Windows.Forms.TextBox txt_desc;
-        private System.Windows.Forms.Label label25;
-        private System.Windows.Forms.Label label24;
-        private System.Windows.Forms.Label label23;
-        private System.Windows.Forms.Label label22;
-        private System.Windows.Forms.Label label21;
-        private System.Windows.Forms.Label label20;
-        private System.Windows.Forms.Label label19;
         private System.Windows.Forms.DataGridView dgv_WindPressure;
-        private System.Windows.Forms.GroupBox groupBox6;
         private System.Windows.Forms.Button button11;
         private System.Windows.Forms.Button button12;
         private System.Windows.Forms.Timer tim_fy;
@@ -1197,5 +1124,7 @@
         private System.Windows.Forms.Button btn_zpmax;
         private System.Windows.Forms.Label label30;
         private System.Windows.Forms.Label label31;
+        private System.Windows.Forms.Panel panel3;
+        private System.Windows.Forms.Label label19;
     }
 }

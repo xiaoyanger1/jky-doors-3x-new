@@ -20,9 +20,9 @@ namespace text.doors.Service
         public bool Add(Model_dt_sm_Info model)
         {
             //删除
-            SQLiteHelper.ExecuteNonQuery("delete from dt_sm_Info where dt_Code='" + model.dt_Code + "' and info_DangH = '" + model.info_DangH + "'");
+            SQLiteHelper.ExecuteNonQuery("delete from dt_sm_Info where testcount=" + model.testcount + " and dt_Code='" + model.dt_Code + "' and info_DangH = '" + model.info_DangH + "'");
 
-            var sql = string.Format("insert into dt_sm_Info (dt_Code,info_DangH,sm_PaDesc,sm_Pa,sm_Remark,Method,testcount) values('{0}','{1}','{2}','{3}','{4}','{5}',{6})", model.dt_Code, model.info_DangH, model.sm_PaDesc, model.sm_Pa, model.sm_Remark,model.Method,model.testcount);
+            var sql = string.Format("insert into dt_sm_Info (dt_Code,info_DangH,sm_PaDesc,sm_Pa,sm_Remark,Method,testcount) values('{0}','{1}','{2}','{3}','{4}','{5}',{6})", model.dt_Code, model.info_DangH, model.sm_PaDesc, model.sm_Pa, model.sm_Remark, model.Method, model.testcount);
             var res = SQLiteHelper.ExecuteNonQuery(sql) > 0 ? true : false;
             if (res)
             {
