@@ -52,31 +52,31 @@ namespace text.doors.Detection
 
             if (name == "风速传感器      米/秒")
             {
-                res = _serialPortClient.GetFSXS(ref IsSuccess);
+                res = _serialPortClient.GetFSXS();
             }
             if (name == "差压传感器      高 帕")
             {
-                res = _serialPortClient.GetCYGXS(ref IsSuccess);
+                res = _serialPortClient.GetCYGXS();
             }
             if (name == "温度传感器      ℃")
             {
-                res = _serialPortClient.GetWDXS(ref IsSuccess);
+                res = _serialPortClient.GetWDXS();
             }
             if (name == "大气压力传感器 KPa")
             {
-                res = _serialPortClient.GetDQYLXS(ref IsSuccess);
+                res = _serialPortClient.GetDQYLXS();
             }
             if (name == "位移传感器1      mm")
             {
-                res = _serialPortClient.GetDisplace1(ref IsSuccess);
+                res = _serialPortClient.GetDisplace1();
             }
             if (name == "位移传感器2      mm")
             {
-                res = _serialPortClient.GetDisplace2(ref IsSuccess);
+                res = _serialPortClient.GetDisplace2();
             }
             if (name == "位移传感器3      mm")
             {
-                res = _serialPortClient.GetDisplace3(ref IsSuccess);
+                res = _serialPortClient.GetDisplace3();
             }
 
             lvi.Text = res.ToString();

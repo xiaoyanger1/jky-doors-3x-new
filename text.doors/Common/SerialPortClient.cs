@@ -5,6 +5,7 @@ using System.IO.Ports;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using text.doors.Default;
 
 namespace text.doors.Common
@@ -13,30 +14,43 @@ namespace text.doors.Common
     {
         public static Young.Core.Logger.ILog Logger = Young.Core.Logger.LoggerManager.Current();
 
-        SerialPort sp = new SerialPort();//实例化串口通讯类
-        public static string strProtName = "COM3";
-        public static string strBaudRate = "9600";
-        public static string strDataBits = "7";
-        public static string strStopBits = "1";
-        public static string strParity = "Even";
+        public SerialPort sp = new SerialPort();
+
+        public static string _protName = System.Configuration.ConfigurationSettings.AppSettings["ProtName"].ToString();
+        public static string _baudRate = System.Configuration.ConfigurationSettings.AppSettings["BaudRate"].ToString();
+        public static string _dataBits = System.Configuration.ConfigurationSettings.AppSettings["DataBits"].ToString();
+        public static string _stopBits = System.Configuration.ConfigurationSettings.AppSettings["StopBits"].ToString();
+        public static string _parity = System.Configuration.ConfigurationSettings.AppSettings["Parity"].ToString();
+        public static string _slaveID = System.Configuration.ConfigurationSettings.AppSettings["SlaveID"].ToString();
 
         public ModbusSerialMaster _MASTER;
         private static Object syncLock = new Object();
-        public bool IsSerialPortLink = false;
 
         private ushort _StartAddress = 0;
         private ushort _NumOfPoints = 1;
-        private byte _SlaveID = 1;
+        private byte _SlaveID = byte.Parse(_slaveID);
+
+        public SerialPortClient()
+        {
+            sp.PortName = _protName;//串口号
+            sp.BaudRate = int.Parse(_baudRate);//波特率
+            sp.DataBits = int.Parse(_dataBits);//数据位
+            sp.StopBits = (StopBits)int.Parse(_stopBits);//停止位
+            sp.Parity = Parity.None;//校验位
+            sp.ReadTimeout = 1500;//读取数据的超时时间，引发ReadExisting异常
+        }
+
 
         public void Init()
         {
-            sp.Close();
-            sp.PortName = strProtName;//串口号
-            sp.BaudRate = int.Parse(strBaudRate);//波特率
-            sp.DataBits = int.Parse(strDataBits);//数据位
-            sp.StopBits = (StopBits)int.Parse(strStopBits);//停止位
-            sp.Parity = Parity.Even;//校验位
-            sp.ReadTimeout = 1500;//读取数据的超时时间，引发ReadExisting异常
+            string[] strPortNames = SerialPort.GetPortNames();
+
+            if (strPortNames == null || strPortNames.Length == 0)
+            {
+                MessageBox.Show("未找到串口！", "串口", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
+                return;
+            }
+
         }
         public void SerialPortOpen()
         {
@@ -44,29 +58,23 @@ namespace text.doors.Common
                 _MASTER.Dispose();
             try
             {
-                if (!IsSerialPortLink)
+                if (sp.IsOpen)
                 {
-                    Init();
-                    if (sp.IsOpen)
-                    {
-                        sp.Close();
-                        sp.Open();//打开串口
-                    }
-                    else
-                    {
-                        sp.Open();//打开串口
-                    }
-                    //由客户端创建Modbus TCP的主
-                    _MASTER = ModbusSerialMaster.CreateAscii(sp);
-                    _MASTER.Transport.Retries = 0;   //不必调试
-                    _MASTER.Transport.ReadTimeout = 1500;//读取超时
-                    IsSerialPortLink = true;
+                    sp.Close();
+                    sp.Open();//打开串口
                 }
+                else
+                {
+                    sp.Open();//打开串口
+                }
+                //由客户端创建Modbus TCP的主
+                _MASTER = ModbusSerialMaster.CreateAscii(sp);
+                _MASTER.Transport.Retries = 0;   //不必调试
+                _MASTER.Transport.ReadTimeout = 1500;//读取超时
+
             }
             catch (Exception ex)
             {
-                Logger.Error(ex);
-                IsSerialPortLink = false;
                 sp.Close();
             }
         }
@@ -80,11 +88,9 @@ namespace text.doors.Common
         /// <param name="IsSuccess"></param>
         public bool SetZYYB()
         {
-            if (!IsSerialPortLink)
-                return false;
             try
             {
-                lock (syncLock)
+
                 {
                     var res = SendZYF();
                     if (!res)
@@ -97,8 +103,6 @@ namespace text.doors.Common
             }
             catch (Exception ex)
             {
-                IsSerialPortLink = false;
-                Logger.Error(ex);
                 return false;
             }
             return true;
@@ -111,14 +115,9 @@ namespace text.doors.Common
         public int GetZYYBJS(ref bool IsSuccess)
         {
             int res = 0;
-            if (!IsSerialPortLink)
-            {
-                IsSuccess = false;
-                return res;
-            }
             try
             {
-                lock (syncLock)
+
                 {
                     _StartAddress = BFMCommand.GetCommandDict(BFMCommand.正压预备结束);
                     ushort[] holding_register = _MASTER.ReadHoldingRegisters(_SlaveID, _StartAddress, _NumOfPoints);
@@ -128,9 +127,7 @@ namespace text.doors.Common
             }
             catch (Exception ex)
             {
-                IsSerialPortLink = false;
                 IsSuccess = false;
-                Logger.Error(ex);
             }
             return res;
         }
@@ -138,31 +135,24 @@ namespace text.doors.Common
         /// <summary>
         /// 发送正压开始
         /// </summary>
-        public bool SendZYKS(ref bool IsSuccess)
+        public void SendZYKS()
         {
-            if (!IsSerialPortLink)
-                return false;
-            try
-            {
-                lock (syncLock)
-                {
-                    var res = SendZYF();
-                    if (!res)
-                    {
-                        return false;
-                    }
-                    _StartAddress = BFMCommand.GetCommandDict(BFMCommand.正压开始);
-                    _MASTER.WriteSingleCoil(_SlaveID, _StartAddress, false);
-                    _MASTER.WriteSingleCoil(_SlaveID, _StartAddress, true);
-                }
-            }
-            catch (Exception ex)
-            {
-                IsSerialPortLink = false;
-                Logger.Error(ex);
-                return false;
-            }
-            return true;
+            //try
+            //{
+            //var res = SendZYF();
+            //if (!res)
+            //{
+            //    return false;
+            //}
+            _StartAddress = BFMCommand.GetCommandDict(BFMCommand.正压开始);
+            _MASTER.WriteSingleCoil(_SlaveID, _StartAddress, false);
+            _MASTER.WriteSingleCoil(_SlaveID, _StartAddress, true);
+            //}
+            //catch (Exception ex)
+            //{
+            //    return false;
+            //}
+            //return true;
         }
 
 
@@ -170,29 +160,17 @@ namespace text.doors.Common
         /// 读取正压开始结束
         /// </summary>
         /// <param name="IsSuccess"></param>
-        public double GetZYKSJS(ref bool IsSuccess)
+        public double GetZYKSJS()
         {
             double res = 0;
-            if (!IsSerialPortLink)
-            {
-                IsSuccess = false;
-                return res;
-            }
             try
             {
-                lock (syncLock)
-                {
-                    _StartAddress = BFMCommand.GetCommandDict(BFMCommand.正压开始结束);
-                    ushort[] holding_register = _MASTER.ReadHoldingRegisters(_SlaveID, _StartAddress, _NumOfPoints);
-                    res = double.Parse(holding_register[0].ToString());
-                }
-                IsSuccess = true;
+                _StartAddress = BFMCommand.GetCommandDict(BFMCommand.正压开始结束);
+                ushort[] holding_register = _MASTER.ReadHoldingRegisters(_SlaveID, _StartAddress, _NumOfPoints);
+                res = double.Parse(holding_register[0].ToString());
             }
             catch (Exception ex)
             {
-                IsSerialPortLink = false;
-                IsSuccess = false;
-                Logger.Error(ex);
             }
             return res;
         }
@@ -203,11 +181,9 @@ namespace text.doors.Common
         /// <param name="IsSuccess"></param>
         public bool SendFYYB()
         {
-            if (!IsSerialPortLink)
-                return false;
             try
             {
-                lock (syncLock)
+
                 {
                     var res = SendFYF();
                     if (!res)
@@ -223,8 +199,7 @@ namespace text.doors.Common
             }
             catch (Exception ex)
             {
-                IsSerialPortLink = false;
-                Logger.Error(ex);
+
                 return false;
             }
             return true;
@@ -232,31 +207,11 @@ namespace text.doors.Common
         /// <summary>
         /// 发送负压开始
         /// </summary>
-        public bool SendFYKS()
+        public void SendFYKS()
         {
-            if (!IsSerialPortLink)
-                return false;
-            try
-            {
-                lock (syncLock)
-                {
-                    var res = SendFYF();
-                    if (!res)
-                    {
-                        return false;
-                    }
-                    _StartAddress = BFMCommand.GetCommandDict(BFMCommand.负压开始);
-                    _MASTER.WriteSingleCoil(_SlaveID, _StartAddress, false);
-                    _MASTER.WriteSingleCoil(_SlaveID, _StartAddress, true);
-                }
-            }
-            catch (Exception ex)
-            {
-                IsSerialPortLink = false;
-                Logger.Error(ex);
-                return false;
-            }
-            return true;
+            _StartAddress = BFMCommand.GetCommandDict(BFMCommand.负压开始);
+            _MASTER.WriteSingleCoil(_SlaveID, _StartAddress, false);
+            _MASTER.WriteSingleCoil(_SlaveID, _StartAddress, true);
         }
 
 
@@ -267,15 +222,10 @@ namespace text.doors.Common
         public int GetFYYBJS(ref bool IsSuccess)
         {
             int res = 0;
-            if (!IsSerialPortLink)
-            {
-                IsSuccess = false;
-                return res;
-            }
 
             try
             {
-                lock (syncLock)
+
                 {
                     _StartAddress = BFMCommand.GetCommandDict(BFMCommand.负压预备结束);
                     ushort[] holding_register = _MASTER.ReadHoldingRegisters(_SlaveID, _StartAddress, _NumOfPoints);
@@ -285,9 +235,8 @@ namespace text.doors.Common
             }
             catch (Exception ex)
             {
-                IsSerialPortLink = false;
                 IsSuccess = false;
-                Logger.Error(ex);
+
             }
             return res;
         }
@@ -296,32 +245,13 @@ namespace text.doors.Common
         /// 读取负压开始结束
         /// </summary>
         /// <param name="IsSuccess"></param>
-        public double GetFYKSJS(ref bool IsSuccess)
+        public double GetFYKSJS()
         {
             double res = 0;
-            if (!IsSerialPortLink)
-            {
-                IsSuccess = false;
-                return res;
-            }
-            try
-            {
-                lock (syncLock)
-                {
-                    _StartAddress = BFMCommand.GetCommandDict(BFMCommand.负压开始结束);
-                    ushort[] holding_register = _MASTER.ReadHoldingRegisters(_SlaveID, _StartAddress, _NumOfPoints);
-                    res = double.Parse(holding_register[0].ToString());
-                    IsSuccess = true;
-                }
-            }
-            catch (Exception ex)
-            {
-                IsSerialPortLink = false;
-                IsSuccess = false;
-                Logger.Error(ex);
-            }
 
-            return res;
+            _StartAddress = BFMCommand.GetCommandDict(BFMCommand.负压开始结束);
+            ushort[] holding_register = _MASTER.ReadHoldingRegisters(_SlaveID, _StartAddress, _NumOfPoints);
+            return double.Parse(holding_register[0].ToString());
         }
 
 
@@ -329,47 +259,32 @@ namespace text.doors.Common
         /// <summary>
         /// 获取正压预备时，设定压力值
         /// </summary>
-        public double GetZYYBYLZ(ref bool IsSuccess, string type)
+        public double GetZYYBYLZ(string type)
         {
             double res = 0;
-            if (!IsSerialPortLink)
+
+
+            if (type == "ZYYB")
             {
-                IsSuccess = false;
-                return res;
+                _StartAddress = BFMCommand.GetCommandDict(BFMCommand.正压预备_设定值);
+            }
+            else if (type == "ZYKS")
+            {
+                _StartAddress = BFMCommand.GetCommandDict(BFMCommand.正压开始_设定值);
+            }
+            else if (type == "FYYB")
+            {
+                _StartAddress = BFMCommand.GetCommandDict(BFMCommand.负压预备_设定值);
+            }
+            else if (type == "FYKS")
+            {
+                _StartAddress = BFMCommand.GetCommandDict(BFMCommand.负压开始_设定值);
             }
 
-            try
-            {
-                lock (syncLock)
-                {
-                    if (type == "ZYYB")
-                    {
-                        _StartAddress = BFMCommand.GetCommandDict(BFMCommand.正压预备_设定值);
-                    }
-                    else if (type == "ZYKS")
-                    {
-                        _StartAddress = BFMCommand.GetCommandDict(BFMCommand.正压开始_设定值);
-                    }
-                    else if (type == "FYYB")
-                    {
-                        _StartAddress = BFMCommand.GetCommandDict(BFMCommand.负压预备_设定值);
-                    }
-                    else if (type == "FYKS")
-                    {
-                        _StartAddress = BFMCommand.GetCommandDict(BFMCommand.负压开始_设定值);
-                    }
+            ushort[] holding_register = _MASTER.ReadHoldingRegisters(_SlaveID, _StartAddress, _NumOfPoints);
+            res = double.Parse((double.Parse(holding_register[0].ToString())).ToString());
 
-                    ushort[] holding_register = _MASTER.ReadHoldingRegisters(_SlaveID, _StartAddress, _NumOfPoints);
-                    res = double.Parse((double.Parse(holding_register[0].ToString())).ToString());
-                    IsSuccess = true;
-                }
-            }
-            catch (Exception ex)
-            {
-                IsSerialPortLink = false;
-                IsSuccess = false;
-                Logger.Error(ex);
-            }
+
             return res;
         }
 
@@ -378,123 +293,20 @@ namespace text.doors.Common
 
 
         /// <summary>
-        /// 获取正压100Pa是否开始计时
+        /// 获取正压是否开始计时
         /// </summary>
-        public bool GetQiMiTimeStart(string ylType)
+        public bool GetQiMiTimeStart(string key)
         {
-            if (!IsSerialPortLink)
+
+            _StartAddress = BFMCommand.GetCommandDict(key);
+            ushort[] t = _MASTER.ReadHoldingRegisters(_SlaveID, _StartAddress, _NumOfPoints);
+            if (Convert.ToInt32(t[0]) > 5)
+                return true;
+            else
                 return false;
-            try
-            {
-                lock (syncLock)
-                {
-                    var key = "";
-                    if (ylType == "Z_S_10Stop")
-                    {
-                        key = BFMCommand.正压10TimeStart;
-                    }
-                    if (ylType == "Z_S_30Stop")
-                    {
-                        key = BFMCommand.正压30TimeStart;
-                    }
-                    if (ylType == "Z_S_50Stop")
-                    {
-                        key = BFMCommand.正压50TimeStart;
-                    }
-                    if (ylType == "Z_S_70Stop")
-                    {
-                        key = BFMCommand.正压70TimeStart;
-                    }
-                    if (ylType == "Z_S_100Stop")
-                    {
-                        key = BFMCommand.正压100TimeStart;
-                    }
-                    if (ylType == "Z_S_150Stop")
-                    {
-                        key = BFMCommand.正压150TimeStart;
-                    }
-                    if (ylType == "Z_J_100Stop")
-                    {
-                        key = BFMCommand.正压_100TimeStart;
-                    }
-                    if (ylType == "Z_J_70Stop")
-                    {
-                        key = BFMCommand.正压_70TimeStart;
-                    }
-                    if (ylType == "Z_J_50Stop")
-                    {
-                        key = BFMCommand.正压_50TimeStart;
-                    }
-                    if (ylType == "Z_J_30Stop")
-                    {
-                        key = BFMCommand.正压_30TimeStart;
-                    }
-                    if (ylType == "Z_J_10Stop")
-                    {
-                        key = BFMCommand.正压_10TimeStart;
-                    }
 
-
-                    if (ylType == "F_S_10Stop")
-                    {
-                        key = BFMCommand.负压10TimeStart;
-                    }
-                    if (ylType == "F_S_30Stop")
-                    {
-                        key = BFMCommand.负压30TimeStart;
-                    }
-                    if (ylType == "F_S_50Stop")
-                    {
-                        key = BFMCommand.负压50TimeStart;
-                    }
-                    if (ylType == "F_S_70Stop")
-                    {
-                        key = BFMCommand.负压70TimeStart;
-                    }
-                    if (ylType == "F_S_100Stop")
-                    {
-                        key = BFMCommand.负压100TimeStart;
-                    }
-                    if (ylType == "F_S_150Stop")
-                    {
-                        key = BFMCommand.负压150TimeStart;
-                    }
-                    if (ylType == "F_J_100Stop")
-                    {
-                        key = BFMCommand.负压_100TimeStart;
-                    }
-                    if (ylType == "F_J_70Stop")
-                    {
-                        key = BFMCommand.负压_70TimeStart;
-                    }
-                    if (ylType == "F_J_50Stop")
-                    {
-                        key = BFMCommand.负压_50TimeStart;
-                    }
-                    if (ylType == "F_J_30Stop")
-                    {
-                        key = BFMCommand.负压_30TimeStart;
-                    }
-                    if (ylType == "F_J_10Stop")
-                    {
-                        key = BFMCommand.负压_10TimeStart;
-                    }
-
-                    _StartAddress = BFMCommand.GetCommandDict(key);
-                    ushort[] t = _MASTER.ReadHoldingRegisters(_SlaveID, _StartAddress, _NumOfPoints);
-                    if (Convert.ToInt32(t[0]) > 20)
-                        return true;
-                    else
-                        return false;
-                }
-            }
-            catch (Exception ex)
-            {
-                IsSerialPortLink = false;
-                Logger.Error(ex);
-                return false;
-            }
         }
+
 
 
 
@@ -508,7 +320,7 @@ namespace text.doors.Common
         //        return false;
         //    try
         //    {
-        //        lock (syncLock)
+        //      
         //        {
         //            _StartAddress = BFMCommand.GetCommandDict(BFMCommand.正压100TimeStart);
         //            ushort[] t = _MASTER.ReadHoldingRegisters(_SlaveID, _StartAddress, _NumOfPoints);
@@ -521,7 +333,7 @@ namespace text.doors.Common
         //    catch (Exception ex)
         //    {
         //        IsSerialPortLink = false;
-        //        Logger.Error(ex);
+        //     
         //        return false;
         //    }
         //}
@@ -535,7 +347,7 @@ namespace text.doors.Common
         //        return false;
         //    try
         //    {
-        //        lock (syncLock)
+        //      
         //        {
         //            _StartAddress = BFMCommand.GetCommandDict(BFMCommand.正压150TimeStart);
         //            ushort[] t = _MASTER.ReadHoldingRegisters(_SlaveID, _StartAddress, _NumOfPoints);
@@ -548,7 +360,7 @@ namespace text.doors.Common
         //    catch (Exception ex)
         //    {
         //        IsSerialPortLink = false;
-        //        Logger.Error(ex);
+        //     
         //        return false;
         //    }
         //}
@@ -562,7 +374,7 @@ namespace text.doors.Common
         //        return false;
         //    try
         //    {
-        //        lock (syncLock)
+        //      
         //        {
         //            _StartAddress = BFMCommand.GetCommandDict(BFMCommand.正压_100TimeStart);
         //            ushort[] t = _MASTER.ReadHoldingRegisters(_SlaveID, _StartAddress, _NumOfPoints);
@@ -575,7 +387,7 @@ namespace text.doors.Common
         //    catch (Exception ex)
         //    {
         //        IsSerialPortLink = false;
-        //        Logger.Error(ex);
+        //     
         //        return false;
         //    }
         //}
@@ -590,7 +402,7 @@ namespace text.doors.Common
 
         //    try
         //    {
-        //        lock (syncLock)
+        //      
         //        {
         //            _StartAddress = BFMCommand.GetCommandDict(BFMCommand.负压100TimeStart);
         //            ushort[] t = _MASTER.ReadHoldingRegisters(_SlaveID, _StartAddress, _NumOfPoints);
@@ -603,7 +415,7 @@ namespace text.doors.Common
         //    catch (Exception ex)
         //    {
         //        IsSerialPortLink = false;
-        //        Logger.Error(ex);
+        //     
         //        return false;
         //    }
         //}
@@ -618,7 +430,7 @@ namespace text.doors.Common
 
         //    try
         //    {
-        //        lock (syncLock)
+        //      
         //        {
         //            _StartAddress = BFMCommand.GetCommandDict(BFMCommand.负压150TimeStart);
         //            ushort[] t = _MASTER.ReadHoldingRegisters(_SlaveID, _StartAddress, _NumOfPoints);
@@ -631,7 +443,7 @@ namespace text.doors.Common
         //    catch (Exception ex)
         //    {
         //        IsSerialPortLink = false;
-        //        Logger.Error(ex);
+        //     
         //        return false;
         //    }
         //}
@@ -645,7 +457,7 @@ namespace text.doors.Common
         //        return false;
         //    try
         //    {
-        //        lock (syncLock)
+        //      
         //        {
         //            _StartAddress = BFMCommand.GetCommandDict(BFMCommand.负压_100TimeStart);
         //            ushort[] t = _MASTER.ReadHoldingRegisters(_SlaveID, _StartAddress, _NumOfPoints);
@@ -658,7 +470,7 @@ namespace text.doors.Common
         //    catch (Exception ex)
         //    {
         //        IsSerialPortLink = false;
-        //        Logger.Error(ex);
+        //     
         //        return false;
         //    }
         //}
@@ -673,11 +485,9 @@ namespace text.doors.Common
         /// <param name="IsSuccess"></param>
         public bool SetSMYB()
         {
-            if (!IsSerialPortLink)
-                return false;
             try
             {
-                lock (syncLock)
+
                 {
                     var res = SendZYF();
                     if (!res)
@@ -691,8 +501,7 @@ namespace text.doors.Common
             }
             catch (Exception ex)
             {
-                IsSerialPortLink = false;
-                Logger.Error(ex);
+
                 return false;
             }
             return true;
@@ -706,14 +515,9 @@ namespace text.doors.Common
         public int GetSMYBJS(ref bool IsSuccess)
         {
             int res = 0;
-            if (!IsSerialPortLink)
-            {
-                IsSuccess = false;
-                return res;
-            }
             try
             {
-                lock (syncLock)
+
                 {
                     _StartAddress = BFMCommand.GetCommandDict(BFMCommand.水密预备结束);
                     ushort[] holding_register = _MASTER.ReadHoldingRegisters(_SlaveID, _StartAddress, _NumOfPoints);
@@ -723,9 +527,8 @@ namespace text.doors.Common
             }
             catch (Exception ex)
             {
-                IsSerialPortLink = false;
                 IsSuccess = false;
-                Logger.Error(ex);
+
             }
             return res;
         }
@@ -737,14 +540,9 @@ namespace text.doors.Common
         public int GetSMXYJJS_BD(ref bool IsSuccess)
         {
             int res = 0;
-            if (!IsSerialPortLink)
-            {
-                IsSuccess = false;
-                return res;
-            }
             try
             {
-                lock (syncLock)
+
                 {
                     _StartAddress = BFMCommand.GetCommandDict(BFMCommand.水密预备结束);
                     ushort[] holding_register = _MASTER.ReadHoldingRegisters(_SlaveID, _StartAddress, _NumOfPoints);
@@ -754,9 +552,8 @@ namespace text.doors.Common
             }
             catch (Exception ex)
             {
-                IsSerialPortLink = false;
                 IsSuccess = false;
-                Logger.Error(ex);
+
             }
             return res;
         }
@@ -768,14 +565,9 @@ namespace text.doors.Common
         public int GetSMJS_BD(ref bool IsSuccess)
         {
             int res = 0;
-            if (!IsSerialPortLink)
-            {
-                IsSuccess = false;
-                return res;
-            }
             try
             {
-                lock (syncLock)
+
                 {
                     _StartAddress = BFMCommand.GetCommandDict(BFMCommand.水密开始波动结束);
                     ushort[] holding_register = _MASTER.ReadHoldingRegisters(_SlaveID, _StartAddress, _NumOfPoints);
@@ -785,9 +577,8 @@ namespace text.doors.Common
             }
             catch (Exception ex)
             {
-                IsSerialPortLink = false;
                 IsSuccess = false;
-                Logger.Error(ex);
+
             }
             return res;
         }
@@ -800,15 +591,8 @@ namespace text.doors.Common
         public int GetSMYBSDYL(ref bool IsSuccess, string type)
         {
             int res = 0;
-            if (!IsSerialPortLink)
-            {
-                IsSuccess = false;
-                return res;
-            }
-
             try
             {
-                lock (syncLock)
                 {
                     if (type == "SMYB")
                     {
@@ -834,9 +618,8 @@ namespace text.doors.Common
             }
             catch (Exception ex)
             {
-                IsSerialPortLink = false;
                 IsSuccess = false;
-                Logger.Error(ex);
+
             }
             return res;
         }
@@ -846,11 +629,9 @@ namespace text.doors.Common
         /// </summary>
         public bool SendSMXKS()
         {
-            if (!IsSerialPortLink)
-                return false;
             try
             {
-                lock (syncLock)
+
                 {
                     var res = SendZYF();
                     if (!res)
@@ -864,8 +645,7 @@ namespace text.doors.Common
             }
             catch (Exception ex)
             {
-                IsSerialPortLink = false;
-                Logger.Error(ex);
+
                 return false;
             }
         }
@@ -875,11 +655,9 @@ namespace text.doors.Common
         /// </summary>
         public bool SendSMXXYJ()
         {
-            if (!IsSerialPortLink)
-                return false;
             try
             {
-                lock (syncLock)
+
                 {
                     _StartAddress = BFMCommand.GetCommandDict(BFMCommand.下一级);
                     _MASTER.WriteSingleCoil(_SlaveID, _StartAddress, false);
@@ -889,26 +667,19 @@ namespace text.doors.Common
             }
             catch (Exception ex)
             {
-                IsSerialPortLink = false;
-                Logger.Error(ex);
+
                 return false;
             }
         }
-
-
-
-
 
         /// <summary>
         /// 设置水密依次加压
         /// </summary>
         public bool SendSMYCJY(double value)
         {
-            if (!IsSerialPortLink)
-                return false;
             try
             {
-                lock (syncLock)
+
                 {
                     var res = SendZYF();
                     if (!res)
@@ -926,8 +697,7 @@ namespace text.doors.Common
             }
             catch (Exception ex)
             {
-                IsSerialPortLink = false;
-                Logger.Error(ex);
+
                 return false;
             }
         }
@@ -938,12 +708,9 @@ namespace text.doors.Common
         /// </summary>
         public bool Stop()
         {
-            if (!IsSerialPortLink)
-                return false;
-
             try
             {
-                lock (syncLock)
+
                 {
                     _StartAddress = BFMCommand.GetCommandDict(BFMCommand.急停);
                     _MASTER.WriteSingleCoil(this._SlaveID, _StartAddress, true);
@@ -953,10 +720,8 @@ namespace text.doors.Common
             }
             catch (Exception ex)
             {
-                IsSerialPortLink = false;
-                Logger.Error(ex);
+
                 return false;
-                // System.Environment.Exit(0);
             }
         }
         #endregion
@@ -966,11 +731,9 @@ namespace text.doors.Common
 
         public bool SendSMXKS_波动()
         {
-            if (!IsSerialPortLink)
-                return false;
             try
             {
-                lock (syncLock)
+
                 {
                     var res = SendZYF();
                     if (!res)
@@ -984,8 +747,7 @@ namespace text.doors.Common
             }
             catch (Exception ex)
             {
-                IsSerialPortLink = false;
-                Logger.Error(ex);
+
                 return false;
             }
         }
@@ -995,12 +757,9 @@ namespace text.doors.Common
         /// </summary>
         public bool StopBoDong()
         {
-            if (!IsSerialPortLink)
-                return false;
-
             try
             {
-                lock (syncLock)
+
                 {
                     _StartAddress = BFMCommand.GetCommandDict(BFMCommand.工程检测水密性停止加压);
                     _MASTER.WriteSingleCoil(this._SlaveID, _StartAddress, true);
@@ -1010,8 +769,7 @@ namespace text.doors.Common
             }
             catch (Exception ex)
             {
-                IsSerialPortLink = false;
-                Logger.Error(ex);
+
                 return false;
             }
         }
@@ -1021,11 +779,9 @@ namespace text.doors.Common
         /// </summary>
         public bool SendBoDongksjy(double maxValue, double minValue)
         {
-            if (!IsSerialPortLink)
-                return false;
             try
             {
-                lock (syncLock)
+
                 {
                     var res = SendZYF();
                     if (!res)
@@ -1047,8 +803,7 @@ namespace text.doors.Common
             }
             catch (Exception ex)
             {
-                IsSerialPortLink = false;
-                Logger.Error(ex);
+
                 return false;
             }
         }
@@ -1059,13 +814,9 @@ namespace text.doors.Common
         /// <param name="IsSuccess"></param>
         public bool qiehuanTab(bool type)
         {
-            if (!IsSerialPortLink)
-            {
-                return false;
-            }
             try
             {
-                lock (syncLock)
+
                 {
                     _StartAddress = BFMCommand.GetCommandDict(BFMCommand.国标检测波动加压开始);
                     _MASTER.WriteSingleCoil(this._SlaveID, _StartAddress, type);
@@ -1073,8 +824,7 @@ namespace text.doors.Common
             }
             catch (Exception ex)
             {
-                IsSerialPortLink = false;
-                Logger.Error(ex);
+
                 return false;
             }
             return true;
@@ -1089,72 +839,34 @@ namespace text.doors.Common
         /// <summary>
         /// 获取位移传感器1
         /// </summary>
-        public double GetDisplace1(ref bool IsSuccess)
+        public double GetDisplace1()
         {
             double res = 0;
-            if (!IsSerialPortLink)
-            {
-                IsSuccess = false;
-                return res;
-            }
-            try
-            {
-                lock (syncLock)
-                {
-                    _StartAddress = BFMCommand.GetCommandDict(BFMCommand.位移1);
-                    ushort[] holding_register = _MASTER.ReadHoldingRegisters(_SlaveID, _StartAddress, _NumOfPoints);
-                    if (holding_register.Length > 0)
-                    {
-                        res = double.Parse((double.Parse(holding_register[0].ToString()) / 1000).ToString());
-                        res = Formula.GetValues(PublicEnum.DemarcateType.位移传感器1, float.Parse(res.ToString()));
-                        IsSuccess = true;
-                    }
-                }
 
-            }
-            catch (Exception ex)
+            _StartAddress = BFMCommand.GetCommandDict(BFMCommand.位移1);
+            ushort[] holding_register = _MASTER.ReadHoldingRegisters(_SlaveID, _StartAddress, _NumOfPoints);
+            if (holding_register.Length > 0)
             {
-                IsSerialPortLink = false;
-                Logger.Error(ex);
-                IsSuccess = false;
+                res = double.Parse((double.Parse(holding_register[0].ToString()) / 1000).ToString());
+                res = Formula.GetValues(PublicEnum.DemarcateType.位移传感器1, float.Parse(res.ToString()));
             }
-
             return res;
         }
 
         /// <summary>
         /// 获取位移传感器2
         /// </summary>
-        public double GetDisplace2(ref bool IsSuccess)
+        public double GetDisplace2()
         {
             double res = 0;
-            if (!IsSerialPortLink)
-            {
-                IsSuccess = false;
-                return res;
-            }
-            try
-            {
-                lock (syncLock)
-                {
-                    _StartAddress = BFMCommand.GetCommandDict(BFMCommand.位移2);
-                    ushort[] holding_register = _MASTER.ReadHoldingRegisters(_SlaveID, _StartAddress, _NumOfPoints);
-                    if (holding_register.Length > 0)
-                    {
-                        res = double.Parse((double.Parse(holding_register[0].ToString()) / 1000).ToString());
-                        res = Formula.GetValues(PublicEnum.DemarcateType.位移传感器2, float.Parse(res.ToString()));
-                        IsSuccess = true;
-                    }
-                }
 
-            }
-            catch (Exception ex)
+            _StartAddress = BFMCommand.GetCommandDict(BFMCommand.位移2);
+            ushort[] holding_register = _MASTER.ReadHoldingRegisters(_SlaveID, _StartAddress, _NumOfPoints);
+            if (holding_register.Length > 0)
             {
-                IsSerialPortLink = false;
-                Logger.Error(ex);
-                IsSuccess = false;
+                res = double.Parse((double.Parse(holding_register[0].ToString()) / 1000).ToString());
+                res = Formula.GetValues(PublicEnum.DemarcateType.位移传感器2, float.Parse(res.ToString()));
             }
-
             return res;
         }
 
@@ -1162,35 +874,17 @@ namespace text.doors.Common
         /// <summary>
         /// 获取位移传感器3
         /// </summary>
-        public double GetDisplace3(ref bool IsSuccess)
+        public double GetDisplace3()
         {
             double res = 0;
-            if (!IsSerialPortLink)
+            _StartAddress = BFMCommand.GetCommandDict(BFMCommand.位移3);
+            ushort[] holding_register = _MASTER.ReadHoldingRegisters(_SlaveID, _StartAddress, _NumOfPoints);
+            if (holding_register.Length > 0)
             {
-                IsSuccess = false;
-                return res;
-            }
-            try
-            {
-                lock (syncLock)
-                {
-                    _StartAddress = BFMCommand.GetCommandDict(BFMCommand.位移3);
-                    ushort[] holding_register = _MASTER.ReadHoldingRegisters(_SlaveID, _StartAddress, _NumOfPoints);
-                    if (holding_register.Length > 0)
-                    {
-                        res = double.Parse((double.Parse(holding_register[0].ToString()) / 1000).ToString());
-                        res = Formula.GetValues(PublicEnum.DemarcateType.位移传感器3, float.Parse(res.ToString()));
-                        IsSuccess = true;
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                IsSerialPortLink = false;
-                Logger.Error(ex);
-                IsSuccess = false;
-            }
+                res = double.Parse((double.Parse(holding_register[0].ToString()) / 1000).ToString());
+                res = Formula.GetValues(PublicEnum.DemarcateType.位移传感器3, float.Parse(res.ToString()));
 
+            }
             return res;
         }
 
@@ -1199,11 +893,9 @@ namespace text.doors.Common
         /// </summary>
         public bool SendWYGL(bool logon = false)
         {
-            if (!IsSerialPortLink)
-                return false;
             try
             {
-                lock (syncLock)
+
                 {
                     _StartAddress = BFMCommand.GetCommandDict(BFMCommand.位移1标零);
                     bool[] readCoils = _MASTER.ReadCoils(_SlaveID, _StartAddress, _NumOfPoints);
@@ -1244,8 +936,7 @@ namespace text.doors.Common
             }
             catch (Exception ex)
             {
-                IsSerialPortLink = false;
-                Logger.Error(ex);
+
                 return false;
             }
             return true;
@@ -1257,11 +948,9 @@ namespace text.doors.Common
         /// <param name="IsSuccess"></param>
         public bool SetKFYZYYB()
         {
-            if (!IsSerialPortLink)
-                return false;
             try
             {
-                lock (syncLock)
+
                 {
                     var res = SendZYF();
                     if (!res)
@@ -1274,8 +963,7 @@ namespace text.doors.Common
             }
             catch (Exception ex)
             {
-                IsSerialPortLink = false;
-                Logger.Error(ex);
+
                 return false;
             }
             return true;
@@ -1286,11 +974,9 @@ namespace text.doors.Common
         /// </summary>
         public bool SendKFYZYKS()
         {
-            if (!IsSerialPortLink)
-                return false;
             try
             {
-                lock (syncLock)
+
                 {
                     var res = SendZYF();
                     if (!res)
@@ -1304,8 +990,7 @@ namespace text.doors.Common
             }
             catch (Exception ex)
             {
-                IsSerialPortLink = false;
-                Logger.Error(ex);
+
                 return false;
             }
             return true;
@@ -1317,11 +1002,9 @@ namespace text.doors.Common
         /// <param name="IsSuccess"></param>
         public bool SendKFYFYYB()
         {
-            if (!IsSerialPortLink)
-                return false;
             try
             {
-                lock (syncLock)
+
                 {
                     var res = SendFYF();
                     if (!res)
@@ -1337,8 +1020,7 @@ namespace text.doors.Common
             }
             catch (Exception ex)
             {
-                IsSerialPortLink = false;
-                Logger.Error(ex);
+
                 return false;
             }
             return true;
@@ -1348,11 +1030,9 @@ namespace text.doors.Common
         /// </summary>
         public bool SendKFYFYKS()
         {
-            if (!IsSerialPortLink)
-                return false;
             try
             {
-                lock (syncLock)
+
                 {
                     var res = SendFYF();
                     if (!res)
@@ -1366,8 +1046,7 @@ namespace text.doors.Common
             }
             catch (Exception ex)
             {
-                IsSerialPortLink = false;
-                Logger.Error(ex);
+
                 return false;
             }
             return true;
@@ -1380,29 +1059,26 @@ namespace text.doors.Common
         /// <returns></returns>
         public bool Set_FY_Value(string commandValue, string commandStr, double value, bool isZ = true)
         {
-            if (!IsSerialPortLink)
-                return false;
             try
             {
-                lock (syncLock)
-                {
-                    var res = isZ ? SendZYF() : SendFYF();
-                    if (!res)
-                        return false;
 
-                    _StartAddress = BFMCommand.GetCommandDict(commandValue);
-                    _MASTER.WriteSingleRegister(_SlaveID, _StartAddress, (ushort)(value));
+                //{
+                //    var res = isZ ? SendZYF() : SendFYF();
+                //    if (!res)
+                //        return false;
 
-                    _StartAddress = BFMCommand.GetCommandDict(commandStr);
-                    _MASTER.WriteSingleCoil(this._SlaveID, _StartAddress, false);
-                    _MASTER.WriteSingleCoil(this._SlaveID, _StartAddress, true);
-                    return true;
-                }
+                _StartAddress = BFMCommand.GetCommandDict(commandValue);
+                _MASTER.WriteSingleRegister(_SlaveID, _StartAddress, (ushort)(value));
+
+                _StartAddress = BFMCommand.GetCommandDict(commandStr);
+                _MASTER.WriteSingleCoil(this._SlaveID, _StartAddress, false);
+                _MASTER.WriteSingleCoil(this._SlaveID, _StartAddress, true);
+                return true;
+                //}
             }
             catch (Exception ex)
             {
-                IsSerialPortLink = false;
-                Logger.Error(ex);
+
                 return false;
             }
         }
@@ -1415,11 +1091,9 @@ namespace text.doors.Common
         /// </summary>
         public bool Read_FY_Static_IsStart(string commandStr)
         {
-            if (!IsSerialPortLink)
-                return false;
             try
             {
-                lock (syncLock)
+
                 {
                     _StartAddress = BFMCommand.GetCommandDict(commandStr);
                     ushort[] t = _MASTER.ReadHoldingRegisters(_SlaveID, _StartAddress, _NumOfPoints);
@@ -1431,8 +1105,7 @@ namespace text.doors.Common
             }
             catch (Exception ex)
             {
-                IsSerialPortLink = false;
-                Logger.Error(ex);
+
                 return false;
             }
 
@@ -1446,14 +1119,9 @@ namespace text.doors.Common
         public int Read_FY_BtnType(string commandStr, ref bool IsSuccess)
         {
             int res = 0;
-            if (!IsSerialPortLink)
-            {
-                IsSuccess = false;
-                return res;
-            }
             try
             {
-                lock (syncLock)
+
                 {
                     _StartAddress = BFMCommand.GetCommandDict(commandStr);
                     ushort[] holding_register = _MASTER.ReadHoldingRegisters(_SlaveID, _StartAddress, _NumOfPoints);
@@ -1463,9 +1131,8 @@ namespace text.doors.Common
             }
             catch (Exception ex)
             {
-                IsSerialPortLink = false;
                 IsSuccess = false;
-                Logger.Error(ex);
+
             }
             return res;
         }
@@ -1475,64 +1142,47 @@ namespace text.doors.Common
         /// <summary>
         /// 获取正压预备时，设定压力值
         /// </summary>
-        public double Read_FY_Btn_SetValue(ref bool IsSuccess, string type)
+        public double Read_FY_Btn_SetValue(string type)
         {
             double res = 0;
-            if (!IsSerialPortLink)
+
+            if (type == "ZYYB")
             {
-                IsSuccess = false;
-                return res;
+                _StartAddress = BFMCommand.GetCommandDict(BFMCommand.风压_正压预备_设定值);
+            }
+            else if (type == "ZYKS")
+            {
+                _StartAddress = BFMCommand.GetCommandDict(BFMCommand.风压_正压开始_设定值);
+            }
+            else if (type == "FYYB")
+            {
+                _StartAddress = BFMCommand.GetCommandDict(BFMCommand.风压_负压预备_设定值);
+            }
+            else if (type == "FYKS")
+            {
+                _StartAddress = BFMCommand.GetCommandDict(BFMCommand.风压_负压开始_设定值);
             }
 
-            try
+            else if (type == "ZAQ")
             {
-                lock (syncLock)
-                {
-                    if (type == "ZYYB")
-                    {
-                        _StartAddress = BFMCommand.GetCommandDict(BFMCommand.风压_正压预备_设定值);
-                    }
-                    else if (type == "ZYKS")
-                    {
-                        _StartAddress = BFMCommand.GetCommandDict(BFMCommand.风压_正压开始_设定值);
-                    }
-                    else if (type == "FYYB")
-                    {
-                        _StartAddress = BFMCommand.GetCommandDict(BFMCommand.风压_负压预备_设定值);
-                    }
-                    else if (type == "FYKS")
-                    {
-                        _StartAddress = BFMCommand.GetCommandDict(BFMCommand.风压_负压开始_设定值);
-                    }
-
-                    else if (type == "ZAQ")
-                    {
-                        _StartAddress = BFMCommand.GetCommandDict(BFMCommand.正安全数值);
-                    }
-                    else if (type == "FAQ")
-                    {
-                        _StartAddress = BFMCommand.GetCommandDict(BFMCommand.负安全数值);
-                    }
-                    else if (type == "ZFF")
-                    {
-                        _StartAddress = BFMCommand.GetCommandDict(BFMCommand.正反复数值);
-                    }
-                    else if (type == "FFF")
-                    {
-                        _StartAddress = BFMCommand.GetCommandDict(BFMCommand.负反复数值);
-                    }
-
-                    ushort[] holding_register = _MASTER.ReadHoldingRegisters(_SlaveID, _StartAddress, _NumOfPoints);
-                    res = double.Parse((double.Parse(holding_register[0].ToString())).ToString());
-                    IsSuccess = true;
-                }
+                _StartAddress = BFMCommand.GetCommandDict(BFMCommand.正安全数值);
             }
-            catch (Exception ex)
+            else if (type == "FAQ")
             {
-                IsSerialPortLink = false;
-                IsSuccess = false;
-                Logger.Error(ex);
+                _StartAddress = BFMCommand.GetCommandDict(BFMCommand.负安全数值);
             }
+            else if (type == "ZFF")
+            {
+                _StartAddress = BFMCommand.GetCommandDict(BFMCommand.正反复数值);
+            }
+            else if (type == "FFF")
+            {
+                _StartAddress = BFMCommand.GetCommandDict(BFMCommand.负反复数值);
+            }
+
+            ushort[] holding_register = _MASTER.ReadHoldingRegisters(_SlaveID, _StartAddress, _NumOfPoints);
+            res = double.Parse((double.Parse(holding_register[0].ToString())).ToString());
+
             return res;
         }
 
@@ -1544,11 +1194,9 @@ namespace text.doors.Common
         /// <param name="isZ">是否正压</param>
         public bool Send_FY_Btn(string commandStr, bool isZ = true)
         {
-            if (!IsSerialPortLink)
-                return false;
             try
             {
-                lock (syncLock)
+
                 {
                     var res = isZ ? SendZYF() : SendFYF();
                     if (!res)
@@ -1561,8 +1209,7 @@ namespace text.doors.Common
             }
             catch (Exception ex)
             {
-                IsSerialPortLink = false;
-                Logger.Error(ex);
+
                 return false;
             }
             return true;
@@ -1578,11 +1225,9 @@ namespace text.doors.Common
         /// </summary>
         public bool SendGYBD(bool logon = false)
         {
-            if (!IsSerialPortLink)
-                return false;
             try
             {
-                lock (syncLock)
+
                 {
                     _StartAddress = BFMCommand.GetCommandDict(BFMCommand.高压标0_交替型按钮);
                     bool[] readCoils = _MASTER.ReadCoils(_SlaveID, _StartAddress, _NumOfPoints);
@@ -1597,8 +1242,6 @@ namespace text.doors.Common
             }
             catch (Exception ex)
             {
-                IsSerialPortLink = false;
-                Logger.Error(ex);
                 return false;
             }
             return true;
@@ -1609,11 +1252,9 @@ namespace text.doors.Common
         /// </summary>
         public bool SendDYBD(bool logon = false)
         {
-            if (!IsSerialPortLink)
-                return false;
             try
             {
-                lock (syncLock)
+
                 {
                     _StartAddress = BFMCommand.GetCommandDict(BFMCommand.低压标0_交替型按钮);
                     bool[] readCoils = _MASTER.ReadCoils(_SlaveID, _StartAddress, _NumOfPoints);
@@ -1628,8 +1269,7 @@ namespace text.doors.Common
             }
             catch (Exception ex)
             {
-                IsSerialPortLink = false;
-                Logger.Error(ex);
+
                 return false;
             }
             return true;
@@ -1638,23 +1278,29 @@ namespace text.doors.Common
         /// <summary>
         /// 开关量控制
         /// </summary>
-        public bool Sendkglkz()
+        public bool Sendkglkz(ref bool _KaiGuanLiangKongZhiStat)
         {
-            if (!IsSerialPortLink)
-                return false;
             try
             {
-                lock (syncLock)
+
                 {
                     _StartAddress = BFMCommand.GetCommandDict(BFMCommand.开关量控制);
-                    bool[] readCoils = _MASTER.ReadCoils(_SlaveID, _StartAddress, _NumOfPoints);
-                    _MASTER.WriteSingleCoil(this._SlaveID, _StartAddress, true);
+                    if (_KaiGuanLiangKongZhiStat)
+                    {
+                        _MASTER.WriteSingleCoil(this._SlaveID, _StartAddress, false);
+                        _KaiGuanLiangKongZhiStat = false;
+                    }
+                    else
+                    {
+                        _MASTER.WriteSingleCoil(this._SlaveID, _StartAddress, true);
+                        _KaiGuanLiangKongZhiStat = true;
+                    }
+
                 }
             }
             catch (Exception ex)
             {
-                IsSerialPortLink = false;
-                Logger.Error(ex);
+
                 return false;
             }
             return true;
@@ -1664,106 +1310,50 @@ namespace text.doors.Common
         /// <summary>
         /// 获取温度显示
         /// </summary>
-        public double GetWDXS(ref bool IsSuccess)
+        public double GetWDXS()
         {
             double res = 0;
-            if (!IsSerialPortLink)
-            {
-                IsSuccess = false;
-                return res;
-            }
-            try
-            {
-                lock (syncLock)
-                {
-                    _StartAddress = BFMCommand.GetCommandDict(BFMCommand.温度显示);
 
-                    ushort[] holding_register = _MASTER.ReadHoldingRegisters(_SlaveID, _StartAddress, _NumOfPoints);
-                    if (holding_register.Length > 0)
-                    {
-                        res = double.Parse((double.Parse(holding_register[0].ToString()) / 10).ToString());
-                        res = Formula.GetValues(PublicEnum.DemarcateType.温度传感器, float.Parse(res.ToString()));
-                    }
-                    IsSuccess = true;
-                }
-            }
-            catch (Exception ex)
+            _StartAddress = BFMCommand.GetCommandDict(BFMCommand.温度显示);
+
+            ushort[] holding_register = _MASTER.ReadHoldingRegisters(_SlaveID, _StartAddress, _NumOfPoints);
+            if (holding_register.Length > 0)
             {
-                IsSerialPortLink = false;
-                Logger.Error(ex);
-                IsSuccess = false;
+                res = double.Parse((double.Parse(holding_register[0].ToString()) / 10).ToString());
+                res = Formula.GetValues(PublicEnum.DemarcateType.温度传感器, float.Parse(res.ToString()));
             }
+
             return res;
         }
 
         /// <summary>
         /// 获取大气压力显示
         /// </summary>
-        public double GetDQYLXS(ref bool IsSuccess)
+        public double GetDQYLXS()
         {
             double res = 0;
-            if (!IsSerialPortLink)
+            _StartAddress = BFMCommand.GetCommandDict(BFMCommand.大气压力显示);
+            ushort[] holding_register = _MASTER.ReadHoldingRegisters(_SlaveID, _StartAddress, _NumOfPoints);
+            if (holding_register.Length > 0)
             {
-                IsSuccess = false;
-                return res;
+                res = double.Parse((double.Parse(holding_register[0].ToString()) / 100).ToString());
+                res = Formula.GetValues(PublicEnum.DemarcateType.大气压力传感器, float.Parse(res.ToString()));
             }
-
-            try
-            {
-                lock (syncLock)
-                {
-                    _StartAddress = BFMCommand.GetCommandDict(BFMCommand.大气压力显示);
-                    ushort[] holding_register = _MASTER.ReadHoldingRegisters(_SlaveID, _StartAddress, _NumOfPoints);
-                    if (holding_register.Length > 0)
-                    {
-                        res = double.Parse((double.Parse(holding_register[0].ToString()) / 100).ToString());
-                        res = Formula.GetValues(PublicEnum.DemarcateType.大气压力传感器, float.Parse(res.ToString()));
-                    }
-                }
-                IsSuccess = true;
-            }
-            catch (Exception ex)
-            {
-                IsSerialPortLink = false;
-                Logger.Error(ex);
-                IsSuccess = false;
-            }
-
             return res;
         }
 
         /// <summary>
         /// 获取风速显示
         /// </summary>
-        public double GetFSXS(ref bool IsSuccess)
+        public double GetFSXS()
         {
             double res = 0;
-
-            if (!IsSerialPortLink)
+            _StartAddress = BFMCommand.GetCommandDict(BFMCommand.风速显示);
+            ushort[] holding_register = _MASTER.ReadHoldingRegisters(_SlaveID, _StartAddress, _NumOfPoints);
+            if (holding_register.Length > 0)
             {
-                IsSuccess = false;
-                return res;
-            }
-            try
-            {
-                lock (syncLock)
-                {
-                    _StartAddress = BFMCommand.GetCommandDict(BFMCommand.风速显示);
-                    ushort[] holding_register = _MASTER.ReadHoldingRegisters(_SlaveID, _StartAddress, _NumOfPoints);
-                    if (holding_register.Length > 0)
-                    {
-                        var f = double.Parse((double.Parse(holding_register[0].ToString()) / 100).ToString());
-                        res = Formula.GetValues(PublicEnum.DemarcateType.风速传感器, float.Parse(f.ToString()));
-
-                        IsSuccess = true;
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                IsSerialPortLink = false;
-                IsSuccess = false;
-                Logger.Error(ex);
+                var f = double.Parse((double.Parse(holding_register[0].ToString()) / 100).ToString());
+                res = Formula.GetValues(PublicEnum.DemarcateType.风速传感器, float.Parse(f.ToString()));
             }
             return res;
         }
@@ -1774,42 +1364,27 @@ namespace text.doors.Common
         /// </summary>
         /// <param name="IsSuccess"></param>
         /// <returns></returns>
-        public int GetCYGXS(ref bool IsSuccess)
+        public int GetCYGXS()
         {
             double res = 0;
-            if (!IsSerialPortLink)
-            {
-                IsSuccess = false;
-                return 0;
-            }
-            try
-            {
-                lock (syncLock)
-                {
-                    _StartAddress = BFMCommand.GetCommandDict(BFMCommand.差压高显示);
 
-                    ushort[] holding_register = _MASTER.ReadHoldingRegisters(_SlaveID, _StartAddress, _NumOfPoints);
-                    if (holding_register.Length > 0)
-                    {
-                        var f = double.Parse(holding_register[0].ToString());;
+            _StartAddress = BFMCommand.GetCommandDict(BFMCommand.差压高显示);
 
-                        if (int.Parse(holding_register[0].ToString()) > 10000)
-                            f = -(65535 - int.Parse(holding_register[0].ToString()));
-                        else
-                            f = int.Parse(holding_register[0].ToString());
-
-                        res = Formula.GetValues(PublicEnum.DemarcateType.差压传感器, float.Parse(f.ToString()));
-                        IsSuccess = true;
-                    }
-                }
-            }
-            catch (Exception ex)
+            ushort[] holding_register = _MASTER.ReadHoldingRegisters(_SlaveID, _StartAddress, _NumOfPoints);
+            if (holding_register.Length > 0)
             {
-                IsSerialPortLink = false;
-                IsSuccess = false;
-                Logger.Error(ex);
+                var f = double.Parse(holding_register[0].ToString()); ;
+
+                if (int.Parse(holding_register[0].ToString()) > 10000)
+                    f = -(65535 - int.Parse(holding_register[0].ToString()));
+                else
+                    f = int.Parse(holding_register[0].ToString());
+
+                res = Formula.GetValues(PublicEnum.DemarcateType.差压传感器, float.Parse(f.ToString()));
+
+                return int.Parse(Math.Round(res, 0).ToString());
             }
-            return int.Parse(Math.Round(res, 0).ToString());
+            return 0;
         }
 
 
@@ -1818,45 +1393,28 @@ namespace text.doors.Common
         /// </summary>
         /// <param name="IsSuccess"></param>
         /// <returns></returns>
-        public int GetCYDXS(ref bool IsSuccess)
+        public int GetCYDXS()
         {
             double res = 0;
-            if (!IsSerialPortLink)
-            {
-                IsSuccess = false;
-                return 0;
-            }
-            try
-            {
-                lock (syncLock)
-                {
-                    _StartAddress = BFMCommand.GetCommandDict(BFMCommand.差压低显示);
 
-                    ushort[] holding_register = _MASTER.ReadHoldingRegisters(_SlaveID, _StartAddress, _NumOfPoints);
-                    if (holding_register.Length > 0)
-                    {
-                        var f = double.Parse(holding_register[0].ToString()); 
+            _StartAddress = BFMCommand.GetCommandDict(BFMCommand.差压低显示);
 
-                        if (int.Parse(holding_register[0].ToString()) > 10000)
-                            f = -(65535 - int.Parse(holding_register[0].ToString()));
-                        else
-                            f = int.Parse(holding_register[0].ToString());
-
-                        f = double.Parse((f / 10).ToString());
-                        res = Formula.GetValues(PublicEnum.DemarcateType.差压传感器, float.Parse(f.ToString()));
-                        IsSuccess = true;
-                    }
-                }
-            }
-            catch (Exception ex)
+            ushort[] holding_register = _MASTER.ReadHoldingRegisters(_SlaveID, _StartAddress, _NumOfPoints);
+            if (holding_register.Length > 0)
             {
-                IsSerialPortLink = false;
-                IsSuccess = false;
-                Logger.Error(ex);
+                var f = double.Parse(holding_register[0].ToString());
+
+                if (int.Parse(holding_register[0].ToString()) > 10000)
+                    f = -(65535 - int.Parse(holding_register[0].ToString()));
+                else
+                    f = int.Parse(holding_register[0].ToString());
+
+                f = double.Parse((f / 10).ToString());
+                res = Formula.GetValues(PublicEnum.DemarcateType.差压传感器, float.Parse(f.ToString()));
+                return int.Parse(Math.Round(res, 0).ToString());
             }
-            return int.Parse(Math.Round(res, 0).ToString());
+            return 0;
         }
-
         /// <summary>
         /// 读取波动差压显示（min ,max ）
         /// </summary>
@@ -1864,14 +1422,9 @@ namespace text.doors.Common
         /// <returns></returns>
         public void GetCYXS_BODONG(ref bool IsSuccess, ref int minVal, ref int maxVal)
         {
-            // double res = 0;
-            if (!IsSerialPortLink)
-            {
-                IsSuccess = false;
-            }
             try
             {
-                lock (syncLock)
+
                 {
                     //最小
                     _StartAddress = BFMCommand.GetCommandDict(BFMCommand.读取设定波动加压Min);
@@ -1910,9 +1463,8 @@ namespace text.doors.Common
             }
             catch (Exception ex)
             {
-                IsSerialPortLink = false;
                 IsSuccess = false;
-                Logger.Error(ex);
+
             }
         }
 
@@ -1923,11 +1475,9 @@ namespace text.doors.Common
         /// </summary>
         public bool SendFJKZ(double value)
         {
-            if (!IsSerialPortLink)
-                return false;
             try
             {
-                lock (syncLock)
+
                 {
                     _StartAddress = BFMCommand.GetCommandDict(BFMCommand.风机控制);
                     _MASTER.WriteSingleRegister(_SlaveID, _StartAddress, (ushort)(value));
@@ -1935,8 +1485,6 @@ namespace text.doors.Common
             }
             catch (Exception ex)
             {
-                IsSerialPortLink = false;
-                Logger.Error(ex);
                 return false;
             }
             return true;
@@ -1950,14 +1498,9 @@ namespace text.doors.Common
         public double ReadFJSD(ref bool IsSuccess)
         {
             double res = 0;
-            if (!IsSerialPortLink)
-            {
-                IsSuccess = false;
-                return res;
-            }
             try
             {
-                lock (syncLock)
+
                 {
                     _StartAddress = BFMCommand.GetCommandDict(BFMCommand.风机设定值);
                     ushort[] holding_register = _MASTER.ReadHoldingRegisters(_SlaveID, _StartAddress, _NumOfPoints);
@@ -1967,9 +1510,8 @@ namespace text.doors.Common
             }
             catch (Exception ex)
             {
-                IsSerialPortLink = false;
                 IsSuccess = false;
-                Logger.Error(ex);
+
             }
             return res;
         }
@@ -1979,11 +1521,9 @@ namespace text.doors.Common
         /// </summary>
         public bool SendZYF()
         {
-            if (!IsSerialPortLink)
-                return false;
             try
             {
-                lock (syncLock)
+
                 {
                     _StartAddress = BFMCommand.GetCommandDict(BFMCommand.负压阀);
                     _MASTER.WriteSingleCoil(this._SlaveID, _StartAddress, false);
@@ -1993,8 +1533,7 @@ namespace text.doors.Common
             }
             catch (Exception ex)
             {
-                IsSerialPortLink = false;
-                Logger.Error(ex);
+
                 return false;
             }
             return true;
@@ -2005,11 +1544,9 @@ namespace text.doors.Common
         /// </summary>
         public bool SendFYF()
         {
-            if (!IsSerialPortLink)
-                return false;
             try
             {
-                lock (syncLock)
+
                 {
                     _StartAddress = BFMCommand.GetCommandDict(BFMCommand.正压阀);
                     _MASTER.WriteSingleCoil(this._SlaveID, _StartAddress, false);
@@ -2019,8 +1556,7 @@ namespace text.doors.Common
             }
             catch (Exception ex)
             {
-                IsSerialPortLink = false;
-                Logger.Error(ex);
+
                 return false;
             }
             return true;
@@ -2033,11 +1569,9 @@ namespace text.doors.Common
         /// </summary>
         public bool SendFengJiQiDong(ref bool _FengJiQiDongStat)
         {
-            if (!IsSerialPortLink)
-                return false;
             try
             {
-                lock (syncLock)
+
                 {
                     _StartAddress = BFMCommand.GetCommandDict(BFMCommand.风机启动);
                     if (_FengJiQiDongStat)
@@ -2054,8 +1588,7 @@ namespace text.doors.Common
             }
             catch (Exception ex)
             {
-                IsSerialPortLink = false;
-                Logger.Error(ex);
+
                 return false;
             }
             return true;
@@ -2066,11 +1599,9 @@ namespace text.doors.Common
         /// </summary>
         public bool SendShuiBengQiDong(ref bool _ShuiBengQiDong)
         {
-            if (!IsSerialPortLink)
-                return false;
             try
             {
-                lock (syncLock)
+
                 {
                     _StartAddress = BFMCommand.GetCommandDict(BFMCommand.水泵启动);
                     if (_ShuiBengQiDong)
@@ -2087,8 +1618,6 @@ namespace text.doors.Common
             }
             catch (Exception ex)
             {
-                IsSerialPortLink = false;
-                Logger.Error(ex);
                 return false;
             }
             return true;
@@ -2100,11 +1629,9 @@ namespace text.doors.Common
         /// </summary>
         public bool SendBaoHuFaTong(ref bool _ShuiBengQiDong)
         {
-            if (!IsSerialPortLink)
-                return false;
             try
             {
-                lock (syncLock)
+
                 {
                     _StartAddress = BFMCommand.GetCommandDict(BFMCommand.保护阀通);
                     if (_ShuiBengQiDong)
@@ -2121,8 +1648,6 @@ namespace text.doors.Common
             }
             catch (Exception ex)
             {
-                IsSerialPortLink = false;
-                Logger.Error(ex);
                 return false;
             }
             return true;
@@ -2133,11 +1658,9 @@ namespace text.doors.Common
         /// </summary>
         public bool SendSiTongFaKai(ref bool _SiTongFaKai)
         {
-            if (!IsSerialPortLink)
-                return false;
             try
             {
-                lock (syncLock)
+
                 {
                     _StartAddress = BFMCommand.GetCommandDict(BFMCommand.四通阀开);
                     if (_SiTongFaKai)
@@ -2154,8 +1677,6 @@ namespace text.doors.Common
             }
             catch (Exception ex)
             {
-                IsSerialPortLink = false;
-                Logger.Error(ex);
                 return false;
             }
             return true;
@@ -2166,11 +1687,9 @@ namespace text.doors.Common
         /// </summary>
         public bool SendDianDongKai(bool isdown)
         {
-            if (!IsSerialPortLink)
-                return false;
             try
             {
-                lock (syncLock)
+
                 {
                     if (isdown)
                     {
@@ -2186,8 +1705,7 @@ namespace text.doors.Common
             }
             catch (Exception ex)
             {
-                IsSerialPortLink = false;
-                Logger.Error(ex);
+
                 return false;
             }
             return true;
@@ -2197,11 +1715,9 @@ namespace text.doors.Common
         /// </summary>
         public bool SendDianDongGuan(bool isdown)
         {
-            if (!IsSerialPortLink)
-                return false;
             try
             {
-                lock (syncLock)
+
                 {
                     if (isdown)
                     {
@@ -2217,8 +1733,6 @@ namespace text.doors.Common
             }
             catch (Exception ex)
             {
-                IsSerialPortLink = false;
-                Logger.Error(ex);
                 return false;
             }
             return true;
@@ -2229,11 +1743,9 @@ namespace text.doors.Common
         /// </summary>
         public bool SendGuanDaoTou(ref bool _GuanDaoTou)
         {
-            if (!IsSerialPortLink)
-                return false;
             try
             {
-                lock (syncLock)
+
                 {
                     _StartAddress = BFMCommand.GetCommandDict(BFMCommand.点动关);
                     if (_GuanDaoTou)
@@ -2250,8 +1762,6 @@ namespace text.doors.Common
             }
             catch (Exception ex)
             {
-                IsSerialPortLink = false;
-                Logger.Error(ex);
                 return false;
             }
             return true;
@@ -2263,11 +1773,9 @@ namespace text.doors.Common
         /// <param name="IsSuccess"></param>
         public bool SendPid(string type, double value)
         {
-            if (!IsSerialPortLink)
-                return false;
             try
             {
-                lock (syncLock)
+
                 {
                     if (type == "P")
                         _StartAddress = BFMCommand.GetCommandDict(BFMCommand.P);
@@ -2294,8 +1802,6 @@ namespace text.doors.Common
             }
             catch (Exception ex)
             {
-                IsSerialPortLink = false;
-                Logger.Error(ex);
                 return false;
             }
         }
@@ -2307,14 +1813,9 @@ namespace text.doors.Common
         public int GetPID(string type, ref bool IsSuccess)
         {
             int res = 0;
-            if (!IsSerialPortLink)
-            {
-                IsSuccess = false;
-                return res;
-            }
             try
             {
-                lock (syncLock)
+
                 {
                     if (type == "P")
                         _StartAddress = BFMCommand.GetCommandDict(BFMCommand.P);
@@ -2345,15 +1846,89 @@ namespace text.doors.Common
             }
             catch (Exception ex)
             {
-                IsSerialPortLink = false;
                 IsSuccess = false;
-                Logger.Error(ex);
             }
             return res;
         }
 
-
         #endregion
+
+
+
+        /// <summary>
+        /// 设置改变级差
+        /// </summary>
+        public bool SendGBJC(double value)
+        {
+            try
+            {
+
+                {
+                    var res = SendZYF();
+                    if (!res)
+                        return false;
+
+                    _StartAddress = BFMCommand.GetCommandDict(BFMCommand.改变级差);
+                    _MASTER.WriteSingleRegister(_SlaveID, _StartAddress, (ushort)(value));
+
+                    return true;
+                }
+
+            }
+            catch (Exception ex)
+            {
+
+                return false;
+            }
+        }
+
+        ///// <summary>
+        ///// 设置正pmax
+        ///// </summary>
+        //public bool SendZPMAX(string commandValue, string commandStr, double value)
+        //{
+
+        //    _StartAddress = BFMCommand.GetCommandDict(commandValue);
+        //    _MASTER.WriteSingleRegister(_SlaveID, _StartAddress, (ushort)(value));
+
+        //    _StartAddress = BFMCommand.GetCommandDict(commandStr);
+        //    _MASTER.WriteSingleCoil(this._SlaveID, _StartAddress, false);
+        //    _MASTER.WriteSingleCoil(this._SlaveID, _StartAddress, true);
+        //    return true;
+
+
+        //}
+
+
+
+
+        ///// <summary>
+        /////  设置负pmax
+        ///// </summary>
+        //public bool SendFPMAX(double value)
+        //{
+        //    try
+        //    {
+
+        //        {
+        //            var res = SendZYF();
+        //            if (!res)
+        //                return false;
+
+        //            _StartAddress = BFMCommand.GetCommandDict(BFMCommand.改变级差);
+        //            _MASTER.WriteSingleRegister(_SlaveID, _StartAddress, (ushort)(value));
+
+        //            return true;
+        //        }
+
+        //    }
+        //    catch (Exception ex)
+        //    {
+
+        //        return false;
+        //    }
+        //}
+
 
     }
 }

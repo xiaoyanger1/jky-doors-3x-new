@@ -35,7 +35,6 @@
             this.tssl_SetCode = new System.Windows.Forms.ToolStripStatusLabel();
             this.tsl_type = new System.Windows.Forms.ToolStripStatusLabel();
             this.tsl_user = new System.Windows.Forms.ToolStripStatusLabel();
-            this.tcp_type = new System.Windows.Forms.ToolStripStatusLabel();
             this.tsl_tcpclient = new System.Windows.Forms.ToolStripStatusLabel();
             this.pl_top = new System.Windows.Forms.Panel();
             this.ts_pic = new System.Windows.Forms.ToolStrip();
@@ -84,8 +83,11 @@
             this.btn_ddk = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.lbl_cydcgq = new System.Windows.Forms.Label();
             this.lbl_Displace3 = new System.Windows.Forms.Label();
+            this.label19 = new System.Windows.Forms.Label();
             this.label17 = new System.Windows.Forms.Label();
+            this.label20 = new System.Windows.Forms.Label();
             this.label18 = new System.Windows.Forms.Label();
             this.lbl_Displace2 = new System.Windows.Forms.Label();
             this.label12 = new System.Windows.Forms.Label();
@@ -115,9 +117,6 @@
             this.btn_gyZero = new System.Windows.Forms.Button();
             this.pl_showItem = new System.Windows.Forms.Panel();
             this.tim_panelValue = new System.Windows.Forms.Timer(this.components);
-            this.lbl_cydcgq = new System.Windows.Forms.Label();
-            this.label19 = new System.Windows.Forms.Label();
-            this.label20 = new System.Windows.Forms.Label();
             this.ssp_button.SuspendLayout();
             this.pl_top.SuspendLayout();
             this.ts_pic.SuspendLayout();
@@ -138,7 +137,6 @@
             this.tssl_SetCode,
             this.tsl_type,
             this.tsl_user,
-            this.tcp_type,
             this.tsl_tcpclient});
             this.ssp_button.Location = new System.Drawing.Point(0, 603);
             this.ssp_button.Name = "ssp_button";
@@ -172,21 +170,13 @@
             this.tsl_user.Size = new System.Drawing.Size(147, 17);
             this.tsl_user.Text = "当前用户：Administrator";
             // 
-            // tcp_type
-            // 
-            this.tcp_type.ForeColor = System.Drawing.Color.Red;
-            this.tcp_type.Margin = new System.Windows.Forms.Padding(100, 3, 0, 2);
-            this.tcp_type.Name = "tcp_type";
-            this.tcp_type.Size = new System.Drawing.Size(92, 17);
-            this.tcp_type.Text = "网络连接：断开";
-            // 
             // tsl_tcpclient
             // 
             this.tsl_tcpclient.ForeColor = System.Drawing.Color.Red;
             this.tsl_tcpclient.Margin = new System.Windows.Forms.Padding(150, 3, 30, 2);
             this.tsl_tcpclient.Name = "tsl_tcpclient";
-            this.tsl_tcpclient.Size = new System.Drawing.Size(104, 17);
-            this.tsl_tcpclient.Text = "服务器连接：成功";
+            this.tsl_tcpclient.Size = new System.Drawing.Size(92, 17);
+            this.tsl_tcpclient.Text = "串口连接：成功";
             // 
             // pl_top
             // 
@@ -649,15 +639,34 @@
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "测量结果：";
             // 
+            // lbl_cydcgq
+            // 
+            this.lbl_cydcgq.AutoSize = true;
+            this.lbl_cydcgq.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.lbl_cydcgq.Location = new System.Drawing.Point(91, 65);
+            this.lbl_cydcgq.Name = "lbl_cydcgq";
+            this.lbl_cydcgq.Size = new System.Drawing.Size(16, 16);
+            this.lbl_cydcgq.TabIndex = 8;
+            this.lbl_cydcgq.Text = "0";
+            // 
             // lbl_Displace3
             // 
             this.lbl_Displace3.AutoSize = true;
             this.lbl_Displace3.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.lbl_Displace3.Location = new System.Drawing.Point(100, 176);
+            this.lbl_Displace3.Location = new System.Drawing.Point(91, 176);
             this.lbl_Displace3.Name = "lbl_Displace3";
             this.lbl_Displace3.Size = new System.Drawing.Size(16, 16);
             this.lbl_Displace3.TabIndex = 20;
             this.lbl_Displace3.Text = "0";
+            // 
+            // label19
+            // 
+            this.label19.AutoSize = true;
+            this.label19.Location = new System.Drawing.Point(155, 67);
+            this.label19.Name = "label19";
+            this.label19.Size = new System.Drawing.Size(17, 12);
+            this.label19.TabIndex = 6;
+            this.label19.Text = "Pa";
             // 
             // label17
             // 
@@ -667,6 +676,15 @@
             this.label17.Size = new System.Drawing.Size(17, 12);
             this.label17.TabIndex = 18;
             this.label17.Text = "mm";
+            // 
+            // label20
+            // 
+            this.label20.AutoSize = true;
+            this.label20.Location = new System.Drawing.Point(6, 69);
+            this.label20.Name = "label20";
+            this.label20.Size = new System.Drawing.Size(77, 12);
+            this.label20.TabIndex = 7;
+            this.label20.Text = "差压低传感器";
             // 
             // label18
             // 
@@ -681,7 +699,7 @@
             // 
             this.lbl_Displace2.AutoSize = true;
             this.lbl_Displace2.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.lbl_Displace2.Location = new System.Drawing.Point(100, 154);
+            this.lbl_Displace2.Location = new System.Drawing.Point(91, 154);
             this.lbl_Displace2.Name = "lbl_Displace2";
             this.lbl_Displace2.Size = new System.Drawing.Size(16, 16);
             this.lbl_Displace2.TabIndex = 17;
@@ -709,7 +727,7 @@
             // 
             this.lbl_Displace1.AutoSize = true;
             this.lbl_Displace1.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.lbl_Displace1.Location = new System.Drawing.Point(100, 131);
+            this.lbl_Displace1.Location = new System.Drawing.Point(91, 131);
             this.lbl_Displace1.Name = "lbl_Displace1";
             this.lbl_Displace1.Size = new System.Drawing.Size(16, 16);
             this.lbl_Displace1.TabIndex = 14;
@@ -737,7 +755,7 @@
             // 
             this.lbl_dqylcgq.AutoSize = true;
             this.lbl_dqylcgq.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.lbl_dqylcgq.Location = new System.Drawing.Point(100, 110);
+            this.lbl_dqylcgq.Location = new System.Drawing.Point(91, 110);
             this.lbl_dqylcgq.Name = "lbl_dqylcgq";
             this.lbl_dqylcgq.Size = new System.Drawing.Size(16, 16);
             this.lbl_dqylcgq.TabIndex = 11;
@@ -755,7 +773,7 @@
             // label14
             // 
             this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(3, 113);
+            this.label14.Location = new System.Drawing.Point(0, 113);
             this.label14.Name = "label14";
             this.label14.Size = new System.Drawing.Size(89, 12);
             this.label14.TabIndex = 10;
@@ -765,7 +783,7 @@
             // 
             this.lbl_wdcgq.AutoSize = true;
             this.lbl_wdcgq.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.lbl_wdcgq.Location = new System.Drawing.Point(100, 86);
+            this.lbl_wdcgq.Location = new System.Drawing.Point(91, 86);
             this.lbl_wdcgq.Name = "lbl_wdcgq";
             this.lbl_wdcgq.Size = new System.Drawing.Size(16, 16);
             this.lbl_wdcgq.TabIndex = 8;
@@ -793,7 +811,7 @@
             // 
             this.lbl_cygcgq.AutoSize = true;
             this.lbl_cygcgq.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.lbl_cygcgq.Location = new System.Drawing.Point(100, 43);
+            this.lbl_cygcgq.Location = new System.Drawing.Point(91, 43);
             this.lbl_cygcgq.Name = "lbl_cygcgq";
             this.lbl_cygcgq.Size = new System.Drawing.Size(16, 16);
             this.lbl_cygcgq.TabIndex = 5;
@@ -821,7 +839,7 @@
             // 
             this.lbl_fscgq.AutoSize = true;
             this.lbl_fscgq.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.lbl_fscgq.Location = new System.Drawing.Point(100, 20);
+            this.lbl_fscgq.Location = new System.Drawing.Point(91, 20);
             this.lbl_fscgq.Name = "lbl_fscgq";
             this.lbl_fscgq.Size = new System.Drawing.Size(16, 16);
             this.lbl_fscgq.TabIndex = 2;
@@ -884,13 +902,13 @@
             this.txt_hz.Name = "txt_hz";
             this.txt_hz.Size = new System.Drawing.Size(48, 21);
             this.txt_hz.TabIndex = 0;
-            this.txt_hz.Text = "0.00";
+            this.txt_hz.Text = "0";
             // 
             // hsb_WindControl
             // 
             this.hsb_WindControl.LargeChange = 6;
             this.hsb_WindControl.Location = new System.Drawing.Point(16, 22);
-            this.hsb_WindControl.Maximum = 5005;
+            this.hsb_WindControl.Maximum = 32000;
             this.hsb_WindControl.Name = "hsb_WindControl";
             this.hsb_WindControl.Size = new System.Drawing.Size(148, 17);
             this.hsb_WindControl.TabIndex = 0;
@@ -945,34 +963,6 @@
             this.tim_panelValue.Enabled = true;
             this.tim_panelValue.Interval = 1000;
             this.tim_panelValue.Tick += new System.EventHandler(this.tim_panelValue_Tick);
-            // 
-            // lbl_cydcgq
-            // 
-            this.lbl_cydcgq.AutoSize = true;
-            this.lbl_cydcgq.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.lbl_cydcgq.Location = new System.Drawing.Point(100, 65);
-            this.lbl_cydcgq.Name = "lbl_cydcgq";
-            this.lbl_cydcgq.Size = new System.Drawing.Size(16, 16);
-            this.lbl_cydcgq.TabIndex = 8;
-            this.lbl_cydcgq.Text = "0";
-            // 
-            // label19
-            // 
-            this.label19.AutoSize = true;
-            this.label19.Location = new System.Drawing.Point(155, 67);
-            this.label19.Name = "label19";
-            this.label19.Size = new System.Drawing.Size(17, 12);
-            this.label19.TabIndex = 6;
-            this.label19.Text = "Pa";
-            // 
-            // label20
-            // 
-            this.label20.AutoSize = true;
-            this.label20.Location = new System.Drawing.Point(6, 69);
-            this.label20.Name = "label20";
-            this.label20.Size = new System.Drawing.Size(77, 12);
-            this.label20.TabIndex = 7;
-            this.label20.Text = "差压低传感器";
             // 
             // MainForm
             // 
@@ -1065,7 +1055,6 @@
         private System.Windows.Forms.ToolStripStatusLabel tssl_SetCode;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem3;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem4;
-        private System.Windows.Forms.ToolStripStatusLabel tcp_type;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.ToolStripStatusLabel tsl_tcpclient;
         private System.Windows.Forms.Label lbl_Displace3;

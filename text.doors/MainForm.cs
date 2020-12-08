@@ -51,84 +51,83 @@ namespace text.doors
         {
             InitializeComponent();
 
-            ExamineLAN();
-            OpenTcp();
+            //ExamineLAN();
+            OpenSerialPortClient();
 
             //设置高压标零
-            var pressureZero = _serialPortClient.SendGYBD(true);
+            //_serialPortClient.SendGYBD(true);
 
-            _serialPortClient.SendDYBD(true);
+            //_serialPortClient.SendDYBD(true);
 
-            DataInit();
+            //DataInit();
             ShowDetectionSet();
         }
 
 
-        private void ExamineLAN()
+        //private void ExamineLAN()
+        //{
+        //    Thread thread = new Thread(new ThreadStart(() =>
+        //    {
+        //        while (true)
+        //        {
+        //            LAN.ReadLanLink();
+
+        //            using (BackgroundWorker bw = new BackgroundWorker())
+        //            {
+        //                bw.RunWorkerCompleted += new RunWorkerCompletedEventHandler(Lan_RunWorkerCompleted);
+        //                bw.DoWork += new DoWorkEventHandler(Lan_DoWork);
+        //                bw.RunWorkerAsync();
+        //            }
+        //            Thread.Sleep(5000);
+        //        }
+        //    }));
+        //    thread.Start();
+        //}
+        //void Lan_DoWork(object sender, DoWorkEventArgs e)
+        //{
+        //    e.Result = LAN.IsLanLink ? "网络连接：开启" : "网络连接：断开";
+        //}
+
+        //void Lan_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        //{
+        //    try
+        //    {
+        //        this.tcp_type.Text = e.Result.ToString();
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //    }
+        //}
+
+        private void OpenSerialPortClient()
         {
             Thread thread = new Thread(new ThreadStart(() =>
             {
                 while (true)
                 {
-                    LAN.ReadLanLink();
-
                     using (BackgroundWorker bw = new BackgroundWorker())
                     {
-                        bw.RunWorkerCompleted += new RunWorkerCompletedEventHandler(Lan_RunWorkerCompleted);
-                        bw.DoWork += new DoWorkEventHandler(Lan_DoWork);
+                        bw.RunWorkerCompleted += new RunWorkerCompletedEventHandler(SerialPort_RunWorkerCompleted);
+                        bw.DoWork += new DoWorkEventHandler(SerialPort_DoWork);
                         bw.RunWorkerAsync();
                     }
-                    Thread.Sleep(5000);
-                }
-            }));
-            thread.Start();
-        }
-        void Lan_DoWork(object sender, DoWorkEventArgs e)
-        {
-            e.Result = LAN.IsLanLink ? "网络连接：开启" : "网络连接：断开";
-        }
-
-        void Lan_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
-        {
-            try
-            {
-                this.tcp_type.Text = e.Result.ToString();
-            }
-            catch (Exception ex)
-            {
-            }
-        }
-
-        private void OpenTcp()
-        {
-            Thread thread = new Thread(new ThreadStart(() =>
-            {
-                while (true)
-                {
-                    using (BackgroundWorker bw = new BackgroundWorker())
-                    {
-                        bw.RunWorkerCompleted += new RunWorkerCompletedEventHandler(Tcp_RunWorkerCompleted);
-                        bw.DoWork += new DoWorkEventHandler(Tcp_DoWork);
-                        bw.RunWorkerAsync();
-                    }
-                    if (!_serialPortClient.IsSerialPortLink)
+                    if (!_serialPortClient.sp.IsOpen)
                     {
                         _serialPortClient.SerialPortOpen();
-                        Thread.Sleep(500);
                     }
-                    else
-                        Thread.Sleep(5000);
+
+                    Thread.Sleep(500);
                 }
             }));
             thread.Start();
         }
 
-        void Tcp_DoWork(object sender, DoWorkEventArgs e)
+        void SerialPort_DoWork(object sender, DoWorkEventArgs e)
         {
-            e.Result = _serialPortClient.IsSerialPortLink ? "服务器连接：成功" : "服务器连接：失败";
+            e.Result = _serialPortClient.sp.IsOpen ? "串口连接：成功" : "串口连接：失败";
         }
 
-        void Tcp_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        void SerialPort_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             try
             {
@@ -212,25 +211,19 @@ namespace text.doors
 
         private void DataInit()
         {
-            if (_serialPortClient.IsSerialPortLink)
+            if (_serialPortClient.sp.IsOpen)
             {
                 #region 获取面板显示
-                var IsSeccess = false;
 
-                var temperature = _temperature = _serialPortClient.GetWDXS(ref IsSeccess);
-                if (!IsSeccess) return;
+                var temperature = _temperature = _serialPortClient.GetWDXS();
 
-                var temppressure = _temppressure = _serialPortClient.GetDQYLXS(ref IsSeccess);
-                if (!IsSeccess) return;
+                var temppressure = _temppressure = _serialPortClient.GetDQYLXS();
 
-                var windSpeed = _serialPortClient.GetFSXS(ref IsSeccess).ToString();
-                if (!IsSeccess) return;
+                var windSpeed = _serialPortClient.GetFSXS();
 
-                var diffPressG = _serialPortClient.GetCYGXS(ref IsSeccess).ToString();
-                if (!IsSeccess) return;
+                var diffPressG = _serialPortClient.GetCYGXS();
 
-                var diffPressD = _serialPortClient.GetCYDXS(ref IsSeccess).ToString();
-                if (!IsSeccess) return;
+                var diffPressD = _serialPortClient.GetCYDXS();
 
 
                 lbl_wdcgq.Text = temperature.ToString();
@@ -241,12 +234,9 @@ namespace text.doors
                 lbl_cydcgq.Text = diffPressD.ToString();
 
                 //抗风压
-                var displace1 = _serialPortClient.GetDisplace1(ref IsSeccess).ToString();
-                if (!IsSeccess) return;
-                var displace2 = _serialPortClient.GetDisplace2(ref IsSeccess).ToString();
-                if (!IsSeccess) return;
-                var displace3 = _serialPortClient.GetDisplace3(ref IsSeccess).ToString();
-                if (!IsSeccess) return;
+                var displace1 = _serialPortClient.GetDisplace1();
+                var displace2 = _serialPortClient.GetDisplace2();
+                var displace3 = _serialPortClient.GetDisplace3();
 
                 lbl_Displace1.Text = displace1.ToString();
                 lbl_Displace2.Text = displace2.ToString();
@@ -254,9 +244,6 @@ namespace text.doors
 
                 #endregion
 
-                //#region 获取正负压阀状态
-                //GetPRVs();
-                //#endregion
             }
         }
 
@@ -265,11 +252,9 @@ namespace text.doors
             if (hsb_WindControl.Value == 0)
                 txt_hz.Text = "0.00";
             else
-                txt_hz.Text = (hsb_WindControl.Value * 0.01).ToString();
+                txt_hz.Text = (hsb_WindControl.Value / 640).ToString();
 
-            double value = (hsb_WindControl.Value * 0.01) * 80;
-
-
+            double value = (hsb_WindControl.Value);
 
             Logger.Info("发送-" + value);
             var res = _serialPortClient.SendFJKZ(value);
@@ -415,7 +400,7 @@ namespace text.doors
         private void btn_OkFj_Click(object sender, EventArgs e)
         {
             //0-50HZ滚动条 标示0-4000值
-            double value = double.Parse(txt_hz.Text) * 80;
+            double value = double.Parse(txt_hz.Text) * 640;
             var res = _serialPortClient.SendFJKZ(value);
 
             if (!res)
@@ -540,8 +525,8 @@ namespace text.doors
                 return;
 
             Logger.Info("获取-" + e.Result.ToString());
-            var value = int.Parse(e.Result.ToString()) / 80;
-            this.hsb_WindControl.Value = value;// * 100;
+            var value = int.Parse(e.Result.ToString()) / 640;
+            this.hsb_WindControl.Value = value; ;
             txt_hz.Text = value.ToString();
         }
 
@@ -554,7 +539,7 @@ namespace text.doors
 
         private void tim_panelValue_Tick(object sender, EventArgs e)
         {
-            if (_serialPortClient.IsSerialPortLink)
+            if (_serialPortClient.sp.IsOpen)
             {
                 DataInit();
 
@@ -564,7 +549,6 @@ namespace text.doors
                     bw.DoWork += new DoWorkEventHandler(hsb_DoWork);
                     bw.RunWorkerAsync();
                 }
-
             }
         }
 
@@ -573,9 +557,10 @@ namespace text.doors
 
         }
 
+        private bool _KaiGuanLiangKongZhiStat = false;
         private void btn_kglkz_Click(object sender, EventArgs e)
         {
-            if (!_serialPortClient.Sendkglkz())
+            if (!_serialPortClient.Sendkglkz(ref _KaiGuanLiangKongZhiStat))
             {
                 MessageBox.Show("开关量控制异常,请确认服务器连接是否成功!", "设置", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
             }
@@ -665,8 +650,6 @@ namespace text.doors
             }
         }
 
-
-
         private bool _GuanDaoTou = false;
         private void btn_gdt_Click(object sender, EventArgs e)
         {
@@ -677,7 +660,5 @@ namespace text.doors
                 return;
             }
         }
-
-
     }
 }

@@ -12,40 +12,6 @@ namespace text.doors.Default
     /// </summary>
     public static class BFMCommand
     {
-        //public const string 风速0标定 = "M200";
-        //public const string 风速1 = "M201";
-        //public const string 风速3 = "M202";
-        //public const string 风速5 = "M203";
-        //public const string 风速8 = "M204";
-        //public const string 风速10 = "M205";
-        //public const string 风速13 = "M206";
-        //public const string 风速15 = "M207";
-        //public const string 风速18 = "M208";
-        //public const string 风速20 = "M209";
-        //public const string 差压0 = "M210";
-        //public const string 差压100 = "M211";
-        //public const string 差压200 = "M212";
-        //public const string 差压500 = "M213";
-        //public const string 差压800 = "M214";
-        //public const string 差压1000 = "M215";
-        //public const string 差压_100 = "M216";
-        //public const string 差压_200 = "M217";
-        //public const string 差压_500 = "M218";
-        //public const string 差压_800 = "M219";
-        //public const string 差压_1000 = "M220";
-
-        //public const string 温度_40 = "M221";
-
-        //public const string 温度0 = "M222";
-        //  public const string 温度80 = "M223";
-        //  public const string 大气压力80 = "M224";
-        // public const string 大气压力103_1 = "M225";
-        // public const string 大气压力110 = "M226";
-        // public const string 标定全部清除 = "M60";
-        //public const string 正极限 = "X0";
-        //public const string 负极限 = "X1";
-        //public const string 正压阀 = "Y0";
-        //public const string 负压阀 = "Y1";
 
 
         public const string 高压标0_交替型按钮 = "M66";
@@ -129,22 +95,19 @@ namespace text.doors.Default
 
 
 
-        public const string 负压10TimeStart = "";
-        public const string 负压30TimeStart = "";
-        public const string 负压50TimeStart = "";
-        public const string 负压70TimeStart = "";
+        public const string 负压10TimeStart = "T61";
+        public const string 负压30TimeStart = "T62";
+        public const string 负压50TimeStart = "T63";
+        public const string 负压70TimeStart = "T64";
 
-        public const string 负压100TimeStart = "T7";
-        public const string 负压150TimeStart = "T8";
-        public const string 负压_100TimeStart = "T9";
+        public const string 负压100TimeStart = "T65";
+        public const string 负压150TimeStart = "T66";
+        public const string 负压_100TimeStart = "T67";
 
-        public const string 负压_70TimeStart = "";
-        public const string 负压_50TimeStart = "";
-        public const string 负压_30TimeStart = "";
-        public const string 负压_10TimeStart = "";
-
-
-
+        public const string 负压_70TimeStart = "T68";
+        public const string 负压_50TimeStart = "T69";
+        public const string 负压_30TimeStart = "T70";
+        public const string 负压_10TimeStart = "T71";
 
 
         public const string 水密预备结束 = "D32";
@@ -154,7 +117,14 @@ namespace text.doors.Default
 
 
 
+        public const string 改变级差 = "D230";
 
+        public const string 正PMAX = "M36";
+        public const string 负PMAX = "M37";
+
+        public const string 正PMAX值 = "D590";
+     
+        public const string 负PMAX值 = "D592";
 
 
         #region  波动加压

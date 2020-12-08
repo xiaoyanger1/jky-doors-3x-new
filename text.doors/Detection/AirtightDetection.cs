@@ -45,6 +45,7 @@ namespace text.doors.Detection
         /// </summary>
         double zFc = 0, fFc = 0, zMj = 0, fMj = 0;
 
+        public List<ReadT> _readT = new List<ReadT>();
         /// <summary>
         /// 操作状态
         /// </summary>
@@ -56,7 +57,7 @@ namespace text.doors.Detection
         public DateTime dtnow { get; set; }
         public AirtightDetection()
         {
-            dgv_ll.Height = 410;
+            //dgv_ll.Height = 410;
         }
 
         public AirtightDetection(SerialPortClient tcpClient, string tempCode, string tempTong)
@@ -132,7 +133,6 @@ namespace text.doors.Detection
         {
             dgv_ll.DataSource = GetPressureFlow();
 
-            dgv_ll.Height = 410;
             dgv_ll.RowHeadersVisible = false;
             dgv_ll.AllowUserToResizeColumns = false;
             dgv_ll.AllowUserToResizeRows = false;
@@ -291,7 +291,6 @@ namespace text.doors.Detection
             }
 
             dgv_WindSpeed.DataSource = pressureList;
-            dgv_WindSpeed.Height = 115;
             dgv_WindSpeed.RowHeadersVisible = false;
             dgv_WindSpeed.AllowUserToResizeColumns = false;
             dgv_WindSpeed.AllowUserToResizeRows = false;
@@ -327,7 +326,7 @@ namespace text.doors.Detection
         {
             GetDatabaseLevelIndex();
             dgv_levelIndex.DataSource = GetLevelIndex();
-            dgv_levelIndex.Height = 69;
+            //dgv_levelIndex.Height = 69;
             dgv_levelIndex.RowHeadersVisible = false;
             dgv_levelIndex.AllowUserToResizeColumns = false;
             dgv_levelIndex.AllowUserToResizeRows = false;
@@ -390,62 +389,47 @@ namespace text.doors.Detection
         /// <param name="e"></param>
         private void tim_qm_Tick(object sender, EventArgs e)
         {
-            if (_serialPortClient.IsSerialPortLink)
+            if (IsStart)
             {
-                var value = int.Parse(_serialPortClient.GetCYDXS(ref IsSeccess).ToString());
-                if (!IsSeccess)
-                {
-                    return;
-                }
-                lbl_dqyl.Text = value.ToString();
-
-                //读取设定值
-                //if (airtightPropertyTest == PublicEnum.AirtightPropertyTest.ZStart)
-                //{
-                //    double yl = _serialPortClient.GetZYYBYLZ(ref IsSeccess, "ZYKS");
-                //    if (!IsSeccess)
-                //    {
-                //        return;
-                //    }
-                //    lbl_setYL.Text = yl.ToString();
-                //}
-                //else if (airtightPropertyTest == PublicEnum.AirtightPropertyTest.FStart)
-                //{
-                //    double yl = _serialPortClient.GetZYYBYLZ(ref IsSeccess, "FYKS");
-                //    if (!IsSeccess)
-                //    {
-                //        return;
-                //    }
-                //    lbl_setYL.Text = "-" + yl.ToString();
-                //}
-                //else if (airtightPropertyTest == PublicEnum.AirtightPropertyTest.Stop)
-                //{
-                //    lbl_setYL.Text = "0";
-                //}
-
-                if (IsStart)
-                {
-                    if (this.tim_Top10.Enabled == false)
-                        SetCurrType(value);
-                }
+                if (this.tim_Top10.Enabled == false)
+                    SetCurrType();
             }
+
+            //读取设定值
+            //if (airtightPropertyTest == PublicEnum.AirtightPropertyTest.ZStart)
+            //{
+            //    double yl = _serialPortClient.GetZYYBYLZ(ref IsSeccess, "ZYKS");
+            //    if (!IsSeccess)
+            //    {
+            //        return;
+            //    }
+            //    lbl_setYL.Text = yl.ToString();
+            //}
+            //else if (airtightPropertyTest == PublicEnum.AirtightPropertyTest.FStart)
+            //{
+            //    double yl = _serialPortClient.GetZYYBYLZ(ref IsSeccess, "FYKS");
+            //    if (!IsSeccess)
+            //    {
+            //        return;
+            //    }
+            //    lbl_setYL.Text = "-" + yl.ToString();
+            //}
+            //else if (airtightPropertyTest == PublicEnum.AirtightPropertyTest.Stop)
+            //{
+            //    lbl_setYL.Text = "0";
+            //}
 
         }
 
         private void tim_PainPic_Tick(object sender, EventArgs e)
         {
-            if (_serialPortClient.IsSerialPortLink)
-            {
-                var c = _serialPortClient.GetCYDXS(ref IsSeccess);
-                int value = int.Parse(c.ToString());
-                if (!IsSeccess)
-                {
-                    return;
-                }
+            if (!_serialPortClient.sp.IsOpen)
+                return;
+            var c = _serialPortClient.GetCYDXS();
 
-                AnimateSeries(this.tChart_qm, value);
+            lbl_dqyl.Text = c.ToString();
 
-            }
+            AnimateSeries(this.tChart_qm, c);
         }
 
         int index = 0;
@@ -453,94 +437,11 @@ namespace text.doors.Detection
         {
             gv_list.Enabled = true;
 
-            var cyvalue = _serialPortClient.GetCYDXS(ref IsSeccess);
-            if (!IsSeccess)
-            {
-                return;
-            }
+            var cyvalue = _serialPortClient.GetCYDXS();
 
             index++;
-            if (index > 8)
+            if (index > 4)
             {
-                //标记计时结束
-                if (kpa_Level == PublicEnum.Kpa_Level.liter10)
-                {
-                    if (cyvalue > 0)
-                        Z_S_10Stop = false;
-                    else
-                        F_S_10Stop = false;
-                }
-                else if (kpa_Level == PublicEnum.Kpa_Level.liter30)
-                {
-                    if (cyvalue > 0)
-                        Z_S_30Stop = false;
-                    else
-                        F_S_30Stop = false;
-                }
-                else if (kpa_Level == PublicEnum.Kpa_Level.liter50)
-                {
-                    if (cyvalue > 0)
-                        Z_S_50Stop = false;
-                    else
-                        F_S_50Stop = false;
-                }
-                else if (kpa_Level == PublicEnum.Kpa_Level.liter70)
-                {
-                    if (cyvalue > 0)
-                        Z_S_70Stop = false;
-                    else
-                        F_S_70Stop = false;
-                }
-
-                else if (kpa_Level == PublicEnum.Kpa_Level.liter100)
-                {
-                    if (cyvalue > 0)
-                        Z_S_100Stop = false;
-                    else
-                        F_S_100Stop = false;
-                }
-                else if (kpa_Level == PublicEnum.Kpa_Level.liter150)
-                {
-                    if (cyvalue > 0)
-                        Z_S_150Stop = false;
-                    else
-                        F_S_150Stop = false;
-                }
-                else if (kpa_Level == PublicEnum.Kpa_Level.drop100)
-                {
-                    if (cyvalue > 0)
-                        Z_J_100Stop = false;
-                    else
-                        F_J_100Stop = false;
-                }
-                else if (kpa_Level == PublicEnum.Kpa_Level.drop70)
-                {
-                    if (cyvalue > 0)
-                        Z_J_70Stop = false;
-                    else
-                        F_J_70Stop = false;
-                }
-                else if (kpa_Level == PublicEnum.Kpa_Level.drop50)
-                {
-                    if (cyvalue > 0)
-                        Z_J_50Stop = false;
-                    else
-                        F_J_50Stop = false;
-                }
-                else if (kpa_Level == PublicEnum.Kpa_Level.drop30)
-                {
-                    if (cyvalue > 0)
-                        Z_J_30Stop = false;
-                    else
-                        F_J_30Stop = false;
-                }
-                else if (kpa_Level == PublicEnum.Kpa_Level.drop10)
-                {
-                    if (cyvalue > 0)
-                        Z_J_10Stop = false;
-                    else
-                        F_J_10Stop = false;
-                }
                 this.tim_Top10.Enabled = false;
                 index = 0;
                 gv_list.Enabled = false;
@@ -549,11 +450,7 @@ namespace text.doors.Detection
 
 
             //获取风速
-            var fsvalue = _serialPortClient.GetFSXS(ref IsSeccess);
-            if (!IsSeccess)
-            {
-                return;
-            }
+            var fsvalue = _serialPortClient.GetFSXS();
 
             if (rdb_fjstl.Checked)
             {
@@ -719,268 +616,253 @@ namespace text.doors.Detection
             }
         }
 
-        /// <summary>
-        /// 获取是否已经读取的压力状态
-        /// </summary>
-
-        private bool Z_S_10Stop = true;//生正压10
-        private bool Z_S_30Stop = true;//生正压30 
-        private bool Z_S_50Stop = true;//生正压50 
-        private bool Z_S_70Stop = true;//生正压70 
-        private bool Z_S_100Stop = true;//生正压100 
-        private bool Z_S_150Stop = true;//生正压150
-        private bool Z_J_100Stop = true;//降正压100
-        private bool Z_J_70Stop = true;//降正压70
-        private bool Z_J_50Stop = true;//降正压50
-        private bool Z_J_30Stop = true;//降正压30
-        private bool Z_J_10Stop = true;//降正压10
-
-
-        private bool F_S_10Stop = true;//生负压10
-        private bool F_S_30Stop = true;//生负压30
-        private bool F_S_50Stop = true;//生负压50
-        private bool F_S_70Stop = true;//生负压70
-        private bool F_S_100Stop = true;//生负压100
-        private bool F_S_150Stop = true;//生负压150
-        private bool F_J_100Stop = true;//降负压100
-        private bool F_J_70Stop = true;//降负压70
-        private bool F_J_50Stop = true;//降负压50
-        private bool F_J_30Stop = true;//降负压30
-        private bool F_J_10Stop = true;//降负压10
-
+     
         /// <summary>
         /// 设置添加数据状态
         /// </summary>
         /// <param name="value"></param>
-        private void SetCurrType(int value)
+        private void SetCurrType()
         {
-            bool start = _serialPortClient.GetQiMiTimeStart("Z_S_10Stop");
-            if (start && Z_S_10Stop)
+            bool start = false;
+            var notReadList = _readT.FindAll(t => t.IsRead == false);
+            if (notReadList == null || notReadList.Count == 0)
             {
-                kpa_Level = PublicEnum.Kpa_Level.liter10;
-                tim_Top10.Enabled = true;
-                Z_S_10Stop = false;
+                return;
+            }
+            var notRead = notReadList?.OrderBy(t => t.Order)?.First();
+
+            if (airtightPropertyTest == PublicEnum.AirtightPropertyTest.ZStart)
+            {
+                if (notRead?.Key == BFMCommand.正压10TimeStart)
+                {
+                    start = _serialPortClient.GetQiMiTimeStart(notRead?.Key);
+                    if (start)
+                    {
+                        kpa_Level = PublicEnum.Kpa_Level.liter10;
+                        tim_Top10.Enabled = true;
+                        notRead.IsRead = true;
+                    }
+                }
+                else if (notRead?.Key == BFMCommand.正压30TimeStart)
+                {
+                    start = _serialPortClient.GetQiMiTimeStart(notRead?.Key);
+                    if (start)
+                    {
+                        kpa_Level = PublicEnum.Kpa_Level.liter30;
+                        tim_Top10.Enabled = true;
+                        notRead.IsRead = true;
+                    }
+                }
+                else if (notRead?.Key == BFMCommand.正压50TimeStart)
+                {
+                    start = _serialPortClient.GetQiMiTimeStart(notRead?.Key);
+                    if (start)
+                    {
+                        kpa_Level = PublicEnum.Kpa_Level.liter50;
+                        tim_Top10.Enabled = true;
+                        notRead.IsRead = true;
+                    }
+                }
+                else if (notRead?.Key == BFMCommand.正压70TimeStart)
+                {
+                    start = _serialPortClient.GetQiMiTimeStart(notRead?.Key);
+                    if (start)
+                    {
+                        kpa_Level = PublicEnum.Kpa_Level.liter70;
+                        tim_Top10.Enabled = true;
+                        notRead.IsRead = true;
+                    }
+                }
+                else if (notRead?.Key == BFMCommand.正压100TimeStart)
+                {
+                    start = _serialPortClient.GetQiMiTimeStart(notRead?.Key);
+                    if (start)
+                    {
+                        kpa_Level = PublicEnum.Kpa_Level.liter100;
+                        tim_Top10.Enabled = true;
+                        notRead.IsRead = true;
+                    }
+                }
+                else if (notRead?.Key == BFMCommand.正压150TimeStart)
+                {
+                    start = _serialPortClient.GetQiMiTimeStart(notRead?.Key);
+                    if (start)
+                    {
+                        kpa_Level = PublicEnum.Kpa_Level.liter150;
+                        tim_Top10.Enabled = true;
+                        notRead.IsRead = true;
+                    }
+                }
+                else if (notRead?.Key == BFMCommand.正压_100TimeStart)
+                {
+                    start = _serialPortClient.GetQiMiTimeStart(notRead?.Key);
+                    if (start)
+                    {
+                        kpa_Level = PublicEnum.Kpa_Level.drop100;
+                        tim_Top10.Enabled = true;
+                        notRead.IsRead = true;
+                    }
+                }
+                else if (notRead?.Key == BFMCommand.正压_70TimeStart)
+                {
+                    start = _serialPortClient.GetQiMiTimeStart(notRead?.Key);
+                    if (start)
+                    {
+                        kpa_Level = PublicEnum.Kpa_Level.drop70;
+                        tim_Top10.Enabled = true;
+                        notRead.IsRead = true;
+                    }
+                }
+                else if (notRead?.Key == BFMCommand.正压_50TimeStart)
+                {
+                    start = _serialPortClient.GetQiMiTimeStart(notRead?.Key);
+                    if (start)
+                    {
+                        kpa_Level = PublicEnum.Kpa_Level.drop50;
+                        tim_Top10.Enabled = true;
+                        notRead.IsRead = true;
+                    }
+                }
+                else if (notRead?.Key == BFMCommand.正压_30TimeStart)
+                {
+                    start = _serialPortClient.GetQiMiTimeStart(notRead?.Key);
+                    if (start)
+                    {
+                        kpa_Level = PublicEnum.Kpa_Level.drop30;
+                        tim_Top10.Enabled = true;
+                        notRead.IsRead = true;
+                    }
+                }
+                else if (notRead?.Key == BFMCommand.正压_10TimeStart)
+                {
+                    start = _serialPortClient.GetQiMiTimeStart(notRead?.Key);
+                    if (start)
+                    {
+                        kpa_Level = PublicEnum.Kpa_Level.drop10;
+                        tim_Top10.Enabled = true;
+                        notRead.IsRead = true;
+                    }
+                }
             }
 
-            start = _serialPortClient.GetQiMiTimeStart("Z_S_30Stop");
-            if (start && Z_S_30Stop)
-            {
-                kpa_Level = PublicEnum.Kpa_Level.liter30;
-                tim_Top10.Enabled = true;
-                Z_S_30Stop = false;
-            }
-            start = _serialPortClient.GetQiMiTimeStart("Z_S_50Stop");
-            if (start && Z_S_50Stop)
-            {
-                kpa_Level = PublicEnum.Kpa_Level.liter50;
-                tim_Top10.Enabled = true;
-                Z_S_50Stop = false;
-            }
-            start = _serialPortClient.GetQiMiTimeStart("Z_S_70Stop");
-            if (start && Z_S_70Stop)
-            {
-                kpa_Level = PublicEnum.Kpa_Level.liter70;
-                tim_Top10.Enabled = true;
-                Z_S_70Stop = false;
-            }
 
-            start = _serialPortClient.GetQiMiTimeStart("Z_S_100Stop");
-            if (start && Z_S_100Stop)
+            if (airtightPropertyTest == PublicEnum.AirtightPropertyTest.FStart)
             {
-                kpa_Level = PublicEnum.Kpa_Level.liter100;
-                tim_Top10.Enabled = true;
-                Z_S_100Stop = false;
-            }
-            start = _serialPortClient.GetQiMiTimeStart("Z_S_150Stop");
-            if (start && Z_S_150Stop)
-            {
-                kpa_Level = PublicEnum.Kpa_Level.liter150;
-                tim_Top10.Enabled = true;
-                Z_S_150Stop = false;
-            }
 
-            start = _serialPortClient.GetQiMiTimeStart("Z_J_100Stop");
-            if (start && Z_J_100Stop)
-            {
-                Thread.Sleep(500);
-                kpa_Level = PublicEnum.Kpa_Level.drop100;
-                tim_Top10.Enabled = true;
-                Z_J_100Stop = false;
+                if (notRead?.Key == BFMCommand.负压10TimeStart)
+                {
+                    start = _serialPortClient.GetQiMiTimeStart(notRead?.Key);
+                    if (start)
+                    {
+                        kpa_Level = PublicEnum.Kpa_Level.liter10;
+                        tim_Top10.Enabled = true;
+                        notRead.IsRead = true;
+                    }
+                }
+                else if (notRead?.Key == BFMCommand.负压30TimeStart)
+                {
+                    start = _serialPortClient.GetQiMiTimeStart(notRead?.Key);
+                    if (start)
+                    {
+                        kpa_Level = PublicEnum.Kpa_Level.liter30;
+                        tim_Top10.Enabled = true;
+                        notRead.IsRead = true;
+                    }
+                }
+                else if (notRead?.Key == BFMCommand.负压50TimeStart)
+                {
+                    start = _serialPortClient.GetQiMiTimeStart(notRead?.Key);
+                    if (start)
+                    {
+                        kpa_Level = PublicEnum.Kpa_Level.liter50;
+                        tim_Top10.Enabled = true;
+                        notRead.IsRead = true;
+                    }
+                }
+                else if (notRead?.Key == BFMCommand.负压70TimeStart)
+                {
+                    start = _serialPortClient.GetQiMiTimeStart(notRead?.Key);
+                    if (start)
+                    {
+                        kpa_Level = PublicEnum.Kpa_Level.liter70;
+                        tim_Top10.Enabled = true;
+                        notRead.IsRead = true;
+                    }
+                }
+                else if (notRead?.Key == BFMCommand.负压100TimeStart)
+                {
+                    start = _serialPortClient.GetQiMiTimeStart(notRead?.Key);
+                    if (start)
+                    {
+                        kpa_Level = PublicEnum.Kpa_Level.liter100;
+                        tim_Top10.Enabled = true;
+                        notRead.IsRead = true;
+                    }
+                }
+                else if (notRead?.Key == BFMCommand.负压150TimeStart)
+                {
+                    start = _serialPortClient.GetQiMiTimeStart(notRead?.Key);
+                    if (start)
+                    {
+                        kpa_Level = PublicEnum.Kpa_Level.liter150;
+                        tim_Top10.Enabled = true;
+                        notRead.IsRead = true;
+                    }
+                }
+                else if (notRead?.Key == BFMCommand.负压_100TimeStart)
+                {
+                    start = _serialPortClient.GetQiMiTimeStart(notRead?.Key);
+                    if (start)
+                    {
+                        kpa_Level = PublicEnum.Kpa_Level.drop100;
+                        tim_Top10.Enabled = true;
+                        notRead.IsRead = true;
+                    }
+                }
+                else if (notRead?.Key == BFMCommand.负压_70TimeStart)
+                {
+                    start = _serialPortClient.GetQiMiTimeStart(notRead?.Key);
+                    if (start)
+                    {
+                        kpa_Level = PublicEnum.Kpa_Level.drop70;
+                        tim_Top10.Enabled = true;
+                        notRead.IsRead = true;
+                    }
+                }
+                else if (notRead?.Key == BFMCommand.负压_50TimeStart)
+                {
+                    start = _serialPortClient.GetQiMiTimeStart(notRead?.Key);
+                    if (start)
+                    {
+                        kpa_Level = PublicEnum.Kpa_Level.drop50;
+                        tim_Top10.Enabled = true;
+                        notRead.IsRead = true;
+                    }
+                }
+                else if (notRead?.Key == BFMCommand.负压_30TimeStart)
+                {
+                    start = _serialPortClient.GetQiMiTimeStart(notRead?.Key);
+                    if (start)
+                    {
+                        kpa_Level = PublicEnum.Kpa_Level.drop30;
+                        tim_Top10.Enabled = true;
+                        notRead.IsRead = true;
+                    }
+                }
+                else if (notRead?.Key == BFMCommand.负压_10TimeStart)
+                {
+                    start = _serialPortClient.GetQiMiTimeStart(notRead?.Key);
+                    if (start)
+                    {
+                        kpa_Level = PublicEnum.Kpa_Level.drop10;
+                        tim_Top10.Enabled = true;
+                        notRead.IsRead = true;
+                    }
+                }
             }
-            start = _serialPortClient.GetQiMiTimeStart("Z_J_70Stop");
-            if (start && Z_J_70Stop)
-            {
-                Thread.Sleep(500);
-                kpa_Level = PublicEnum.Kpa_Level.drop70;
-                tim_Top10.Enabled = true;
-                Z_J_70Stop = false;
-            }
-            start = _serialPortClient.GetQiMiTimeStart("Z_J_50Stop");
-            if (start && Z_J_50Stop)
-            {
-                Thread.Sleep(500);
-                kpa_Level = PublicEnum.Kpa_Level.drop50;
-                tim_Top10.Enabled = true;
-                Z_J_50Stop = false;
-            }
-            start = _serialPortClient.GetQiMiTimeStart("Z_J_30Stop");
-            if (start && Z_J_30Stop)
-            {
-                Thread.Sleep(500);
-                kpa_Level = PublicEnum.Kpa_Level.drop30;
-                tim_Top10.Enabled = true;
-                Z_J_30Stop = false;
-            }
-            start = _serialPortClient.GetQiMiTimeStart("Z_J_10Stop");
-            if (start && Z_J_10Stop)
-            {
-                Thread.Sleep(500);
-                kpa_Level = PublicEnum.Kpa_Level.drop10;
-                tim_Top10.Enabled = true;
-                Z_J_10Stop = false;
-            }
-
-            //负压
-            start = _serialPortClient.GetQiMiTimeStart("F_S_10Stop");
-            if (start && F_S_10Stop)
-            {
-                kpa_Level = PublicEnum.Kpa_Level.liter10;
-                tim_Top10.Enabled = true;
-                F_S_10Stop = false;
-            }
-            start = _serialPortClient.GetQiMiTimeStart("F_S_30Stop");
-            if (start && F_S_30Stop)
-            {
-                kpa_Level = PublicEnum.Kpa_Level.liter30;
-                tim_Top10.Enabled = true;
-                F_S_30Stop = false;
-            }
-            start = _serialPortClient.GetQiMiTimeStart("F_S_50Stop");
-            if (start && F_S_50Stop)
-            {
-                kpa_Level = PublicEnum.Kpa_Level.liter50;
-                tim_Top10.Enabled = true;
-                F_S_50Stop = false;
-            }
-            start = _serialPortClient.GetQiMiTimeStart("F_S_70Stop");
-            if (start && F_S_70Stop)
-            {
-                kpa_Level = PublicEnum.Kpa_Level.liter70;
-                tim_Top10.Enabled = true;
-                F_S_70Stop = false;
-            }
-            start = _serialPortClient.GetQiMiTimeStart("F_S_100Stop");
-            if (start && F_S_100Stop)
-            {
-                kpa_Level = PublicEnum.Kpa_Level.liter100;
-                tim_Top10.Enabled = true;
-                F_S_100Stop = false;
-            }
-
-            start = _serialPortClient.GetQiMiTimeStart("F_S_150Stop");
-            if (start && F_S_150Stop)
-            {
-                kpa_Level = PublicEnum.Kpa_Level.liter150;
-                tim_Top10.Enabled = true;
-                F_S_150Stop = false;
-            }
-            start = _serialPortClient.GetQiMiTimeStart("F_J_100Stop");
-            if (start && F_J_100Stop)
-            {
-                Thread.Sleep(500);
-                kpa_Level = PublicEnum.Kpa_Level.drop100;
-                tim_Top10.Enabled = true;
-                F_J_100Stop = false;
-            }
-            start = _serialPortClient.GetQiMiTimeStart("F_J_70Stop");
-            if (start && F_J_70Stop)
-            {
-                Thread.Sleep(500);
-                kpa_Level = PublicEnum.Kpa_Level.drop70;
-                tim_Top10.Enabled = true;
-                F_J_70Stop = false;
-            }
-            start = _serialPortClient.GetQiMiTimeStart("F_J_50Stop");
-            if (start && F_J_50Stop)
-            {
-                Thread.Sleep(500);
-                kpa_Level = PublicEnum.Kpa_Level.drop50;
-                tim_Top10.Enabled = true;
-                F_J_50Stop = false;
-            }
-            start = _serialPortClient.GetQiMiTimeStart("F_J_30Stop");
-            if (start && F_J_30Stop)
-            {
-                Thread.Sleep(500);
-                kpa_Level = PublicEnum.Kpa_Level.drop30;
-                tim_Top10.Enabled = true;
-                F_J_30Stop = false;
-            }
-            start = _serialPortClient.GetQiMiTimeStart("F_J_10Stop");
-            if (start && F_J_10Stop)
-            {
-                Thread.Sleep(500);
-                kpa_Level = PublicEnum.Kpa_Level.drop10;
-                tim_Top10.Enabled = true;
-                F_J_10Stop = false;
-            }
-
-            //bool start = _serialPortClient.Get_Z_S100TimeStart();
-
-            //if (start && Z_S_100Stop)
-            //{
-            //    kpa_Level = PublicEnum.Kpa_Level.liter100;
-            //    tim_Top10.Enabled = true;
-            //    Z_S_100Stop = false;
-            //}
-
-            //start = _serialPortClient.Get_Z_S150PaTimeStart();
-
-            //if (start && Z_S_150Stop)
-            //{
-            //    kpa_Level = PublicEnum.Kpa_Level.liter150;
-            //    tim_Top10.Enabled = true;
-            //    Z_S_150Stop = false;
-            //}
-
-            //start = _serialPortClient.Get_Z_J100PaTimeStart();
-
-            //if (start && Z_J_100Stop)
-            //{
-            //    Thread.Sleep(500);
-            //    kpa_Level = PublicEnum.Kpa_Level.drop100;
-            //    tim_Top10.Enabled = true;
-            //    Z_J_100Stop = false;
-            //}
-
-            ////负压
-            //start = _serialPortClient.Get_F_S100PaTimeStart();
-
-            //if (start && F_S_100Stop)
-            //{
-            //    kpa_Level = PublicEnum.Kpa_Level.liter100;
-            //    tim_Top10.Enabled = true;
-            //    F_S_100Stop = false;
-            //}
-
-            //start = _serialPortClient.Get_F_S150PaTimeStart();
-
-            //if (start && F_S_150Stop)
-            //{
-            //    kpa_Level = PublicEnum.Kpa_Level.liter150;
-            //    tim_Top10.Enabled = true;
-            //    F_S_150Stop = false;
-            //}
-            //start = _serialPortClient.Get_F_J100PaTimeStart();
-
-            //if (start && F_J_100Stop)
-            //{
-            //    Thread.Sleep(500);
-            //    kpa_Level = PublicEnum.Kpa_Level.drop100;
-            //    tim_Top10.Enabled = true;
-            //    F_J_100Stop = false;
-            //}
         }
+
+
         #endregion
 
 
@@ -997,11 +879,8 @@ namespace text.doors.Detection
 
         private void btn_justready_Click(object sender, EventArgs e)
         {
-            if (!_serialPortClient.IsSerialPortLink)
-            {
-                MessageBox.Show("未连接服务器", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
+            if (!_serialPortClient.sp.IsOpen)
                 return;
-            }
 
             //double yl = _serialPortClient.GetZYYBYLZ(ref IsSeccess, "ZYYB");
             //if (!IsSeccess)
@@ -1041,7 +920,7 @@ namespace text.doors.Detection
         /// <param name="e"></param>
         private void btn_juststart_Click(object sender, EventArgs e)
         {
-            IsFirst = false;
+
 
             //double yl = _serialPortClient.GetZYYBYLZ(ref IsSeccess, "ZYKS");
             //if (!IsSeccess)
@@ -1051,34 +930,23 @@ namespace text.doors.Detection
             //}
             //lbl_setYL.Text = yl.ToString();
 
+            IsFirst = false;
             IsStart = true;
             DisableBtnType();
 
-            Z_S_10Stop = true;//生正压10
-            Z_S_30Stop = true;//生正压30 
-            Z_S_50Stop = true;//生正压50 
-            Z_S_70Stop = true;//生正压70 
-            Z_S_100Stop = true;//生正压100 
-            Z_S_150Stop = true;//生正压150
-            Z_J_100Stop = true;//降正压100
-            Z_J_70Stop = true;//降正压70
-            Z_J_50Stop = true;//降正压50
-            Z_J_30Stop = true;//降正压30
-            Z_J_10Stop = true;//降正压10
 
-
-            F_S_10Stop = true;//生负压10
-            F_S_30Stop = true;//生负压30
-            F_S_50Stop = true;//生负压50
-            F_S_70Stop = true;//生负压70
-            F_S_100Stop = true;//生负压100
-            F_S_150Stop = true;//生负压150
-            F_J_100Stop = true;//降负压100
-            F_J_70Stop = true;//降负压70
-            F_J_50Stop = true;//降负压50
-            F_J_30Stop = true;//降负压30
-            F_J_10Stop = true;//降负压10
-
+            _readT = new List<ReadT>();
+            _readT.Add(new ReadT() { Key = BFMCommand.正压10TimeStart, Order = 1, IsRead = false });
+            _readT.Add(new ReadT() { Key = BFMCommand.正压30TimeStart, Order = 2, IsRead = false });
+            _readT.Add(new ReadT() { Key = BFMCommand.正压50TimeStart, Order = 3, IsRead = false });
+            _readT.Add(new ReadT() { Key = BFMCommand.正压70TimeStart, Order = 4, IsRead = false });
+            _readT.Add(new ReadT() { Key = BFMCommand.正压100TimeStart, Order = 5, IsRead = false });
+            _readT.Add(new ReadT() { Key = BFMCommand.正压150TimeStart, Order = 6, IsRead = false });
+            _readT.Add(new ReadT() { Key = BFMCommand.正压_100TimeStart, Order = 7, IsRead = false });
+            _readT.Add(new ReadT() { Key = BFMCommand.正压_70TimeStart, Order = 8, IsRead = false });
+            _readT.Add(new ReadT() { Key = BFMCommand.正压_50TimeStart, Order = 9, IsRead = false });
+            _readT.Add(new ReadT() { Key = BFMCommand.正压_30TimeStart, Order = 10, IsRead = false });
+            _readT.Add(new ReadT() { Key = BFMCommand.正压_10TimeStart, Order = 11, IsRead = false });
 
             if (rdb_fjstl.Checked)
             {
@@ -1089,14 +957,7 @@ namespace text.doors.Detection
                 new Pressure().ClearZ_Z();
             }
 
-            _serialPortClient.SendZYKS(ref IsSeccess);
-            if (!IsSeccess)
-            {
-                MessageBox.Show("正压开始异常", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
-                return;
-            }
-
-         
+            _serialPortClient.SendZYKS();
 
             airtightPropertyTest = PublicEnum.AirtightPropertyTest.ZStart;
         }
@@ -1166,31 +1027,19 @@ namespace text.doors.Detection
             IsStart = true;
             DisableBtnType();
 
+            _readT = new List<ReadT>();
 
-            Z_S_10Stop = true;//生正压10
-            Z_S_30Stop = true;//生正压30 
-            Z_S_50Stop = true;//生正压50 
-            Z_S_70Stop = true;//生正压70 
-            Z_S_100Stop = true;//生正压100 
-            Z_S_150Stop = true;//生正压150
-            Z_J_100Stop = true;//降正压100
-            Z_J_70Stop = true;//降正压70
-            Z_J_50Stop = true;//降正压50
-            Z_J_30Stop = true;//降正压30
-            Z_J_10Stop = true;//降正压10
-
-            F_S_10Stop = true;//生负压10
-            F_S_30Stop = true;//生负压30
-            F_S_50Stop = true;//生负压50
-            F_S_70Stop = true;//生负压70
-            F_S_100Stop = true;//生负压100
-            F_S_150Stop = true;//生负压150
-            F_J_100Stop = true;//降负压100
-            F_J_70Stop = true;//降负压70
-            F_J_50Stop = true;//降负压50
-            F_J_30Stop = true;//降负压30
-            F_J_10Stop = true;//降负压10
-
+            _readT.Add(new ReadT() { Key = BFMCommand.负压10TimeStart, Order = 1, IsRead = false });
+            _readT.Add(new ReadT() { Key = BFMCommand.负压30TimeStart, Order = 2, IsRead = false });
+            _readT.Add(new ReadT() { Key = BFMCommand.负压50TimeStart, Order = 3, IsRead = false });
+            _readT.Add(new ReadT() { Key = BFMCommand.负压70TimeStart, Order = 4, IsRead = false });
+            _readT.Add(new ReadT() { Key = BFMCommand.负压100TimeStart, Order = 5, IsRead = false });
+            _readT.Add(new ReadT() { Key = BFMCommand.负压150TimeStart, Order = 6, IsRead = false });
+            _readT.Add(new ReadT() { Key = BFMCommand.负压_100TimeStart, Order = 7, IsRead = false });
+            _readT.Add(new ReadT() { Key = BFMCommand.负压_70TimeStart, Order = 8, IsRead = false });
+            _readT.Add(new ReadT() { Key = BFMCommand.负压_50TimeStart, Order = 9, IsRead = false });
+            _readT.Add(new ReadT() { Key = BFMCommand.负压_30TimeStart, Order = 10, IsRead = false });
+            _readT.Add(new ReadT() { Key = BFMCommand.负压_10TimeStart, Order = 11, IsRead = false });
 
             if (rdb_fjstl.Checked)
             {
@@ -1200,12 +1049,7 @@ namespace text.doors.Detection
             {
                 new Pressure().ClearF_Z();
             }
-            var res = _serialPortClient.SendFYKS();
-            if (!res)
-            {
-                MessageBox.Show("负压开始异常", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
-                return;
-            }
+            _serialPortClient.SendFYKS();
 
             airtightPropertyTest = PublicEnum.AirtightPropertyTest.FStart;
         }
@@ -1427,75 +1271,67 @@ namespace text.doors.Detection
         /// <param name="e"></param>
         private void tim_getType_Tick(object sender, EventArgs e)
         {
-            if (_serialPortClient.IsSerialPortLink)
+            if (!_serialPortClient.sp.IsOpen)
+                return;
+            if (airtightPropertyTest == null) { return; }
+
+            if (airtightPropertyTest == PublicEnum.AirtightPropertyTest.ZReady)
             {
-                if (airtightPropertyTest == null) { return; }
+                int value = _serialPortClient.GetZYYBJS(ref IsSeccess);
 
-                if (airtightPropertyTest == PublicEnum.AirtightPropertyTest.ZReady)
+                if (!IsSeccess)
                 {
-                    int value = _serialPortClient.GetZYYBJS(ref IsSeccess);
-
-                    if (!IsSeccess)
-                    {
-                        return;
-                    }
-                    if (value == 3)
-                    {
-                        airtightPropertyTest = PublicEnum.AirtightPropertyTest.Stop;
-                        //lbl_setYL.Text = "0";
-                        OpenBtnType();
-                    }
+                    return;
                 }
-                if (airtightPropertyTest == PublicEnum.AirtightPropertyTest.ZStart)
+                if (value == 3)
                 {
-                    double value = _serialPortClient.GetZYKSJS(ref IsSeccess);
-
-                    if (!IsSeccess)
-                    {
-                        return;
-                    }
-                    if (value >= 15)
-                    {
-                        airtightPropertyTest = PublicEnum.AirtightPropertyTest.Stop;
-                        IsStart = false;
-                        Thread.Sleep(1000);
-                        //lbl_setYL.Text = "0";
-                        OpenBtnType();
-                    }
+                    airtightPropertyTest = PublicEnum.AirtightPropertyTest.Stop;
+                    //lbl_setYL.Text = "0";
+                    OpenBtnType();
                 }
+            }
+            if (airtightPropertyTest == PublicEnum.AirtightPropertyTest.ZStart)
+            {
+                double value = _serialPortClient.GetZYKSJS();
 
-                if (airtightPropertyTest == PublicEnum.AirtightPropertyTest.FReady)
+
+                if (value >= 15)
                 {
-                    int value = _serialPortClient.GetFYYBJS(ref IsSeccess);
-
-                    if (!IsSeccess)
-                    {
-                        return;
-                    }
-                    if (value == 3)
-                    {
-                        airtightPropertyTest = PublicEnum.AirtightPropertyTest.Stop;
-                        //lbl_setYL.Text = "0";
-                        OpenBtnType();
-                    }
+                    airtightPropertyTest = PublicEnum.AirtightPropertyTest.Stop;
+                    IsStart = false;
+                    Thread.Sleep(1000);
+                    //lbl_setYL.Text = "0";
+                    OpenBtnType();
                 }
+            }
 
-                if (airtightPropertyTest == PublicEnum.AirtightPropertyTest.FStart)
+            if (airtightPropertyTest == PublicEnum.AirtightPropertyTest.FReady)
+            {
+                int value = _serialPortClient.GetFYYBJS(ref IsSeccess);
+
+                if (!IsSeccess)
                 {
-                    double value = _serialPortClient.GetFYKSJS(ref IsSeccess);
+                    return;
+                }
+                if (value == 3)
+                {
+                    airtightPropertyTest = PublicEnum.AirtightPropertyTest.Stop;
+                    //lbl_setYL.Text = "0";
+                    OpenBtnType();
+                }
+            }
 
-                    if (!IsSeccess)
-                    {
-                        MessageBox.Show("负压开始结束状态异常", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
-                        return;
-                    }
-                    if (value >= 15)
-                    {
-                        IsStart = false;
-                        Thread.Sleep(1000);
-                        //lbl_setYL.Text = "0";
-                        OpenBtnType();
-                    }
+            if (airtightPropertyTest == PublicEnum.AirtightPropertyTest.FStart)
+            {
+                double value = _serialPortClient.GetFYKSJS();
+
+
+                if (value >= 15)
+                {
+                    IsStart = false;
+                    Thread.Sleep(1000);
+                    //lbl_setYL.Text = "0";
+                    OpenBtnType();
                 }
             }
         }
@@ -1504,11 +1340,10 @@ namespace text.doors.Detection
         {
             try
             {
-                if (_serialPortClient.IsSerialPortLink)
-                {
-                    BindWindSpeedBase();
-                    BindFlowBase();
-                }
+                if (!_serialPortClient.sp.IsOpen)
+                    return;
+                BindWindSpeedBase();
+                BindFlowBase();
             }
             catch (Exception ex)
             {
@@ -1528,6 +1363,15 @@ namespace text.doors.Detection
         private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
         {
             BindFlowBase();
+        }
+
+        private void tim_readcy_Tick(object sender, EventArgs e)
+        {
+            if (!_serialPortClient.sp.IsOpen)
+                return;
+            var value = _serialPortClient.GetCYDXS();
+
+            lbl_dqyl.Text = value.ToString();
         }
 
         private void tChart_sm_MouseDown(object sender, MouseEventArgs e)
@@ -1550,6 +1394,13 @@ namespace text.doors.Detection
             Stop();
             this.Close();
         }
+    }
 
+
+    public class ReadT
+    {
+        public string Key { get; set; }
+        public int Order { get; set; }
+        public bool IsRead { get; set; }
     }
 }

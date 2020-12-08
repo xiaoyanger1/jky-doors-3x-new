@@ -128,26 +128,26 @@
             // page_watertight
             // 
             this.page_watertight.BackColor = System.Drawing.Color.White;
+            this.page_watertight.Controls.Add(this.lbl_max);
             this.page_watertight.Controls.Add(this.groupBox10);
             this.page_watertight.Controls.Add(this.groupBox8);
+            this.page_watertight.Controls.Add(this.lbl_sdyl);
             this.page_watertight.Controls.Add(this.groupBox4);
             this.page_watertight.Controls.Add(this.groupBox5);
+            this.page_watertight.Controls.Add(this.label20);
             this.page_watertight.Controls.Add(this.groupBox6);
             this.page_watertight.Controls.Add(this.groupBox7);
             this.page_watertight.Location = new System.Drawing.Point(4, 30);
             this.page_watertight.Name = "page_watertight";
-            this.page_watertight.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
+            this.page_watertight.Padding = new System.Windows.Forms.Padding(3);
             this.page_watertight.Size = new System.Drawing.Size(1143, 587);
             this.page_watertight.TabIndex = 1;
             this.page_watertight.Text = "水密监控";
             // 
             // groupBox10
             // 
-            this.groupBox10.Controls.Add(this.lbl_max);
             this.groupBox10.Controls.Add(this.lbldqyl);
-            this.groupBox10.Controls.Add(this.lbl_sdyl);
             this.groupBox10.Controls.Add(this.label19);
-            this.groupBox10.Controls.Add(this.label20);
             this.groupBox10.Controls.Add(this.lbl_smjc);
             this.groupBox10.Location = new System.Drawing.Point(8, 18);
             this.groupBox10.Name = "groupBox10";
@@ -160,7 +160,7 @@
             // 
             this.lbl_max.AutoSize = true;
             this.lbl_max.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.lbl_max.Location = new System.Drawing.Point(771, 17);
+            this.lbl_max.Location = new System.Drawing.Point(779, 5);
             this.lbl_max.Name = "lbl_max";
             this.lbl_max.Size = new System.Drawing.Size(17, 16);
             this.lbl_max.TabIndex = 30;
@@ -171,7 +171,7 @@
             // 
             this.lbldqyl.AutoSize = true;
             this.lbldqyl.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.lbldqyl.Location = new System.Drawing.Point(704, 47);
+            this.lbldqyl.Location = new System.Drawing.Point(704, 34);
             this.lbldqyl.Name = "lbldqyl";
             this.lbldqyl.Size = new System.Drawing.Size(17, 16);
             this.lbldqyl.TabIndex = 29;
@@ -181,17 +181,18 @@
             // 
             this.lbl_sdyl.AutoSize = true;
             this.lbl_sdyl.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.lbl_sdyl.Location = new System.Drawing.Point(703, 16);
+            this.lbl_sdyl.Location = new System.Drawing.Point(711, 4);
             this.lbl_sdyl.Name = "lbl_sdyl";
             this.lbl_sdyl.Size = new System.Drawing.Size(17, 16);
             this.lbl_sdyl.TabIndex = 28;
             this.lbl_sdyl.Text = "0";
+            this.lbl_sdyl.Visible = false;
             // 
             // label19
             // 
             this.label19.AutoSize = true;
             this.label19.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.label19.Location = new System.Drawing.Point(528, 47);
+            this.label19.Location = new System.Drawing.Point(528, 34);
             this.label19.Name = "label19";
             this.label19.Size = new System.Drawing.Size(144, 16);
             this.label19.TabIndex = 27;
@@ -201,11 +202,12 @@
             // 
             this.label20.AutoSize = true;
             this.label20.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.label20.Location = new System.Drawing.Point(528, 15);
+            this.label20.Location = new System.Drawing.Point(536, 3);
             this.label20.Name = "label20";
             this.label20.Size = new System.Drawing.Size(144, 16);
             this.label20.TabIndex = 26;
             this.label20.Text = "设定压力（帕）：";
+            this.label20.Visible = false;
             // 
             // lbl_smjc
             // 
@@ -468,7 +470,7 @@
             // 
             this.btn_tzbd.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.btn_tzbd.Location = new System.Drawing.Point(200, 47);
-            this.btn_tzbd.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btn_tzbd.Margin = new System.Windows.Forms.Padding(2);
             this.btn_tzbd.Name = "btn_tzbd";
             this.btn_tzbd.Size = new System.Drawing.Size(71, 21);
             this.btn_tzbd.TabIndex = 10;
@@ -480,7 +482,7 @@
             // 
             this.btn_ksbd.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.btn_ksbd.Location = new System.Drawing.Point(199, 15);
-            this.btn_ksbd.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btn_ksbd.Margin = new System.Windows.Forms.Padding(2);
             this.btn_ksbd.Name = "btn_ksbd";
             this.btn_ksbd.Size = new System.Drawing.Size(71, 24);
             this.btn_ksbd.TabIndex = 11;
@@ -610,7 +612,7 @@
             this.rdb_wdjy.AutoSize = true;
             this.rdb_wdjy.Checked = true;
             this.rdb_wdjy.Location = new System.Drawing.Point(77, 1);
-            this.rdb_wdjy.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.rdb_wdjy.Margin = new System.Windows.Forms.Padding(2);
             this.rdb_wdjy.Name = "rdb_wdjy";
             this.rdb_wdjy.Size = new System.Drawing.Size(75, 16);
             this.rdb_wdjy.TabIndex = 21;
@@ -632,7 +634,7 @@
             // 
             this.rdb_bdjy.AutoSize = true;
             this.rdb_bdjy.Location = new System.Drawing.Point(178, 0);
-            this.rdb_bdjy.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.rdb_bdjy.Margin = new System.Windows.Forms.Padding(2);
             this.rdb_bdjy.Name = "rdb_bdjy";
             this.rdb_bdjy.Size = new System.Drawing.Size(75, 16);
             this.rdb_bdjy.TabIndex = 22;
@@ -1276,6 +1278,7 @@
             this.Text = "RealTimeSurveillance";
             this.tc_RealTimeSurveillance.ResumeLayout(false);
             this.page_watertight.ResumeLayout(false);
+            this.page_watertight.PerformLayout();
             this.groupBox10.ResumeLayout(false);
             this.groupBox10.PerformLayout();
             this.groupBox8.ResumeLayout(false);

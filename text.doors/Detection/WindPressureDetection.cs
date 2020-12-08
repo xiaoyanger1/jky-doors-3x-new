@@ -247,22 +247,23 @@ namespace text.doors.Detection
 
         private void tim_PainPic_Tick(object sender, EventArgs e)
         {
-            if (_serialPortClient.IsSerialPortLink)
+            if (!_serialPortClient.sp.IsOpen)
+                return;
+
+            var IsSeccess = false;
+            var c = _serialPortClient.GetCYGXS();
+            int value = int.Parse(c.ToString());
+            if (!IsSeccess)
             {
-                var IsSeccess = false;
-                var c = _serialPortClient.GetCYGXS(ref IsSeccess);
-                int value = int.Parse(c.ToString());
-                if (!IsSeccess)
-                {
-                   return;
-                }
-                AnimateSeries(this.tChart_qm, value);
+                return;
             }
+            AnimateSeries(this.tChart_qm, value);
         }
+
 
         private void btn_zyyb_Click(object sender, EventArgs e)
         {
-            if (!_serialPortClient.IsSerialPortLink)
+            if (!_serialPortClient.sp.IsOpen)
                 return;
 
             var res = _serialPortClient.Send_FY_Btn(BFMCommand.风压正压预备);
@@ -271,14 +272,9 @@ namespace text.doors.Detection
                 MessageBox.Show("正压预备异常！", "警告！", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
                 return;
             }
-            var IsSeccess = false;
-            double yl = _serialPortClient.Read_FY_Btn_SetValue(ref IsSeccess, "ZYYB");
-            if (!IsSeccess)
-            {
-                MessageBox.Show("读取设定值异常", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
-                return;
-            }
-            lbl_setYL.Text = yl.ToString();
+            //double yl = _serialPortClient.Read_FY_Btn_SetValue("ZYYB");
+
+            //lbl_setYL.Text = yl.ToString();
 
             windPressureTest = PublicEnum.WindPressureTest.ZReady;
             DisableBtnType();
@@ -289,7 +285,7 @@ namespace text.doors.Detection
         private void btn_zyks_Click(object sender, EventArgs e)
         {
             IsFirst = false;
-            if (!_serialPortClient.IsSerialPortLink)
+            if (!_serialPortClient.sp.IsOpen)
                 return;
 
             var res = _serialPortClient.Send_FY_Btn(BFMCommand.风压正压开始);
@@ -299,14 +295,8 @@ namespace text.doors.Detection
                 return;
             }
 
-            var IsSeccess = false;
-            double yl = _serialPortClient.Read_FY_Btn_SetValue(ref IsSeccess, "ZYKS");
-            if (!IsSeccess)
-            {
-                MessageBox.Show("读取设定值异常", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
-                return;
-            }
-            lbl_setYL.Text = yl.ToString();
+            //double yl = _serialPortClient.Read_FY_Btn_SetValue("ZYKS");
+            //lbl_setYL.Text = yl.ToString();
 
             windPressureTest = PublicEnum.WindPressureTest.ZStart;
             DisableBtnType();
@@ -317,24 +307,18 @@ namespace text.doors.Detection
 
         private void btn_fyyb_Click(object sender, EventArgs e)
         {
-            if (!_serialPortClient.IsSerialPortLink)
-            {
+            if (!_serialPortClient.sp.IsOpen)
                 return;
-            }
+
             var res = _serialPortClient.Send_FY_Btn(BFMCommand.风压负压预备, false);
             if (!res)
             {
                 MessageBox.Show("负压预备异常！", "警告！", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
                 return;
             }
-            var IsSeccess = false;
-            double yl = _serialPortClient.Read_FY_Btn_SetValue(ref IsSeccess, "FYYB");
-            if (!IsSeccess)
-            {
-                MessageBox.Show("读取设定值异常", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
-                return;
-            }
-            lbl_setYL.Text = yl.ToString();
+            //double yl = _serialPortClient.Read_FY_Btn_SetValue("FYYB");
+
+            //lbl_setYL.Text = yl.ToString();
 
             windPressureTest = PublicEnum.WindPressureTest.FReady;
             DisableBtnType();
@@ -344,24 +328,18 @@ namespace text.doors.Detection
         private void btn_fyks_Click(object sender, EventArgs e)
         {
             IsFirst = false;
-            if (!_serialPortClient.IsSerialPortLink)
-            {
+            if (!_serialPortClient.sp.IsOpen)
                 return;
-            }
+
             var res = _serialPortClient.Send_FY_Btn(BFMCommand.风压负压开始, false);
             if (!res)
             {
                 MessageBox.Show("负压开始异常！", "警告！", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
                 return;
             }
-            var IsSeccess = false;
-            double yl = _serialPortClient.Read_FY_Btn_SetValue(ref IsSeccess, "FYKS");
-            if (!IsSeccess)
-            {
-                MessageBox.Show("读取设定值异常", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
-                return;
-            }
-            lbl_setYL.Text = yl.ToString();
+            //double yl = _serialPortClient.Read_FY_Btn_SetValue("FYKS");
+
+            //lbl_setYL.Text = yl.ToString();
 
             windPressureTest = PublicEnum.WindPressureTest.FStart;
             DisableBtnType();
@@ -572,7 +550,7 @@ namespace text.doors.Detection
 
         private void btn_zff_Click(object sender, EventArgs e)
         {
-            if (!_serialPortClient.IsSerialPortLink)
+            if (!_serialPortClient.sp.IsOpen)
                 return;
             this.tim_fy.Enabled = true;
             int value = 0;
@@ -595,7 +573,7 @@ namespace text.doors.Detection
 
         private void btn_fff_Click(object sender, EventArgs e)
         {
-            if (!_serialPortClient.IsSerialPortLink)
+            if (!_serialPortClient.sp.IsOpen)
                 return;
 
             this.tim_fy.Enabled = true;
@@ -617,7 +595,7 @@ namespace text.doors.Detection
 
         private void btn_zaq_Click(object sender, EventArgs e)
         {
-            if (!_serialPortClient.IsSerialPortLink)
+            if (!_serialPortClient.sp.IsOpen)
                 return;
 
             this.tim_fy.Enabled = true;
@@ -640,7 +618,7 @@ namespace text.doors.Detection
 
         private void btnfaq_Click(object sender, EventArgs e)
         {
-            if (!_serialPortClient.IsSerialPortLink)
+            if (!_serialPortClient.sp.IsOpen)
                 return;
 
             this.tim_fy.Enabled = true;
@@ -667,30 +645,27 @@ namespace text.doors.Detection
 
         private void btn_wygl_Click(object sender, EventArgs e)
         {
-            if (!_serialPortClient.IsSerialPortLink)
-            {
+            if (!_serialPortClient.sp.IsOpen)
                 return;
-            }
             _serialPortClient.SendWYGL();
         }
 
         private void tim_wyData_Tick(object sender, EventArgs e)
         {
-            if (_serialPortClient.IsSerialPortLink)
-            {
-                var IsSeccess = true;
-                //抗风压
-                var displace1 = _serialPortClient.GetDisplace1(ref IsSeccess).ToString();
-                if (!IsSeccess) return;
-                var displace2 = _serialPortClient.GetDisplace2(ref IsSeccess).ToString();
-                if (!IsSeccess) return;
-                var displace3 = _serialPortClient.GetDisplace3(ref IsSeccess).ToString();
-                if (!IsSeccess) return;
+            if (!_serialPortClient.sp.IsOpen)
+                return;
+            var IsSeccess = true;
+            //抗风压
+            var displace1 = _serialPortClient.GetDisplace1();
+            var displace2 = _serialPortClient.GetDisplace2();
+            if (!IsSeccess) return;
+            var displace3 = _serialPortClient.GetDisplace3();
+            if (!IsSeccess) return;
 
-                txt_wy1.Text = displace1.ToString();
-                txt_wy2.Text = displace2.ToString();
-                txt_wy3.Text = displace3.ToString();
-            }
+            txt_wy1.Text = displace1.ToString();
+            txt_wy2.Text = displace2.ToString();
+            txt_wy3.Text = displace3.ToString();
+
         }
 
         /// <summary>
@@ -702,84 +677,68 @@ namespace text.doors.Detection
 
         private void tim_fy_Tick(object sender, EventArgs e)
         {
-            if (!_serialPortClient.IsSerialPortLink)
-            {
+            if (!_serialPortClient.sp.IsOpen)
                 return;
-            }
-            var IsSeccess = true;
-            var value = _serialPortClient.GetCYGXS(ref IsSeccess);
-            if (!IsSeccess)
-                return;
+
+            var value = _serialPortClient.GetCYGXS();
+
 
             lbl_dqyl.Text = value.ToString();
 
             if (!IsOk)
                 return;
 
-            if (windPressureTest == PublicEnum.WindPressureTest.FReady)
-            {
-                double yl = _serialPortClient.Read_FY_Btn_SetValue(ref IsSeccess, "FYYB");
-                if (!IsSeccess)
-                    return;
-
-                lbl_setYL.Text = "-" + yl.ToString();
-            }
-
-            if (windPressureTest == PublicEnum.WindPressureTest.ZReady)
-            {
-                double yl = _serialPortClient.Read_FY_Btn_SetValue(ref IsSeccess, "ZYYB");
-                if (!IsSeccess)
-                    return;
-
-                lbl_setYL.Text = yl.ToString();
-            }
+            //if (windPressureTest == PublicEnum.WindPressureTest.FReady)
+            //{
+            //    double yl = _serialPortClient.Read_FY_Btn_SetValue("FYYB");
 
 
-            if (windPressureTest == PublicEnum.WindPressureTest.ZRepeatedly)
-            {
-                double yl = _serialPortClient.Read_FY_Btn_SetValue(ref IsSeccess, "ZFF");
-                if (!IsSeccess)
-                    return;
+            //    lbl_setYL.Text = "-" + yl.ToString();
+            //}
 
-                lbl_setYL.Text = yl.ToString();
-            }
+            //if (windPressureTest == PublicEnum.WindPressureTest.ZReady)
+            //{
+            //    double yl = _serialPortClient.Read_FY_Btn_SetValue("ZYYB");
 
 
-            if (windPressureTest == PublicEnum.WindPressureTest.FRepeatedly)
-            {
-                double yl = _serialPortClient.Read_FY_Btn_SetValue(ref IsSeccess, "FFF");
-                if (!IsSeccess)
-                    return;
+            //    lbl_setYL.Text = yl.ToString();
+            //}
 
-                lbl_setYL.Text = "-" + yl.ToString();
-            }
 
-            if (windPressureTest == PublicEnum.WindPressureTest.ZSafety)
-            {
-                double yl = _serialPortClient.Read_FY_Btn_SetValue(ref IsSeccess, "ZAQ");
-                if (!IsSeccess)
-                    return;
+            //if (windPressureTest == PublicEnum.WindPressureTest.ZRepeatedly)
+            //{
+            //    double yl = _serialPortClient.Read_FY_Btn_SetValue("ZFF");
 
-                lbl_setYL.Text = yl.ToString();
-            }
-            if (windPressureTest == PublicEnum.WindPressureTest.FSafety)
-            {
-                double yl = _serialPortClient.Read_FY_Btn_SetValue(ref IsSeccess, "FAQ");
-                if (!IsSeccess)
-                    return;
+            //    lbl_setYL.Text = yl.ToString();
+            //}
 
-                lbl_setYL.Text = "-" + yl.ToString();
-            }
+
+            //if (windPressureTest == PublicEnum.WindPressureTest.FRepeatedly)
+            //{
+            //    double yl = _serialPortClient.Read_FY_Btn_SetValue("FFF");
+
+            //    lbl_setYL.Text = "-" + yl.ToString();
+            //}
+
+            //if (windPressureTest == PublicEnum.WindPressureTest.ZSafety)
+            //{
+            //    double yl = _serialPortClient.Read_FY_Btn_SetValue("ZAQ");
+
+            //    lbl_setYL.Text = yl.ToString();
+            //}
+            //if (windPressureTest == PublicEnum.WindPressureTest.FSafety)
+            //{
+            //    double yl = _serialPortClient.Read_FY_Btn_SetValue("FAQ");
+
+
+            //    lbl_setYL.Text = "-" + yl.ToString();
+            //}
 
             if (windPressureTest == PublicEnum.WindPressureTest.FStart)
             {
-                double yl = _serialPortClient.Read_FY_Btn_SetValue(ref IsSeccess, "FYKS");
-                if (!IsSeccess)
-                {
-                    MessageBox.Show("读取设定值异常", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
-                    return;
-                }
-                lbl_setYL.Text = "-" + yl.ToString();
+                //double yl = _serialPortClient.Read_FY_Btn_SetValue("FYKS");
+
+                //lbl_setYL.Text = "-" + yl.ToString();
 
                 if (value <= -250 && value >= -255 && !complete.Exists(t => t.ToString() == "-250"))
                 {
@@ -833,13 +792,9 @@ namespace text.doors.Detection
             }
             if (windPressureTest == PublicEnum.WindPressureTest.ZStart)
             {
-                double yl = _serialPortClient.Read_FY_Btn_SetValue(ref IsSeccess, "ZYKS");
-                if (!IsSeccess)
-                {
-                    MessageBox.Show("读取设定值异常", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
-                    return;
-                }
-                lbl_setYL.Text = yl.ToString();
+                //double yl = _serialPortClient.Read_FY_Btn_SetValue("ZYKS");
+
+                //lbl_setYL.Text = yl.ToString();
 
                 if (value >= 250 && value <= 255 && !complete.Exists(t => t.ToString() == "250"))
                 {
@@ -913,17 +868,17 @@ namespace text.doors.Detection
             if (staticIndex < 5)
             {
                 var IsSeccess = false;
-                double displace1 = _serialPortClient.GetDisplace1(ref IsSeccess);
+                double displace1 = _serialPortClient.GetDisplace1();
                 if (!IsSeccess)
                 {
                     return;
                 }
-                double displace2 = _serialPortClient.GetDisplace2(ref IsSeccess);
+                double displace2 = _serialPortClient.GetDisplace2();
                 if (!IsSeccess)
                 {
                     return;
                 }
-                double displace3 = _serialPortClient.GetDisplace3(ref IsSeccess);
+                double displace3 = _serialPortClient.GetDisplace3();
                 if (!IsSeccess)
                 {
                     return;
@@ -1003,7 +958,7 @@ namespace text.doors.Detection
                 staticIndex = 1;
                 IsOk = true;
 
-                lbl_setYL.Text = "0";
+                // lbl_setYL.Text = "0";
             }
             staticIndex++;
         }
@@ -1036,7 +991,7 @@ namespace text.doors.Detection
         private bool IsStart = false;
         private void tim_btnType_Tick(object sender, EventArgs e)
         {
-            if (!_serialPortClient.IsSerialPortLink)
+            if (!_serialPortClient.sp.IsOpen)
                 return;
 
             if (windPressureTest == null)
@@ -1054,7 +1009,7 @@ namespace text.doors.Detection
                 if (value == 3)
                 {
                     windPressureTest = PublicEnum.WindPressureTest.Stop;
-                    lbl_setYL.Text = "0";
+                    //  lbl_setYL.Text = "0";
                     OpenBtnType();
                     this.tim_fy.Enabled = true;
                 }
@@ -1072,7 +1027,7 @@ namespace text.doors.Detection
                 {
                     windPressureTest = PublicEnum.WindPressureTest.Stop;
                     IsStart = false;
-                    lbl_setYL.Text = "0";
+                    // lbl_setYL.Text = "0";
                     OpenBtnType();
                     this.tim_fy.Enabled = true;
                 }
@@ -1089,7 +1044,7 @@ namespace text.doors.Detection
                 if (value == 3)
                 {
                     windPressureTest = PublicEnum.WindPressureTest.Stop;
-                    lbl_setYL.Text = "0";
+                    //   lbl_setYL.Text = "0";
                     OpenBtnType();
                     this.tim_fy.Enabled = true;
                 }
@@ -1106,7 +1061,7 @@ namespace text.doors.Detection
                 if (value >= 15)
                 {
                     IsStart = false;
-                    lbl_setYL.Text = "0";
+                    // lbl_setYL.Text = "0";
                     OpenBtnType();
                     this.tim_fy.Enabled = true;
                 }
@@ -1121,7 +1076,7 @@ namespace text.doors.Detection
                 }
                 if (value == 5)
                 {
-                    lbl_setYL.Text = "0";
+                    //   lbl_setYL.Text = "0";
                     OpenBtnType();
                     this.tim_fy.Enabled = true;
                 }
@@ -1136,7 +1091,7 @@ namespace text.doors.Detection
                 }
                 if (value == 5)
                 {
-                    lbl_setYL.Text = "0";
+                    // lbl_setYL.Text = "0";
                     OpenBtnType();
                     this.tim_fy.Enabled = true;
                 }
@@ -1151,7 +1106,7 @@ namespace text.doors.Detection
                 }
                 if (value == 1)
                 {
-                    lbl_setYL.Text = "0";
+                    //  lbl_setYL.Text = "0";
                     OpenBtnType();
                     this.tim_fy.Enabled = true;
                 }
@@ -1166,7 +1121,7 @@ namespace text.doors.Detection
                 }
                 if (value == 1)
                 {
-                    lbl_setYL.Text = "0";
+                    // lbl_setYL.Text = "0";
                     OpenBtnType();
                     this.tim_fy.Enabled = true;
                 }
@@ -1209,7 +1164,7 @@ namespace text.doors.Detection
         {
             Stop();
             OpenBtnType();
-            lbl_setYL.Text = "0";
+            // lbl_setYL.Text = "0";
 
             windPressureTest = PublicEnum.WindPressureTest.Stop;
         }
@@ -1228,10 +1183,10 @@ namespace text.doors.Detection
         {
             try
             {
-                if (_serialPortClient.IsSerialPortLink)
-                {
-                    BindData();
-                }
+                if (!_serialPortClient.sp.IsOpen)
+                    return;
+                BindData();
+
             }
             catch (Exception ex)
             {
@@ -1317,6 +1272,41 @@ namespace text.doors.Detection
             }
 
             BindData();
+        }
+
+        private void btn_gbjc_Click(object sender, EventArgs e)
+        {
+            var value = int.Parse(txt_gbjc.Text);
+            var res = _serialPortClient.SendGBJC(value);
+            if (!res)
+            {
+                MessageBox.Show("改变级差异常", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
+            }
+        }
+
+        private void btn_zpmax_Click(object sender, EventArgs e)
+        {
+            int value = 0;
+            int.TryParse(txt_zpmax.Text, out value);
+
+            var res = _serialPortClient.Set_FY_Value(BFMCommand.正PMAX值, BFMCommand.正PMAX, value);
+            if (!res)
+            {
+                MessageBox.Show("正pmax！", "警告！", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
+                return;
+            }
+        }
+
+        private void btn_fpmax_Click(object sender, EventArgs e)
+        {
+            int value = 0;
+            int.TryParse(txt_fpmax.Text, out value);
+            var res = _serialPortClient.Set_FY_Value(BFMCommand.负PMAX值, BFMCommand.负PMAX, value);
+            if (!res)
+            {
+                MessageBox.Show("负pmax！", "警告！", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
+                return;
+            }
         }
     }
 }

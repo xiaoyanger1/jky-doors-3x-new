@@ -22,9 +22,6 @@ namespace text.doors.Detection
         }
         private void Init()
         {
-            if (!_serialPortClient.IsSerialPortLink)
-                MessageBox.Show("连接未打开暂时不能设置PID！", "警告", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
-
             bool IsSuccess = false;
             var P = _serialPortClient.GetPID("P", ref IsSuccess);
             var I = _serialPortClient.GetPID("I", ref IsSuccess);
