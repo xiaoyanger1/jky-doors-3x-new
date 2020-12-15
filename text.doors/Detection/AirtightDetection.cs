@@ -510,7 +510,7 @@ namespace text.doors.Detection
             var cyvalue = _serialPortClient.GetCYDXS();
 
             index++;
-            if (index > 4)
+            if (index > 8)
             {
                 this.tim_Top10.Enabled = false;
                 index = 0;
