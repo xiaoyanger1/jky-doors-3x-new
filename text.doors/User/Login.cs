@@ -4,10 +4,6 @@ using System.Data;
 using System.Drawing;
 using System.Windows.Forms;
 using Young.Core.SQLite;
-using Spire.Doc;
-using Spire.Doc.Documents;
-using Spire.Doc.Fields;
-using text.doors.Default;
 using System.IO;
 
 namespace text.doors

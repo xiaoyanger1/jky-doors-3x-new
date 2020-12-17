@@ -49,7 +49,7 @@ namespace text.doors
 
         public MainForm()
         {
-            
+
             InitializeComponent();
 
             //ExamineLAN();
@@ -409,6 +409,24 @@ namespace text.doors
         {
             if (DefaultBase.IsSetTong)
             {
+                //FolderBrowserDialog path = new FolderBrowserDialog();
+                //path.ShowDialog();
+
+                //if (string.IsNullOrWhiteSpace(path.SelectedPath))
+                //{
+                //    return;
+                //}
+
+                try
+                {
+                    var selectedPath = "E:\\测试\\asd.xls";
+                    ExportExcel exportExcel = new ExportExcel(_tempCode);
+                    exportExcel.ExportData(selectedPath);
+                }
+                catch (Exception ex)
+                {
+
+                }
 
             }
             else
