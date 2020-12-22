@@ -47,7 +47,7 @@ namespace text.doors.Detection
             this.txt_PipeDiameter.Text = GetConfigSetting("PipeDiameter");
         }
 
-    
+
         private void btn_save_Click(object sender, EventArgs e)
         {
             SaveConfig(this.cb_ProtName.Text, "ProtName");
@@ -59,7 +59,9 @@ namespace text.doors.Detection
 
 
             MessageBox.Show("保存成功,请重启软件", "风机", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
-            Application.Exit();
+            //  Application.Exit();
+            System.Environment.Exit(0);
+
 
         }
 

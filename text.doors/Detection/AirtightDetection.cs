@@ -98,6 +98,7 @@ namespace text.doors.Detection
 
             BindSetPressure();
             QMchartInit();
+
             Clear();
         }
 
@@ -220,121 +221,159 @@ namespace text.doors.Detection
 
             if (qm_Info != null && qm_Info.Count > 0)
             {
-                var qm = qm_Info.FindAll(t => t.info_DangH == _tempTong && string.IsNullOrWhiteSpace(t.qm_j_f_zd100) == false && t.testcount == qm_TestCount).OrderBy(t => t.info_DangH);
-                //是否首次加载
-                if (/*IsFirst && */(qm != null && qm.Count() > 0))
+                var qm = qm_Info.FindAll(t => t.info_DangH == _tempTong && string.IsNullOrWhiteSpace(t.qm_j_f_zd100) == false && t.testcount == qm_TestCount).OrderBy(t => t.info_DangH).ToList();
+                if ((qm != null && qm.Count() > 0))
                 {
                     gv_list.Enabled = false;
-                    foreach (var item in qm)
+
+                    //监控
+                    if (qm[0].testtype == "1")
                     {
-                        Pressure model4 = new Pressure();
-                        model4.Pressure_F = string.IsNullOrWhiteSpace(item.qm_s_f_fj10) ? 0 : double.Parse(item.qm_s_f_fj10);
-                        model4.Pressure_F_Z = string.IsNullOrWhiteSpace(item.qm_s_f_zd10) ? 0 : double.Parse(item.qm_s_f_zd10);
+                        btn_ycjy_z.Enabled = false;
+                        btn_ycjyf.Enabled = false;
 
-                        model4.Pressure_Z = string.IsNullOrWhiteSpace(item.qm_s_z_fj10) ? 0 : double.Parse(item.qm_s_z_fj10);
-                        model4.Pressure_Z_Z = string.IsNullOrWhiteSpace(item.qm_s_z_zd10) ? 0 : double.Parse(item.qm_s_z_zd10);
-                        model4.PressurePa = "10";
-                        pressureList.Add(model4);
+                        //绑定风速
+                        foreach (var item in qm)
+                        {
+                            Pressure model4 = new Pressure();
+                            model4.Pressure_F = string.IsNullOrWhiteSpace(item.qm_s_f_fj10) ? 0 : double.Parse(item.qm_s_f_fj10);
+                            model4.Pressure_F_Z = string.IsNullOrWhiteSpace(item.qm_s_f_zd10) ? 0 : double.Parse(item.qm_s_f_zd10);
 
-                        Pressure model5 = new Pressure();
-                        model5.Pressure_F = string.IsNullOrWhiteSpace(item.qm_s_f_fj30) ? 0 : double.Parse(item.qm_s_f_fj30);
-                        model5.Pressure_F_Z = string.IsNullOrWhiteSpace(item.qm_s_f_zd30) ? 0 : double.Parse(item.qm_s_f_zd30);
+                            model4.Pressure_Z = string.IsNullOrWhiteSpace(item.qm_s_z_fj10) ? 0 : double.Parse(item.qm_s_z_fj10);
+                            model4.Pressure_Z_Z = string.IsNullOrWhiteSpace(item.qm_s_z_zd10) ? 0 : double.Parse(item.qm_s_z_zd10);
+                            model4.PressurePa = "10";
+                            pressureList.Add(model4);
 
-                        model5.Pressure_Z = string.IsNullOrWhiteSpace(item.qm_s_z_fj30) ? 0 : double.Parse(item.qm_s_z_fj30);
-                        model5.Pressure_Z_Z = string.IsNullOrWhiteSpace(item.qm_s_z_zd30) ? 0 : double.Parse(item.qm_s_z_zd30);
-                        model5.PressurePa = "30";
-                        pressureList.Add(model5);
+                            Pressure model5 = new Pressure();
+                            model5.Pressure_F = string.IsNullOrWhiteSpace(item.qm_s_f_fj30) ? 0 : double.Parse(item.qm_s_f_fj30);
+                            model5.Pressure_F_Z = string.IsNullOrWhiteSpace(item.qm_s_f_zd30) ? 0 : double.Parse(item.qm_s_f_zd30);
 
-                        Pressure model6 = new Pressure();
-                        model6.Pressure_F = string.IsNullOrWhiteSpace(item.qm_s_f_fj50) ? 0 : double.Parse(item.qm_s_f_fj50);
-                        model6.Pressure_F_Z = string.IsNullOrWhiteSpace(item.qm_s_f_zd50) ? 0 : double.Parse(item.qm_s_f_zd50);
+                            model5.Pressure_Z = string.IsNullOrWhiteSpace(item.qm_s_z_fj30) ? 0 : double.Parse(item.qm_s_z_fj30);
+                            model5.Pressure_Z_Z = string.IsNullOrWhiteSpace(item.qm_s_z_zd30) ? 0 : double.Parse(item.qm_s_z_zd30);
+                            model5.PressurePa = "30";
+                            pressureList.Add(model5);
 
-                        model6.Pressure_Z = string.IsNullOrWhiteSpace(item.qm_s_z_fj50) ? 0 : double.Parse(item.qm_s_z_fj50);
-                        model6.Pressure_Z_Z = string.IsNullOrWhiteSpace(item.qm_s_z_zd50) ? 0 : double.Parse(item.qm_s_z_zd50);
-                        model6.PressurePa = "50";
-                        pressureList.Add(model6);
+                            Pressure model6 = new Pressure();
+                            model6.Pressure_F = string.IsNullOrWhiteSpace(item.qm_s_f_fj50) ? 0 : double.Parse(item.qm_s_f_fj50);
+                            model6.Pressure_F_Z = string.IsNullOrWhiteSpace(item.qm_s_f_zd50) ? 0 : double.Parse(item.qm_s_f_zd50);
 
-                        Pressure model7 = new Pressure();
-                        model7.Pressure_F = string.IsNullOrWhiteSpace(item.qm_s_f_fj70) ? 0 : double.Parse(item.qm_s_f_fj70);
-                        model7.Pressure_F_Z = string.IsNullOrWhiteSpace(item.qm_s_f_zd70) ? 0 : double.Parse(item.qm_s_f_zd70);
+                            model6.Pressure_Z = string.IsNullOrWhiteSpace(item.qm_s_z_fj50) ? 0 : double.Parse(item.qm_s_z_fj50);
+                            model6.Pressure_Z_Z = string.IsNullOrWhiteSpace(item.qm_s_z_zd50) ? 0 : double.Parse(item.qm_s_z_zd50);
+                            model6.PressurePa = "50";
+                            pressureList.Add(model6);
 
-                        model7.Pressure_Z = string.IsNullOrWhiteSpace(item.qm_s_z_fj70) ? 0 : double.Parse(item.qm_s_z_fj70);
-                        model7.Pressure_Z_Z = string.IsNullOrWhiteSpace(item.qm_s_z_zd70) ? 0 : double.Parse(item.qm_s_z_zd70);
-                        model7.PressurePa = "70";
-                        pressureList.Add(model7);
+                            Pressure model7 = new Pressure();
+                            model7.Pressure_F = string.IsNullOrWhiteSpace(item.qm_s_f_fj70) ? 0 : double.Parse(item.qm_s_f_fj70);
+                            model7.Pressure_F_Z = string.IsNullOrWhiteSpace(item.qm_s_f_zd70) ? 0 : double.Parse(item.qm_s_f_zd70);
+
+                            model7.Pressure_Z = string.IsNullOrWhiteSpace(item.qm_s_z_fj70) ? 0 : double.Parse(item.qm_s_z_fj70);
+                            model7.Pressure_Z_Z = string.IsNullOrWhiteSpace(item.qm_s_z_zd70) ? 0 : double.Parse(item.qm_s_z_zd70);
+                            model7.PressurePa = "70";
+                            pressureList.Add(model7);
 
 
-                        Pressure model1 = new Pressure();
-                        model1.Pressure_F = string.IsNullOrWhiteSpace(item.qm_s_f_fj100) ? 0 : double.Parse(item.qm_s_f_fj100);
-                        model1.Pressure_F_Z = string.IsNullOrWhiteSpace(item.qm_s_f_zd100) ? 0 : double.Parse(item.qm_s_f_zd100);
+                            Pressure model1 = new Pressure();
+                            model1.Pressure_F = string.IsNullOrWhiteSpace(item.qm_s_f_fj100) ? 0 : double.Parse(item.qm_s_f_fj100);
+                            model1.Pressure_F_Z = string.IsNullOrWhiteSpace(item.qm_s_f_zd100) ? 0 : double.Parse(item.qm_s_f_zd100);
 
-                        model1.Pressure_Z = string.IsNullOrWhiteSpace(item.qm_s_z_fj100) ? 0 : double.Parse(item.qm_s_z_fj100);
-                        model1.Pressure_Z_Z = string.IsNullOrWhiteSpace(item.qm_s_z_zd100) ? 0 : double.Parse(item.qm_s_z_zd100);
-                        model1.PressurePa = "100";
-                        pressureList.Add(model1);
+                            model1.Pressure_Z = string.IsNullOrWhiteSpace(item.qm_s_z_fj100) ? 0 : double.Parse(item.qm_s_z_fj100);
+                            model1.Pressure_Z_Z = string.IsNullOrWhiteSpace(item.qm_s_z_zd100) ? 0 : double.Parse(item.qm_s_z_zd100);
+                            model1.PressurePa = "100";
+                            pressureList.Add(model1);
 
-                        Pressure model2 = new Pressure();
-                        model2.Pressure_F = string.IsNullOrWhiteSpace(item.qm_s_f_fj150) ? 0 : double.Parse(item.qm_s_f_fj150);
-                        model2.Pressure_F_Z = string.IsNullOrWhiteSpace(item.qm_s_f_zd150) ? 0 : double.Parse(item.qm_s_f_zd150);
+                            Pressure model2 = new Pressure();
+                            model2.Pressure_F = string.IsNullOrWhiteSpace(item.qm_s_f_fj150) ? 0 : double.Parse(item.qm_s_f_fj150);
+                            model2.Pressure_F_Z = string.IsNullOrWhiteSpace(item.qm_s_f_zd150) ? 0 : double.Parse(item.qm_s_f_zd150);
 
-                        model2.Pressure_Z = string.IsNullOrWhiteSpace(item.qm_s_z_fj150) ? 0 : double.Parse(item.qm_s_z_fj150);
-                        model2.Pressure_Z_Z = string.IsNullOrWhiteSpace(item.qm_s_z_zd150) ? 0 : double.Parse(item.qm_s_z_zd150);
-                        model2.PressurePa = "150";
-                        pressureList.Add(model2);
+                            model2.Pressure_Z = string.IsNullOrWhiteSpace(item.qm_s_z_fj150) ? 0 : double.Parse(item.qm_s_z_fj150);
+                            model2.Pressure_Z_Z = string.IsNullOrWhiteSpace(item.qm_s_z_zd150) ? 0 : double.Parse(item.qm_s_z_zd150);
+                            model2.PressurePa = "150";
+                            pressureList.Add(model2);
 
-                        Pressure model3 = new Pressure();
-                        model3.Pressure_F = string.IsNullOrWhiteSpace(item.qm_j_f_fj100) ? 0 : double.Parse(item.qm_j_f_fj100);
-                        model3.Pressure_F_Z = string.IsNullOrWhiteSpace(item.qm_j_f_zd100) ? 0 : double.Parse(item.qm_j_f_zd100);
+                            Pressure model3 = new Pressure();
+                            model3.Pressure_F = string.IsNullOrWhiteSpace(item.qm_j_f_fj100) ? 0 : double.Parse(item.qm_j_f_fj100);
+                            model3.Pressure_F_Z = string.IsNullOrWhiteSpace(item.qm_j_f_zd100) ? 0 : double.Parse(item.qm_j_f_zd100);
 
-                        model3.Pressure_Z = string.IsNullOrWhiteSpace(item.qm_j_z_fj100) ? 0 : double.Parse(item.qm_j_z_fj100);
-                        model3.Pressure_Z_Z = string.IsNullOrWhiteSpace(item.qm_j_z_zd100) ? 0 : double.Parse(item.qm_j_z_zd100);
-                        model3.PressurePa = "100";
-                        pressureList.Add(model3);
+                            model3.Pressure_Z = string.IsNullOrWhiteSpace(item.qm_j_z_fj100) ? 0 : double.Parse(item.qm_j_z_fj100);
+                            model3.Pressure_Z_Z = string.IsNullOrWhiteSpace(item.qm_j_z_zd100) ? 0 : double.Parse(item.qm_j_z_zd100);
+                            model3.PressurePa = "100";
+                            pressureList.Add(model3);
 
-                        Pressure model8 = new Pressure();
-                        model8.Pressure_F = string.IsNullOrWhiteSpace(item.qm_j_f_fj70) ? 0 : double.Parse(item.qm_j_f_fj70);
-                        model8.Pressure_F_Z = string.IsNullOrWhiteSpace(item.qm_j_f_zd70) ? 0 : double.Parse(item.qm_j_f_zd70);
+                            Pressure model8 = new Pressure();
+                            model8.Pressure_F = string.IsNullOrWhiteSpace(item.qm_j_f_fj70) ? 0 : double.Parse(item.qm_j_f_fj70);
+                            model8.Pressure_F_Z = string.IsNullOrWhiteSpace(item.qm_j_f_zd70) ? 0 : double.Parse(item.qm_j_f_zd70);
 
-                        model8.Pressure_Z = string.IsNullOrWhiteSpace(item.qm_j_z_fj70) ? 0 : double.Parse(item.qm_j_z_fj70);
-                        model8.Pressure_Z_Z = string.IsNullOrWhiteSpace(item.qm_j_z_zd70) ? 0 : double.Parse(item.qm_j_z_zd70);
-                        model8.PressurePa = "70";
-                        pressureList.Add(model8);
+                            model8.Pressure_Z = string.IsNullOrWhiteSpace(item.qm_j_z_fj70) ? 0 : double.Parse(item.qm_j_z_fj70);
+                            model8.Pressure_Z_Z = string.IsNullOrWhiteSpace(item.qm_j_z_zd70) ? 0 : double.Parse(item.qm_j_z_zd70);
+                            model8.PressurePa = "70";
+                            pressureList.Add(model8);
 
-                        Pressure model9 = new Pressure();
-                        model9.Pressure_F = string.IsNullOrWhiteSpace(item.qm_j_f_fj50) ? 0 : double.Parse(item.qm_j_f_fj50);
-                        model9.Pressure_F_Z = string.IsNullOrWhiteSpace(item.qm_j_f_zd50) ? 0 : double.Parse(item.qm_j_f_zd50);
+                            Pressure model9 = new Pressure();
+                            model9.Pressure_F = string.IsNullOrWhiteSpace(item.qm_j_f_fj50) ? 0 : double.Parse(item.qm_j_f_fj50);
+                            model9.Pressure_F_Z = string.IsNullOrWhiteSpace(item.qm_j_f_zd50) ? 0 : double.Parse(item.qm_j_f_zd50);
 
-                        model9.Pressure_Z = string.IsNullOrWhiteSpace(item.qm_j_z_fj50) ? 0 : double.Parse(item.qm_j_z_fj50);
-                        model9.Pressure_Z_Z = string.IsNullOrWhiteSpace(item.qm_j_z_zd50) ? 0 : double.Parse(item.qm_j_z_zd50);
-                        model9.PressurePa = "50";
-                        pressureList.Add(model9);
+                            model9.Pressure_Z = string.IsNullOrWhiteSpace(item.qm_j_z_fj50) ? 0 : double.Parse(item.qm_j_z_fj50);
+                            model9.Pressure_Z_Z = string.IsNullOrWhiteSpace(item.qm_j_z_zd50) ? 0 : double.Parse(item.qm_j_z_zd50);
+                            model9.PressurePa = "50";
+                            pressureList.Add(model9);
 
-                        Pressure model10 = new Pressure();
-                        model10.Pressure_F = string.IsNullOrWhiteSpace(item.qm_j_f_fj30) ? 0 : double.Parse(item.qm_j_f_fj30);
-                        model10.Pressure_F_Z = string.IsNullOrWhiteSpace(item.qm_j_f_zd30) ? 0 : double.Parse(item.qm_j_f_zd30);
+                            Pressure model10 = new Pressure();
+                            model10.Pressure_F = string.IsNullOrWhiteSpace(item.qm_j_f_fj30) ? 0 : double.Parse(item.qm_j_f_fj30);
+                            model10.Pressure_F_Z = string.IsNullOrWhiteSpace(item.qm_j_f_zd30) ? 0 : double.Parse(item.qm_j_f_zd30);
 
-                        model10.Pressure_Z = string.IsNullOrWhiteSpace(item.qm_j_z_fj30) ? 0 : double.Parse(item.qm_j_z_fj30);
-                        model10.Pressure_Z_Z = string.IsNullOrWhiteSpace(item.qm_j_z_zd30) ? 0 : double.Parse(item.qm_j_z_zd30);
-                        model10.PressurePa = "30";
-                        pressureList.Add(model10);
+                            model10.Pressure_Z = string.IsNullOrWhiteSpace(item.qm_j_z_fj30) ? 0 : double.Parse(item.qm_j_z_fj30);
+                            model10.Pressure_Z_Z = string.IsNullOrWhiteSpace(item.qm_j_z_zd30) ? 0 : double.Parse(item.qm_j_z_zd30);
+                            model10.PressurePa = "30";
+                            pressureList.Add(model10);
 
-                        Pressure model11 = new Pressure();
-                        model11.Pressure_F = string.IsNullOrWhiteSpace(item.qm_j_f_fj10) ? 0 : double.Parse(item.qm_j_f_fj10);
-                        model11.Pressure_F_Z = string.IsNullOrWhiteSpace(item.qm_j_f_zd10) ? 0 : double.Parse(item.qm_j_f_zd10);
+                            Pressure model11 = new Pressure();
+                            model11.Pressure_F = string.IsNullOrWhiteSpace(item.qm_j_f_fj10) ? 0 : double.Parse(item.qm_j_f_fj10);
+                            model11.Pressure_F_Z = string.IsNullOrWhiteSpace(item.qm_j_f_zd10) ? 0 : double.Parse(item.qm_j_f_zd10);
 
-                        model11.Pressure_Z = string.IsNullOrWhiteSpace(item.qm_j_z_fj10) ? 0 : double.Parse(item.qm_j_z_fj10);
-                        model11.Pressure_Z_Z = string.IsNullOrWhiteSpace(item.qm_j_z_zd10) ? 0 : double.Parse(item.qm_j_z_zd10);
-                        model11.PressurePa = "10";
-                        pressureList.Add(model11);
+                            model11.Pressure_Z = string.IsNullOrWhiteSpace(item.qm_j_z_fj10) ? 0 : double.Parse(item.qm_j_z_fj10);
+                            model11.Pressure_Z_Z = string.IsNullOrWhiteSpace(item.qm_j_z_zd10) ? 0 : double.Parse(item.qm_j_z_zd10);
+                            model11.PressurePa = "10";
 
-                        //Pressure model12 = new Pressure();
-                        //model12.Pressure_F = string.IsNullOrWhiteSpace(item.qm_j_f_fj10) ? 0 : double.Parse(item.qm_j_f_fj10);
-                        //model12.Pressure_F_Z = string.IsNullOrWhiteSpace(item.qm_j_f_zd10) ? 0 : double.Parse(item.qm_j_f_zd10);
+                            Pressure model12 = new Pressure();
+                            model12.Pressure_F = 0;
+                            model12.Pressure_F_Z = 0;
 
-                        //model12.Pressure_Z = string.IsNullOrWhiteSpace(item.qm_j_z_fj10) ? 0 : double.Parse(item.qm_j_z_fj10);
-                        //model12.Pressure_Z_Z = string.IsNullOrWhiteSpace(item.qm_j_z_zd10) ? 0 : double.Parse(item.qm_j_z_zd10);
-                        //model12.PressurePa = "10";
-                        //pressureList.Add(model11);
+                            model12.Pressure_Z = 0;
+                            model12.Pressure_Z_Z = 0;
+                            model12.PressurePa = "设计值";
+                            pressureList.Add(model11);
+                        }
+
+                    }
+                    else if (qm[0].testtype == "2") //工程检测  不存在监控数据
+                    {
+                        this.btn_justready.Enabled = false;
+                        this.btn_loseready.Enabled = false;
+                        this.btn_losestart.Enabled = false;
+                        this.btn_datadispose.Enabled = false;
+                        this.btn_juststart.Enabled = false;
+
+                        txt_ycjy_z.Text = qm[0].sjz_value;
+                        txt_ycjy_f.Text = qm[0].sjz_value;
+
+                        //绑定空监测数据
+                        if (qm_TestCount == (int)QM_TestCount.第一次)
+                        {
+                            pressureList = pressure_One.GetPressure();
+                        }
+                        else if (qm_TestCount == (int)QM_TestCount.第二次)
+                        {
+                            pressureList = pressure_Two.GetPressure();
+                        }
+                        //绑定设计值
+                        var sjz = pressureList.Find(t => t.PressurePa == "设计值");
+                        if (sjz != null)
+                        {
+                            sjz.Pressure_F = double.Parse(qm[0].sjz_f_fj);
+                            sjz.Pressure_F_Z = double.Parse(qm[0].sjz_f_zd);
+                            sjz.Pressure_Z = double.Parse(qm[0].sjz_z_fj);
+                            sjz.Pressure_Z_Z = double.Parse(qm[0].sjz_z_zd);
+                        }
                     }
                 }
                 else
@@ -370,6 +409,7 @@ namespace text.doors.Detection
         /// </summary>
         private void BindLevelIndex(QM_TestCount qm_TestCount)
         {
+
             GetDatabaseLevelIndex(qm_TestCount);
             dgv_levelIndex.DataSource = GetLevelIndex();
             dgv_levelIndex.RowHeadersVisible = false;
@@ -402,6 +442,10 @@ namespace text.doors.Detection
                 new  LevelIndex(){ Quantity="单位面积",  PressureZ =Math.Round(zMj,2), PressureF  =Math.Round(fMj,2)}
             };
         }
+
+
+
+
         #endregion
 
         #region 图表控制
@@ -609,6 +653,8 @@ namespace text.doors.Detection
                     }
                     else if (kpa_Level == PublicEnum.Kpa_Level.YCJY)
                     {
+                        //todo:设计值计算
+                        fsvalue = Formula.MathFlow(fsvalue);
                         if (cyvalue > 0)
                             pressure_One.AddZYFJ(fsvalue, PublicEnum.Kpa_Level.YCJY);
                         else
@@ -697,6 +743,9 @@ namespace text.doors.Detection
                     }
                     else if (kpa_Level == PublicEnum.Kpa_Level.YCJY)
                     {
+                        //todo:设计值计算
+                        fsvalue = Formula.MathFlow(fsvalue);
+
                         if (cyvalue > 0)
                             pressure_One.AddZYZD(fsvalue, PublicEnum.Kpa_Level.YCJY);
                         else
@@ -790,6 +839,8 @@ namespace text.doors.Detection
                     }
                     else if (kpa_Level == PublicEnum.Kpa_Level.YCJY)
                     {
+                        //todo:设计值计算
+                        fsvalue = Formula.MathFlow(fsvalue);
                         if (cyvalue > 0)
                             pressure_Two.AddZYFJ(fsvalue, PublicEnum.Kpa_Level.YCJY);
                         else
@@ -878,6 +929,8 @@ namespace text.doors.Detection
                     }
                     else if (kpa_Level == PublicEnum.Kpa_Level.YCJY)
                     {
+                        //todo:设计值计算
+                        fsvalue = Formula.MathFlow(fsvalue);
                         if (cyvalue > 0)
                             pressure_Two.AddZYZD(fsvalue, PublicEnum.Kpa_Level.YCJY);
                         else
@@ -1186,6 +1239,10 @@ namespace text.doors.Detection
             }
 
             airtightPropertyTest = PublicEnum.AirtightPropertyTest.ZReady;
+
+            //关闭依次加压
+            btn_ycjy_z.Enabled = false;
+            btn_ycjyf.Enabled = false;
         }
 
         /// <summary>
@@ -1243,6 +1300,11 @@ namespace text.doors.Detection
             _serialPortClient.SendZYKS();
 
             airtightPropertyTest = PublicEnum.AirtightPropertyTest.ZStart;
+
+
+            //关闭依次加压
+            btn_ycjy_z.Enabled = false;
+            btn_ycjyf.Enabled = false;
         }
 
         private void btn_loseready_Click(object sender, EventArgs e)
@@ -1264,6 +1326,11 @@ namespace text.doors.Detection
 
             DisableBtnType();
             airtightPropertyTest = PublicEnum.AirtightPropertyTest.FReady;
+
+
+            //关闭依次加压
+            btn_ycjy_z.Enabled = false;
+            btn_ycjyf.Enabled = false;
         }
         /// <summary>
         /// 禁用按钮
@@ -1275,6 +1342,8 @@ namespace text.doors.Detection
             this.btn_losestart.Enabled = false;
             this.btn_datadispose.Enabled = false;
             this.btn_juststart.Enabled = false;
+            btn_ycjy_z.Enabled = false;
+            btn_ycjyf.Enabled = false;
         }
 
         /// <summary>
@@ -1287,7 +1356,10 @@ namespace text.doors.Detection
             this.btn_losestart.Enabled = true;
             this.btn_datadispose.Enabled = true;
             this.btn_juststart.Enabled = true;
+            btn_ycjy_z.Enabled = true;
+            btn_ycjyf.Enabled = true;
         }
+
 
         /// <summary>
         /// 负压开始
@@ -1333,6 +1405,11 @@ namespace text.doors.Detection
             _serialPortClient.SendFYKS();
 
             airtightPropertyTest = PublicEnum.AirtightPropertyTest.FStart;
+
+
+            //关闭依次加压
+            btn_ycjy_z.Enabled = false;
+            btn_ycjyf.Enabled = false;
         }
 
 
@@ -1356,6 +1433,7 @@ namespace text.doors.Detection
 
         private void btn_datadispose_Click(object sender, EventArgs e)
         {
+
             if (this.tabControl1.SelectedTab.Name == "流量原始数据")
             {
                 GetDatabaseLevelIndex(QM_TestCount.第一次);
@@ -1382,10 +1460,13 @@ namespace text.doors.Detection
         /// <returns></returns>
         private bool AddQMResult(QM_TestCount qm_TestCount)
         {
+
+            var sjzValue = txt_ycjy_z.Text;
             DAL_dt_qm_Info dal = new DAL_dt_qm_Info();
 
             Model_dt_qm_Info model = new Model_dt_qm_Info();
             model.testcount = (int)qm_TestCount;
+            model.testtype = sjzValue;
 
             for (int i = 0; i < 2; i++)
             {
@@ -1404,7 +1485,7 @@ namespace text.doors.Detection
                 }
             }
 
-            for (int i = 0; i < 11; i++)
+            for (int i = 0; i < 12; i++)
             {
                 if (qm_TestCount == QM_TestCount.第一次)
                 {
@@ -1484,6 +1565,13 @@ namespace text.doors.Detection
                         model.qm_j_z_zd10 = this.dgv_ll.Rows[i].Cells["Pressure_Z_Z"].Value.ToString();
                         model.qm_j_f_fj10 = this.dgv_ll.Rows[i].Cells["Pressure_F"].Value.ToString();
                         model.qm_j_f_zd10 = this.dgv_ll.Rows[i].Cells["Pressure_F_Z"].Value.ToString();
+                    }
+                    if (i == 11)
+                    {
+                        model.sjz_z_fj = this.dgv_ll.Rows[i].Cells["Pressure_Z"].Value.ToString();
+                        model.sjz_z_zd = this.dgv_ll.Rows[i].Cells["Pressure_Z_Z"].Value.ToString();
+                        model.sjz_f_fj = this.dgv_ll.Rows[i].Cells["Pressure_F"].Value.ToString();
+                        model.sjz_f_zd = this.dgv_ll.Rows[i].Cells["Pressure_F_Z"].Value.ToString();
                     }
                 }
                 else if (qm_TestCount == QM_TestCount.第二次)
@@ -1565,8 +1653,14 @@ namespace text.doors.Detection
                         model.qm_j_f_fj10 = this.dgv_ll2.Rows[i].Cells["Pressure_F"].Value.ToString();
                         model.qm_j_f_zd10 = this.dgv_ll2.Rows[i].Cells["Pressure_F_Z"].Value.ToString();
                     }
+                    if (i == 11)
+                    {
+                        model.sjz_z_fj = this.dgv_ll2.Rows[i].Cells["Pressure_Z"].Value.ToString();
+                        model.sjz_z_zd = this.dgv_ll2.Rows[i].Cells["Pressure_Z_Z"].Value.ToString();
+                        model.sjz_f_fj = this.dgv_ll2.Rows[i].Cells["Pressure_F"].Value.ToString();
+                        model.sjz_f_zd = this.dgv_ll2.Rows[i].Cells["Pressure_F_Z"].Value.ToString();
+                    }
                 }
-
             }
             return dal.Add(model);
         }
@@ -1597,7 +1691,6 @@ namespace text.doors.Detection
 
             if (qm_TestCount == QM_TestCount.第一次)
             {
-
                 zFc = Formula.GetIndexStitchLengthAndArea(
                     double.Parse(this.dgv_ll.Rows[4].Cells["Pressure_Z_Z"].Value.ToString()),
                     double.Parse(this.dgv_ll.Rows[4].Cells["Pressure_Z"].Value.ToString()),
@@ -1800,7 +1893,8 @@ namespace text.doors.Detection
             int value = 0;
             int.TryParse(txt_ycjy_z.Text, out value);
 
-            if (value == 0) {
+            if (value == 0)
+            {
                 this.btn_ycjy_z.Enabled = true;
                 return;
             }
@@ -1813,6 +1907,13 @@ namespace text.doors.Detection
 
             airtightPropertyTest = PublicEnum.AirtightPropertyTest.ZYCJY;
             this.btn_ycjy_z.Enabled = true;
+
+
+            //关闭监控按钮
+            this.btn_justready.Enabled = false;
+            this.btn_loseready.Enabled = false;
+            this.btn_losestart.Enabled = false;
+            this.btn_juststart.Enabled = false;
         }
 
         private void btn_ycjyf_Click(object sender, EventArgs e)
@@ -1822,11 +1923,12 @@ namespace text.doors.Detection
 
             int.TryParse(txt_ycjy_f.Text, out value);
 
-            if (value == 0) {
+            if (value == 0)
+            {
                 this.btn_ycjyf.Enabled = true;
                 return;
             }
-               
+
             var res = _serialPortClient.Set_FY_Value(BFMCommand.负依次加压值, BFMCommand.负依次加压, value);
             if (!res)
             {
@@ -1835,11 +1937,28 @@ namespace text.doors.Detection
             }
             airtightPropertyTest = PublicEnum.AirtightPropertyTest.FYCJY;
             this.btn_ycjyf.Enabled = true;
+
+            //关闭监控按钮
+            this.btn_justready.Enabled = false;
+            this.btn_loseready.Enabled = false;
+            this.btn_losestart.Enabled = false;
+            this.btn_juststart.Enabled = false;
         }
 
         private void tim_getsjz_Tick(object sender, EventArgs e)
         {
 
+        }
+
+        private void txt_ycjy_z_TextChanged(object sender, EventArgs e)
+        {
+            txt_ycjy_f.Text = txt_ycjy_z.Text;
+
+        }
+
+        private void txt_ycjy_f_TextChanged(object sender, EventArgs e)
+        {
+            txt_ycjy_z.Text = txt_ycjy_f.Text;
         }
 
         private void tChart_sm_MouseDown(object sender, MouseEventArgs e)

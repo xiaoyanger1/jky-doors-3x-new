@@ -250,6 +250,14 @@ namespace text.doors.dal
                     model.qm_j_f_zd10 = item["qm_j_f_zd10"].ToString();
                     model.testcount = int.Parse(item["testcount"].ToString());
 
+
+                    model.testtype = item["testtype"].ToString();
+                    model.sjz_z_fj = item["sjz_z_fj"].ToString();
+                    model.sjz_z_zd = item["sjz_z_zd"].ToString();
+                    model.sjz_f_zd = item["sjz_f_zd"].ToString();
+                    model.sjz_f_fj = item["sjz_f_fj"].ToString();
+
+
                     list.Add(model);
                     #endregion
                 }

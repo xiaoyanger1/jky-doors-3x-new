@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AirtightDetection));
             this.tc_RealTimeSurveillance = new System.Windows.Forms.TabControl();
             this.page_airtight = new System.Windows.Forms.TabPage();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
@@ -73,7 +74,6 @@
             this.tim_Top10 = new System.Windows.Forms.Timer(this.components);
             this.gv_list = new System.Windows.Forms.Timer(this.components);
             this.tim_PainPic = new System.Windows.Forms.Timer(this.components);
-            this.tim_getsjz = new System.Windows.Forms.Timer(this.components);
             this.tc_RealTimeSurveillance.SuspendLayout();
             this.page_airtight.SuspendLayout();
             this.groupBox4.SuspendLayout();
@@ -172,6 +172,7 @@
             this.txt_ycjy_z.Size = new System.Drawing.Size(52, 21);
             this.txt_ycjy_z.TabIndex = 21;
             this.txt_ycjy_z.Text = "0";
+            this.txt_ycjy_z.TextChanged += new System.EventHandler(this.txt_ycjy_z_TextChanged);
             // 
             // label2
             // 
@@ -204,11 +205,13 @@
             // 
             // txt_ycjy_f
             // 
+            this.txt_ycjy_f.Enabled = false;
             this.txt_ycjy_f.Location = new System.Drawing.Point(97, 43);
             this.txt_ycjy_f.Name = "txt_ycjy_f";
             this.txt_ycjy_f.Size = new System.Drawing.Size(52, 21);
             this.txt_ycjy_f.TabIndex = 24;
             this.txt_ycjy_f.Text = "0";
+            this.txt_ycjy_f.TextChanged += new System.EventHandler(this.txt_ycjy_f_TextChanged);
             // 
             // groupBox9
             // 
@@ -587,12 +590,6 @@
             this.tim_PainPic.Interval = 500;
             this.tim_PainPic.Tick += new System.EventHandler(this.tim_PainPic_Tick);
             // 
-            // tim_getsjz
-            // 
-            this.tim_getsjz.Enabled = true;
-            this.tim_getsjz.Interval = 2000;
-            this.tim_getsjz.Tick += new System.EventHandler(this.tim_getsjz_Tick);
-            // 
             // AirtightDetection
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -669,6 +666,5 @@
         private System.Windows.Forms.Button btn_ycjyf;
         private System.Windows.Forms.TextBox txt_ycjy_f;
         private System.Windows.Forms.TabPage 重复流量数据;
-        private System.Windows.Forms.Timer tim_getsjz;
     }
 }

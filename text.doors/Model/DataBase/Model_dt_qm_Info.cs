@@ -18,6 +18,11 @@ namespace text.doors.Model.DataBase
         /// 测试次数
         /// </summary>
         public int testcount { get; set; }
+
+        /// <summary>
+        /// 1.监控 2.工程检测
+        /// </summary>
+        public string testtype { get; set; }
         /// <summary>
         /// 正压缝长
         /// </summary>
@@ -223,6 +228,27 @@ namespace text.doors.Model.DataBase
         /// 降-负压总的10
         /// </summary>
         public string qm_j_f_zd10 { get; set; }
+
+        /// <summary>
+        /// 设计值
+        /// </summary>
+        public string sjz_value { get; set; }
+        /// <summary>
+        /// 设计值正附加
+        /// </summary>
+        public string sjz_z_fj { get; set; }
+        /// <summary>
+        /// 设计值正总的
+        /// </summary>
+        public string sjz_z_zd{ get; set; }
+        /// <summary>
+        /// 设计值负附加
+        /// </summary>
+        public string sjz_f_fj { get; set; }
+        /// <summary>
+        /// 设计值负总的
+        /// </summary>
+        public string sjz_f_zd { get; set; }
 
 
     }

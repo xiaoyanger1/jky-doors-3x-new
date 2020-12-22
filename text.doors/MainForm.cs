@@ -653,6 +653,8 @@ namespace text.doors
                 MessageBox.Show("风机启动异常,请确认服务器连接是否成功!", "设置", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
                 return;
             }
+
+            btn_fjqd.BackColor = _FengJiQiDongStat ? Color.Green : Color.Transparent;
         }
         private bool _ShuiBengQiDong = false;
         private void btn_sbqd_Click(object sender, EventArgs e)
@@ -663,6 +665,7 @@ namespace text.doors
                 MessageBox.Show("水泵启动异常,请确认服务器连接是否成功!", "设置", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
                 return;
             }
+            btn_sbqd.BackColor = _ShuiBengQiDong ? Color.Green : Color.Transparent;
         }
 
         private bool _BaoHuFaTong = false;
@@ -674,6 +677,7 @@ namespace text.doors
                 MessageBox.Show("保护阀通启动异常,请确认服务器连接是否成功!", "设置", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
                 return;
             }
+            btn_bhft.BackColor = _BaoHuFaTong ? Color.Green : Color.Transparent;
         }
         private bool _SiTongFaKai = false;
         private void btn_stfk_Click(object sender, EventArgs e)
@@ -684,6 +688,7 @@ namespace text.doors
                 MessageBox.Show("四通阀开异常,请确认服务器连接是否成功!", "设置", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
                 return;
             }
+            btn_stfk.BackColor = _SiTongFaKai ? Color.Green : Color.Transparent;
         }
 
 
@@ -695,6 +700,8 @@ namespace text.doors
                 MessageBox.Show("点动开异常,请确认服务器连接是否成功!", "设置", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
                 return;
             }
+            btn_ddk.BackColor = Color.Green;
+
         }
         private void btn_ddk_MouseDown(object sender, MouseEventArgs e)
         {
@@ -704,6 +711,7 @@ namespace text.doors
                 MessageBox.Show("点动开异常,请确认服务器连接是否成功!", "设置", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
                 return;
             }
+            btn_ddk.BackColor = Color.Transparent;
         }
 
         private void btn_ddg_MouseDown(object sender, MouseEventArgs e)
@@ -714,6 +722,7 @@ namespace text.doors
                 MessageBox.Show("水泵启动异常,请确认服务器连接是否成功!", "设置", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
                 return;
             }
+            btn_ddg.BackColor = Color.Green;
         }
 
         private void btn_ddg_MouseUp(object sender, MouseEventArgs e)
@@ -724,6 +733,7 @@ namespace text.doors
                 MessageBox.Show("水泵启动异常,请确认服务器连接是否成功!", "设置", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
                 return;
             }
+            btn_ddg.BackColor = Color.Transparent;
         }
 
         private bool _GuanDaoTou = false;
@@ -735,6 +745,7 @@ namespace text.doors
                 MessageBox.Show("关到头异常,请确认服务器连接是否成功!", "设置", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
                 return;
             }
+            btn_gdt.BackColor = _GuanDaoTou ? Color.Green : Color.Transparent;
         }
     }
 }

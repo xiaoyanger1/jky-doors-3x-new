@@ -76,6 +76,7 @@
             this.btn_sbqd = new System.Windows.Forms.Button();
             this.btn_fjqd = new System.Windows.Forms.Button();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
+            this.textBox1 = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.btn_gdt = new System.Windows.Forms.Button();
             this.btn_ddg = new System.Windows.Forms.Button();
@@ -116,7 +117,6 @@
             this.btn_gyZero = new System.Windows.Forms.Button();
             this.pl_showItem = new System.Windows.Forms.Panel();
             this.tim_panelValue = new System.Windows.Forms.Timer(this.components);
-            this.textBox1 = new System.Windows.Forms.TextBox();
             this.ssp_button.SuspendLayout();
             this.pl_top.SuspendLayout();
             this.ts_pic.SuspendLayout();
@@ -391,11 +391,12 @@
             this.检测结论ToolStripMenuItem.Name = "检测结论ToolStripMenuItem";
             this.检测结论ToolStripMenuItem.Size = new System.Drawing.Size(68, 22);
             this.检测结论ToolStripMenuItem.Text = "综合评定";
+            this.检测结论ToolStripMenuItem.Visible = false;
             // 
             // toolStripMenuItem4
             // 
             this.toolStripMenuItem4.Name = "toolStripMenuItem4";
-            this.toolStripMenuItem4.Size = new System.Drawing.Size(124, 22);
+            this.toolStripMenuItem4.Size = new System.Drawing.Size(180, 22);
             this.toolStripMenuItem4.Text = "综合评定";
             this.toolStripMenuItem4.Click += new System.EventHandler(this.toolStripMenuItem4_Click);
             // 
@@ -415,40 +416,40 @@
             // tsm_sensorSet
             // 
             this.tsm_sensorSet.Name = "tsm_sensorSet";
-            this.tsm_sensorSet.Size = new System.Drawing.Size(136, 22);
+            this.tsm_sensorSet.Size = new System.Drawing.Size(180, 22);
             this.tsm_sensorSet.Text = "传感器标定";
             this.tsm_sensorSet.Click += new System.EventHandler(this.tsm_sensorSet_Click);
             // 
             // toolStripMenuItem3
             // 
             this.toolStripMenuItem3.Name = "toolStripMenuItem3";
-            this.toolStripMenuItem3.Size = new System.Drawing.Size(136, 22);
+            this.toolStripMenuItem3.Size = new System.Drawing.Size(180, 22);
             this.toolStripMenuItem3.Text = "系统设置";
             this.toolStripMenuItem3.Click += new System.EventHandler(this.toolStripMenuItem3_Click);
             // 
             // toolStripSeparator4
             // 
             this.toolStripSeparator4.Name = "toolStripSeparator4";
-            this.toolStripSeparator4.Size = new System.Drawing.Size(133, 6);
+            this.toolStripSeparator4.Size = new System.Drawing.Size(177, 6);
             // 
             // tsm_UpdatePassWord
             // 
             this.tsm_UpdatePassWord.Name = "tsm_UpdatePassWord";
-            this.tsm_UpdatePassWord.Size = new System.Drawing.Size(136, 22);
+            this.tsm_UpdatePassWord.Size = new System.Drawing.Size(180, 22);
             this.tsm_UpdatePassWord.Text = "修改密码";
             this.tsm_UpdatePassWord.Click += new System.EventHandler(this.tsm_UpdatePassWord_Click);
             // 
             // tsm_close
             // 
             this.tsm_close.Name = "tsm_close";
-            this.tsm_close.Size = new System.Drawing.Size(136, 22);
+            this.tsm_close.Size = new System.Drawing.Size(180, 22);
             this.tsm_close.Text = "关闭系统";
             this.tsm_close.Click += new System.EventHandler(this.tsm_close_Click);
             // 
             // pID设定ToolStripMenuItem
             // 
             this.pID设定ToolStripMenuItem.Name = "pID设定ToolStripMenuItem";
-            this.pID设定ToolStripMenuItem.Size = new System.Drawing.Size(136, 22);
+            this.pID设定ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.pID设定ToolStripMenuItem.Text = "PID设定";
             this.pID设定ToolStripMenuItem.Click += new System.EventHandler(this.pID设定ToolStripMenuItem_Click);
             // 
@@ -544,6 +545,15 @@
             this.groupBox5.TabIndex = 12;
             this.groupBox5.TabStop = false;
             this.groupBox5.Text = "漏气阀控制";
+            // 
+            // textBox1
+            // 
+            this.textBox1.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.textBox1.Location = new System.Drawing.Point(94, 50);
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(48, 21);
+            this.textBox1.TabIndex = 1;
+            this.textBox1.Text = "0";
             // 
             // label2
             // 
@@ -963,15 +973,6 @@
             this.tim_panelValue.Enabled = true;
             this.tim_panelValue.Interval = 1000;
             this.tim_panelValue.Tick += new System.EventHandler(this.tim_panelValue_Tick);
-            // 
-            // textBox1
-            // 
-            this.textBox1.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.textBox1.Location = new System.Drawing.Point(94, 50);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(48, 21);
-            this.textBox1.TabIndex = 1;
-            this.textBox1.Text = "0";
             // 
             // MainForm
             // 

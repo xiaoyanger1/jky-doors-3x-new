@@ -1060,7 +1060,6 @@ namespace text.doors.Detection
                 MessageBox.Show("水密波动开始异常", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
                 return;
             }
-
             waterTightPropertyTest = PublicEnum.WaterTightPropertyTest.SrartBD;
         }
 
@@ -1077,6 +1076,7 @@ namespace text.doors.Detection
             this.btn_ready.Enabled = true;
             this.btn_start.Enabled = true;
             this.btn_next.Enabled = true;
+
             waterTightPropertyTest = PublicEnum.WaterTightPropertyTest.StopBD;
         }
 
