@@ -1,12 +1,11 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using text.doors.Default;
 using text.doors.Model;
 using text.doors.Model.DataBase;
 using text.doors.Service;
 
-using System.Linq;
 namespace text.doors.Common
 {
     public class Formula
@@ -175,6 +174,129 @@ namespace text.doors.Common
         #endregion
 
         #region 获取分级指标缝长和面积
+
+
+
+
+        #region 监控
+
+
+        public static IndexStitchLengthAndArea GetJK_IndexStitchLengthAndArea(List<AirtightCalculation> airtightCalculation, double fc, double mj)
+        {
+            double zy_q10 = 0;
+            double fy_q10 = 0;
+            GetQ10(airtightCalculation, ref zy_q10, ref fy_q10);
+
+            IndexStitchLengthAndArea res = null;
+
+            if (zy_q10 > 0 && fy_q10 > 0)
+            {
+                res = new IndexStitchLengthAndArea()
+                {
+                    ZY_FC = Math.Round(zy_q10 / fc, 2),
+                    ZY_MJ = Math.Round(zy_q10 / mj, 2),
+                    FY_FC = Math.Round(fy_q10 / fc, 2),
+                    FY_MJ = Math.Round(fy_q10 / mj, 2)
+                };
+            }
+            return res;
+        }
+
+
+        /// <summary>
+        /// 获取正负压  线性回归到10的q'
+        /// </summary>
+        /// <param name="airtightCalculation"></param>
+        /// <param name="zy_q10"></param>
+        /// <param name="fy_q10"></param>
+        /// <returns></returns>
+        public static void GetQ10(List<AirtightCalculation> airtightCalculation, ref double zy_q10, ref double fy_q10)
+        {
+            string errorMsg = "";
+
+            //正压
+            double _z_k = 0;
+            double _z_c = 0;
+            var z_point = airtightCalculation.Select(t => new text.doors.Model.Point() { X = Math.Log(t.PaValue, 10), Y = Math.Log(t._Z_Q_SJ_P, 10) }).ToList();
+            var z_isSuccess = Formula.LinearRegression(z_point, ref _z_k, ref _z_c, ref errorMsg);
+            if (z_isSuccess)
+            {
+                zy_q10 = _z_k * System.Math.Pow(10, _z_c);
+            }
+            else
+            {
+
+                zy_q10 = -1;
+            }
+
+            //负压
+            double _f_k = 0;
+            double _f_c = 0;
+
+            var f_point = airtightCalculation.Select(t => new text.doors.Model.Point() { X = t.kPa, Y = t._F_Q_SJ_P }).ToList();
+            var f_isSuccess = Formula.LinearRegression(f_point, ref _f_k, ref _f_c, ref errorMsg);
+            if (f_isSuccess)
+            {
+                fy_q10 = _f_k * System.Math.Pow(10, _f_c);
+            }
+            else
+            {
+                fy_q10 = -1;
+            }
+        }
+
+
+        /// <summary>
+        /// 对一组点通过最小二乘法进行线性回归
+        /// </summary>
+        /// <param name="parray"></param>
+        private static bool LinearRegression(List<text.doors.Model.Point> parray, ref double k, ref double c, ref string errorMsg)
+        {
+            //点数不能小于2
+            if (parray.Count < 2)
+            {
+                errorMsg = "点的数量小于2，无法进行线性回归";
+                return false;
+            }
+
+            //求出横纵坐标的平均值
+            double averagex = 0, averagey = 0;
+            foreach (text.doors.Model.Point p in parray)
+            {
+                averagex += p.X;
+                averagey += p.Y;
+            }
+            averagex /= parray.Count;
+            averagey /= parray.Count;
+
+            //经验回归系数的分子与分母
+            double numerator = 0;
+            double denominator = 0;
+
+            foreach (text.doors.Model.Point p in parray)
+            {
+                numerator += (p.X - averagex) * (p.Y - averagey);
+                denominator += (p.X - averagex) * (p.X - averagex);
+            }
+
+            //回归系数b（Regression Coefficient）
+            double RCB = numerator / denominator;
+
+            //回归系数a
+            double RCA = averagey - RCB * averagex;
+
+            c = RCB;
+
+            k = Math.Pow(10, RCA);
+
+            return true;
+        }
+
+
+        #endregion
+
+        #region 工程检测
+
         /// <summary>
         /// 获取分级指标缝长和面积
         /// </summary>
@@ -187,25 +309,69 @@ namespace text.doors.Common
         ///   <param name="tempTemperature">当前温度</param>
         ///    <param name="stitchLength">开启逢长</param>
         ///     <param name="sumArea">总面积</param>
-        public static double GetIndexStitchLengthAndArea(double zd, double fj, double _zd, double _fj, bool isFC, double kPa, double tempTemperature, double stitchLength, double sumArea)
+        public static double GetIndexStitchLengthAndArea(double zd, double fj, bool isFC, double kPa, double tempTemperature, double stitchLength, double sumArea)
         {
             double res = 0;
-            //流量数值（正压100升总的 +正压100降总的）/2 -（正压100升附加 +正压100降附加）/2 
-            var Q = (zd + _zd) / 2 - (fj + _fj) / 2;
+
+            var Q = zd - fj;
 
             var qMin = 293 / 101.3 * (kPa / (273 + tempTemperature)) * Q;
 
             if (isFC)
             {
-                res = qMin / stitchLength / 4.65;
+                res = qMin / stitchLength;
             }
             else
             {
-                res = qMin / sumArea / 4.65;
+                res = qMin / sumArea;
             }
             return res;
         }
+
         #endregion
+
+        #region  old
+        /// <summary>
+        /// 获取分级指标缝长和面积
+        /// </summary>
+        /// <param name="zd">升压总的</param>
+        /// <param name="fj">升压附加</param>
+        /// <param name="_zd">降压总的</param>
+        /// <param name="_fj">降压附加</param>
+        /// 
+        ///  <param name="kPa">大气压力</param>
+        ///   <param name="tempTemperature">当前温度</param>
+        ///    <param name="stitchLength">开启逢长</param>
+        ///     <param name="sumArea">总面积</param>
+        //public static double GetIndexStitchLengthAndArea(double zd, double fj, double _zd, double _fj, bool isFC, double kPa, double tempTemperature, double stitchLength, double sumArea)
+        //{
+        //    double res = 0;
+        //    //流量数值（正压100升总的 +正压100降总的）/2 -（正压100升附加 +正压100降附加）/2 
+        //    var Q = (zd + _zd) / 2 - (fj + _fj) / 2;
+
+        //    var qMin = 293 / 101.3 * (kPa / (273 + tempTemperature)) * Q;
+
+        //    if (isFC)
+        //    {
+        //        res = qMin / stitchLength / 4.65;
+        //    }
+        //    else
+        //    {
+        //        res = qMin / sumArea / 4.65;
+        //    }
+        //    return res;
+        //}
+        #endregion
+
+        #endregion
+
+
+
+
+
+
+
+
 
         #region 等级划分
 

@@ -156,6 +156,7 @@
     <Compile Include="Detection\WindPressureDetection.Designer.cs">
       <DependentUpon>WindPressureDetection.cs</DependentUpon>
     </Compile>
+    <Compile Include="Model\AirtightCalculation.cs" />
     <Compile Include="Model\Calibrating_Dict.cs" />
     <Compile Include="Model\DataBase\Model_dt_kfy_Info.cs" />
     <Compile Include="Model\Pressure.cs" />

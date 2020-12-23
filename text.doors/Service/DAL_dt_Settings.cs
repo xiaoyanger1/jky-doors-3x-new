@@ -251,11 +251,11 @@ namespace text.doors.dal
                     model.testcount = int.Parse(item["testcount"].ToString());
 
 
-                    model.testtype = item["testtype"].ToString();
-                    model.sjz_z_fj = item["sjz_z_fj"].ToString();
-                    model.sjz_z_zd = item["sjz_z_zd"].ToString();
-                    model.sjz_f_zd = item["sjz_f_zd"].ToString();
-                    model.sjz_f_fj = item["sjz_f_fj"].ToString();
+                    model.testtype = item["testtype"]?.ToString();
+                    model.sjz_z_fj = item["sjz_z_fj"]?.ToString();
+                    model.sjz_z_zd = item["sjz_z_zd"]?.ToString();
+                    model.sjz_f_zd = item["sjz_f_zd"]?.ToString();
+                    model.sjz_f_fj = item["sjz_f_fj"]?.ToString();
 
 
                     list.Add(model);

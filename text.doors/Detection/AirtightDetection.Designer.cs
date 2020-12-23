@@ -29,7 +29,6 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AirtightDetection));
             this.tc_RealTimeSurveillance = new System.Windows.Forms.TabControl();
             this.page_airtight = new System.Windows.Forms.TabPage();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
@@ -427,7 +426,7 @@
             this.重复流量数据.Name = "重复流量数据";
             this.重复流量数据.Size = new System.Drawing.Size(281, 326);
             this.重复流量数据.TabIndex = 2;
-            this.重复流量数据.Text = "重复流量数据(m3/h)";
+            this.重复流量数据.Text = "重复流量原始数据(m3/h)";
             this.重复流量数据.UseVisualStyleBackColor = true;
             // 
             // dgv_ll2

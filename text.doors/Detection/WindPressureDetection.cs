@@ -459,8 +459,8 @@ namespace text.doors.Detection
                 var p = Calculate(x1, x2, y1, y2);
 
                 txt_p1.Text = Math.Round(p, 0).ToString();
-                txt_p2.Text = Math.Round(p * 1.5, 0).ToString();
-                txt_p3.Text = Math.Round(p * 2.5, 0).ToString();
+                //txt_p2.Text = Math.Round(p * 1.5, 0).ToString();
+                //txt_p3.Text = Math.Round(p * 2.5, 0).ToString();
             }
 
             var fone = new WindPressureDGV();
@@ -475,8 +475,8 @@ namespace text.doors.Detection
                 var y2 = fdefPa;
                 var _p = Calculate(_x1, _x2, y1, y2);
                 txt_f_p1.Text = Math.Round(_p, 0).ToString();
-                txt_f_p2.Text = Math.Round(_p * 1.5, 0).ToString();
-                txt_f_p3.Text = Math.Round(_p * 2.5, 0).ToString();
+                //txt_f_p2.Text = Math.Round(_p * 1.5, 0).ToString();
+                //txt_f_p3.Text = Math.Round(_p * 2.5, 0).ToString();
             }
             currentkPa = 0;
         }
@@ -851,14 +851,14 @@ namespace text.doors.Detection
                         if (windPressureTest == PublicEnum.WindPressureTest.ZStart)
                         {
                             txt_p1.Text = Math.Round(p, 0).ToString();
-                            txt_p2.Text = Math.Round(p * 1.5, 0).ToString();
-                            txt_p3.Text = Math.Round(p * 2.5, 0).ToString();
+                            //txt_p2.Text = Math.Round(p * 1.5, 0).ToString();
+                            //txt_p3.Text = Math.Round(p * 2.5, 0).ToString();
                         }
                         else if (windPressureTest == PublicEnum.WindPressureTest.FStart)
                         {
                             txt_f_p1.Text = Math.Round(p, 0).ToString();
-                            txt_f_p2.Text = Math.Round(p * 1.5, 0).ToString();
-                            txt_f_p3.Text = Math.Round(p * 2.5, 0).ToString();
+                            //txt_f_p2.Text = Math.Round(p * 1.5, 0).ToString();
+                            //txt_f_p3.Text = Math.Round(p * 2.5, 0).ToString();
                         }
                     }
                 }

@@ -1688,67 +1688,304 @@ namespace text.doors.Detection
                 stitchLength = double.Parse(dt.Rows[0]["KaiQiFengChang"].ToString());
                 sumArea = double.Parse(dt.Rows[0]["shijianmianji"].ToString());
             }
-
+            List<AirtightCalculation> airtightCalculation = new List<AirtightCalculation>();
             if (qm_TestCount == QM_TestCount.第一次)
             {
-                zFc = Formula.GetIndexStitchLengthAndArea(
-                    double.Parse(this.dgv_ll.Rows[4].Cells["Pressure_Z_Z"].Value.ToString()),
-                    double.Parse(this.dgv_ll.Rows[4].Cells["Pressure_Z"].Value.ToString()),
-                    double.Parse(this.dgv_ll.Rows[6].Cells["Pressure_Z_Z"].Value.ToString()),
-                    double.Parse(this.dgv_ll.Rows[6].Cells["Pressure_Z"].Value.ToString()),
-                    true, kPa, tempTemperature, stitchLength, sumArea);
+                if (int.Parse(this.dgv_ll.Rows[11].Cells["Pressure_F_Z"].Value.ToString()) > 0)
+                {
+                    zFc = Formula.GetIndexStitchLengthAndArea(
+                        double.Parse(this.dgv_ll.Rows[11].Cells["Pressure_Z_Z"].Value.ToString()),
+                        double.Parse(this.dgv_ll.Rows[11].Cells["Pressure_Z_F"].Value.ToString()),
+                        true, kPa, tempTemperature, stitchLength, sumArea);
 
-                fFc = Formula.GetIndexStitchLengthAndArea(
-                    double.Parse(this.dgv_ll.Rows[4].Cells["Pressure_F_Z"].Value.ToString()),
-                    double.Parse(this.dgv_ll.Rows[4].Cells["Pressure_F"].Value.ToString()),
-                    double.Parse(this.dgv_ll.Rows[6].Cells["Pressure_F_Z"].Value.ToString()),
-                    double.Parse(this.dgv_ll.Rows[6].Cells["Pressure_F"].Value.ToString()),
-                     true, kPa, tempTemperature, stitchLength, sumArea);
+                    fFc = Formula.GetIndexStitchLengthAndArea(
+                        double.Parse(this.dgv_ll.Rows[11].Cells["Pressure_F_Z"].Value.ToString()),
+                        double.Parse(this.dgv_ll.Rows[11].Cells["Pressure_F_F"].Value.ToString()),
+                         true, kPa, tempTemperature, stitchLength, sumArea);
 
-                zMj = Formula.GetIndexStitchLengthAndArea(
-                    double.Parse(this.dgv_ll.Rows[4].Cells["Pressure_Z_Z"].Value.ToString()),
-                    double.Parse(this.dgv_ll.Rows[4].Cells["Pressure_Z"].Value.ToString()),
-                    double.Parse(this.dgv_ll.Rows[6].Cells["Pressure_Z_Z"].Value.ToString()),
-                    double.Parse(this.dgv_ll.Rows[6].Cells["Pressure_Z"].Value.ToString()),
-                     false, kPa, tempTemperature, stitchLength, sumArea);
+                    zMj = Formula.GetIndexStitchLengthAndArea(
+                        double.Parse(this.dgv_ll.Rows[11].Cells["Pressure_Z_Z"].Value.ToString()),
+                        double.Parse(this.dgv_ll.Rows[11].Cells["Pressure_Z_F"].Value.ToString()),
+                        false, kPa, tempTemperature, stitchLength, sumArea);
 
-                fMj = Formula.GetIndexStitchLengthAndArea(
-                    double.Parse(this.dgv_ll.Rows[4].Cells["Pressure_F_Z"].Value.ToString()),
-                    double.Parse(this.dgv_ll.Rows[4].Cells["Pressure_F"].Value.ToString()),
-                    double.Parse(this.dgv_ll.Rows[6].Cells["Pressure_F_Z"].Value.ToString()),
-                    double.Parse(this.dgv_ll.Rows[6].Cells["Pressure_F"].Value.ToString()),
-                     false, kPa, tempTemperature, stitchLength, sumArea);
+                    fMj = Formula.GetIndexStitchLengthAndArea(
+                        double.Parse(this.dgv_ll.Rows[11].Cells["Pressure_F_Z"].Value.ToString()),
+                        double.Parse(this.dgv_ll.Rows[11].Cells["Pressure_F_F"].Value.ToString()),
+                        false, kPa, tempTemperature, stitchLength, sumArea);
+                }
+                else
+                {
+                    airtightCalculation.Add(new AirtightCalculation()
+                    {
+                        PaValue = 10,
+                        Z_S_ZZ_Value = double.Parse(this.dgv_ll.Rows[0].Cells["Pressure_Z_Z"].Value.ToString()),
+                        Z_J_ZZ_Value = double.Parse(this.dgv_ll.Rows[10].Cells["Pressure_Z_Z"].Value.ToString()),
+                        Z_S_FJ_Value = double.Parse(this.dgv_ll.Rows[0].Cells["Pressure_Z"].Value.ToString()),
+                        Z_J_FJ_Value = double.Parse(this.dgv_ll.Rows[10].Cells["Pressure_Z"].Value.ToString()),
+
+                        F_S_ZZ_Value = double.Parse(this.dgv_ll.Rows[0].Cells["Pressure_F_Z"].Value.ToString()),
+                        F_J_ZZ_Value = double.Parse(this.dgv_ll.Rows[10].Cells["Pressure_F_Z"].Value.ToString()),
+                        F_S_FJ_Value = double.Parse(this.dgv_ll.Rows[0].Cells["Pressure_F"].Value.ToString()),
+                        F_J_FJ_Value = double.Parse(this.dgv_ll.Rows[10].Cells["Pressure_F"].Value.ToString()),
+
+                        // _Z_Q_SJ_P=17.478,
+                        kPa = kPa,
+                        CurrentTemperature = tempTemperature
+                    });
+                    airtightCalculation.Add(new AirtightCalculation()
+                    {
+                        PaValue = 30,
+                        Z_S_ZZ_Value = double.Parse(this.dgv_ll.Rows[1].Cells["Pressure_F_Z"].Value.ToString()),
+                        Z_J_ZZ_Value = double.Parse(this.dgv_ll.Rows[9].Cells["Pressure_F_Z"].Value.ToString()),
+                        Z_S_FJ_Value = double.Parse(this.dgv_ll.Rows[1].Cells["Pressure_F"].Value.ToString()),
+                        Z_J_FJ_Value = double.Parse(this.dgv_ll.Rows[9].Cells["Pressure_F"].Value.ToString()),
+
+                        F_S_ZZ_Value = double.Parse(this.dgv_ll.Rows[1].Cells["Pressure_F_Z"].Value.ToString()),
+                        F_J_ZZ_Value = double.Parse(this.dgv_ll.Rows[9].Cells["Pressure_F_Z"].Value.ToString()),
+                        F_S_FJ_Value = double.Parse(this.dgv_ll.Rows[1].Cells["Pressure_F"].Value.ToString()),
+                        F_J_FJ_Value = double.Parse(this.dgv_ll.Rows[9].Cells["Pressure_F"].Value.ToString()),
+                        //  _Z_Q_SJ_P = 22.062,
+                        kPa = kPa,
+                        CurrentTemperature = tempTemperature
+                    });
+                    airtightCalculation.Add(new AirtightCalculation()
+                    {
+                        PaValue = 50,
+                        Z_S_ZZ_Value = double.Parse(this.dgv_ll.Rows[2].Cells["Pressure_Z_Z"].Value.ToString()),
+                        Z_J_ZZ_Value = double.Parse(this.dgv_ll.Rows[8].Cells["Pressure_Z_Z"].Value.ToString()),
+                        Z_S_FJ_Value = double.Parse(this.dgv_ll.Rows[2].Cells["Pressure_Z"].Value.ToString()),
+                        Z_J_FJ_Value = double.Parse(this.dgv_ll.Rows[8].Cells["Pressure_Z"].Value.ToString()),
+
+                        F_S_ZZ_Value = double.Parse(this.dgv_ll.Rows[2].Cells["Pressure_F_Z"].Value.ToString()),
+                        F_J_ZZ_Value = double.Parse(this.dgv_ll.Rows[8].Cells["Pressure_F_Z"].Value.ToString()),
+                        F_S_FJ_Value = double.Parse(this.dgv_ll.Rows[2].Cells["Pressure_F"].Value.ToString()),
+                        F_J_FJ_Value = double.Parse(this.dgv_ll.Rows[8].Cells["Pressure_F"].Value.ToString()),
+                        kPa = kPa,
+                        // _Z_Q_SJ_P = 25.786,
+                        CurrentTemperature = tempTemperature
+                    });
+                    airtightCalculation.Add(new AirtightCalculation()
+                    {
+                        PaValue = 70,
+                        Z_S_ZZ_Value = double.Parse(this.dgv_ll.Rows[3].Cells["Pressure_Z_Z"].Value.ToString()),
+                        Z_J_ZZ_Value = double.Parse(this.dgv_ll.Rows[7].Cells["Pressure_Z_Z"].Value.ToString()),
+                        Z_S_FJ_Value = double.Parse(this.dgv_ll.Rows[3].Cells["Pressure_Z"].Value.ToString()),
+                        Z_J_FJ_Value = double.Parse(this.dgv_ll.Rows[7].Cells["Pressure_Z"].Value.ToString()),
+
+                        F_S_ZZ_Value = double.Parse(this.dgv_ll.Rows[3].Cells["Pressure_F_Z"].Value.ToString()),
+                        F_J_ZZ_Value = double.Parse(this.dgv_ll.Rows[7].Cells["Pressure_F_Z"].Value.ToString()),
+                        F_S_FJ_Value = double.Parse(this.dgv_ll.Rows[3].Cells["Pressure_F"].Value.ToString()),
+                        F_J_FJ_Value = double.Parse(this.dgv_ll.Rows[7].Cells["Pressure_F"].Value.ToString()),
+                        kPa = kPa,
+                        //  _Z_Q_SJ_P = 35.815,
+                        CurrentTemperature = tempTemperature
+                    });
+                    airtightCalculation.Add(new AirtightCalculation()
+                    {
+                        PaValue = 100,
+                        Z_S_ZZ_Value = double.Parse(this.dgv_ll.Rows[4].Cells["Pressure_Z_Z"].Value.ToString()),
+                        Z_J_ZZ_Value = double.Parse(this.dgv_ll.Rows[6].Cells["Pressure_Z_Z"].Value.ToString()),
+                        Z_S_FJ_Value = double.Parse(this.dgv_ll.Rows[4].Cells["Pressure_Z"].Value.ToString()),
+                        Z_J_FJ_Value = double.Parse(this.dgv_ll.Rows[4].Cells["Pressure_Z"].Value.ToString()),
+
+                        F_S_ZZ_Value = double.Parse(this.dgv_ll.Rows[4].Cells["Pressure_F_Z"].Value.ToString()),
+                        F_J_ZZ_Value = double.Parse(this.dgv_ll.Rows[6].Cells["Pressure_F_Z"].Value.ToString()),
+                        F_S_FJ_Value = double.Parse(this.dgv_ll.Rows[4].Cells["Pressure_F"].Value.ToString()),
+                        F_J_FJ_Value = double.Parse(this.dgv_ll.Rows[4].Cells["Pressure_F"].Value.ToString()),
+                        kPa = kPa,
+                        // _Z_Q_SJ_P = 63.893,
+                        CurrentTemperature = tempTemperature
+                    });
+
+                    //获取分级指标
+                    var indexStitchLengthAndArea = Formula.GetJK_IndexStitchLengthAndArea(airtightCalculation, stitchLength, sumArea);
+                    if (indexStitchLengthAndArea != null)
+                    {
+                        zFc = indexStitchLengthAndArea.ZY_FC;
+                        fFc = indexStitchLengthAndArea.FY_FC;
+                        zMj = indexStitchLengthAndArea.ZY_MJ;
+                        fMj = indexStitchLengthAndArea.FY_MJ;
+                    }
+                }
+
             }
             else if (qm_TestCount == QM_TestCount.第二次)
             {
-                zFc = Formula.GetIndexStitchLengthAndArea(
-                     double.Parse(this.dgv_ll2.Rows[4].Cells["Pressure_Z_Z"].Value.ToString()),
-                     double.Parse(this.dgv_ll2.Rows[4].Cells["Pressure_Z"].Value.ToString()),
-                     double.Parse(this.dgv_ll2.Rows[6].Cells["Pressure_Z_Z"].Value.ToString()),
-                     double.Parse(this.dgv_ll2.Rows[6].Cells["Pressure_Z"].Value.ToString()),
-                     true, kPa, tempTemperature, stitchLength, sumArea);
+                if ((int)this.dgv_ll2.Rows[11].Cells["Pressure_F_Z"].Value > 0)
+                {
+                    zFc = Formula.GetIndexStitchLengthAndArea(
+                         double.Parse(this.dgv_ll2.Rows[11].Cells["Pressure_Z_Z"].Value.ToString()),
+                         double.Parse(this.dgv_ll2.Rows[11].Cells["Pressure_Z_F"].Value.ToString()),
+                         true, kPa, tempTemperature, stitchLength, sumArea);
 
-                fFc = Formula.GetIndexStitchLengthAndArea(
-                    double.Parse(this.dgv_ll2.Rows[4].Cells["Pressure_F_Z"].Value.ToString()),
-                    double.Parse(this.dgv_ll2.Rows[4].Cells["Pressure_F"].Value.ToString()),
-                    double.Parse(this.dgv_ll2.Rows[6].Cells["Pressure_F_Z"].Value.ToString()),
-                    double.Parse(this.dgv_ll2.Rows[6].Cells["Pressure_F"].Value.ToString()),
-                     true, kPa, tempTemperature, stitchLength, sumArea);
+                    fFc = Formula.GetIndexStitchLengthAndArea(
+                        double.Parse(this.dgv_ll2.Rows[11].Cells["Pressure_F_Z"].Value.ToString()),
+                        double.Parse(this.dgv_ll2.Rows[11].Cells["Pressure_F_F"].Value.ToString()),
+                         true, kPa, tempTemperature, stitchLength, sumArea);
 
-                zMj = Formula.GetIndexStitchLengthAndArea(
-                    double.Parse(this.dgv_ll2.Rows[4].Cells["Pressure_Z_Z"].Value.ToString()),
-                    double.Parse(this.dgv_ll2.Rows[4].Cells["Pressure_Z"].Value.ToString()),
-                    double.Parse(this.dgv_ll2.Rows[6].Cells["Pressure_Z_Z"].Value.ToString()),
-                    double.Parse(this.dgv_ll2.Rows[6].Cells["Pressure_Z"].Value.ToString()),
-                     false, kPa, tempTemperature, stitchLength, sumArea);
+                    zMj = Formula.GetIndexStitchLengthAndArea(
+                        double.Parse(this.dgv_ll2.Rows[11].Cells["Pressure_Z_Z"].Value.ToString()),
+                        double.Parse(this.dgv_ll2.Rows[11].Cells["Pressure_Z_F"].Value.ToString()),
+                        false, kPa, tempTemperature, stitchLength, sumArea);
 
-                fMj = Formula.GetIndexStitchLengthAndArea(
-                    double.Parse(this.dgv_ll2.Rows[4].Cells["Pressure_F_Z"].Value.ToString()),
-                    double.Parse(this.dgv_ll2.Rows[4].Cells["Pressure_F"].Value.ToString()),
-                    double.Parse(this.dgv_ll2.Rows[6].Cells["Pressure_F_Z"].Value.ToString()),
-                    double.Parse(this.dgv_ll2.Rows[6].Cells["Pressure_F"].Value.ToString()),
-                     false, kPa, tempTemperature, stitchLength, sumArea);
+                    fMj = Formula.GetIndexStitchLengthAndArea(
+                        double.Parse(this.dgv_ll2.Rows[11].Cells["Pressure_F_Z"].Value.ToString()),
+                        double.Parse(this.dgv_ll2.Rows[11].Cells["Pressure_F_F"].Value.ToString()),
+                        false, kPa, tempTemperature, stitchLength, sumArea);
+                }
+                else
+                {
+                    airtightCalculation.Add(new AirtightCalculation()
+                    {
+                        PaValue = 10,
+                        Z_S_ZZ_Value = double.Parse(this.dgv_ll2.Rows[0].Cells["Pressure_Z_Z"].Value.ToString()),
+                        Z_J_ZZ_Value = double.Parse(this.dgv_ll2.Rows[10].Cells["Pressure_Z_Z"].Value.ToString()),
+                        Z_S_FJ_Value = double.Parse(this.dgv_ll2.Rows[0].Cells["Pressure_Z"].Value.ToString()),
+                        Z_J_FJ_Value = double.Parse(this.dgv_ll2.Rows[10].Cells["Pressure_Z"].Value.ToString()),
+
+                        F_S_ZZ_Value = double.Parse(this.dgv_ll2.Rows[0].Cells["Pressure_F_Z"].Value.ToString()),
+                        F_J_ZZ_Value = double.Parse(this.dgv_ll2.Rows[10].Cells["Pressure_F_Z"].Value.ToString()),
+                        F_S_FJ_Value = double.Parse(this.dgv_ll2.Rows[0].Cells["Pressure_F"].Value.ToString()),
+                        F_J_FJ_Value = double.Parse(this.dgv_ll2.Rows[10].Cells["Pressure_F"].Value.ToString()),
+                        kPa = kPa,
+                        CurrentTemperature = tempTemperature
+                    });
+                    airtightCalculation.Add(new AirtightCalculation()
+                    {
+                        PaValue = 30,
+                        Z_S_ZZ_Value = double.Parse(this.dgv_ll2.Rows[1].Cells["Pressure_F_Z"].Value.ToString()),
+                        Z_J_ZZ_Value = double.Parse(this.dgv_ll2.Rows[9].Cells["Pressure_F_Z"].Value.ToString()),
+                        Z_S_FJ_Value = double.Parse(this.dgv_ll2.Rows[1].Cells["Pressure_F"].Value.ToString()),
+                        Z_J_FJ_Value = double.Parse(this.dgv_ll2.Rows[9].Cells["Pressure_F"].Value.ToString()),
+
+                        F_S_ZZ_Value = double.Parse(this.dgv_ll2.Rows[1].Cells["Pressure_F_Z"].Value.ToString()),
+                        F_J_ZZ_Value = double.Parse(this.dgv_ll2.Rows[9].Cells["Pressure_F_Z"].Value.ToString()),
+                        F_S_FJ_Value = double.Parse(this.dgv_ll2.Rows[1].Cells["Pressure_F"].Value.ToString()),
+                        F_J_FJ_Value = double.Parse(this.dgv_ll2.Rows[9].Cells["Pressure_F"].Value.ToString()),
+                        kPa = kPa,
+                        CurrentTemperature = tempTemperature
+                    });
+                    airtightCalculation.Add(new AirtightCalculation()
+                    {
+                        PaValue = 50,
+                        Z_S_ZZ_Value = double.Parse(this.dgv_ll2.Rows[2].Cells["Pressure_Z_Z"].Value.ToString()),
+                        Z_J_ZZ_Value = double.Parse(this.dgv_ll2.Rows[8].Cells["Pressure_Z_Z"].Value.ToString()),
+                        Z_S_FJ_Value = double.Parse(this.dgv_ll2.Rows[2].Cells["Pressure_Z"].Value.ToString()),
+                        Z_J_FJ_Value = double.Parse(this.dgv_ll2.Rows[8].Cells["Pressure_Z"].Value.ToString()),
+
+                        F_S_ZZ_Value = double.Parse(this.dgv_ll2.Rows[2].Cells["Pressure_F_Z"].Value.ToString()),
+                        F_J_ZZ_Value = double.Parse(this.dgv_ll2.Rows[8].Cells["Pressure_F_Z"].Value.ToString()),
+                        F_S_FJ_Value = double.Parse(this.dgv_ll2.Rows[2].Cells["Pressure_F"].Value.ToString()),
+                        F_J_FJ_Value = double.Parse(this.dgv_ll2.Rows[8].Cells["Pressure_F"].Value.ToString()),
+                        kPa = kPa,
+                        CurrentTemperature = tempTemperature
+                    });
+                    airtightCalculation.Add(new AirtightCalculation()
+                    {
+                        PaValue = 70,
+                        Z_S_ZZ_Value = double.Parse(this.dgv_ll2.Rows[3].Cells["Pressure_Z_Z"].Value.ToString()),
+                        Z_J_ZZ_Value = double.Parse(this.dgv_ll2.Rows[7].Cells["Pressure_Z_Z"].Value.ToString()),
+                        Z_S_FJ_Value = double.Parse(this.dgv_ll2.Rows[3].Cells["Pressure_Z"].Value.ToString()),
+                        Z_J_FJ_Value = double.Parse(this.dgv_ll2.Rows[7].Cells["Pressure_Z"].Value.ToString()),
+
+                        F_S_ZZ_Value = double.Parse(this.dgv_ll2.Rows[3].Cells["Pressure_F_Z"].Value.ToString()),
+                        F_J_ZZ_Value = double.Parse(this.dgv_ll2.Rows[7].Cells["Pressure_F_Z"].Value.ToString()),
+                        F_S_FJ_Value = double.Parse(this.dgv_ll2.Rows[3].Cells["Pressure_F"].Value.ToString()),
+                        F_J_FJ_Value = double.Parse(this.dgv_ll2.Rows[7].Cells["Pressure_F"].Value.ToString()),
+                        kPa = kPa,
+                        CurrentTemperature = tempTemperature
+                    });
+                    airtightCalculation.Add(new AirtightCalculation()
+                    {
+                        PaValue = 100,
+                        Z_S_ZZ_Value = double.Parse(this.dgv_ll2.Rows[4].Cells["Pressure_Z_Z"].Value.ToString()),
+                        Z_J_ZZ_Value = double.Parse(this.dgv_ll2.Rows[6].Cells["Pressure_Z_Z"].Value.ToString()),
+                        Z_S_FJ_Value = double.Parse(this.dgv_ll2.Rows[4].Cells["Pressure_Z"].Value.ToString()),
+                        Z_J_FJ_Value = double.Parse(this.dgv_ll2.Rows[4].Cells["Pressure_Z"].Value.ToString()),
+
+                        F_S_ZZ_Value = double.Parse(this.dgv_ll2.Rows[4].Cells["Pressure_F_Z"].Value.ToString()),
+                        F_J_ZZ_Value = double.Parse(this.dgv_ll2.Rows[6].Cells["Pressure_F_Z"].Value.ToString()),
+                        F_S_FJ_Value = double.Parse(this.dgv_ll2.Rows[4].Cells["Pressure_F"].Value.ToString()),
+                        F_J_FJ_Value = double.Parse(this.dgv_ll2.Rows[4].Cells["Pressure_F"].Value.ToString()),
+                        kPa = kPa,
+                        CurrentTemperature = tempTemperature
+                    });
+
+                    //获取分级指标
+                    var indexStitchLengthAndArea = Formula.GetJK_IndexStitchLengthAndArea(airtightCalculation, stitchLength, sumArea);
+                    if (indexStitchLengthAndArea != null)
+                    {
+                        zFc = indexStitchLengthAndArea.ZY_FC;
+                        fFc = indexStitchLengthAndArea.FY_FC;
+                        zMj = indexStitchLengthAndArea.ZY_MJ;
+                        fMj = indexStitchLengthAndArea.FY_MJ;
+                    }
+                }
             }
+
+
+            #region  old
+            //if (qm_TestCount == QM_TestCount.第一次)
+            //{
+            //    zFc = Formula.GetIndexStitchLengthAndArea(
+            //        double.Parse(this.dgv_ll.Rows[4].Cells["Pressure_Z_Z"].Value.ToString()),
+            //        double.Parse(this.dgv_ll.Rows[4].Cells["Pressure_Z"].Value.ToString()),
+            //        double.Parse(this.dgv_ll.Rows[6].Cells["Pressure_Z_Z"].Value.ToString()),
+            //        double.Parse(this.dgv_ll.Rows[6].Cells["Pressure_Z"].Value.ToString()),
+            //        true, kPa, tempTemperature, stitchLength, sumArea);
+
+            //    fFc = Formula.GetIndexStitchLengthAndArea(
+            //        double.Parse(this.dgv_ll.Rows[4].Cells["Pressure_F_Z"].Value.ToString()),
+            //        double.Parse(this.dgv_ll.Rows[4].Cells["Pressure_F"].Value.ToString()),
+            //        double.Parse(this.dgv_ll.Rows[6].Cells["Pressure_F_Z"].Value.ToString()),
+            //        double.Parse(this.dgv_ll.Rows[6].Cells["Pressure_F"].Value.ToString()),
+            //         true, kPa, tempTemperature, stitchLength, sumArea);
+
+            //    zMj = Formula.GetIndexStitchLengthAndArea(
+            //        double.Parse(this.dgv_ll.Rows[4].Cells["Pressure_Z_Z"].Value.ToString()),
+            //        double.Parse(this.dgv_ll.Rows[4].Cells["Pressure_Z"].Value.ToString()),
+            //        double.Parse(this.dgv_ll.Rows[6].Cells["Pressure_Z_Z"].Value.ToString()),
+            //        double.Parse(this.dgv_ll.Rows[6].Cells["Pressure_Z"].Value.ToString()),
+            //         false, kPa, tempTemperature, stitchLength, sumArea);
+
+            //    fMj = Formula.GetIndexStitchLengthAndArea(
+            //        double.Parse(this.dgv_ll.Rows[4].Cells["Pressure_F_Z"].Value.ToString()),
+            //        double.Parse(this.dgv_ll.Rows[4].Cells["Pressure_F"].Value.ToString()),
+            //        double.Parse(this.dgv_ll.Rows[6].Cells["Pressure_F_Z"].Value.ToString()),
+            //        double.Parse(this.dgv_ll.Rows[6].Cells["Pressure_F"].Value.ToString()),
+            //         false, kPa, tempTemperature, stitchLength, sumArea);
+            //}
+            //else if (qm_TestCount == QM_TestCount.第二次)
+            //{
+            //    zFc = Formula.GetIndexStitchLengthAndArea(
+            //         double.Parse(this.dgv_ll2.Rows[4].Cells["Pressure_Z_Z"].Value.ToString()),
+            //         double.Parse(this.dgv_ll2.Rows[4].Cells["Pressure_Z"].Value.ToString()),
+            //         double.Parse(this.dgv_ll2.Rows[6].Cells["Pressure_Z_Z"].Value.ToString()),
+            //         double.Parse(this.dgv_ll2.Rows[6].Cells["Pressure_Z"].Value.ToString()),
+            //         true, kPa, tempTemperature, stitchLength, sumArea);
+
+            //    fFc = Formula.GetIndexStitchLengthAndArea(
+            //        double.Parse(this.dgv_ll2.Rows[4].Cells["Pressure_F_Z"].Value.ToString()),
+            //        double.Parse(this.dgv_ll2.Rows[4].Cells["Pressure_F"].Value.ToString()),
+            //        double.Parse(this.dgv_ll2.Rows[6].Cells["Pressure_F_Z"].Value.ToString()),
+            //        double.Parse(this.dgv_ll2.Rows[6].Cells["Pressure_F"].Value.ToString()),
+            //         true, kPa, tempTemperature, stitchLength, sumArea);
+
+            //    zMj = Formula.GetIndexStitchLengthAndArea(
+            //        double.Parse(this.dgv_ll2.Rows[4].Cells["Pressure_Z_Z"].Value.ToString()),
+            //        double.Parse(this.dgv_ll2.Rows[4].Cells["Pressure_Z"].Value.ToString()),
+            //        double.Parse(this.dgv_ll2.Rows[6].Cells["Pressure_Z_Z"].Value.ToString()),
+            //        double.Parse(this.dgv_ll2.Rows[6].Cells["Pressure_Z"].Value.ToString()),
+            //         false, kPa, tempTemperature, stitchLength, sumArea);
+
+            //    fMj = Formula.GetIndexStitchLengthAndArea(
+            //        double.Parse(this.dgv_ll2.Rows[4].Cells["Pressure_F_Z"].Value.ToString()),
+            //        double.Parse(this.dgv_ll2.Rows[4].Cells["Pressure_F"].Value.ToString()),
+            //        double.Parse(this.dgv_ll2.Rows[6].Cells["Pressure_F_Z"].Value.ToString()),
+            //        double.Parse(this.dgv_ll2.Rows[6].Cells["Pressure_F"].Value.ToString()),
+            //         false, kPa, tempTemperature, stitchLength, sumArea);
+            //}
+            #endregion
         }
 
         private void btn_stop_Click(object sender, EventArgs e)
