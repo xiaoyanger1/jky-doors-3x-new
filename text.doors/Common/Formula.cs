@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Web;
 using text.doors.Default;
 using text.doors.Model;
 using text.doors.Model.DataBase;
@@ -204,7 +205,7 @@ namespace text.doors.Common
 
 
         /// <summary>
-        /// 获取正负压  线性回归到10的q'
+        /// 水密获取正负压  线性回归到10的q'
         /// </summary>
         /// <param name="airtightCalculation"></param>
         /// <param name="zy_q10"></param>
@@ -215,29 +216,32 @@ namespace text.doors.Common
             string errorMsg = "";
 
             //正压
-            double _z_k = 0;
-            double _z_c = 0;
+            double _z_a = 0;
+            double _z_b = 0;
             var z_point = airtightCalculation.Select(t => new text.doors.Model.Point() { X = Math.Log(t.PaValue, 10), Y = Math.Log(t._Z_Q_SJ_P, 10) }).ToList();
-            var z_isSuccess = Formula.LinearRegression(z_point, ref _z_k, ref _z_c, ref errorMsg);
+            var z_isSuccess = Formula.LinearRegression(z_point, ref _z_a, ref _z_b, ref errorMsg);
             if (z_isSuccess)
             {
-                zy_q10 = _z_k * System.Math.Pow(10, _z_c);
+                var k = Math.Pow(10, _z_a);
+                var c = Math.Pow(10, _z_b);
+                zy_q10 = k * c;
             }
             else
             {
-
                 zy_q10 = -1;
             }
 
             //负压
-            double _f_k = 0;
-            double _f_c = 0;
+            double _f_a = 0;
+            double _f_b = 0;
 
             var f_point = airtightCalculation.Select(t => new text.doors.Model.Point() { X = t.kPa, Y = t._F_Q_SJ_P }).ToList();
-            var f_isSuccess = Formula.LinearRegression(f_point, ref _f_k, ref _f_c, ref errorMsg);
+            var f_isSuccess = Formula.LinearRegression(f_point, ref _f_a, ref _f_b, ref errorMsg);
             if (f_isSuccess)
             {
-                fy_q10 = _f_k * System.Math.Pow(10, _f_c);
+                var k = Math.Pow(10, _f_a);
+                var c = Math.Pow(10, _f_b);
+                fy_q10 = k * c;
             }
             else
             {
@@ -246,11 +250,56 @@ namespace text.doors.Common
         }
 
 
+
+        /// <summary>
+        /// 抗风压获取正负压  线性回归到10的q'
+        /// </summary>
+        /// <param name="airtightCalculation"></param>
+        /// <param name="zy_q10"></param>
+        /// <param name="fy_q10"></param>
+        /// <returns></returns>
+        public static void GetKFY(List<WindPressureDGV> windPressureDGV, int gjcd, double lx, ref double zy, ref double fy)
+        {
+            string errorMsg = "";
+
+            //正压
+            double _z_a = 0;
+            double _z_b = 0;
+            var z_point = windPressureDGV.FindAll(t => t.PaValue > 0).Select(t => new text.doors.Model.Point() { X = t.PaValue, Y = t.zzd }).ToList();
+            var z_isSuccess = Formula.LinearRegression(z_point, ref _z_a, ref _z_b, ref errorMsg);
+            if (z_isSuccess)
+            {
+                var y = Math.Round(gjcd / lx, 2, MidpointRounding.AwayFromZero);
+                zy = Math.Round((y - _z_a) / _z_b, 2, MidpointRounding.AwayFromZero);
+            }
+            else
+            {
+                zy = -100;
+            }
+
+            //负压
+            double _f_a = 0;
+            double _f_b = 0;
+
+            var f_point = windPressureDGV.FindAll(t => t.PaValue > 0).Select(t => new text.doors.Model.Point() { X = t.PaValue, Y = t.zzd }).ToList();
+            var f_isSuccess = Formula.LinearRegression(f_point, ref _f_a, ref _f_b, ref errorMsg);
+            if (f_isSuccess)
+            {
+                var y = Math.Round(gjcd / lx, 2, MidpointRounding.AwayFromZero);
+                fy = Math.Round((y - _f_a) / _f_b, 2, MidpointRounding.AwayFromZero);
+            }
+            else
+            {
+                fy = -100;
+            }
+        }
+
+
         /// <summary>
         /// 对一组点通过最小二乘法进行线性回归
         /// </summary>
         /// <param name="parray"></param>
-        private static bool LinearRegression(List<text.doors.Model.Point> parray, ref double k, ref double c, ref string errorMsg)
+        public static bool LinearRegression(List<text.doors.Model.Point> parray, ref double a, ref double b, ref string errorMsg)
         {
             //点数不能小于2
             if (parray.Count < 2)
@@ -285,10 +334,8 @@ namespace text.doors.Common
             //回归系数a
             double RCA = averagey - RCB * averagex;
 
-            c = RCB;
-
-            k = Math.Pow(10, RCA);
-
+            b = Math.Round(RCB, 4, MidpointRounding.AwayFromZero);
+            a = Math.Round(RCA, 4, MidpointRounding.AwayFromZero);
             return true;
         }
 

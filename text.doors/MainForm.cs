@@ -20,6 +20,7 @@ using AForge.Video;
 using AForge.Video.DirectShow;
 using Young.Core.Common;
 using text.doors.Default;
+using text.doors.Model;
 
 namespace text.doors
 {
@@ -52,6 +53,7 @@ namespace text.doors
 
             InitializeComponent();
 
+
             //ExamineLAN();
             OpenSerialPortClient();
 
@@ -62,6 +64,39 @@ namespace text.doors
 
             //DataInit();
             ShowDetectionSet();
+
+
+
+
+
+
+            //List<WindPressureDGV> windPressureDGV = new List<WindPressureDGV>();
+            //windPressureDGV.Add(new WindPressureDGV() { PaValue = 250, zzd = 0.3 });
+            //windPressureDGV.Add(new WindPressureDGV() { PaValue = 500, zzd = 0.6 });
+            //windPressureDGV.Add(new WindPressureDGV() { PaValue = 750, zzd = 0.9 });
+            //windPressureDGV.Add(new WindPressureDGV() { PaValue = 1000, zzd = 1.2 });
+            //windPressureDGV.Add(new WindPressureDGV() { PaValue = 1250, zzd = 1.6 });
+            //windPressureDGV.Add(new WindPressureDGV() { PaValue = 1500, zzd = 1.9 });
+            //windPressureDGV.Add(new WindPressureDGV() { PaValue = 1750, zzd = 2.3 });
+            //windPressureDGV.Add(new WindPressureDGV() { PaValue = 2000, zzd = 2.8 });
+
+
+            //double zy = 0;
+            //double fy = 0;
+
+            //Formula.GetKFY(windPressureDGV, 1400, 375, ref zy, ref fy);
+            //if (zy != -100 && fy != -100)
+            //{
+
+            //}
+
+
+
+
+
+
+
+
         }
 
 

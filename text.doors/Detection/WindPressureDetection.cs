@@ -9,6 +9,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using text.doors.Common;
+using text.doors.dal;
 using text.doors.Default;
 using text.doors.Model;
 using text.doors.Model.DataBase;
@@ -35,6 +36,8 @@ namespace text.doors.Detection
 
 
         private static int _CYGXS = 0;
+        //杆件长度
+        private static int ganjianchangdu = 0;
 
 
         public List<WindPressureDGV> windPressureDGV = new List<WindPressureDGV>();
@@ -67,6 +70,10 @@ namespace text.doors.Detection
             txt_gbjc.Text = _serialPortClient.GetKFYjC().ToString();
 
 
+
+            var dt = new DAL_dt_Settings().Getdt_SettingsByCode(_tempCode);
+
+            ganjianchangdu = int.Parse(dt.Rows[0]["ganjianchangdu"].ToString());
             var value = int.Parse(txt_gbjc.Text);
             KFYPa = new List<int>();
             for (int i = 1; i < 9; i++)
@@ -74,10 +81,6 @@ namespace text.doors.Detection
                 KFYPa.Add((value * i));
             }
             BindData();
-
-          
-
-
 
             BindSetPressure();
             FYchartInit();
@@ -203,7 +206,6 @@ namespace text.doors.Detection
 
                 //极差
                 txt_gbjc.Text = dr["defJC"].ToString();
-
                 //绑定锁点
                 if (dr["CheckLock"].ToString() == "1")
                     rdb_DWDD1.Checked = true;
@@ -215,6 +217,7 @@ namespace text.doors.Detection
                     windPressureDGV.Add(new WindPressureDGV()
                     {
                         Pa = value + "Pa",
+                        PaValue = value,
                         zwy1 = string.IsNullOrWhiteSpace(dr["z_one_" + value].ToString()) ? 0 : double.Parse(dr["z_one_" + value].ToString()),
                         zwy2 = string.IsNullOrWhiteSpace(dr["z_two_" + value].ToString()) ? 0 : double.Parse(dr["z_two_" + value].ToString()),
                         zwy3 = string.IsNullOrWhiteSpace(dr["z_three_" + value].ToString()) ? 0 : double.Parse(dr["z_three_" + value].ToString()),
@@ -242,6 +245,7 @@ namespace text.doors.Detection
                     windPressureDGV.Add(new WindPressureDGV()
                     {
                         Pa = value + "Pa",
+                        PaValue = value,
                         zwy1 = 0,
                         zwy2 = 0,
                         zwy3 = 0,
@@ -257,6 +261,7 @@ namespace text.doors.Detection
                 windPressureDGV.Add(new WindPressureDGV()
                 {
                     Pa = "P3阶段",
+                    PaValue = -1,
                     zwy1 = 0,
                     zwy2 = 0,
                     zwy3 = 0,
@@ -271,6 +276,7 @@ namespace text.doors.Detection
                 windPressureDGV.Add(new WindPressureDGV()
                 {
                     Pa = "P3残余变形",
+                    PaValue = -2,
                     zwy1 = 0,
                     zwy2 = 0,
                     zwy3 = 0,
@@ -285,6 +291,7 @@ namespace text.doors.Detection
                 windPressureDGV.Add(new WindPressureDGV()
                 {
                     Pa = "PMax/残余变形",
+                    PaValue = -3,
                     zwy1 = 0,
                     zwy2 = 0,
                     zwy3 = 0,
@@ -421,63 +428,82 @@ namespace text.doors.Detection
 
             BindData();
 
-            var data = windPressureDGV.FindAll(t => t.zwy1 > 0 || t.zwy2 > 0 || t.zwy3 > 0 || t.fwy3 > 0 || t.fwy2 > 0 || t.fwy1 > 0);
-            //初始化按最大等级计算。
-            var zdefPa = 2000;
-            var fdefPa = 2000;
+
+            #region new
+
             double lx = 0;
             double.TryParse(txt_lx.Text, out lx);
-            foreach (var item in data)
+            double zy = 0;
+            double fy = 0;
+
+            Formula.GetKFY(windPressureDGV, ganjianchangdu, lx, ref zy, ref fy);
+            if (zy != -100 && fy != -100)
             {
-                if (item.zlx <= lx)
-                {
-                    zdefPa = int.Parse(item.Pa.Replace("Pa", ""));
-                    break;
-                }
+                txt_p1.Text = Math.Round(zy, 0).ToString();
+                txt_f_p1.Text = Math.Round(fy, 0).ToString();
             }
+            #endregion
 
-            foreach (var item in data)
-            {
-                if (item.flx <= lx)
-                {
-                    fdefPa = int.Parse(item.Pa.Replace("Pa", ""));
-                    break;
-                }
-            }
+            #region  old
+            //var data = windPressureDGV.FindAll(t => t.zwy1 > 0 || t.zwy2 > 0 || t.zwy3 > 0 || t.fwy3 > 0 || t.fwy2 > 0 || t.fwy1 > 0);
+            ////初始化按最大等级计算。
+            //var zdefPa = int.Parse(txt_gbjc.Text) * 8;//2000;
+            //var fdefPa = int.Parse(txt_gbjc.Text) * 8;//2000
+            //double lx = 0;
+            //double.TryParse(txt_lx.Text, out lx);
+            //foreach (var item in data)
+            //{
+            //    if (item.zlx <= lx)
+            //    {
+            //        zdefPa = int.Parse(item.Pa.Replace("Pa", ""));
+            //        break;
+            //    }
+            //}
 
-            var zone = new WindPressureDGV();
-            var ztwo = new WindPressureDGV();
-            zone = windPressureDGV.Find(t => t.Pa == (zdefPa - defPa) + "Pa");
-            ztwo = windPressureDGV.Find(t => t.Pa == zdefPa + "Pa");
-            if (zone != null || ztwo != null)
-            {
-                var x1 = float.Parse(zone.zzd.ToString());
-                var x2 = float.Parse(ztwo.zzd.ToString());
-                var y1 = zdefPa - defPa;
-                var y2 = zdefPa;
+            //foreach (var item in data)
+            //{
+            //    if (item.flx <= lx)
+            //    {
+            //        fdefPa = int.Parse(item.Pa.Replace("Pa", ""));
+            //        break;
+            //    }
+            //}
 
-                var p = Calculate(x1, x2, y1, y2);
+            //var zone = new WindPressureDGV();
+            //var ztwo = new WindPressureDGV();
+            //zone = windPressureDGV.Find(t => t.Pa == (zdefPa - defPa) + "Pa");
+            //ztwo = windPressureDGV.Find(t => t.Pa == zdefPa + "Pa");
+            //if (zone != null || ztwo != null)
+            //{
+            //    var x1 = float.Parse(zone.zzd.ToString());
+            //    var x2 = float.Parse(ztwo.zzd.ToString());
+            //    var y1 = zdefPa - defPa;
+            //    var y2 = zdefPa;
 
-                txt_p1.Text = Math.Round(p, 0).ToString();
-                //txt_p2.Text = Math.Round(p * 1.5, 0).ToString();
-                //txt_p3.Text = Math.Round(p * 2.5, 0).ToString();
-            }
+            //    var p = Calculate(x1, x2, y1, y2);
 
-            var fone = new WindPressureDGV();
-            var ftwo = new WindPressureDGV();
-            fone = windPressureDGV.Find(t => t.Pa == (fdefPa - defPa) + "Pa");
-            ftwo = windPressureDGV.Find(t => t.Pa == fdefPa + "Pa");
-            if (zone != null || ztwo != null)
-            {
-                var _x1 = float.Parse(fone.fzd.ToString());
-                var _x2 = float.Parse(ftwo.fzd.ToString());
-                var y1 = fdefPa - defPa;
-                var y2 = fdefPa;
-                var _p = Calculate(_x1, _x2, y1, y2);
-                txt_f_p1.Text = Math.Round(_p, 0).ToString();
-                //txt_f_p2.Text = Math.Round(_p * 1.5, 0).ToString();
-                //txt_f_p3.Text = Math.Round(_p * 2.5, 0).ToString();
-            }
+            //    txt_p1.Text = Math.Round(p, 0).ToString();
+            //    txt_p2.Text = Math.Round(p * 1.5, 0).ToString();
+            //    txt_p3.Text = Math.Round(p * 2.5, 0).ToString();
+            //}
+
+            //var fone = new WindPressureDGV();
+            //var ftwo = new WindPressureDGV();
+            //fone = windPressureDGV.Find(t => t.Pa == (fdefPa - defPa) + "Pa");
+            //ftwo = windPressureDGV.Find(t => t.Pa == fdefPa + "Pa");
+            //if (zone != null || ztwo != null)
+            //{
+            //    var _x1 = float.Parse(fone.fzd.ToString());
+            //    var _x2 = float.Parse(ftwo.fzd.ToString());
+            //    var y1 = fdefPa - defPa;
+            //    var y2 = fdefPa;
+            //    var _p = Calculate(_x1, _x2, y1, y2);
+            //    txt_f_p1.Text = Math.Round(_p, 0).ToString();
+            //    txt_f_p2.Text = Math.Round(_p * 1.5, 0).ToString();
+            //    txt_f_p3.Text = Math.Round(_p * 2.5, 0).ToString();
+            //}
+            #endregion
+
             currentkPa = 0;
         }
 
@@ -834,33 +860,47 @@ namespace text.doors.Detection
                     Stop();
                     OpenBtnType();
 
-                    var one = new WindPressureDGV();
-                    var two = new WindPressureDGV();
+                    //todo:使用那个lx?
+                    double lx2 = 0;
+                    double.TryParse(txt_lx.Text, out lx2);
+                    double zy = 0;
+                    double fy = 0;
 
-                    one = windPressureDGV.Find(t => t.Pa == (currentkPa - defPa) + "Pa");
-                    two = windPressureDGV.Find(t => t.Pa == currentkPa + "Pa");
-                    if (one != null && two != null)
+                    Formula.GetKFY(windPressureDGV, ganjianchangdu, lx2, ref zy, ref fy);
+                    if (zy != -100 && fy != -100)
                     {
-                        var x1 = windPressureTest == PublicEnum.WindPressureTest.ZStart ? float.Parse(one.zzd.ToString()) : float.Parse(one.fzd.ToString());
-                        var x2 = windPressureTest == PublicEnum.WindPressureTest.ZStart ? float.Parse(two.zzd.ToString()) : float.Parse(two.fzd.ToString());
-                        var y1 = currentkPa - defPa;
-                        var y2 = currentkPa;
-
-
-                        var p = Calculate(x1, x2, y1, y2);
-                        if (windPressureTest == PublicEnum.WindPressureTest.ZStart)
-                        {
-                            txt_p1.Text = Math.Round(p, 0).ToString();
-                            //txt_p2.Text = Math.Round(p * 1.5, 0).ToString();
-                            //txt_p3.Text = Math.Round(p * 2.5, 0).ToString();
-                        }
-                        else if (windPressureTest == PublicEnum.WindPressureTest.FStart)
-                        {
-                            txt_f_p1.Text = Math.Round(p, 0).ToString();
-                            //txt_f_p2.Text = Math.Round(p * 1.5, 0).ToString();
-                            //txt_f_p3.Text = Math.Round(p * 2.5, 0).ToString();
-                        }
+                        txt_p1.Text = Math.Round(zy, 0).ToString();
+                        txt_f_p1.Text = Math.Round(fy, 0).ToString();
                     }
+
+
+                    //var one = new WindPressureDGV();
+                    //var two = new WindPressureDGV();
+
+                    //one = windPressureDGV.Find(t => t.Pa == (currentkPa - defPa) + "Pa");
+                    //two = windPressureDGV.Find(t => t.Pa == currentkPa + "Pa");
+                    //if (one != null && two != null)
+                    //{
+                    //var x1 = windPressureTest == PublicEnum.WindPressureTest.ZStart ? float.Parse(one.zzd.ToString()) : float.Parse(one.fzd.ToString());
+                    //var x2 = windPressureTest == PublicEnum.WindPressureTest.ZStart ? float.Parse(two.zzd.ToString()) : float.Parse(two.fzd.ToString());
+                    //var y1 = currentkPa - defPa;
+                    //var y2 = currentkPa;
+
+
+                    //var p = Calculate(x1, x2, y1, y2);
+                    //if (windPressureTest == PublicEnum.WindPressureTest.ZStart)
+                    //{
+                    //    txt_p1.Text = Math.Round(p, 0).ToString();
+                    //txt_p2.Text = Math.Round(p * 1.5, 0).ToString();
+                    //txt_p3.Text = Math.Round(p * 2.5, 0).ToString();
+                    //}
+                    //else if (windPressureTest == PublicEnum.WindPressureTest.FStart)
+                    //{
+                    //    txt_f_p1.Text = Math.Round(p, 0).ToString();
+                    //txt_f_p2.Text = Math.Round(p * 1.5, 0).ToString();
+                    //txt_f_p3.Text = Math.Round(p * 2.5, 0).ToString();
+                    //}
+                    //}
                 }
                 this.tim_static.Enabled = false;
                 BindData();
@@ -1239,11 +1279,11 @@ namespace text.doors.Detection
             var res = _serialPortClient.Set_FY_Value(BFMCommand.负PMAX值, BFMCommand.负PMAX, value);
             if (!res)
             {
-                MessageBox.Show("负pmax！", "警告！", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification); 
+                MessageBox.Show("负pmax！", "警告！", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
                 return;
             }
         }
 
-      
+
     }
 }

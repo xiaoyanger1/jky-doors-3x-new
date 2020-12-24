@@ -10,6 +10,7 @@ namespace text.doors.Model
     {
 
         public string Pa { get; set; }
+        public int PaValue { get; set; }
         public double zwy1 { get; set; }
         public double zwy2 { get; set; }
         public double zwy3 { get; set; }
