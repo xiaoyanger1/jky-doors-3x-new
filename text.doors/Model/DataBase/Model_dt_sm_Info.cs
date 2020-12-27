@@ -32,5 +32,16 @@ namespace text.doors.Model.DataBase
         public string sm_Remark { get; set; }
 
         public string Method{ get; set; }
+        /// <summary>
+        /// 上线压力
+        /// </summary>
+        public string sxyl { get; set; }
+
+        /// <summary>
+        /// 下线压力
+        /// </summary>
+        public string xxyl{ get; set; }
+
+        public string gongchengjiance { get; set; }
     }
 }

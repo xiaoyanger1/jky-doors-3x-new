@@ -69,21 +69,16 @@ namespace text.doors.Detection
 
             txt_gbjc.Text = _serialPortClient.GetKFYjC().ToString();
 
-
-
             var dt = new DAL_dt_Settings().Getdt_SettingsByCode(_tempCode);
 
             ganjianchangdu = int.Parse(dt.Rows[0]["ganjianchangdu"].ToString());
-            var value = int.Parse(txt_gbjc.Text);
-            KFYPa = new List<int>();
-            for (int i = 1; i < 9; i++)
-            {
-                KFYPa.Add((value * i));
-            }
+
             BindData();
 
             BindSetPressure();
             FYchartInit();
+
+
         }
 
         public void StopTimer()
@@ -195,10 +190,7 @@ namespace text.doors.Detection
 
         private List<WindPressureDGV> GetWindPressureDGV()
         {
-            //if (!IsFirst)
-            //{
-            //    return windPressureDGV;
-            //}
+
             var dt = new DAL_dt_kfy_Info().GetkfyByCodeAndTong(_tempCode, _tempTong);
             if (dt != null && dt.Rows.Count > 0)
             {
@@ -206,6 +198,14 @@ namespace text.doors.Detection
 
                 //极差
                 txt_gbjc.Text = dr["defJC"].ToString();
+
+                var jcvalue = int.Parse(txt_gbjc.Text);
+                KFYPa = new List<int>();
+                for (int i = 1; i < 9; i++)
+                {
+                    KFYPa.Add((jcvalue * i));
+                }
+
                 //绑定锁点
                 if (dr["CheckLock"].ToString() == "1")
                     rdb_DWDD1.Checked = true;
@@ -507,13 +507,13 @@ namespace text.doors.Detection
             currentkPa = 0;
         }
 
-        private bool AddKfyInfo()
+        private bool AddKfyInfo(int defJC)
         {
             DAL_dt_kfy_Info dal = new DAL_dt_kfy_Info();
             Model_dt_kfy_Info model = new Model_dt_kfy_Info();
             model.dt_Code = _tempCode;
             model.info_DangH = _tempTong;
-
+            model.defJC = defJC;
             for (int i = 0; i < KFYPa.Count; i++)
             {
                 #region 获取
@@ -1167,7 +1167,8 @@ namespace text.doors.Detection
                     return;
                 }
             }
-            if (AddKfyInfo())
+            var jc = int.Parse(txt_gbjc.Text);
+            if (AddKfyInfo(jc))
             {
                 MessageBox.Show("处理成功！", "完成", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
             }

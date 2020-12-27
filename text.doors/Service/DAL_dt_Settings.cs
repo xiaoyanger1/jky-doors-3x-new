@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using text.doors.Model.DataBase;
 using Young.Core.SQLite;
 using System.Runtime.InteropServices.WindowsRuntime;
+using NPOI.SS.Formula.Functions;
 
 namespace text.doors.dal
 {
@@ -283,6 +284,9 @@ namespace text.doors.dal
                     model.sm_Remark = item["sm_Remark"].ToString();
                     model.Method = item["Method"].ToString();
                     model.testcount = int.Parse(item["testcount"].ToString());
+                    model.sxyl = item["sxyl"].ToString();
+                    model.xxyl = item["xxyl"].ToString();
+                    model.gongchengjiance = item["gongchengjiance"].ToString();
                     list.Add(model);
                     #endregion
                 }

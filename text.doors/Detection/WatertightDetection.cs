@@ -21,6 +21,7 @@ using text.doors.Model.DataBase;
 using text.doors.Default;
 using text.doors.Service;
 using static text.doors.Default.PublicEnum;
+using NPOI.SS.Formula.Functions;
 
 namespace text.doors.Detection
 {
@@ -105,6 +106,8 @@ namespace text.doors.Detection
                     var remark = sm[0].sm_Remark;
                     var method = sm[0].Method;
 
+
+
                     if (method == "稳定加压")
                     {
                         this.rdb_wdjy.Checked = true;
@@ -112,6 +115,9 @@ namespace text.doors.Detection
                     else if (method == "波动加压")
                     {
                         this.rdb_bdjy.Checked = true;
+
+                        txt_maxValue.Text = sm[0].sxyl;
+                        txt_minValue.Text = sm[0].xxyl;
                     }
                     else
                     {
@@ -965,13 +971,15 @@ namespace text.doors.Detection
             model.sm_PaDesc = CheckPosition + "," + CheckProblem;
             model.sm_Remark = txt_desc.Text;
 
-
             model.testcount = 1;
+            model.gongchengjiance = txt_ycjy.Text;
 
 
             if (this.rdb_bdjy.Checked == true)
             {
                 model.Method = "波动加压";
+                model.sxyl = txt_maxValue.Text;
+                model.xxyl = txt_minValue.Text;
             }
             else
             {
@@ -1140,8 +1148,7 @@ namespace text.doors.Detection
 
         private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (!_serialPortClient.sp.IsOpen)
-                return;
+
             if (this.tabControl1.SelectedTab.Name == "水密")
             {
                 Initial(QM_TestCount.第一次);
@@ -1412,6 +1419,8 @@ namespace text.doors.Detection
             if (this.rdb_bdjy.Checked == true)
             {
                 model.Method = "波动加压";
+                model.sxyl = txt_maxValue.Text;
+                model.xxyl = txt_minValue.Text;
             }
             else
             {

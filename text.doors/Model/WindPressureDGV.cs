@@ -10,7 +10,7 @@ namespace text.doors.Model
     {
 
         public string Pa { get; set; }
-        public int PaValue { get; set; }
+       
         public double zwy1 { get; set; }
         public double zwy2 { get; set; }
         public double zwy3 { get; set; }
@@ -20,6 +20,8 @@ namespace text.doors.Model
         public double fwy2 { get; set; }
         public double fwy3 { get; set; }
         public double fzd { get; set; }
+
+        public int PaValue { get; set; }
         public int flx { get; set; }
     }
 }

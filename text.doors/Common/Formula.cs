@@ -235,7 +235,7 @@ namespace text.doors.Common
             double _f_a = 0;
             double _f_b = 0;
 
-            var f_point = airtightCalculation.Select(t => new text.doors.Model.Point() { X = t.kPa, Y = t._F_Q_SJ_P }).ToList();
+            var f_point = airtightCalculation.Select(t => new text.doors.Model.Point() { X = Math.Log(t.PaValue, 10), Y = Math.Log(t._F_Q_SJ_P, 10) }).ToList();
             var f_isSuccess = Formula.LinearRegression(f_point, ref _f_a, ref _f_b, ref errorMsg);
             if (f_isSuccess)
             {
@@ -411,12 +411,6 @@ namespace text.doors.Common
         #endregion
 
         #endregion
-
-
-
-
-
-
 
 
 

@@ -333,6 +333,7 @@ namespace text.doors.Detection
                             model11.Pressure_Z = string.IsNullOrWhiteSpace(item.qm_j_z_fj10) ? 0 : double.Parse(item.qm_j_z_fj10);
                             model11.Pressure_Z_Z = string.IsNullOrWhiteSpace(item.qm_j_z_zd10) ? 0 : double.Parse(item.qm_j_z_zd10);
                             model11.PressurePa = "10";
+                            pressureList.Add(model11);
 
                             Pressure model12 = new Pressure();
                             model12.Pressure_F = 0;
@@ -341,7 +342,7 @@ namespace text.doors.Detection
                             model12.Pressure_Z = 0;
                             model12.Pressure_Z_Z = 0;
                             model12.PressurePa = "设计值";
-                            pressureList.Add(model11);
+                            pressureList.Add(model12);
                         }
 
                     }
@@ -410,7 +411,7 @@ namespace text.doors.Detection
         private void BindLevelIndex(QM_TestCount qm_TestCount)
         {
 
-            GetDatabaseLevelIndex(qm_TestCount);
+             GetDatabaseLevelIndex(qm_TestCount);
             dgv_levelIndex.DataSource = GetLevelIndex();
             dgv_levelIndex.RowHeadersVisible = false;
             dgv_levelIndex.AllowUserToResizeColumns = false;
@@ -1691,7 +1692,7 @@ namespace text.doors.Detection
             List<AirtightCalculation> airtightCalculation = new List<AirtightCalculation>();
             if (qm_TestCount == QM_TestCount.第一次)
             {
-                if (int.Parse(this.dgv_ll.Rows[11].Cells["Pressure_F_Z"].Value.ToString()) > 0)
+                if (this.dgv_ll.Rows[11].Cells["Pressure_F_Z"].Value.ToString().ToString() != "0")
                 {
                     zFc = Formula.GetIndexStitchLengthAndArea(
                         double.Parse(this.dgv_ll.Rows[11].Cells["Pressure_Z_Z"].Value.ToString()),
@@ -1811,7 +1812,7 @@ namespace text.doors.Detection
             }
             else if (qm_TestCount == QM_TestCount.第二次)
             {
-                if ((int)this.dgv_ll2.Rows[11].Cells["Pressure_F_Z"].Value > 0)
+                if (this.dgv_ll2.Rows[11].Cells["Pressure_F_Z"].Value.ToString() != "0")
                 {
                     zFc = Formula.GetIndexStitchLengthAndArea(
                          double.Parse(this.dgv_ll2.Rows[11].Cells["Pressure_Z_Z"].Value.ToString()),
