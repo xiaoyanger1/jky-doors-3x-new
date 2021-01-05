@@ -113,7 +113,7 @@
             this.page_airtight.Controls.Add(this.groupBox2);
             this.page_airtight.Location = new System.Drawing.Point(4, 30);
             this.page_airtight.Name = "page_airtight";
-            this.page_airtight.Padding = new System.Windows.Forms.Padding(3);
+            this.page_airtight.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
             this.page_airtight.Size = new System.Drawing.Size(1143, 676);
             this.page_airtight.TabIndex = 0;
             this.page_airtight.Text = "气密监控";
@@ -403,7 +403,7 @@
             this.流量原始数据.Controls.Add(this.dgv_ll);
             this.流量原始数据.Location = new System.Drawing.Point(4, 22);
             this.流量原始数据.Name = "流量原始数据";
-            this.流量原始数据.Padding = new System.Windows.Forms.Padding(3);
+            this.流量原始数据.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
             this.流量原始数据.Size = new System.Drawing.Size(281, 326);
             this.流量原始数据.TabIndex = 1;
             this.流量原始数据.Text = "流量原始数据(m3/h)";
@@ -575,7 +575,7 @@
             // 
             // tim_Top10
             // 
-            this.tim_Top10.Interval = 800;
+            this.tim_Top10.Interval = 1000;
             this.tim_Top10.Tick += new System.EventHandler(this.tim_Top10_Tick);
             // 
             // gv_list
@@ -593,7 +593,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1157, 718);
+            this.ClientSize = new System.Drawing.Size(1151, 713);
             this.Controls.Add(this.tc_RealTimeSurveillance);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "AirtightDetection";

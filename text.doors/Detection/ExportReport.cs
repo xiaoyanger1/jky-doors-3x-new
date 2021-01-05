@@ -1,4 +1,4 @@
-﻿using Microsoft.Office.Interop.Word;
+﻿//using Microsoft.Office.Interop.Word;
 //using Microsoft.Office.Interop.Graph;
 using text.doors.Common;
 using text.doors.dal;
@@ -51,6 +51,32 @@ namespace text.doors.Detection
 
         private void Eexport(string fileName)
         {
+            FolderBrowserDialog path = new FolderBrowserDialog();
+            path.ShowDialog();
+
+            label3.Visible = true;
+            if (string.IsNullOrWhiteSpace(path.SelectedPath))
+            {
+                return;
+            }
+            btn_ok.Enabled = false;
+            cm_Report.Enabled = false;
+            btn_close.Enabled = false;
+
+            string[] name = fileName.Split('.');
+
+            string _name = name[0] + "_" + _tempCode + "." + name[1];
+
+            var saveExcelUrl = path.SelectedPath + "\\" + _name;
+
+            if (fileName == "建筑外窗（门）气密、水密、抗风压性能检测报告")
+            {
+                ExportExcel exportExcel = new ExportExcel(_tempCode);
+                exportExcel.ExportData(saveExcelUrl);
+            }
+
+            #region ss
+            /*
             try
             {
                 string strResult = string.Empty;
@@ -146,8 +172,12 @@ namespace text.doors.Detection
                 MessageBox.Show("数据出现问题，导出失败!", "警告", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
                 this.Close();
             }
+            */
+            #endregion
         }
 
+        #region old
+        /*
         /// <summary>
         /// 导入图片到word
         /// </summary>
@@ -1321,5 +1351,7 @@ namespace text.doors.Detection
                 image.Dispose();
             }
         }
+        */
+        #endregion
     }
 }

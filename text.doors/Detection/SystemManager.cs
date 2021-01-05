@@ -59,10 +59,11 @@ namespace text.doors.Detection
 
 
             MessageBox.Show("保存成功,请重启软件", "风机", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
-            //  Application.Exit();
+            //Application.Exit();
+            //System.Environment.Exit(0);
+            this.Dispose();
+            // 加入想要的逻辑处理
             System.Environment.Exit(0);
-
-
         }
 
         private string GetConfigSetting(string value)

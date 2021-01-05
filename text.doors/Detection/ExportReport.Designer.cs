@@ -63,10 +63,9 @@
             this.cm_Report.FormattingEnabled = true;
             this.cm_Report.Items.AddRange(new object[] {
             "-------请选择-----",
-            "门窗检验报告.doc",
-            "实验室记录.doc"});
+            "建筑外窗（门）气密、水密、抗风压性能检测报告"});
             this.cm_Report.Location = new System.Drawing.Point(168, 105);
-            this.cm_Report.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.cm_Report.Margin = new System.Windows.Forms.Padding(4);
             this.cm_Report.Name = "cm_Report";
             this.cm_Report.Size = new System.Drawing.Size(200, 26);
             this.cm_Report.TabIndex = 2;
@@ -74,7 +73,7 @@
             // btn_ok
             // 
             this.btn_ok.Location = new System.Drawing.Point(46, 176);
-            this.btn_ok.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btn_ok.Margin = new System.Windows.Forms.Padding(4);
             this.btn_ok.Name = "btn_ok";
             this.btn_ok.Size = new System.Drawing.Size(112, 34);
             this.btn_ok.TabIndex = 3;
@@ -85,7 +84,7 @@
             // btn_close
             // 
             this.btn_close.Location = new System.Drawing.Point(258, 176);
-            this.btn_close.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btn_close.Margin = new System.Windows.Forms.Padding(4);
             this.btn_close.Name = "btn_close";
             this.btn_close.Size = new System.Drawing.Size(112, 34);
             this.btn_close.TabIndex = 3;
@@ -118,7 +117,7 @@
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "ExportReport";

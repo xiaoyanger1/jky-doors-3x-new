@@ -444,28 +444,35 @@ namespace text.doors
         {
             if (DefaultBase.IsSetTong)
             {
-                //FolderBrowserDialog path = new FolderBrowserDialog();
-                //path.ShowDialog();
-
-                //if (string.IsNullOrWhiteSpace(path.SelectedPath))
-                //{
-                //    return;
-                //}
-
                 try
                 {
-                    var selectedPath = "E:\\测试\\asd.xls";
+                    //FolderBrowserDialog path = new FolderBrowserDialog();
+                    //path.ShowDialog();
+
+                    //label3.Visible = true;
+                    //if (string.IsNullOrWhiteSpace(path.SelectedPath))
+                    //{
+                    //    return;
+                    //}
+                    //string _name = "建筑外窗（门）气密、水密、抗风压性能检测报告" + "_" + _tempCode + ".xls";
+
+                    //var saveExcelUrl = path.SelectedPath + "\\" + _name;
+                    string _name = "建筑外窗（门）气密、水密、抗风压性能检测报告" + "_" + _tempCode + ".xls";
+
+                    var saveExcelUrl = "E:\\" + _name;
+
                     ExportExcel exportExcel = new ExportExcel(_tempCode);
-                    exportExcel.ExportData(selectedPath);
+                    exportExcel.ExportData(saveExcelUrl);
                 }
                 catch (Exception ex)
                 {
 
                 }
-
             }
             else
+            {
                 MessageBox.Show("请先检测设定", "检测", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
+            }
         }
 
         /// <summary>
@@ -474,12 +481,14 @@ namespace text.doors
         /// <param name="sender"></param>
         /// <param name="e"></param>
 
+        private bool _GaoYaGuiLing = false;
         private void btn_gyZero_Click(object sender, EventArgs e)
         {
-            if (!_serialPortClient.SendGYBD())
+            if (!_serialPortClient.SendGYBD(ref _GaoYaGuiLing))
             {
                 MessageBox.Show("高压归零异常,请确认服务器连接是否成功!", "设置", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
             }
+            btn_gyZero.BackColor = _GaoYaGuiLing ? Color.Green : Color.Transparent;
         }
 
         /// <summary>
@@ -735,7 +744,7 @@ namespace text.doors
                 MessageBox.Show("点动开异常,请确认服务器连接是否成功!", "设置", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
                 return;
             }
-            btn_ddk.BackColor = Color.Green;
+           // btn_ddk.BackColor = Color.Green;
 
         }
         private void btn_ddk_MouseDown(object sender, MouseEventArgs e)
@@ -746,7 +755,7 @@ namespace text.doors
                 MessageBox.Show("点动开异常,请确认服务器连接是否成功!", "设置", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
                 return;
             }
-            btn_ddk.BackColor = Color.Transparent;
+            //btn_ddk.BackColor = Color.Transparent;
         }
 
         private void btn_ddg_MouseDown(object sender, MouseEventArgs e)
@@ -757,7 +766,7 @@ namespace text.doors
                 MessageBox.Show("水泵启动异常,请确认服务器连接是否成功!", "设置", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
                 return;
             }
-            btn_ddg.BackColor = Color.Green;
+           // btn_ddg.BackColor = Color.Green;
         }
 
         private void btn_ddg_MouseUp(object sender, MouseEventArgs e)
@@ -768,7 +777,7 @@ namespace text.doors
                 MessageBox.Show("水泵启动异常,请确认服务器连接是否成功!", "设置", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
                 return;
             }
-            btn_ddg.BackColor = Color.Transparent;
+          //  btn_ddg.BackColor = Color.Transparent;
         }
 
         private bool _GuanDaoTou = false;

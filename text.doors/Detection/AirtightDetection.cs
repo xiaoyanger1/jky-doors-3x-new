@@ -351,7 +351,7 @@ namespace text.doors.Detection
                         this.btn_justready.Enabled = false;
                         this.btn_loseready.Enabled = false;
                         this.btn_losestart.Enabled = false;
-                        this.btn_datadispose.Enabled = false;
+                        //this.btn_datadispose.Enabled = false;
                         this.btn_juststart.Enabled = false;
 
                         txt_ycjy_z.Text = qm[0].sjz_value;
@@ -411,7 +411,7 @@ namespace text.doors.Detection
         private void BindLevelIndex(QM_TestCount qm_TestCount)
         {
 
-             GetDatabaseLevelIndex(qm_TestCount);
+            GetDatabaseLevelIndex(qm_TestCount);
             dgv_levelIndex.DataSource = GetLevelIndex();
             dgv_levelIndex.RowHeadersVisible = false;
             dgv_levelIndex.AllowUserToResizeColumns = false;
@@ -540,7 +540,17 @@ namespace text.doors.Detection
         {
             if (!_serialPortClient.sp.IsOpen)
                 return;
-            var c = _serialPortClient.GetCYDXS();
+
+            int c = 0;
+            if (airtightPropertyTest == PublicEnum.AirtightPropertyTest.ZReady || airtightPropertyTest == PublicEnum.AirtightPropertyTest.FReady)
+            {
+                c = _serialPortClient.GetCYGXS();
+            }
+            else
+            {
+                c = _serialPortClient.GetCYDXS();
+            }
+
 
             lbl_dqyl.Text = c.ToString();
 
@@ -550,19 +560,21 @@ namespace text.doors.Detection
         int index = 0;
         private void tim_Top10_Tick(object sender, EventArgs e)
         {
+            index++;
+            if (index > 5)
+            {
+                this.tim_Top10.Enabled = false;
+
+                if (airtightPropertyTest != PublicEnum.AirtightPropertyTest.ZYCJY)
+                {
+                    index = 0;
+                }
+                //gv_list.Enabled = false;
+                return;
+            }
             gv_list.Enabled = true;
 
             var cyvalue = _serialPortClient.GetCYDXS();
-
-            index++;
-            if (index > 8)
-            {
-                this.tim_Top10.Enabled = false;
-                index = 0;
-                gv_list.Enabled = false;
-                return;
-            }
-
 
             //获取风速
             var fsvalue = _serialPortClient.GetFSXS();
@@ -624,7 +636,7 @@ namespace text.doors.Detection
                         else
                             pressure_One.AddFYFJ(fsvalue, PublicEnum.Kpa_Level.drop100);
                     }
-                    else if (kpa_Level == PublicEnum.Kpa_Level.drop100)
+                    else if (kpa_Level == PublicEnum.Kpa_Level.drop70)
                     {
                         if (cyvalue > 0)
                             pressure_One.AddZYFJ(fsvalue, PublicEnum.Kpa_Level.drop70);
@@ -655,6 +667,7 @@ namespace text.doors.Detection
                     else if (kpa_Level == PublicEnum.Kpa_Level.YCJY)
                     {
                         //todo:设计值计算
+                        fsvalue = _serialPortClient.GetFSXS();
                         fsvalue = Formula.MathFlow(fsvalue);
                         if (cyvalue > 0)
                             pressure_One.AddZYFJ(fsvalue, PublicEnum.Kpa_Level.YCJY);
@@ -745,6 +758,7 @@ namespace text.doors.Detection
                     else if (kpa_Level == PublicEnum.Kpa_Level.YCJY)
                     {
                         //todo:设计值计算
+                        fsvalue = _serialPortClient.GetFSXS();
                         fsvalue = Formula.MathFlow(fsvalue);
 
                         if (cyvalue > 0)
@@ -810,7 +824,7 @@ namespace text.doors.Detection
                         else
                             pressure_Two.AddFYFJ(fsvalue, PublicEnum.Kpa_Level.drop100);
                     }
-                    else if (kpa_Level == PublicEnum.Kpa_Level.drop100)
+                    else if (kpa_Level == PublicEnum.Kpa_Level.drop70)
                     {
                         if (cyvalue > 0)
                             pressure_Two.AddZYFJ(fsvalue, PublicEnum.Kpa_Level.drop70);
@@ -841,6 +855,7 @@ namespace text.doors.Detection
                     else if (kpa_Level == PublicEnum.Kpa_Level.YCJY)
                     {
                         //todo:设计值计算
+                        fsvalue = _serialPortClient.GetFSXS();
                         fsvalue = Formula.MathFlow(fsvalue);
                         if (cyvalue > 0)
                             pressure_Two.AddZYFJ(fsvalue, PublicEnum.Kpa_Level.YCJY);
@@ -931,6 +946,7 @@ namespace text.doors.Detection
                     else if (kpa_Level == PublicEnum.Kpa_Level.YCJY)
                     {
                         //todo:设计值计算
+                        fsvalue = _serialPortClient.GetFSXS();
                         fsvalue = Formula.MathFlow(fsvalue);
                         if (cyvalue > 0)
                             pressure_Two.AddZYZD(fsvalue, PublicEnum.Kpa_Level.YCJY);
@@ -1263,7 +1279,7 @@ namespace text.doors.Detection
         /// <param name="e"></param>
         private void btn_juststart_Click(object sender, EventArgs e)
         {
-
+            index = 0;
             //double yl = _serialPortClient.GetZYYBYLZ(ref IsSeccess, "ZYKS");
             //if (!IsSeccess)
             //{
@@ -1341,7 +1357,7 @@ namespace text.doors.Detection
             this.btn_justready.Enabled = false;
             this.btn_loseready.Enabled = false;
             this.btn_losestart.Enabled = false;
-            this.btn_datadispose.Enabled = false;
+            //this.btn_datadispose.Enabled = false;
             this.btn_juststart.Enabled = false;
             btn_ycjy_z.Enabled = false;
             btn_ycjyf.Enabled = false;
@@ -1369,7 +1385,7 @@ namespace text.doors.Detection
         /// <param name="e"></param>
         private void btn_losestart_Click(object sender, EventArgs e)
         {
-
+            index = 0;
             //IsFirst = false;
             //double yl = _serialPortClient.GetZYYBYLZ(ref IsSeccess, "FYKS");
             //if (!IsSeccess)
@@ -1467,7 +1483,7 @@ namespace text.doors.Detection
 
             Model_dt_qm_Info model = new Model_dt_qm_Info();
             model.testcount = (int)qm_TestCount;
-            model.testtype = sjzValue;
+            model.testtype = int.Parse(sjzValue) > 0 ? "2" : "1";
 
             for (int i = 0; i < 2; i++)
             {
@@ -1569,6 +1585,7 @@ namespace text.doors.Detection
                     }
                     if (i == 11)
                     {
+                        model.sjz_value = txt_ycjy_z.Text;
                         model.sjz_z_fj = this.dgv_ll.Rows[i].Cells["Pressure_Z"].Value.ToString();
                         model.sjz_z_zd = this.dgv_ll.Rows[i].Cells["Pressure_Z_Z"].Value.ToString();
                         model.sjz_f_fj = this.dgv_ll.Rows[i].Cells["Pressure_F"].Value.ToString();
@@ -1656,6 +1673,7 @@ namespace text.doors.Detection
                     }
                     if (i == 11)
                     {
+                        model.sjz_value = txt_ycjy_z.Text;
                         model.sjz_z_fj = this.dgv_ll2.Rows[i].Cells["Pressure_Z"].Value.ToString();
                         model.sjz_z_zd = this.dgv_ll2.Rows[i].Cells["Pressure_Z_Z"].Value.ToString();
                         model.sjz_f_fj = this.dgv_ll2.Rows[i].Cells["Pressure_F"].Value.ToString();
@@ -1692,26 +1710,26 @@ namespace text.doors.Detection
             List<AirtightCalculation> airtightCalculation = new List<AirtightCalculation>();
             if (qm_TestCount == QM_TestCount.第一次)
             {
-                if (this.dgv_ll.Rows[11].Cells["Pressure_F_Z"].Value.ToString().ToString() != "0")
+                if (this.dgv_ll.Rows[11].Cells["Pressure_Z_Z"].Value.ToString().ToString() != "0")
                 {
                     zFc = Formula.GetIndexStitchLengthAndArea(
                         double.Parse(this.dgv_ll.Rows[11].Cells["Pressure_Z_Z"].Value.ToString()),
-                        double.Parse(this.dgv_ll.Rows[11].Cells["Pressure_Z_F"].Value.ToString()),
+                        double.Parse(this.dgv_ll.Rows[11].Cells["Pressure_Z"].Value.ToString()),
                         true, kPa, tempTemperature, stitchLength, sumArea);
 
                     fFc = Formula.GetIndexStitchLengthAndArea(
                         double.Parse(this.dgv_ll.Rows[11].Cells["Pressure_F_Z"].Value.ToString()),
-                        double.Parse(this.dgv_ll.Rows[11].Cells["Pressure_F_F"].Value.ToString()),
+                        double.Parse(this.dgv_ll.Rows[11].Cells["Pressure_F"].Value.ToString()),
                          true, kPa, tempTemperature, stitchLength, sumArea);
 
                     zMj = Formula.GetIndexStitchLengthAndArea(
                         double.Parse(this.dgv_ll.Rows[11].Cells["Pressure_Z_Z"].Value.ToString()),
-                        double.Parse(this.dgv_ll.Rows[11].Cells["Pressure_Z_F"].Value.ToString()),
+                        double.Parse(this.dgv_ll.Rows[11].Cells["Pressure_Z"].Value.ToString()),
                         false, kPa, tempTemperature, stitchLength, sumArea);
 
                     fMj = Formula.GetIndexStitchLengthAndArea(
                         double.Parse(this.dgv_ll.Rows[11].Cells["Pressure_F_Z"].Value.ToString()),
-                        double.Parse(this.dgv_ll.Rows[11].Cells["Pressure_F_F"].Value.ToString()),
+                        double.Parse(this.dgv_ll.Rows[11].Cells["Pressure_F"].Value.ToString()),
                         false, kPa, tempTemperature, stitchLength, sumArea);
                 }
                 else
@@ -1736,10 +1754,10 @@ namespace text.doors.Detection
                     airtightCalculation.Add(new AirtightCalculation()
                     {
                         PaValue = 30,
-                        Z_S_ZZ_Value = double.Parse(this.dgv_ll.Rows[1].Cells["Pressure_F_Z"].Value.ToString()),
-                        Z_J_ZZ_Value = double.Parse(this.dgv_ll.Rows[9].Cells["Pressure_F_Z"].Value.ToString()),
-                        Z_S_FJ_Value = double.Parse(this.dgv_ll.Rows[1].Cells["Pressure_F"].Value.ToString()),
-                        Z_J_FJ_Value = double.Parse(this.dgv_ll.Rows[9].Cells["Pressure_F"].Value.ToString()),
+                        Z_S_ZZ_Value = double.Parse(this.dgv_ll.Rows[1].Cells["Pressure_Z_Z"].Value.ToString()),
+                        Z_J_ZZ_Value = double.Parse(this.dgv_ll.Rows[9].Cells["Pressure_Z_Z"].Value.ToString()),
+                        Z_S_FJ_Value = double.Parse(this.dgv_ll.Rows[1].Cells["Pressure_Z"].Value.ToString()),
+                        Z_J_FJ_Value = double.Parse(this.dgv_ll.Rows[9].Cells["Pressure_Z"].Value.ToString()),
 
                         F_S_ZZ_Value = double.Parse(this.dgv_ll.Rows[1].Cells["Pressure_F_Z"].Value.ToString()),
                         F_J_ZZ_Value = double.Parse(this.dgv_ll.Rows[9].Cells["Pressure_F_Z"].Value.ToString()),
@@ -2116,17 +2134,18 @@ namespace text.doors.Detection
             }
         }
 
-        private void tim_readcy_Tick(object sender, EventArgs e)
-        {
-            if (!_serialPortClient.sp.IsOpen)
-                return;
-            var value = _serialPortClient.GetCYDXS();
+        //private void tim_readcy_Tick(object sender, EventArgs e)
+        //{
+        //    if (!_serialPortClient.sp.IsOpen)
+        //        return;
+        //    var value = _serialPortClient.GetCYDXS();
 
-            lbl_dqyl.Text = value.ToString();
-        }
+        //    lbl_dqyl.Text = value.ToString();
+        //}
 
         private void btn_ycjy_z_Click(object sender, EventArgs e)
         {
+            index = 0;
             this.btn_ycjy_z.Enabled = false;
             int value = 0;
             int.TryParse(txt_ycjy_z.Text, out value);

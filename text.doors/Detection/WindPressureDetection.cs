@@ -30,8 +30,6 @@ namespace text.doors.Detection
         public DateTime dtnow { get; set; }
 
 
-        //private bool IsFirst = true;
-
         private List<int> KFYPa = new List<int>();
 
 
@@ -74,7 +72,6 @@ namespace text.doors.Detection
             ganjianchangdu = int.Parse(dt.Rows[0]["ganjianchangdu"].ToString());
 
             BindData();
-
             BindSetPressure();
             FYchartInit();
 
@@ -114,8 +111,17 @@ namespace text.doors.Detection
         private void BindData()
         {
             #region 绑定
+            List<WindPressureDGV> list = new List<WindPressureDGV>();
+            if (windPressureDGV == null || windPressureDGV.Count == 0)
+            {
+                list = GetWindPressureDGV();
+            }
+            else
+            {
+                list = windPressureDGV;
+            }
 
-            dgv_WindPressure.DataSource = GetWindPressureDGV();
+            dgv_WindPressure.DataSource = list;
             //dgv_WindPressure.Height = 215;
             dgv_WindPressure.RowHeadersVisible = false;
             dgv_WindPressure.AllowUserToResizeColumns = false;
@@ -183,6 +189,8 @@ namespace text.doors.Detection
             dgv_WindPressure.Columns["fwy3"].DefaultCellStyle.Format = "N2";
             dgv_WindPressure.Columns["fzd"].DefaultCellStyle.Format = "N2";
             //dgv_WindPressure.Columns["flx"].DefaultCellStyle.Format = "N";
+
+
             dgv_WindPressure.Refresh();
             #endregion
         }
@@ -190,7 +198,7 @@ namespace text.doors.Detection
 
         private List<WindPressureDGV> GetWindPressureDGV()
         {
-
+            windPressureDGV = new List<WindPressureDGV>();
             var dt = new DAL_dt_kfy_Info().GetkfyByCodeAndTong(_tempCode, _tempTong);
             if (dt != null && dt.Rows.Count > 0)
             {
@@ -240,6 +248,7 @@ namespace text.doors.Detection
             }
             else
             {
+                #region 添加默认
                 foreach (var value in KFYPa)
                 {
                     windPressureDGV.Add(new WindPressureDGV()
@@ -303,7 +312,7 @@ namespace text.doors.Detection
                     fzd = 0,
                     flx = 0,
                 });
-
+                #endregion
             }
             return windPressureDGV;
         }
@@ -437,11 +446,11 @@ namespace text.doors.Detection
             double fy = 0;
 
             Formula.GetKFY(windPressureDGV, ganjianchangdu, lx, ref zy, ref fy);
-            if (zy != -100 && fy != -100)
-            {
-                txt_p1.Text = Math.Round(zy, 0).ToString();
-                txt_f_p1.Text = Math.Round(fy, 0).ToString();
-            }
+            //if (zy != -100 && fy != -100)
+            //{
+            txt_p1.Text = zy > 0 ? Math.Round(zy, 0).ToString() : "0";
+            txt_f_p1.Text = fy > 0 ? Math.Round(fy, 0).ToString() : "0";
+            //}
             #endregion
 
             #region  old
@@ -767,22 +776,8 @@ namespace text.doors.Detection
             if (!IsOk)
                 return;
 
-            if (windPressureTest == PublicEnum.WindPressureTest.FStart)
-            {
-                for (int i = 0; i < 8; i++)
-                {
-                    if (_CYGXS >= -(KFYPa[i] - 10) && _CYGXS <= -(KFYPa[i] + 10) && !complete.Exists(t => t == KFYPa[i]))
-                    {
-                        complete.Add(KFYPa[i]);
-                        currentkPa = KFYPa[i];
-                        tim_static.Enabled = true;
-                    }
-                }
-
-            }
             if (windPressureTest == PublicEnum.WindPressureTest.ZStart)
             {
-
                 for (int i = 0; i < 8; i++)
                 {
                     if (_CYGXS >= KFYPa[i] - 10 && _CYGXS <= (KFYPa[i] + 10) && !complete.Exists(t => t == KFYPa[i]))
@@ -792,6 +787,20 @@ namespace text.doors.Detection
                         tim_static.Enabled = true;
                     }
                 }
+            }
+
+            if (windPressureTest == PublicEnum.WindPressureTest.FStart)
+            {
+                for (int i = 0; i < 8; i++)
+                {
+                    if (_CYGXS >= (-KFYPa[i] - 10) && _CYGXS <= (-KFYPa[i] + 10) && !complete.Exists(t => t == KFYPa[i]))
+                    {
+                        complete.Add(KFYPa[i]);
+                        currentkPa = KFYPa[i];
+                        tim_static.Enabled = true;
+                    }
+                }
+
             }
         }
         //稳压次数
@@ -856,7 +865,7 @@ namespace text.doors.Detection
                 var lx = windPressureTest == PublicEnum.WindPressureTest.ZStart ? pa.zlx : pa.flx;
                 if (lx < def_LX)
                 {
-                    BindData();
+                    //  BindData();
                     Stop();
                     OpenBtnType();
 
@@ -903,7 +912,7 @@ namespace text.doors.Detection
                     //}
                 }
                 this.tim_static.Enabled = false;
-                BindData();
+                //    BindData();
                 average = new List<Tuple<double, double, double>>();
                 staticIndex = 1;
                 IsOk = true;

@@ -36,7 +36,15 @@ namespace text.doors.Common
             sp.BaudRate = int.Parse(_baudRate);//波特率
             sp.DataBits = int.Parse(_dataBits);//数据位
             sp.StopBits = (StopBits)int.Parse(_stopBits);//停止位
-            sp.Parity = Parity.None;//校验位
+            if (_parity == "None")
+            {
+                sp.Parity = Parity.None;//校验位
+            }
+            else if (_parity == "Even")
+            {
+                sp.Parity = Parity.Even;//校验位
+            }
+
             sp.ReadTimeout = 1500;//读取数据的超时时间，引发ReadExisting异常
         }
 
@@ -1256,7 +1264,7 @@ namespace text.doors.Common
         /// <summary>
         /// 设置高压标0
         /// </summary>
-        public bool SendGYBD(bool logon = false)
+        public bool SendGYBD(ref bool _GaoYaGuiLing, bool logon = false)
         {
             try
             {
@@ -1265,11 +1273,15 @@ namespace text.doors.Common
                     _StartAddress = BFMCommand.GetCommandDict(BFMCommand.高压标0_交替型按钮);
                     bool[] readCoils = _MASTER.ReadCoils(_SlaveID, _StartAddress, _NumOfPoints);
                     if (readCoils[0])
+                    {
                         _MASTER.WriteSingleCoil(this._SlaveID, _StartAddress, false);
+                        _GaoYaGuiLing = false;
+                    }
                     else
                     {
                         if (logon == false)
                             _MASTER.WriteSingleCoil(this._SlaveID, _StartAddress, true);
+                        _GaoYaGuiLing = true;
                     }
                 }
             }
@@ -1340,14 +1352,19 @@ namespace text.doors.Common
             double res = 0;
             if (sp.IsOpen)
             {
-                _StartAddress = BFMCommand.GetCommandDict(BFMCommand.温度显示);
-
-                ushort[] holding_register = _MASTER.ReadHoldingRegisters(_SlaveID, _StartAddress, _NumOfPoints);
-                if (holding_register.Length > 0)
+                try
                 {
-                    res = double.Parse((double.Parse(holding_register[0].ToString()) / 10).ToString());
-                    res = Formula.GetValues(PublicEnum.DemarcateType.温度传感器, float.Parse(res.ToString()));
+                    _StartAddress = BFMCommand.GetCommandDict(BFMCommand.温度显示);
+
+                    ushort[] holding_register = _MASTER.ReadHoldingRegisters(_SlaveID, _StartAddress, _NumOfPoints);
+                    if (holding_register.Length > 0)
+                    {
+                        res = double.Parse((double.Parse(holding_register[0].ToString()) / 10).ToString());
+                        res = Formula.GetValues(PublicEnum.DemarcateType.温度传感器, float.Parse(res.ToString()));
+                    }
                 }
+                catch (Exception ex)
+                { }
             }
 
             return res;
@@ -1361,12 +1378,18 @@ namespace text.doors.Common
             double res = 0;
             if (sp.IsOpen)
             {
-                _StartAddress = BFMCommand.GetCommandDict(BFMCommand.大气压力显示);
-                ushort[] holding_register = _MASTER.ReadHoldingRegisters(_SlaveID, _StartAddress, _NumOfPoints);
-                if (holding_register.Length > 0)
+                try
                 {
-                    res = double.Parse((double.Parse(holding_register[0].ToString()) / 100).ToString());
-                    res = Formula.GetValues(PublicEnum.DemarcateType.大气压力传感器, float.Parse(res.ToString()));
+                    _StartAddress = BFMCommand.GetCommandDict(BFMCommand.大气压力显示);
+                    ushort[] holding_register = _MASTER.ReadHoldingRegisters(_SlaveID, _StartAddress, _NumOfPoints);
+                    if (holding_register.Length > 0)
+                    {
+                        res = double.Parse((double.Parse(holding_register[0].ToString()) / 100).ToString());
+                        res = Formula.GetValues(PublicEnum.DemarcateType.大气压力传感器, float.Parse(res.ToString()));
+                    }
+                }
+                catch (Exception ex)
+                {
                 }
             }
             return res;
@@ -1378,16 +1401,20 @@ namespace text.doors.Common
         public double GetFSXS()
         {
             double res = 0;
-            if (sp.IsOpen)
+            try
             {
-                _StartAddress = BFMCommand.GetCommandDict(BFMCommand.风速显示);
-                ushort[] holding_register = _MASTER.ReadHoldingRegisters(_SlaveID, _StartAddress, _NumOfPoints);
-                if (holding_register.Length > 0)
+                if (sp.IsOpen)
                 {
-                    var f = double.Parse((double.Parse(holding_register[0].ToString()) / 100).ToString());
-                    res = Formula.GetValues(PublicEnum.DemarcateType.风速传感器, float.Parse(f.ToString()));
+                    _StartAddress = BFMCommand.GetCommandDict(BFMCommand.风速显示);
+                    ushort[] holding_register = _MASTER.ReadHoldingRegisters(_SlaveID, _StartAddress, _NumOfPoints);
+                    if (holding_register.Length > 0)
+                    {
+                        var f = double.Parse((double.Parse(holding_register[0].ToString()) / 100).ToString());
+                        res = Formula.GetValues(PublicEnum.DemarcateType.风速传感器, float.Parse(f.ToString()));
+                    }
                 }
             }
+            catch (Exception ex) { }
             return res;
         }
 
@@ -1433,12 +1460,18 @@ namespace text.doors.Common
             int res = 0;
             if (sp.IsOpen)
             {
-                _StartAddress = BFMCommand.GetCommandDict(BFMCommand.改变级差);
-
-                ushort[] holding_register = _MASTER.ReadHoldingRegisters(_SlaveID, _StartAddress, _NumOfPoints);
-                if (holding_register.Length > 0)
+                try
                 {
-                    res = int.Parse(holding_register[0].ToString());
+                    _StartAddress = BFMCommand.GetCommandDict(BFMCommand.改变级差);
+
+                    ushort[] holding_register = _MASTER.ReadHoldingRegisters(_SlaveID, _StartAddress, _NumOfPoints);
+                    if (holding_register.Length > 0)
+                    {
+                        res = int.Parse(holding_register[0].ToString());
+                    }
+                }
+                catch (Exception ex)
+                {
                 }
             }
             return res;
@@ -1454,22 +1487,26 @@ namespace text.doors.Common
             double res = 0;
             if (sp.IsOpen)
             {
-                _StartAddress = BFMCommand.GetCommandDict(BFMCommand.差压低显示);
-
-                ushort[] holding_register = _MASTER.ReadHoldingRegisters(_SlaveID, _StartAddress, _NumOfPoints);
-                if (holding_register.Length > 0)
+                try
                 {
-                    var f = double.Parse(holding_register[0].ToString());
+                    _StartAddress = BFMCommand.GetCommandDict(BFMCommand.差压低显示);
 
-                    if (int.Parse(holding_register[0].ToString()) > 10000)
-                        f = -(65535 - int.Parse(holding_register[0].ToString()));
-                    else
-                        f = int.Parse(holding_register[0].ToString());
+                    ushort[] holding_register = _MASTER.ReadHoldingRegisters(_SlaveID, _StartAddress, _NumOfPoints);
+                    if (holding_register.Length > 0)
+                    {
+                        var f = double.Parse(holding_register[0].ToString());
 
-                    f = double.Parse((f / 10).ToString());
-                    res = Formula.GetValues(PublicEnum.DemarcateType.差压传感器, float.Parse(f.ToString()));
-                    return int.Parse(Math.Round(res, 0).ToString());
+                        if (int.Parse(holding_register[0].ToString()) > 10000)
+                            f = -(65535 - int.Parse(holding_register[0].ToString()));
+                        else
+                            f = int.Parse(holding_register[0].ToString());
+
+                        f = double.Parse((f / 10).ToString());
+                        res = Formula.GetValues(PublicEnum.DemarcateType.差压传感器, float.Parse(f.ToString()));
+                        return int.Parse(Math.Round(res, 0).ToString());
+                    }
                 }
+                catch (Exception ex) { }
             }
             return 0;
         }
@@ -1480,10 +1517,11 @@ namespace text.doors.Common
         /// <returns></returns>
         public void GetCYXS_BODONG(ref bool IsSuccess, ref int minVal, ref int maxVal)
         {
-            try
+            if (sp.IsOpen)
             {
-                if (sp.IsOpen)
+                try
                 {
+
                     //最小
                     _StartAddress = BFMCommand.GetCommandDict(BFMCommand.读取设定波动加压Min);
 
@@ -1517,12 +1555,12 @@ namespace text.doors.Common
                         var res = Formula.GetValues(PublicEnum.DemarcateType.差压传感器, float.Parse(f.ToString()));
                         maxVal = int.Parse(Math.Round(res, 0).ToString());
                     }
-                }
-            }
-            catch (Exception ex)
-            {
-                IsSuccess = false;
 
+                }
+                catch (Exception ex)
+                {
+                    IsSuccess = false;
+                }
             }
         }
 

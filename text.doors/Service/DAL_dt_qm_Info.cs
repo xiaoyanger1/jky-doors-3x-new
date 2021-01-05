@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using text.doors.Default;
 using Young.Core.SQLite;
 using text.doors.Service;
+using NPOI.SS.Formula.Functions;
 
 namespace text.doors.dal
 {
@@ -71,10 +72,16 @@ namespace text.doors.dal
                         qm_j_f_zd50  ,
                         qm_j_f_zd30  ,
                         qm_j_f_zd10  ,
-                        testcount
+                        testcount,
+                        testtype,
+                        sjz_value,
+                        sjz_z_fj,
+                        sjz_z_zd,
+                        sjz_f_fj,
+                        sjz_f_zd
                         ) 
                 values('{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}','{9}','{10}','{11}','{12}','{13}','{14}','{15}','{16}','{17}','{18}','{19}','{20}','{21}','{22}','{23}','{24}','{25}','{26}','{27}'
-                      ,'{28}','{29}','{30}','{31}','{32}','{33}','{34}','{35}','{36}','{37}','{38}','{39}','{40}','{41}','{42}','{43}','{44}','{45}','{46}','{47}','{48}','{49}',{50})",
+                      ,'{28}','{29}','{30}','{31}','{32}','{33}','{34}','{35}','{36}','{37}','{38}','{39}','{40}','{41}','{42}','{43}','{44}','{45}','{46}','{47}','{48}','{49}',{50},'{51}','{52}','{53}','{54}','{55}','{56}')",
                  model.dt_Code, model.info_DangH, model.qm_Z_FC, model.qm_F_FC, model.qm_Z_MJ, model.qm_F_MJ,
                  model.qm_s_z_fj10,
                  model.qm_s_z_fj30,
@@ -123,7 +130,13 @@ namespace text.doors.dal
                  model.qm_j_f_zd50,
                  model.qm_j_f_zd30,
                  model.qm_j_f_zd10,
-                 model.testcount
+                 model.testcount,
+                 model.testtype,
+                 model.sjz_value,
+                 model.sjz_z_fj,
+                 model.sjz_z_zd,
+                 model.sjz_f_fj,
+                 model.sjz_f_zd
                  );
             var res = SQLiteHelper.ExecuteNonQuery(sql) > 0 ? true : false;
             if (res)

@@ -168,7 +168,8 @@ namespace text.doors.Common
             {
                 return 0;
             }
-            double _D = DefaultBase._D;
+            //double _D = DefaultBase._D;
+            double _D = double.Parse(System.Configuration.ConfigurationSettings.AppSettings["PipeDiameter"].ToString());
 
             return Math.Round(3.1415 * _D * _D / 4 * value * 3600, 2);
         }
@@ -190,16 +191,14 @@ namespace text.doors.Common
 
             IndexStitchLengthAndArea res = null;
 
-            if (zy_q10 > 0 && fy_q10 > 0)
+            res = new IndexStitchLengthAndArea()
             {
-                res = new IndexStitchLengthAndArea()
-                {
-                    ZY_FC = Math.Round(zy_q10 / fc, 2),
-                    ZY_MJ = Math.Round(zy_q10 / mj, 2),
-                    FY_FC = Math.Round(fy_q10 / fc, 2),
-                    FY_MJ = Math.Round(fy_q10 / mj, 2)
-                };
-            }
+                ZY_FC = double.IsNaN(zy_q10) ? 0 : Math.Round(zy_q10 / fc, 2),
+                ZY_MJ = double.IsNaN(zy_q10) ? 0 : Math.Round(zy_q10 / mj, 2),
+                FY_FC = double.IsNaN(fy_q10) ? 0 : Math.Round(fy_q10 / fc, 2),
+                FY_MJ = double.IsNaN(fy_q10) ? 0 : Math.Round(fy_q10 / mj, 2)
+            };
+
             return res;
         }
 
@@ -265,7 +264,7 @@ namespace text.doors.Common
             //正压
             double _z_a = 0;
             double _z_b = 0;
-            var z_point = windPressureDGV.FindAll(t => t.PaValue > 0).Select(t => new text.doors.Model.Point() { X = t.PaValue, Y = t.zzd }).ToList();
+            var z_point = windPressureDGV.FindAll(t => t.zzd > 0).Select(t => new text.doors.Model.Point() { X = t.PaValue, Y = t.zzd }).ToList();
             var z_isSuccess = Formula.LinearRegression(z_point, ref _z_a, ref _z_b, ref errorMsg);
             if (z_isSuccess)
             {
@@ -281,7 +280,7 @@ namespace text.doors.Common
             double _f_a = 0;
             double _f_b = 0;
 
-            var f_point = windPressureDGV.FindAll(t => t.PaValue > 0).Select(t => new text.doors.Model.Point() { X = t.PaValue, Y = t.zzd }).ToList();
+            var f_point = windPressureDGV.FindAll(t => t.fzd > 0).Select(t => new text.doors.Model.Point() { X = t.PaValue, Y = t.fzd }).ToList();
             var f_isSuccess = Formula.LinearRegression(f_point, ref _f_a, ref _f_b, ref errorMsg);
             if (f_isSuccess)
             {
@@ -312,6 +311,10 @@ namespace text.doors.Common
             double averagex = 0, averagey = 0;
             foreach (text.doors.Model.Point p in parray)
             {
+                if (double.IsNaN(p.Y))
+                {
+                    return false;
+                }
                 averagex += p.X;
                 averagey += p.Y;
             }

@@ -257,6 +257,7 @@ namespace text.doors.dal
                     model.sjz_z_zd = item["sjz_z_zd"]?.ToString();
                     model.sjz_f_zd = item["sjz_f_zd"]?.ToString();
                     model.sjz_f_fj = item["sjz_f_fj"]?.ToString();
+                    model.sjz_value = item["sjz_value"]?.ToString();
 
 
                     list.Add(model);

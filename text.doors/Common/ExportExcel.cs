@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using text.doors.dal;
 using text.doors.Model;
 using text.doors.Model.DataBase;
+using text.doors.Service;
 
 namespace text.doors.Common
 {
@@ -1462,6 +1463,68 @@ namespace text.doors.Common
             ws.GetRow(3).GetCell(1).SetCellValue("");
             ws.GetRow(3).GetCell(4).SetCellValue("");
             ws.GetRow(3).GetCell(11).SetCellValue("");
+
+            var databaseDefPa = 250;
+
+            DataTable kfy_Info1 = new DAL_dt_kfy_Info().GetkfyByCodeAndTong(_tempCode, "第1樘");
+
+            if (kfy_Info1 != null && kfy_Info1.Rows.Count > 0)
+            {
+                var dr1 = kfy_Info1.Rows[0];
+                var jc = int.Parse(dr1["defJC"].ToString());
+
+                for (int i = 1; i < 9; i++)
+                {
+                    ws.GetRow(i + 6).GetCell(0).SetCellValue(jc * i);
+                    ws.GetRow(i + 6).GetCell(1).SetCellValue(dr1["z_one_" + (databaseDefPa * i)].ToString());
+                    ws.GetRow(i + 6).GetCell(2).SetCellValue(dr1["z_two_" + (databaseDefPa * i)].ToString());
+                    ws.GetRow(i + 6).GetCell(3).SetCellValue(dr1["z_three_" + (databaseDefPa * i)].ToString());
+                    ws.GetRow(i + 6).GetCell(4).SetCellValue(dr1["z_nd_" + (databaseDefPa * i)].ToString());
+
+                    ws.GetRow(i + 33).GetCell(0).SetCellValue(-(jc * i));
+                    ws.GetRow(i + 33).GetCell(1).SetCellValue(dr1["f_one_" + (databaseDefPa * i)].ToString());
+                    ws.GetRow(i + 33).GetCell(2).SetCellValue(dr1["f_two_" + (databaseDefPa * i)].ToString());
+                    ws.GetRow(i + 33).GetCell(3).SetCellValue(dr1["f_three_" + (databaseDefPa * i)].ToString());
+                    ws.GetRow(i + 33).GetCell(4).SetCellValue(dr1["f_nd_" + (databaseDefPa * i)].ToString());
+                }
+            }
+
+            DataTable kfy_Info2 = new DAL_dt_kfy_Info().GetkfyByCodeAndTong(_tempCode, "第2樘");
+            if (kfy_Info2 != null && kfy_Info2.Rows.Count > 0)
+            {
+                var dr2 = kfy_Info2.Rows[0];
+                for (int i = 1; i < 9; i++)
+                {
+                    ws.GetRow(i + 6).GetCell(5).SetCellValue(dr2["z_one_" + (databaseDefPa * i)].ToString());
+                    ws.GetRow(i + 6).GetCell(6).SetCellValue(dr2["z_two_" + (databaseDefPa * i)].ToString());
+                    ws.GetRow(i + 6).GetCell(7).SetCellValue(dr2["z_three_" + (databaseDefPa * i)].ToString());
+                    ws.GetRow(i + 6).GetCell(8).SetCellValue(dr2["z_nd_" + (databaseDefPa * i)].ToString());
+
+                    ws.GetRow(i + 33).GetCell(5).SetCellValue(dr2["f_one_" + (databaseDefPa * i)].ToString());
+                    ws.GetRow(i + 33).GetCell(6).SetCellValue(dr2["f_two_" + (databaseDefPa * i)].ToString());
+                    ws.GetRow(i + 33).GetCell(7).SetCellValue(dr2["f_three_" + (databaseDefPa * i)].ToString());
+                    ws.GetRow(i + 33).GetCell(8).SetCellValue(dr2["f_nd_" + (databaseDefPa * i)].ToString());
+                }
+            }
+
+            DataTable kfy_Info3 = new DAL_dt_kfy_Info().GetkfyByCodeAndTong(_tempCode, "第3樘");
+            if (kfy_Info3 != null && kfy_Info3.Rows.Count > 0)
+            {
+                var dr3 = kfy_Info3.Rows[0];
+                for (int i = 1; i < 9; i++)
+                {
+                    ws.GetRow(i + 6).GetCell(9).SetCellValue(dr3["z_one_" + (databaseDefPa * i)].ToString());
+                    ws.GetRow(i + 6).GetCell(10).SetCellValue(dr3["z_two_" + (databaseDefPa * i)].ToString());
+                    ws.GetRow(i + 6).GetCell(11).SetCellValue(dr3["z_three_" + (databaseDefPa * i)].ToString());
+                    ws.GetRow(i + 6).GetCell(12).SetCellValue(dr3["z_nd_" + (databaseDefPa * i)].ToString());
+
+                    ws.GetRow(i + 33).GetCell(9).SetCellValue(dr3["f_one_" + (databaseDefPa * i)].ToString());
+                    ws.GetRow(i + 33).GetCell(10).SetCellValue(dr3["f_two_" + (databaseDefPa * i)].ToString());
+                    ws.GetRow(i + 33).GetCell(11).SetCellValue(dr3["f_three_" + (databaseDefPa * i)].ToString());
+                    ws.GetRow(i + 33).GetCell(12).SetCellValue(dr3["f_nd_" + (databaseDefPa * i)].ToString());
+                }
+            }
+
             #endregion
 
             ws.ForceFormulaRecalculation = true;
