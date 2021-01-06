@@ -47,7 +47,6 @@ namespace text.doors.Detection
                 return;
             }
             double res = 0;
-            bool IsSuccess = false;
             ListViewItem lvi = new ListViewItem();
 
             if (name == "风速传感器      米/秒")
@@ -56,7 +55,7 @@ namespace text.doors.Detection
             }
             if (name == "差压传感器      高 帕")
             {
-                res = _serialPortClient.GetCYGXS();
+                res = _serialPortClient.GetCY_High();
             }
             if (name == "温度传感器      ℃")
             {

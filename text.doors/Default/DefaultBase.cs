@@ -13,6 +13,8 @@ namespace text.doors.Default
     public static class DefaultBase
     {
         #region --系统默认
+
+        public static bool isRelease = false;
         /// <summary>
         /// 是否打开审核页面
         /// </summary>
@@ -36,12 +38,16 @@ namespace text.doors.Default
         /// </summary>
         public static bool LockPoint = false;
 
-        // public static bool IsSerialPortLink = false;
-
         /// <summary>
         /// 杆件长度
         /// </summary>
         public static int BarLength = 0;
+
+
+
+
+
+
         public static PublicEnum.DetectionItem? _TestItem
         {
             get
@@ -76,10 +82,6 @@ namespace text.doors.Default
                 return res;
             }
         }
-        /// <summary>
-        /// 导入图片名称
-        /// </summary>
-        public static string ImagesName = "";
 
         /// <summary>
         /// 气密、水密等级字典
@@ -90,53 +92,75 @@ namespace text.doors.Default
         };
         #endregion
 
+        /// <summary>
+        /// 导入图片名称
+        /// </summary>
+        public static string ImagesName = "";
 
         #region  IP相关
-        /// <summary>
-        /// IP端口
-        /// </summary>
-        public static int TCPPort
-        {
-            get
-            {
-                var res = 502;
-                var dt = new DAL_dt_BaseSet().GetSystemBaseSet();
-                if (dt != null)
-                    res = int.Parse(dt.Rows[0]["PROT"].ToString());
-                return res;
-            }
-        }
-        /// <summary>
-        /// IP地址
-        /// </summary>
-        public static string IPAddress
-        {
-            get
-            {
-                var res = "192.168.2.5";
+        /* /// <summary>
+         /// IP端口
+         /// </summary>
+         public static int TCPPort
+         {
+             get
+             {
+                 var res = 502;
+                 var dt = new DAL_dt_BaseSet().GetSystemBaseSet();
+                 if (dt != null)
+                     res = int.Parse(dt.Rows[0]["PROT"].ToString());
+                 return res;
+             }
+         }
+         /// <summary>
+         /// IP地址
+         /// </summary>
+         public static string IPAddress
+         {
+             get
+             {
+                 var res = "192.168.2.5";
 
-                var dt = new DAL_dt_BaseSet().GetSystemBaseSet();
-                if (dt != null)
-                    res = dt.Rows[0]["IP"].ToString();
-                return res;
-            }
-        }
+                 var dt = new DAL_dt_BaseSet().GetSystemBaseSet();
+                 if (dt != null)
+                     res = dt.Rows[0]["IP"].ToString();
+                 return res;
+             }
+         }
 
-        /// <summary>
-        /// IP地址
-        /// </summary>
-        public static double _D
-        {
-            get
-            {
-                var res = 0.08;
-                var dt = new DAL_dt_BaseSet().GetSystemBaseSet();
-                if (dt != null)
-                    res = Convert.ToDouble(dt.Rows[0]["D"].ToString());
-                return res;
-            }
-        }
+         /// <summary>
+         /// IP地址
+         /// </summary>
+         public static double _D
+         {
+             get
+             {
+                 var res = 0.08;
+                 var dt = new DAL_dt_BaseSet().GetSystemBaseSet();
+                 if (dt != null)
+                     res = Convert.ToDouble(dt.Rows[0]["D"].ToString());
+                 return res;
+             }
+         }*/
 
         #endregion
     }
+
+
+    //public static class RegisterData
+    //{
+    //    public static double Displace1 = 0;
+    //    public static double Displace2 = 0;
+    //    public static double Displace3 = 0;
+    //    //差压高
+    //    public static int CY_High_Value = 0;
+    //    //差压低        
+    //    public static int CY_Low_Value = 0;
+    //    //风速
+    //    public static double WindSpeed_Value = 0;
+    //    //大气压力
+    //    public static double AtmospherePa_Value = 0;
+    //    //温度
+    //    public static double Temperature_Value = 0;
+    //}
 }

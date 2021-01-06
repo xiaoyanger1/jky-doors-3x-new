@@ -117,6 +117,7 @@
             this.btn_gyZero = new System.Windows.Forms.Button();
             this.pl_showItem = new System.Windows.Forms.Panel();
             this.tim_panelValue = new System.Windows.Forms.Timer(this.components);
+            this.tim_getdate = new System.Windows.Forms.Timer(this.components);
             this.ssp_button.SuspendLayout();
             this.pl_top.SuspendLayout();
             this.ts_pic.SuspendLayout();
@@ -396,7 +397,7 @@
             // toolStripMenuItem4
             // 
             this.toolStripMenuItem4.Name = "toolStripMenuItem4";
-            this.toolStripMenuItem4.Size = new System.Drawing.Size(180, 22);
+            this.toolStripMenuItem4.Size = new System.Drawing.Size(124, 22);
             this.toolStripMenuItem4.Text = "综合评定";
             this.toolStripMenuItem4.Click += new System.EventHandler(this.toolStripMenuItem4_Click);
             // 
@@ -416,40 +417,40 @@
             // tsm_sensorSet
             // 
             this.tsm_sensorSet.Name = "tsm_sensorSet";
-            this.tsm_sensorSet.Size = new System.Drawing.Size(180, 22);
+            this.tsm_sensorSet.Size = new System.Drawing.Size(136, 22);
             this.tsm_sensorSet.Text = "传感器标定";
             this.tsm_sensorSet.Click += new System.EventHandler(this.tsm_sensorSet_Click);
             // 
             // toolStripMenuItem3
             // 
             this.toolStripMenuItem3.Name = "toolStripMenuItem3";
-            this.toolStripMenuItem3.Size = new System.Drawing.Size(180, 22);
+            this.toolStripMenuItem3.Size = new System.Drawing.Size(136, 22);
             this.toolStripMenuItem3.Text = "系统设置";
             this.toolStripMenuItem3.Click += new System.EventHandler(this.toolStripMenuItem3_Click);
             // 
             // toolStripSeparator4
             // 
             this.toolStripSeparator4.Name = "toolStripSeparator4";
-            this.toolStripSeparator4.Size = new System.Drawing.Size(177, 6);
+            this.toolStripSeparator4.Size = new System.Drawing.Size(133, 6);
             // 
             // tsm_UpdatePassWord
             // 
             this.tsm_UpdatePassWord.Name = "tsm_UpdatePassWord";
-            this.tsm_UpdatePassWord.Size = new System.Drawing.Size(180, 22);
+            this.tsm_UpdatePassWord.Size = new System.Drawing.Size(136, 22);
             this.tsm_UpdatePassWord.Text = "修改密码";
             this.tsm_UpdatePassWord.Click += new System.EventHandler(this.tsm_UpdatePassWord_Click);
             // 
             // tsm_close
             // 
             this.tsm_close.Name = "tsm_close";
-            this.tsm_close.Size = new System.Drawing.Size(180, 22);
+            this.tsm_close.Size = new System.Drawing.Size(136, 22);
             this.tsm_close.Text = "关闭系统";
             this.tsm_close.Click += new System.EventHandler(this.tsm_close_Click);
             // 
             // pID设定ToolStripMenuItem
             // 
             this.pID设定ToolStripMenuItem.Name = "pID设定ToolStripMenuItem";
-            this.pID设定ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.pID设定ToolStripMenuItem.Size = new System.Drawing.Size(136, 22);
             this.pID设定ToolStripMenuItem.Text = "PID设定";
             this.pID设定ToolStripMenuItem.Click += new System.EventHandler(this.pID设定ToolStripMenuItem_Click);
             // 
@@ -974,6 +975,12 @@
             this.tim_panelValue.Interval = 1000;
             this.tim_panelValue.Tick += new System.EventHandler(this.tim_panelValue_Tick);
             // 
+            // tim_getdate
+            // 
+            this.tim_getdate.Enabled = true;
+            this.tim_getdate.Interval = 500;
+            this.tim_getdate.Tick += new System.EventHandler(this.tim_getdate_Tick);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -1102,5 +1109,6 @@
         private System.Windows.Forms.Label label19;
         private System.Windows.Forms.Label label20;
         private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.Timer tim_getdate;
     }
 }

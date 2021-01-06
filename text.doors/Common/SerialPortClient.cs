@@ -24,7 +24,7 @@ namespace text.doors.Common
         public static string _slaveID = System.Configuration.ConfigurationSettings.AppSettings["SlaveID"].ToString();
 
         public ModbusSerialMaster _MASTER;
-        private static Object syncLock = new Object();
+        private static readonly Object syncLock = new Object();
 
         private ushort _StartAddress = 0;
         private ushort _NumOfPoints = 1;
@@ -100,13 +100,12 @@ namespace text.doors.Common
             {
                 if (sp.IsOpen)
                 {
-                    //var res = SendZYF();
-                    //if (!res)
-                    //    return false;
-
-                    _StartAddress = BFMCommand.GetCommandDict(BFMCommand.正压预备);
-                    _MASTER.WriteSingleCoil(this._SlaveID, _StartAddress, false);
-                    _MASTER.WriteSingleCoil(this._SlaveID, _StartAddress, true);
+                    lock (syncLock)
+                    {
+                        _StartAddress = BFMCommand.GetCommandDict(BFMCommand.正压预备);
+                        _MASTER.WriteSingleCoil(this._SlaveID, _StartAddress, false);
+                        _MASTER.WriteSingleCoil(this._SlaveID, _StartAddress, true);
+                    }
                 }
             }
             catch (Exception ex)
@@ -127,9 +126,12 @@ namespace text.doors.Common
             {
                 if (sp.IsOpen)
                 {
-                    _StartAddress = BFMCommand.GetCommandDict(BFMCommand.正压预备结束);
-                    ushort[] holding_register = _MASTER.ReadHoldingRegisters(_SlaveID, _StartAddress, _NumOfPoints);
-                    res = int.Parse(holding_register[0].ToString());
+                    lock (syncLock)
+                    {
+                        _StartAddress = BFMCommand.GetCommandDict(BFMCommand.正压预备结束);
+                        ushort[] holding_register = _MASTER.ReadHoldingRegisters(_SlaveID, _StartAddress, _NumOfPoints);
+                        res = int.Parse(holding_register[0].ToString());
+                    }
                 }
             }
             catch (Exception ex)
@@ -141,27 +143,26 @@ namespace text.doors.Common
         /// <summary>
         /// 发送正压开始
         /// </summary>
-        public void SendZYKS()
+        public bool SendZYKS()
         {
-            //try
-            //{
-            //var res = SendZYF();
-            //if (!res)
-            //{
-            //    return false;
-            //}
-            if (sp.IsOpen)
+            try
             {
-                _StartAddress = BFMCommand.GetCommandDict(BFMCommand.正压开始);
-                _MASTER.WriteSingleCoil(_SlaveID, _StartAddress, false);
-                _MASTER.WriteSingleCoil(_SlaveID, _StartAddress, true);
+
+                if (sp.IsOpen)
+                {
+                    lock (syncLock)
+                    {
+                        _StartAddress = BFMCommand.GetCommandDict(BFMCommand.正压开始);
+                        _MASTER.WriteSingleCoil(_SlaveID, _StartAddress, false);
+                        _MASTER.WriteSingleCoil(_SlaveID, _StartAddress, true);
+                    }
+                }
             }
-            //}
-            //catch (Exception ex)
-            //{
-            //    return false;
-            //}
-            //return true;
+            catch (Exception ex)
+            {
+                return false;
+            }
+            return true;
         }
 
 
@@ -176,9 +177,12 @@ namespace text.doors.Common
             {
                 if (sp.IsOpen)
                 {
-                    _StartAddress = BFMCommand.GetCommandDict(BFMCommand.正压开始结束);
-                    ushort[] holding_register = _MASTER.ReadHoldingRegisters(_SlaveID, _StartAddress, _NumOfPoints);
-                    res = double.Parse(holding_register[0].ToString());
+                    lock (syncLock)
+                    {
+                        _StartAddress = BFMCommand.GetCommandDict(BFMCommand.正压开始结束);
+                        ushort[] holding_register = _MASTER.ReadHoldingRegisters(_SlaveID, _StartAddress, _NumOfPoints);
+                        res = double.Parse(holding_register[0].ToString());
+                    }
                 }
             }
             catch (Exception ex)
@@ -197,15 +201,12 @@ namespace text.doors.Common
             {
                 if (sp.IsOpen)
                 {
-                    //var res = SendFYF();
-                    //if (!res)
-                    //{
-                    //    return false;
-                    //}
-
-                    _StartAddress = BFMCommand.GetCommandDict(BFMCommand.负压预备);
-                    _MASTER.WriteSingleCoil(this._SlaveID, _StartAddress, false);
-                    _MASTER.WriteSingleCoil(this._SlaveID, _StartAddress, true);
+                    lock (syncLock)
+                    {
+                        _StartAddress = BFMCommand.GetCommandDict(BFMCommand.负压预备);
+                        _MASTER.WriteSingleCoil(this._SlaveID, _StartAddress, false);
+                        _MASTER.WriteSingleCoil(this._SlaveID, _StartAddress, true);
+                    }
                 }
 
             }
@@ -219,14 +220,25 @@ namespace text.doors.Common
         /// <summary>
         /// 发送负压开始
         /// </summary>
-        public void SendFYKS()
+        public bool SendFYKS()
         {
             if (sp.IsOpen)
             {
-                _StartAddress = BFMCommand.GetCommandDict(BFMCommand.负压开始);
-                _MASTER.WriteSingleCoil(_SlaveID, _StartAddress, false);
-                _MASTER.WriteSingleCoil(_SlaveID, _StartAddress, true);
+                try
+                {
+                    lock (syncLock)
+                    {
+                        _StartAddress = BFMCommand.GetCommandDict(BFMCommand.负压开始);
+                        _MASTER.WriteSingleCoil(_SlaveID, _StartAddress, false);
+                        _MASTER.WriteSingleCoil(_SlaveID, _StartAddress, true);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    return false;
+                }
             }
+            return true;
         }
 
 
@@ -242,9 +254,12 @@ namespace text.doors.Common
             {
                 if (sp.IsOpen)
                 {
-                    _StartAddress = BFMCommand.GetCommandDict(BFMCommand.负压预备结束);
-                    ushort[] holding_register = _MASTER.ReadHoldingRegisters(_SlaveID, _StartAddress, _NumOfPoints);
-                    res = int.Parse(holding_register[0].ToString());
+                    lock (syncLock)
+                    {
+                        _StartAddress = BFMCommand.GetCommandDict(BFMCommand.负压预备结束);
+                        ushort[] holding_register = _MASTER.ReadHoldingRegisters(_SlaveID, _StartAddress, _NumOfPoints);
+                        res = int.Parse(holding_register[0].ToString());
+                    }
                 }
             }
             catch (Exception ex)
@@ -262,9 +277,12 @@ namespace text.doors.Common
             double res = 0;
             if (sp.IsOpen)
             {
-                _StartAddress = BFMCommand.GetCommandDict(BFMCommand.负压开始结束);
-                ushort[] holding_register = _MASTER.ReadHoldingRegisters(_SlaveID, _StartAddress, _NumOfPoints);
-                res = double.Parse(holding_register[0].ToString());
+                lock (syncLock)
+                {
+                    _StartAddress = BFMCommand.GetCommandDict(BFMCommand.负压开始结束);
+                    ushort[] holding_register = _MASTER.ReadHoldingRegisters(_SlaveID, _StartAddress, _NumOfPoints);
+                    res = double.Parse(holding_register[0].ToString());
+                }
             }
             return res;
         }
@@ -280,25 +298,28 @@ namespace text.doors.Common
 
             if (sp.IsOpen)
             {
-                if (type == "ZYYB")
+                lock (syncLock)
                 {
-                    _StartAddress = BFMCommand.GetCommandDict(BFMCommand.正压预备_设定值);
-                }
-                else if (type == "ZYKS")
-                {
-                    _StartAddress = BFMCommand.GetCommandDict(BFMCommand.正压开始_设定值);
-                }
-                else if (type == "FYYB")
-                {
-                    _StartAddress = BFMCommand.GetCommandDict(BFMCommand.负压预备_设定值);
-                }
-                else if (type == "FYKS")
-                {
-                    _StartAddress = BFMCommand.GetCommandDict(BFMCommand.负压开始_设定值);
-                }
+                    if (type == "ZYYB")
+                    {
+                        _StartAddress = BFMCommand.GetCommandDict(BFMCommand.正压预备_设定值);
+                    }
+                    else if (type == "ZYKS")
+                    {
+                        _StartAddress = BFMCommand.GetCommandDict(BFMCommand.正压开始_设定值);
+                    }
+                    else if (type == "FYYB")
+                    {
+                        _StartAddress = BFMCommand.GetCommandDict(BFMCommand.负压预备_设定值);
+                    }
+                    else if (type == "FYKS")
+                    {
+                        _StartAddress = BFMCommand.GetCommandDict(BFMCommand.负压开始_设定值);
+                    }
 
-                ushort[] holding_register = _MASTER.ReadHoldingRegisters(_SlaveID, _StartAddress, _NumOfPoints);
-                res = double.Parse((double.Parse(holding_register[0].ToString())).ToString());
+                    ushort[] holding_register = _MASTER.ReadHoldingRegisters(_SlaveID, _StartAddress, _NumOfPoints);
+                    res = double.Parse((double.Parse(holding_register[0].ToString())).ToString());
+                }
             }
 
             return res;
@@ -315,183 +336,19 @@ namespace text.doors.Common
         {
             if (sp.IsOpen)
             {
-                _StartAddress = BFMCommand.GetCommandDict(key);
-                ushort[] t = _MASTER.ReadHoldingRegisters(_SlaveID, _StartAddress, _NumOfPoints);
-                if (Convert.ToInt32(t[0]) > 5)
-                    return true;
-                else
-                    return false;
+                lock (syncLock)
+                {
+                    _StartAddress = BFMCommand.GetCommandDict(key);
+                    ushort[] t = _MASTER.ReadHoldingRegisters(_SlaveID, _StartAddress, _NumOfPoints);
+                    if (Convert.ToInt32(t[0]) > 5)
+                        return true;
+                    else
+                        return false;
+                }
             }
             return false;
         }
 
-
-
-
-
-        ///// <summary>
-        ///// 获取正压100Pa是否开始计时
-        ///// </summary>
-        //public bool Get_Z_S100TimeStart()
-        //{
-        //    if (!IsSerialPortLink)
-        //        return false;
-        //    try
-        //    {
-        //      
-        //        {
-        //            _StartAddress = BFMCommand.GetCommandDict(BFMCommand.正压100TimeStart);
-        //            ushort[] t = _MASTER.ReadHoldingRegisters(_SlaveID, _StartAddress, _NumOfPoints);
-        //            if (Convert.ToInt32(t[0]) > 20)
-        //                return true;
-        //            else
-        //                return false;
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        IsSerialPortLink = false;
-        //     
-        //        return false;
-        //    }
-        //}
-
-        ///// <summary>
-        ///// 获取正压150Pa是否开始计时
-        ///// </summary>
-        //public bool Get_Z_S150PaTimeStart()
-        //{
-        //    if (!IsSerialPortLink)
-        //        return false;
-        //    try
-        //    {
-        //      
-        //        {
-        //            _StartAddress = BFMCommand.GetCommandDict(BFMCommand.正压150TimeStart);
-        //            ushort[] t = _MASTER.ReadHoldingRegisters(_SlaveID, _StartAddress, _NumOfPoints);
-        //            if (Convert.ToInt32(t[0]) > 20)
-        //                return true;
-        //            else
-        //                return false;
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        IsSerialPortLink = false;
-        //     
-        //        return false;
-        //    }
-        //}
-
-        ///// <summary>
-        ///// 获取降压100Pa是否开始计时
-        ///// </summary>
-        //public bool Get_Z_J100PaTimeStart()
-        //{
-        //    if (!IsSerialPortLink)
-        //        return false;
-        //    try
-        //    {
-        //      
-        //        {
-        //            _StartAddress = BFMCommand.GetCommandDict(BFMCommand.正压_100TimeStart);
-        //            ushort[] t = _MASTER.ReadHoldingRegisters(_SlaveID, _StartAddress, _NumOfPoints);
-        //            if (Convert.ToInt32(t[0]) > 20)
-        //                return true;
-        //            else
-        //                return false;
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        IsSerialPortLink = false;
-        //     
-        //        return false;
-        //    }
-        //}
-
-        ///// <summary>
-        ///// 获取负压100Pa是否开始计时
-        ///// </summary>
-        //public bool Get_F_S100PaTimeStart()
-        //{
-        //    if (!IsSerialPortLink)
-        //        return false;
-
-        //    try
-        //    {
-        //      
-        //        {
-        //            _StartAddress = BFMCommand.GetCommandDict(BFMCommand.负压100TimeStart);
-        //            ushort[] t = _MASTER.ReadHoldingRegisters(_SlaveID, _StartAddress, _NumOfPoints);
-        //            if (Convert.ToInt32(t[0]) > 20)
-        //                return true;
-        //            else
-        //                return false;
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        IsSerialPortLink = false;
-        //     
-        //        return false;
-        //    }
-        //}
-
-        ///// <summary>
-        ///// 获取负压150Pa是否开始计时
-        ///// </summary>
-        //public bool Get_F_S150PaTimeStart()
-        //{
-        //    if (!IsSerialPortLink)
-        //        return false;
-
-        //    try
-        //    {
-        //      
-        //        {
-        //            _StartAddress = BFMCommand.GetCommandDict(BFMCommand.负压150TimeStart);
-        //            ushort[] t = _MASTER.ReadHoldingRegisters(_SlaveID, _StartAddress, _NumOfPoints);
-        //            if (Convert.ToInt32(t[0]) > 20)
-        //                return true;
-        //            else
-        //                return false;
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        IsSerialPortLink = false;
-        //     
-        //        return false;
-        //    }
-        //}
-
-        ///// <summary>
-        ///// 获取负压降100Pa是否开始计时
-        ///// </summary>
-        //public bool Get_F_J100PaTimeStart()
-        //{
-        //    if (!IsSerialPortLink)
-        //        return false;
-        //    try
-        //    {
-        //      
-        //        {
-        //            _StartAddress = BFMCommand.GetCommandDict(BFMCommand.负压_100TimeStart);
-        //            ushort[] t = _MASTER.ReadHoldingRegisters(_SlaveID, _StartAddress, _NumOfPoints);
-        //            if (Convert.ToInt32(t[0]) > 20)
-        //                return true;
-        //            else
-        //                return false;
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        IsSerialPortLink = false;
-        //     
-        //        return false;
-        //    }
-        //}
 
         #endregion
 
@@ -507,14 +364,13 @@ namespace text.doors.Common
             {
                 if (sp.IsOpen)
                 {
-                    var res = SendZYF();
-                    if (!res)
-                        return false;
+                    lock (syncLock)
+                    {
 
-                    _StartAddress = BFMCommand.GetCommandDict(BFMCommand.水密性预备加压);
-                    _MASTER.WriteSingleCoil(this._SlaveID, _StartAddress, false);
-                    _MASTER.WriteSingleCoil(this._SlaveID, _StartAddress, true);
-
+                        _StartAddress = BFMCommand.GetCommandDict(BFMCommand.水密性预备加压);
+                        _MASTER.WriteSingleCoil(this._SlaveID, _StartAddress, false);
+                        _MASTER.WriteSingleCoil(this._SlaveID, _StartAddress, true);
+                    }
                 }
             }
             catch (Exception ex)
@@ -537,10 +393,13 @@ namespace text.doors.Common
             {
                 if (sp.IsOpen)
                 {
-                    _StartAddress = BFMCommand.GetCommandDict(BFMCommand.水密预备结束);
-                    ushort[] holding_register = _MASTER.ReadHoldingRegisters(_SlaveID, _StartAddress, _NumOfPoints);
-                    res = int.Parse(holding_register[0].ToString());
-                    IsSuccess = true;
+                    lock (syncLock)
+                    {
+                        _StartAddress = BFMCommand.GetCommandDict(BFMCommand.水密预备结束);
+                        ushort[] holding_register = _MASTER.ReadHoldingRegisters(_SlaveID, _StartAddress, _NumOfPoints);
+                        res = int.Parse(holding_register[0].ToString());
+                        IsSuccess = true;
+                    }
                 }
             }
             catch (Exception ex)
@@ -562,10 +421,13 @@ namespace text.doors.Common
             {
                 if (sp.IsOpen)
                 {
-                    _StartAddress = BFMCommand.GetCommandDict(BFMCommand.水密预备结束);
-                    ushort[] holding_register = _MASTER.ReadHoldingRegisters(_SlaveID, _StartAddress, _NumOfPoints);
-                    res = int.Parse(holding_register[0].ToString());
-                    IsSuccess = true;
+                    lock (syncLock)
+                    {
+                        _StartAddress = BFMCommand.GetCommandDict(BFMCommand.水密预备结束);
+                        ushort[] holding_register = _MASTER.ReadHoldingRegisters(_SlaveID, _StartAddress, _NumOfPoints);
+                        res = int.Parse(holding_register[0].ToString());
+                        IsSuccess = true;
+                    }
                 }
             }
             catch (Exception ex)
@@ -587,10 +449,13 @@ namespace text.doors.Common
             {
                 if (sp.IsOpen)
                 {
-                    _StartAddress = BFMCommand.GetCommandDict(BFMCommand.水密开始波动结束);
-                    ushort[] holding_register = _MASTER.ReadHoldingRegisters(_SlaveID, _StartAddress, _NumOfPoints);
-                    res = int.Parse(holding_register[0].ToString());
-                    IsSuccess = true;
+                    lock (syncLock)
+                    {
+                        _StartAddress = BFMCommand.GetCommandDict(BFMCommand.水密开始波动结束);
+                        ushort[] holding_register = _MASTER.ReadHoldingRegisters(_SlaveID, _StartAddress, _NumOfPoints);
+                        res = int.Parse(holding_register[0].ToString());
+                        IsSuccess = true;
+                    }
                 }
             }
             catch (Exception ex)
@@ -613,25 +478,28 @@ namespace text.doors.Common
             {
                 if (sp.IsOpen)
                 {
-                    if (type == "SMYB")
+                    lock (syncLock)
                     {
-                        _StartAddress = BFMCommand.GetCommandDict(BFMCommand.水密预备_设定值);
-                    }
-                    else if (type == "SMKS")
-                    {
-                        _StartAddress = BFMCommand.GetCommandDict(BFMCommand.水密开始_设定值);
-                    }
-                    else if (type == "YCJY")
-                    {
-                        _StartAddress = BFMCommand.GetCommandDict(BFMCommand.水密依次加压_设定值);
-                    }
-                    else if (type == "XYJ")
-                    {
-                        _StartAddress = BFMCommand.GetCommandDict(BFMCommand.水密开始_设定值);
-                    }
+                        if (type == "SMYB")
+                        {
+                            _StartAddress = BFMCommand.GetCommandDict(BFMCommand.水密预备_设定值);
+                        }
+                        else if (type == "SMKS")
+                        {
+                            _StartAddress = BFMCommand.GetCommandDict(BFMCommand.水密开始_设定值);
+                        }
+                        else if (type == "YCJY")
+                        {
+                            _StartAddress = BFMCommand.GetCommandDict(BFMCommand.水密依次加压_设定值);
+                        }
+                        else if (type == "XYJ")
+                        {
+                            _StartAddress = BFMCommand.GetCommandDict(BFMCommand.水密开始_设定值);
+                        }
 
-                    ushort[] holding_register = _MASTER.ReadHoldingRegisters(_SlaveID, _StartAddress, _NumOfPoints);
-                    res = int.Parse(holding_register[0].ToString());
+                        ushort[] holding_register = _MASTER.ReadHoldingRegisters(_SlaveID, _StartAddress, _NumOfPoints);
+                        res = int.Parse(holding_register[0].ToString());
+                    }
                     IsSuccess = true;
                 }
             }
@@ -652,13 +520,12 @@ namespace text.doors.Common
             {
                 if (sp.IsOpen)
                 {
-                    //var res = SendZYF();
-                    //if (!res)
-                    //    return false;
-
-                    _StartAddress = BFMCommand.GetCommandDict(BFMCommand.水密性开始);
-                    _MASTER.WriteSingleCoil(_SlaveID, _StartAddress, false);
-                    _MASTER.WriteSingleCoil(_SlaveID, _StartAddress, true);
+                    lock (syncLock)
+                    {
+                        _StartAddress = BFMCommand.GetCommandDict(BFMCommand.水密性开始);
+                        _MASTER.WriteSingleCoil(_SlaveID, _StartAddress, false);
+                        _MASTER.WriteSingleCoil(_SlaveID, _StartAddress, true);
+                    }
                 }
                 return true;
             }
@@ -678,9 +545,12 @@ namespace text.doors.Common
             {
                 if (sp.IsOpen)
                 {
-                    _StartAddress = BFMCommand.GetCommandDict(BFMCommand.下一级);
-                    _MASTER.WriteSingleCoil(_SlaveID, _StartAddress, false);
-                    _MASTER.WriteSingleCoil(_SlaveID, _StartAddress, true);
+                    lock (syncLock)
+                    {
+                        _StartAddress = BFMCommand.GetCommandDict(BFMCommand.下一级);
+                        _MASTER.WriteSingleCoil(_SlaveID, _StartAddress, false);
+                        _MASTER.WriteSingleCoil(_SlaveID, _StartAddress, true);
+                    }
                 }
                 return true;
             }
@@ -701,16 +571,15 @@ namespace text.doors.Common
 
                 if (sp.IsOpen)
                 {
-                    //var res = SendZYF();
-                    //if (!res)
-                    //    return false;
+                    lock (syncLock)
+                    {
+                        _StartAddress = BFMCommand.GetCommandDict(BFMCommand.依次加压数值);
+                        _MASTER.WriteSingleRegister(_SlaveID, _StartAddress, (ushort)(value));
 
-                    _StartAddress = BFMCommand.GetCommandDict(BFMCommand.依次加压数值);
-                    _MASTER.WriteSingleRegister(_SlaveID, _StartAddress, (ushort)(value));
-
-                    _StartAddress = BFMCommand.GetCommandDict(BFMCommand.依次加压);
-                    _MASTER.WriteSingleCoil(this._SlaveID, _StartAddress, false);
-                    _MASTER.WriteSingleCoil(this._SlaveID, _StartAddress, true);
+                        _StartAddress = BFMCommand.GetCommandDict(BFMCommand.依次加压);
+                        _MASTER.WriteSingleCoil(this._SlaveID, _StartAddress, false);
+                        _MASTER.WriteSingleCoil(this._SlaveID, _StartAddress, true);
+                    }
                 }
                 return true;
             }
@@ -731,9 +600,12 @@ namespace text.doors.Common
             {
                 if (sp.IsOpen)
                 {
-                    _StartAddress = BFMCommand.GetCommandDict(BFMCommand.急停);
-                    _MASTER.WriteSingleCoil(this._SlaveID, _StartAddress, true);
-                    _MASTER.WriteSingleCoil(this._SlaveID, _StartAddress, false);
+                    lock (syncLock)
+                    {
+                        _StartAddress = BFMCommand.GetCommandDict(BFMCommand.急停);
+                        _MASTER.WriteSingleCoil(this._SlaveID, _StartAddress, true);
+                        _MASTER.WriteSingleCoil(this._SlaveID, _StartAddress, false);
+                    }
                 }
                 return true;
             }
@@ -754,13 +626,13 @@ namespace text.doors.Common
             {
                 if (sp.IsOpen)
                 {
-                    //var res = SendZYF();
-                    //if (!res)
-                    //    return false;
+                    lock (syncLock)
+                    {
 
-                    _StartAddress = BFMCommand.GetCommandDict(BFMCommand.国标检测波动加压开始);
-                    _MASTER.WriteSingleCoil(_SlaveID, _StartAddress, false);
-                    _MASTER.WriteSingleCoil(_SlaveID, _StartAddress, true);
+                        _StartAddress = BFMCommand.GetCommandDict(BFMCommand.国标检测波动加压开始);
+                        _MASTER.WriteSingleCoil(_SlaveID, _StartAddress, false);
+                        _MASTER.WriteSingleCoil(_SlaveID, _StartAddress, true);
+                    }
                 }
                 return true;
             }
@@ -780,9 +652,12 @@ namespace text.doors.Common
             {
                 if (sp.IsOpen)
                 {
-                    _StartAddress = BFMCommand.GetCommandDict(BFMCommand.工程检测水密性停止加压);
-                    _MASTER.WriteSingleCoil(this._SlaveID, _StartAddress, true);
-                    _MASTER.WriteSingleCoil(this._SlaveID, _StartAddress, false);
+                    lock (syncLock)
+                    {
+                        _StartAddress = BFMCommand.GetCommandDict(BFMCommand.工程检测水密性停止加压);
+                        _MASTER.WriteSingleCoil(this._SlaveID, _StartAddress, true);
+                        _MASTER.WriteSingleCoil(this._SlaveID, _StartAddress, false);
+                    }
                 }
                 return true;
             }
@@ -803,20 +678,20 @@ namespace text.doors.Common
 
                 if (sp.IsOpen)
                 {
-                    //var res = SendZYF();
-                    //if (!res)
-                    //    return false;
+                    lock (syncLock)
+                    {
 
-                    _StartAddress = BFMCommand.GetCommandDict(BFMCommand.上限压力设定);
-                    _MASTER.WriteSingleRegister(_SlaveID, _StartAddress, (ushort)(maxValue));
+                        _StartAddress = BFMCommand.GetCommandDict(BFMCommand.上限压力设定);
+                        _MASTER.WriteSingleRegister(_SlaveID, _StartAddress, (ushort)(maxValue));
 
-                    _StartAddress = BFMCommand.GetCommandDict(BFMCommand.下限压力设定);
-                    _MASTER.WriteSingleRegister(_SlaveID, _StartAddress, (ushort)(minValue));
+                        _StartAddress = BFMCommand.GetCommandDict(BFMCommand.下限压力设定);
+                        _MASTER.WriteSingleRegister(_SlaveID, _StartAddress, (ushort)(minValue));
 
 
-                    _StartAddress = BFMCommand.GetCommandDict(BFMCommand.工程检测水密性波动开始);
-                    _MASTER.WriteSingleCoil(this._SlaveID, _StartAddress, true);
-                    _MASTER.WriteSingleCoil(this._SlaveID, _StartAddress, false);
+                        _StartAddress = BFMCommand.GetCommandDict(BFMCommand.工程检测水密性波动开始);
+                        _MASTER.WriteSingleCoil(this._SlaveID, _StartAddress, true);
+                        _MASTER.WriteSingleCoil(this._SlaveID, _StartAddress, false);
+                    }
                 }
                 return true;
             }
@@ -837,8 +712,11 @@ namespace text.doors.Common
             {
                 if (sp.IsOpen)
                 {
-                    _StartAddress = BFMCommand.GetCommandDict(BFMCommand.国标检测波动加压开始);
-                    _MASTER.WriteSingleCoil(this._SlaveID, _StartAddress, type);
+                    lock (syncLock)
+                    {
+                        _StartAddress = BFMCommand.GetCommandDict(BFMCommand.国标检测波动加压开始);
+                        _MASTER.WriteSingleCoil(this._SlaveID, _StartAddress, type);
+                    }
                 }
             }
             catch (Exception ex)
@@ -861,10 +739,13 @@ namespace text.doors.Common
         public double GetDisplace1()
         {
             double res = 0;
+
             if (sp.IsOpen)
             {
                 try
                 {
+                    //lock (syncLock)
+                    //{
                     _StartAddress = BFMCommand.GetCommandDict(BFMCommand.位移1);
                     ushort[] holding_register = _MASTER.ReadHoldingRegisters(_SlaveID, _StartAddress, _NumOfPoints);
                     if (holding_register.Length > 0)
@@ -872,6 +753,7 @@ namespace text.doors.Common
                         res = double.Parse((double.Parse(holding_register[0].ToString()) / 100).ToString());
                         res = Formula.GetValues(PublicEnum.DemarcateType.位移传感器1, float.Parse(res.ToString()));
                     }
+                    //}
                 }
                 catch (Exception) { }
             }
@@ -888,6 +770,8 @@ namespace text.doors.Common
             {
                 try
                 {
+                    //lock (syncLock)
+                    //{
                     _StartAddress = BFMCommand.GetCommandDict(BFMCommand.位移2);
                     ushort[] holding_register = _MASTER.ReadHoldingRegisters(_SlaveID, _StartAddress, _NumOfPoints);
                     if (holding_register.Length > 0)
@@ -895,6 +779,7 @@ namespace text.doors.Common
                         res = double.Parse((double.Parse(holding_register[0].ToString()) / 100).ToString());
                         res = Formula.GetValues(PublicEnum.DemarcateType.位移传感器2, float.Parse(res.ToString()));
                     }
+                    //}
                 }
                 catch (Exception)
                 { }
@@ -913,12 +798,15 @@ namespace text.doors.Common
             {
                 try
                 {
+                    //lock (syncLock)
+                    //{
                     _StartAddress = BFMCommand.GetCommandDict(BFMCommand.位移3);
                     ushort[] holding_register = _MASTER.ReadHoldingRegisters(_SlaveID, _StartAddress, _NumOfPoints);
                     if (holding_register.Length > 0)
                     {
                         res = double.Parse((double.Parse(holding_register[0].ToString()) / 100).ToString());
                         res = Formula.GetValues(PublicEnum.DemarcateType.位移传感器3, float.Parse(res.ToString()));
+                        //}
                     }
                 }
                 catch (Exception) { }
@@ -929,43 +817,51 @@ namespace text.doors.Common
         /// <summary>
         /// 设置位移归零
         /// </summary>
-        public bool SendWYGL(bool logon = false)
+        public bool SendWYGL()
         {
             try
             {
                 if (sp.IsOpen)
                 {
+                    //lock (syncLock)
+                    //{
                     _StartAddress = BFMCommand.GetCommandDict(BFMCommand.位移1标零);
                     bool[] readCoils = _MASTER.ReadCoils(_SlaveID, _StartAddress, _NumOfPoints);
                     if (readCoils[0])
                         _MASTER.WriteSingleCoil(this._SlaveID, _StartAddress, false);
                     else
                     {
-                        if (logon == false)
-                        {
-                            _MASTER.WriteSingleCoil(this._SlaveID, _StartAddress, true);
-                        }
+                        _MASTER.WriteSingleCoil(this._SlaveID, _StartAddress, true);
                     }
+                    //}
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex);
+                return false;
+            }
+            return true;
+        }
 
-                    _StartAddress = BFMCommand.GetCommandDict(BFMCommand.位移2标零);
-                    bool[] readCoils2 = _MASTER.ReadCoils(_SlaveID, _StartAddress, _NumOfPoints);
-                    if (readCoils2[0])
-                        _MASTER.WriteSingleCoil(this._SlaveID, _StartAddress, false);
-                    else
-                    {
-                        if (logon == false)
-                        {
-                            _MASTER.WriteSingleCoil(this._SlaveID, _StartAddress, true);
-                        }
-                    }
 
-                    _StartAddress = BFMCommand.GetCommandDict(BFMCommand.位移3标零);
-                    bool[] readCoils3 = _MASTER.ReadCoils(_SlaveID, _StartAddress, _NumOfPoints);
-                    if (readCoils3[0])
-                        _MASTER.WriteSingleCoil(this._SlaveID, _StartAddress, false);
-                    else
+
+        /// <summary>
+        /// 设置位移归零
+        /// </summary>
+        public bool SendWYGL2()
+        {
+            try
+            {
+                if (sp.IsOpen)
+                {
+                    lock (syncLock)
                     {
-                        if (logon == false)
+                        _StartAddress = BFMCommand.GetCommandDict(BFMCommand.位移2标零);
+                        bool[] readCoils2 = _MASTER.ReadCoils(_SlaveID, _StartAddress, _NumOfPoints);
+                        if (readCoils2[0])
+                            _MASTER.WriteSingleCoil(this._SlaveID, _StartAddress, false);
+                        else
                         {
                             _MASTER.WriteSingleCoil(this._SlaveID, _StartAddress, true);
                         }
@@ -980,6 +876,40 @@ namespace text.doors.Common
             return true;
         }
 
+
+        /// <summary>
+        /// 设置位移归零
+        /// </summary>
+        public bool SendWYGL3()
+        {
+            try
+            {
+                if (sp.IsOpen)
+                {
+                    lock (syncLock)
+                    {
+                        _StartAddress = BFMCommand.GetCommandDict(BFMCommand.位移3标零);
+                        bool[] readCoils3 = _MASTER.ReadCoils(_SlaveID, _StartAddress, _NumOfPoints);
+                        if (readCoils3[0])
+                            _MASTER.WriteSingleCoil(this._SlaveID, _StartAddress, false);
+                        else
+                        {
+                            _MASTER.WriteSingleCoil(this._SlaveID, _StartAddress, true);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+
+                return false;
+            }
+            return true;
+        }
+
+
+
+
         /// <summary>
         /// 设置抗风压正压预备
         /// </summary>
@@ -990,13 +920,12 @@ namespace text.doors.Common
             {
                 if (sp.IsOpen)
                 {
-                    //var res = SendZYF();
-                    //if (!res)
-                    //    return false;
-
-                    _StartAddress = BFMCommand.GetCommandDict(BFMCommand.风压正压预备);
-                    _MASTER.WriteSingleCoil(this._SlaveID, _StartAddress, false);
-                    _MASTER.WriteSingleCoil(this._SlaveID, _StartAddress, true);
+                    lock (syncLock)
+                    {
+                        _StartAddress = BFMCommand.GetCommandDict(BFMCommand.风压正压预备);
+                        _MASTER.WriteSingleCoil(this._SlaveID, _StartAddress, false);
+                        _MASTER.WriteSingleCoil(this._SlaveID, _StartAddress, true);
+                    }
                 }
             }
             catch (Exception ex)
@@ -1016,14 +945,12 @@ namespace text.doors.Common
 
                 if (sp.IsOpen)
                 {
-                    //var res = SendZYF();
-                    //if (!res)
-                    //{
-                    //    return false;
-                    //}
-                    _StartAddress = BFMCommand.GetCommandDict(BFMCommand.风压正压开始);
-                    _MASTER.WriteSingleCoil(_SlaveID, _StartAddress, false);
-                    _MASTER.WriteSingleCoil(_SlaveID, _StartAddress, true);
+                    lock (syncLock)
+                    {
+                        _StartAddress = BFMCommand.GetCommandDict(BFMCommand.风压正压开始);
+                        _MASTER.WriteSingleCoil(_SlaveID, _StartAddress, false);
+                        _MASTER.WriteSingleCoil(_SlaveID, _StartAddress, true);
+                    }
                 }
             }
             catch (Exception ex)
@@ -1044,15 +971,13 @@ namespace text.doors.Common
             {
                 if (sp.IsOpen)
                 {
-                    //var res = SendFYF();
-                    //if (!res)
-                    //{
-                    //    return false;
-                    //}
+                    lock (syncLock)
+                    {
 
-                    _StartAddress = BFMCommand.GetCommandDict(BFMCommand.风压负压预备);
-                    _MASTER.WriteSingleCoil(this._SlaveID, _StartAddress, false);
-                    _MASTER.WriteSingleCoil(this._SlaveID, _StartAddress, true);
+                        _StartAddress = BFMCommand.GetCommandDict(BFMCommand.风压负压预备);
+                        _MASTER.WriteSingleCoil(this._SlaveID, _StartAddress, false);
+                        _MASTER.WriteSingleCoil(this._SlaveID, _StartAddress, true);
+                    }
                 }
 
             }
@@ -1072,14 +997,12 @@ namespace text.doors.Common
             {
                 if (sp.IsOpen)
                 {
-                    //var res = SendFYF();
-                    //if (!res)
-                    //{
-                    //    return false;
-                    //}
-                    _StartAddress = BFMCommand.GetCommandDict(BFMCommand.风压负压开始);
-                    _MASTER.WriteSingleCoil(_SlaveID, _StartAddress, false);
-                    _MASTER.WriteSingleCoil(_SlaveID, _StartAddress, true);
+                    lock (syncLock)
+                    {
+                        _StartAddress = BFMCommand.GetCommandDict(BFMCommand.风压负压开始);
+                        _MASTER.WriteSingleCoil(_SlaveID, _StartAddress, false);
+                        _MASTER.WriteSingleCoil(_SlaveID, _StartAddress, true);
+                    }
                 }
             }
             catch (Exception ex)
@@ -1101,20 +1024,17 @@ namespace text.doors.Common
             {
                 if (sp.IsOpen)
                 {
-                    //{
-                    //    var res = isZ ? SendZYF() : SendFYF();
-                    //    if (!res)
-                    //        return false;
+                    lock (syncLock)
+                    {
+                        _StartAddress = BFMCommand.GetCommandDict(commandValue);
+                        _MASTER.WriteSingleRegister(_SlaveID, _StartAddress, (ushort)(value));
 
-                    _StartAddress = BFMCommand.GetCommandDict(commandValue);
-                    _MASTER.WriteSingleRegister(_SlaveID, _StartAddress, (ushort)(value));
-
-                    _StartAddress = BFMCommand.GetCommandDict(commandStr);
-                    _MASTER.WriteSingleCoil(this._SlaveID, _StartAddress, false);
-                    _MASTER.WriteSingleCoil(this._SlaveID, _StartAddress, true);
+                        _StartAddress = BFMCommand.GetCommandDict(commandStr);
+                        _MASTER.WriteSingleCoil(this._SlaveID, _StartAddress, false);
+                        _MASTER.WriteSingleCoil(this._SlaveID, _StartAddress, true);
+                    }
                 }
                 return true;
-                //}
             }
             catch (Exception ex)
             {
@@ -1135,17 +1055,31 @@ namespace text.doors.Common
             {
                 if (sp.IsOpen)
                 {
-                    _StartAddress = BFMCommand.GetCommandDict(commandStr);
-                    ushort[] t = _MASTER.ReadHoldingRegisters(_SlaveID, _StartAddress, _NumOfPoints);
-                    if (Convert.ToInt32(t[0]) >= 40)
-                        return true;
-                    else
-                        return false;
+                    lock (syncLock)
+                    {
+                        _StartAddress = BFMCommand.GetCommandDict(commandStr);
+                        ushort[] t = _MASTER.ReadHoldingRegisters(_SlaveID, _StartAddress, _NumOfPoints);
+                        if (commandStr == BFMCommand.风压安全_负压是否计时 || commandStr == BFMCommand.风压安全_正压是否计时)
+                        {
+                            if (Convert.ToInt32(t[0]) >= 15)
+                                return true;
+                            else
+                                return false;
+                        }
+                        else
+                        {
+                            if (Convert.ToInt32(t[0]) >= 40)
+                                return true;
+                            else
+                                return false;
+                        }
+                    }
                 }
                 return false;
             }
             catch (Exception ex)
             {
+                Logger.Info(ex);
                 return false;
             }
 
@@ -1163,10 +1097,13 @@ namespace text.doors.Common
             {
                 if (sp.IsOpen)
                 {
-                    _StartAddress = BFMCommand.GetCommandDict(commandStr);
-                    ushort[] holding_register = _MASTER.ReadHoldingRegisters(_SlaveID, _StartAddress, _NumOfPoints);
-                    res = int.Parse(holding_register[0].ToString());
-                    IsSuccess = true;
+                    lock (syncLock)
+                    {
+                        _StartAddress = BFMCommand.GetCommandDict(commandStr);
+                        ushort[] holding_register = _MASTER.ReadHoldingRegisters(_SlaveID, _StartAddress, _NumOfPoints);
+                        res = int.Parse(holding_register[0].ToString());
+                        IsSuccess = true;
+                    }
                 }
             }
             catch (Exception ex)
@@ -1221,8 +1158,11 @@ namespace text.doors.Common
             }
             if (sp.IsOpen)
             {
-                ushort[] holding_register = _MASTER.ReadHoldingRegisters(_SlaveID, _StartAddress, _NumOfPoints);
-                res = double.Parse((double.Parse(holding_register[0].ToString())).ToString());
+                lock (syncLock)
+                {
+                    ushort[] holding_register = _MASTER.ReadHoldingRegisters(_SlaveID, _StartAddress, _NumOfPoints);
+                    res = double.Parse((double.Parse(holding_register[0].ToString())).ToString());
+                }
             }
             return res;
         }
@@ -1239,18 +1179,16 @@ namespace text.doors.Common
             {
                 if (sp.IsOpen)
                 {
-                    //var res = isZ ? SendZYF() : SendFYF();
-                    //if (!res)
-                    //    return false;
-
-                    _StartAddress = BFMCommand.GetCommandDict(commandStr);
-                    _MASTER.WriteSingleCoil(this._SlaveID, _StartAddress, false);
-                    _MASTER.WriteSingleCoil(this._SlaveID, _StartAddress, true);
+                    lock (syncLock)
+                    {
+                        _StartAddress = BFMCommand.GetCommandDict(commandStr);
+                        _MASTER.WriteSingleCoil(this._SlaveID, _StartAddress, false);
+                        _MASTER.WriteSingleCoil(this._SlaveID, _StartAddress, true);
+                    }
                 }
             }
             catch (Exception ex)
             {
-
                 return false;
             }
             return true;
@@ -1270,18 +1208,21 @@ namespace text.doors.Common
             {
                 if (sp.IsOpen)
                 {
-                    _StartAddress = BFMCommand.GetCommandDict(BFMCommand.高压标0_交替型按钮);
-                    bool[] readCoils = _MASTER.ReadCoils(_SlaveID, _StartAddress, _NumOfPoints);
-                    if (readCoils[0])
+                    lock (syncLock)
                     {
-                        _MASTER.WriteSingleCoil(this._SlaveID, _StartAddress, false);
-                        _GaoYaGuiLing = false;
-                    }
-                    else
-                    {
-                        if (logon == false)
-                            _MASTER.WriteSingleCoil(this._SlaveID, _StartAddress, true);
-                        _GaoYaGuiLing = true;
+                        _StartAddress = BFMCommand.GetCommandDict(BFMCommand.高压标0_交替型按钮);
+                        bool[] readCoils = _MASTER.ReadCoils(_SlaveID, _StartAddress, _NumOfPoints);
+                        if (readCoils[0])
+                        {
+                            _MASTER.WriteSingleCoil(this._SlaveID, _StartAddress, false);
+                            _GaoYaGuiLing = false;
+                        }
+                        else
+                        {
+                            if (logon == false)
+                                _MASTER.WriteSingleCoil(this._SlaveID, _StartAddress, true);
+                            _GaoYaGuiLing = true;
+                        }
                     }
                 }
             }
@@ -1301,14 +1242,17 @@ namespace text.doors.Common
             {
                 if (sp.IsOpen)
                 {
-                    _StartAddress = BFMCommand.GetCommandDict(BFMCommand.低压标0_交替型按钮);
-                    bool[] readCoils = _MASTER.ReadCoils(_SlaveID, _StartAddress, _NumOfPoints);
-                    if (readCoils[0])
-                        _MASTER.WriteSingleCoil(this._SlaveID, _StartAddress, false);
-                    else
+                    lock (syncLock)
                     {
-                        if (logon == false)
-                            _MASTER.WriteSingleCoil(this._SlaveID, _StartAddress, true);
+                        _StartAddress = BFMCommand.GetCommandDict(BFMCommand.低压标0_交替型按钮);
+                        bool[] readCoils = _MASTER.ReadCoils(_SlaveID, _StartAddress, _NumOfPoints);
+                        if (readCoils[0])
+                            _MASTER.WriteSingleCoil(this._SlaveID, _StartAddress, false);
+                        else
+                        {
+                            if (logon == false)
+                                _MASTER.WriteSingleCoil(this._SlaveID, _StartAddress, true);
+                        }
                     }
                 }
             }
@@ -1329,11 +1273,13 @@ namespace text.doors.Common
             {
                 if (sp.IsOpen)
                 {
-                    _StartAddress = BFMCommand.GetCommandDict(BFMCommand.开关量控制);
+                    lock (syncLock)
+                    {
+                        _StartAddress = BFMCommand.GetCommandDict(BFMCommand.开关量控制);
 
-                    _MASTER.WriteSingleCoil(this._SlaveID, _StartAddress, true);
-                    _MASTER.WriteSingleCoil(this._SlaveID, _StartAddress, false);
-
+                        _MASTER.WriteSingleCoil(this._SlaveID, _StartAddress, true);
+                        _MASTER.WriteSingleCoil(this._SlaveID, _StartAddress, false);
+                    }
                 }
             }
             catch (Exception ex)
@@ -1349,11 +1295,14 @@ namespace text.doors.Common
         /// </summary>
         public double GetWDXS()
         {
+            // return new Random().Next(50, 100);
             double res = 0;
             if (sp.IsOpen)
             {
                 try
                 {
+                    //lock (syncLock)
+                    //{
                     _StartAddress = BFMCommand.GetCommandDict(BFMCommand.温度显示);
 
                     ushort[] holding_register = _MASTER.ReadHoldingRegisters(_SlaveID, _StartAddress, _NumOfPoints);
@@ -1362,9 +1311,11 @@ namespace text.doors.Common
                         res = double.Parse((double.Parse(holding_register[0].ToString()) / 10).ToString());
                         res = Formula.GetValues(PublicEnum.DemarcateType.温度传感器, float.Parse(res.ToString()));
                     }
+                    //}
                 }
                 catch (Exception ex)
                 { }
+
             }
 
             return res;
@@ -1376,10 +1327,13 @@ namespace text.doors.Common
         public double GetDQYLXS()
         {
             double res = 0;
+
             if (sp.IsOpen)
             {
                 try
                 {
+                    //lock (syncLock)
+                    //{
                     _StartAddress = BFMCommand.GetCommandDict(BFMCommand.大气压力显示);
                     ushort[] holding_register = _MASTER.ReadHoldingRegisters(_SlaveID, _StartAddress, _NumOfPoints);
                     if (holding_register.Length > 0)
@@ -1387,6 +1341,7 @@ namespace text.doors.Common
                         res = double.Parse((double.Parse(holding_register[0].ToString()) / 100).ToString());
                         res = Formula.GetValues(PublicEnum.DemarcateType.大气压力传感器, float.Parse(res.ToString()));
                     }
+                    //}
                 }
                 catch (Exception ex)
                 {
@@ -1401,10 +1356,12 @@ namespace text.doors.Common
         public double GetFSXS()
         {
             double res = 0;
-            try
+            if (sp.IsOpen)
             {
-                if (sp.IsOpen)
+                try
                 {
+                    //lock (syncLock)
+                    //{
                     _StartAddress = BFMCommand.GetCommandDict(BFMCommand.风速显示);
                     ushort[] holding_register = _MASTER.ReadHoldingRegisters(_SlaveID, _StartAddress, _NumOfPoints);
                     if (holding_register.Length > 0)
@@ -1412,9 +1369,10 @@ namespace text.doors.Common
                         var f = double.Parse((double.Parse(holding_register[0].ToString()) / 100).ToString());
                         res = Formula.GetValues(PublicEnum.DemarcateType.风速传感器, float.Parse(f.ToString()));
                     }
+                    //}
                 }
+                catch (Exception ex) { }
             }
-            catch (Exception ex) { }
             return res;
         }
 
@@ -1424,26 +1382,36 @@ namespace text.doors.Common
         /// </summary>
         /// <param name="IsSuccess"></param>
         /// <returns></returns>
-        public int GetCYGXS()
+        public int GetCY_High()
         {
             double res = 0;
+
             if (sp.IsOpen)
             {
-                _StartAddress = BFMCommand.GetCommandDict(BFMCommand.差压高显示);
-
-                ushort[] holding_register = _MASTER.ReadHoldingRegisters(_SlaveID, _StartAddress, _NumOfPoints);
-                if (holding_register.Length > 0)
+                try
                 {
-                    var f = double.Parse(holding_register[0].ToString()); ;
+                    //lock (syncLock)
+                    //{
+                    _StartAddress = BFMCommand.GetCommandDict(BFMCommand.差压高显示);
 
-                    if (int.Parse(holding_register[0].ToString()) > 10000)
-                        f = -(65535 - int.Parse(holding_register[0].ToString()));
-                    else
-                        f = int.Parse(holding_register[0].ToString());
+                    ushort[] holding_register = _MASTER.ReadHoldingRegisters(_SlaveID, _StartAddress, _NumOfPoints);
+                    if (holding_register.Length > 0)
+                    {
+                        var f = double.Parse(holding_register[0].ToString()); ;
 
-                    res = Formula.GetValues(PublicEnum.DemarcateType.差压传感器, float.Parse(f.ToString()));
+                        if (int.Parse(holding_register[0].ToString()) > 10000)
+                            f = -(65535 - int.Parse(holding_register[0].ToString()));
+                        else
+                            f = int.Parse(holding_register[0].ToString());
 
-                    return int.Parse(Math.Round(res, 0).ToString());
+                        res = Formula.GetValues(PublicEnum.DemarcateType.差压传感器, float.Parse(f.ToString()));
+
+                        return int.Parse(Math.Round(res, 0).ToString());
+                    }
+                    //}
+                }
+                catch (Exception ex)
+                {
                 }
             }
             return 0;
@@ -1462,12 +1430,15 @@ namespace text.doors.Common
             {
                 try
                 {
-                    _StartAddress = BFMCommand.GetCommandDict(BFMCommand.改变级差);
-
-                    ushort[] holding_register = _MASTER.ReadHoldingRegisters(_SlaveID, _StartAddress, _NumOfPoints);
-                    if (holding_register.Length > 0)
+                    lock (syncLock)
                     {
-                        res = int.Parse(holding_register[0].ToString());
+                        _StartAddress = BFMCommand.GetCommandDict(BFMCommand.改变级差);
+
+                        ushort[] holding_register = _MASTER.ReadHoldingRegisters(_SlaveID, _StartAddress, _NumOfPoints);
+                        if (holding_register.Length > 0)
+                        {
+                            res = int.Parse(holding_register[0].ToString());
+                        }
                     }
                 }
                 catch (Exception ex)
@@ -1482,13 +1453,15 @@ namespace text.doors.Common
         /// </summary>
         /// <param name="IsSuccess"></param>
         /// <returns></returns>
-        public int GetCYDXS()
+        public int GetCY_Low()
         {
             double res = 0;
             if (sp.IsOpen)
             {
                 try
                 {
+                    //lock (syncLock)
+                    //{
                     _StartAddress = BFMCommand.GetCommandDict(BFMCommand.差压低显示);
 
                     ushort[] holding_register = _MASTER.ReadHoldingRegisters(_SlaveID, _StartAddress, _NumOfPoints);
@@ -1504,6 +1477,7 @@ namespace text.doors.Common
                         f = double.Parse((f / 10).ToString());
                         res = Formula.GetValues(PublicEnum.DemarcateType.差压传感器, float.Parse(f.ToString()));
                         return int.Parse(Math.Round(res, 0).ToString());
+                        //}
                     }
                 }
                 catch (Exception ex) { }
@@ -1521,41 +1495,42 @@ namespace text.doors.Common
             {
                 try
                 {
-
-                    //最小
-                    _StartAddress = BFMCommand.GetCommandDict(BFMCommand.读取设定波动加压Min);
-
-                    ushort[] holding_register = _MASTER.ReadHoldingRegisters(_SlaveID, _StartAddress, _NumOfPoints);
-                    if (holding_register.Length > 0)
+                    lock (syncLock)
                     {
-                        var f = double.Parse(holding_register[0].ToString());
+                        //最小
+                        _StartAddress = BFMCommand.GetCommandDict(BFMCommand.读取设定波动加压Min);
 
-                        if (int.Parse(holding_register[0].ToString()) > 10000)
-                            f = -(65535 - int.Parse(holding_register[0].ToString()));
-                        else
-                            f = int.Parse(holding_register[0].ToString());
+                        ushort[] holding_register = _MASTER.ReadHoldingRegisters(_SlaveID, _StartAddress, _NumOfPoints);
+                        if (holding_register.Length > 0)
+                        {
+                            var f = double.Parse(holding_register[0].ToString());
 
-                        var res = Formula.GetValues(PublicEnum.DemarcateType.差压传感器, float.Parse(f.ToString()));
-                        minVal = int.Parse(Math.Round(res, 0).ToString());
+                            if (int.Parse(holding_register[0].ToString()) > 10000)
+                                f = -(65535 - int.Parse(holding_register[0].ToString()));
+                            else
+                                f = int.Parse(holding_register[0].ToString());
+
+                            var res = Formula.GetValues(PublicEnum.DemarcateType.差压传感器, float.Parse(f.ToString()));
+                            minVal = int.Parse(Math.Round(res, 0).ToString());
+                        }
+
+                        //最大
+                        _StartAddress = BFMCommand.GetCommandDict(BFMCommand.读取设定波动加压Max);
+
+                        ushort[] holding_register1 = _MASTER.ReadHoldingRegisters(_SlaveID, _StartAddress, _NumOfPoints);
+                        if (holding_register1.Length > 0)
+                        {
+                            var f = double.Parse(holding_register1[0].ToString());
+
+                            if (int.Parse(holding_register1[0].ToString()) > 10000)
+                                f = -(65535 - int.Parse(holding_register1[0].ToString()));
+                            else
+                                f = int.Parse(holding_register1[0].ToString());
+
+                            var res = Formula.GetValues(PublicEnum.DemarcateType.差压传感器, float.Parse(f.ToString()));
+                            maxVal = int.Parse(Math.Round(res, 0).ToString());
+                        }
                     }
-
-                    //最大
-                    _StartAddress = BFMCommand.GetCommandDict(BFMCommand.读取设定波动加压Max);
-
-                    ushort[] holding_register1 = _MASTER.ReadHoldingRegisters(_SlaveID, _StartAddress, _NumOfPoints);
-                    if (holding_register1.Length > 0)
-                    {
-                        var f = double.Parse(holding_register1[0].ToString());
-
-                        if (int.Parse(holding_register1[0].ToString()) > 10000)
-                            f = -(65535 - int.Parse(holding_register1[0].ToString()));
-                        else
-                            f = int.Parse(holding_register1[0].ToString());
-
-                        var res = Formula.GetValues(PublicEnum.DemarcateType.差压传感器, float.Parse(f.ToString()));
-                        maxVal = int.Parse(Math.Round(res, 0).ToString());
-                    }
-
                 }
                 catch (Exception ex)
                 {
@@ -1575,8 +1550,11 @@ namespace text.doors.Common
             {
                 if (sp.IsOpen)
                 {
-                    _StartAddress = BFMCommand.GetCommandDict(BFMCommand.风机控制);
-                    _MASTER.WriteSingleRegister(_SlaveID, _StartAddress, (ushort)(value));
+                    lock (syncLock)
+                    {
+                        _StartAddress = BFMCommand.GetCommandDict(BFMCommand.风机控制);
+                        _MASTER.WriteSingleRegister(_SlaveID, _StartAddress, (ushort)(value));
+                    }
                 }
             }
             catch (Exception ex)
@@ -1598,10 +1576,13 @@ namespace text.doors.Common
             {
                 if (sp.IsOpen)
                 {
-                    _StartAddress = BFMCommand.GetCommandDict(BFMCommand.风机设定值);
-                    ushort[] holding_register = _MASTER.ReadHoldingRegisters(_SlaveID, _StartAddress, _NumOfPoints);
-                    res = int.Parse(holding_register[0].ToString());
-                    IsSuccess = true;
+                    lock (syncLock)
+                    {
+                        _StartAddress = BFMCommand.GetCommandDict(BFMCommand.风机设定值);
+                        ushort[] holding_register = _MASTER.ReadHoldingRegisters(_SlaveID, _StartAddress, _NumOfPoints);
+                        res = int.Parse(holding_register[0].ToString());
+                        IsSuccess = true;
+                    }
                 }
             }
             catch (Exception ex)
@@ -1621,10 +1602,13 @@ namespace text.doors.Common
             {
                 if (sp.IsOpen)
                 {
-                    _StartAddress = BFMCommand.GetCommandDict(BFMCommand.负压阀);
-                    _MASTER.WriteSingleCoil(this._SlaveID, _StartAddress, false);
-                    _StartAddress = BFMCommand.GetCommandDict(BFMCommand.正压阀);
-                    _MASTER.WriteSingleCoil(this._SlaveID, _StartAddress, true);
+                    lock (syncLock)
+                    {
+                        _StartAddress = BFMCommand.GetCommandDict(BFMCommand.负压阀);
+                        _MASTER.WriteSingleCoil(this._SlaveID, _StartAddress, false);
+                        _StartAddress = BFMCommand.GetCommandDict(BFMCommand.正压阀);
+                        _MASTER.WriteSingleCoil(this._SlaveID, _StartAddress, true);
+                    }
                 }
             }
             catch (Exception ex)
@@ -1644,10 +1628,13 @@ namespace text.doors.Common
             {
                 if (sp.IsOpen)
                 {
-                    _StartAddress = BFMCommand.GetCommandDict(BFMCommand.正压阀);
-                    _MASTER.WriteSingleCoil(this._SlaveID, _StartAddress, false);
-                    _StartAddress = BFMCommand.GetCommandDict(BFMCommand.负压阀);
-                    _MASTER.WriteSingleCoil(this._SlaveID, _StartAddress, true);
+                    lock (syncLock)
+                    {
+                        _StartAddress = BFMCommand.GetCommandDict(BFMCommand.正压阀);
+                        _MASTER.WriteSingleCoil(this._SlaveID, _StartAddress, false);
+                        _StartAddress = BFMCommand.GetCommandDict(BFMCommand.负压阀);
+                        _MASTER.WriteSingleCoil(this._SlaveID, _StartAddress, true);
+                    }
                 }
             }
             catch (Exception ex)
@@ -1669,16 +1656,19 @@ namespace text.doors.Common
             {
                 if (sp.IsOpen)
                 {
-                    _StartAddress = BFMCommand.GetCommandDict(BFMCommand.风机启动);
-                    if (_FengJiQiDongStat)
+                    lock (syncLock)
                     {
-                        _MASTER.WriteSingleCoil(this._SlaveID, _StartAddress, false);
-                        _FengJiQiDongStat = false;
-                    }
-                    else
-                    {
-                        _MASTER.WriteSingleCoil(this._SlaveID, _StartAddress, true);
-                        _FengJiQiDongStat = true;
+                        _StartAddress = BFMCommand.GetCommandDict(BFMCommand.风机启动);
+                        if (_FengJiQiDongStat)
+                        {
+                            _MASTER.WriteSingleCoil(this._SlaveID, _StartAddress, false);
+                            _FengJiQiDongStat = false;
+                        }
+                        else
+                        {
+                            _MASTER.WriteSingleCoil(this._SlaveID, _StartAddress, true);
+                            _FengJiQiDongStat = true;
+                        }
                     }
                 }
             }
@@ -1699,16 +1689,19 @@ namespace text.doors.Common
             {
                 if (sp.IsOpen)
                 {
-                    _StartAddress = BFMCommand.GetCommandDict(BFMCommand.水泵启动);
-                    if (_ShuiBengQiDong)
+                    lock (syncLock)
                     {
-                        _MASTER.WriteSingleCoil(this._SlaveID, _StartAddress, false);
-                        _ShuiBengQiDong = false;
-                    }
-                    else
-                    {
-                        _MASTER.WriteSingleCoil(this._SlaveID, _StartAddress, true);
-                        _ShuiBengQiDong = true;
+                        _StartAddress = BFMCommand.GetCommandDict(BFMCommand.水泵启动);
+                        if (_ShuiBengQiDong)
+                        {
+                            _MASTER.WriteSingleCoil(this._SlaveID, _StartAddress, false);
+                            _ShuiBengQiDong = false;
+                        }
+                        else
+                        {
+                            _MASTER.WriteSingleCoil(this._SlaveID, _StartAddress, true);
+                            _ShuiBengQiDong = true;
+                        }
                     }
                 }
             }
@@ -1729,16 +1722,19 @@ namespace text.doors.Common
             {
                 if (sp.IsOpen)
                 {
-                    _StartAddress = BFMCommand.GetCommandDict(BFMCommand.保护阀通);
-                    if (_ShuiBengQiDong)
+                    lock (syncLock)
                     {
-                        _MASTER.WriteSingleCoil(this._SlaveID, _StartAddress, false);
-                        _ShuiBengQiDong = false;
-                    }
-                    else
-                    {
-                        _MASTER.WriteSingleCoil(this._SlaveID, _StartAddress, true);
-                        _ShuiBengQiDong = true;
+                        _StartAddress = BFMCommand.GetCommandDict(BFMCommand.保护阀通);
+                        if (_ShuiBengQiDong)
+                        {
+                            _MASTER.WriteSingleCoil(this._SlaveID, _StartAddress, false);
+                            _ShuiBengQiDong = false;
+                        }
+                        else
+                        {
+                            _MASTER.WriteSingleCoil(this._SlaveID, _StartAddress, true);
+                            _ShuiBengQiDong = true;
+                        }
                     }
                 }
             }
@@ -1758,16 +1754,19 @@ namespace text.doors.Common
             {
                 if (sp.IsOpen)
                 {
-                    _StartAddress = BFMCommand.GetCommandDict(BFMCommand.四通阀开);
-                    if (_SiTongFaKai)
+                    lock (syncLock)
                     {
-                        _MASTER.WriteSingleCoil(this._SlaveID, _StartAddress, false);
-                        _SiTongFaKai = false;
-                    }
-                    else
-                    {
-                        _MASTER.WriteSingleCoil(this._SlaveID, _StartAddress, true);
-                        _SiTongFaKai = true;
+                        _StartAddress = BFMCommand.GetCommandDict(BFMCommand.四通阀开);
+                        if (_SiTongFaKai)
+                        {
+                            _MASTER.WriteSingleCoil(this._SlaveID, _StartAddress, false);
+                            _SiTongFaKai = false;
+                        }
+                        else
+                        {
+                            _MASTER.WriteSingleCoil(this._SlaveID, _StartAddress, true);
+                            _SiTongFaKai = true;
+                        }
                     }
                 }
             }
@@ -1787,15 +1786,18 @@ namespace text.doors.Common
             {
                 if (sp.IsOpen)
                 {
-                    if (isdown)
+                    lock (syncLock)
                     {
-                        _StartAddress = BFMCommand.GetCommandDict(BFMCommand.点动开);
-                        _MASTER.WriteSingleCoil(this._SlaveID, _StartAddress, true);
-                    }
-                    else
-                    {
-                        _StartAddress = BFMCommand.GetCommandDict(BFMCommand.点动开);
-                        _MASTER.WriteSingleCoil(this._SlaveID, _StartAddress, false);
+                        if (isdown)
+                        {
+                            _StartAddress = BFMCommand.GetCommandDict(BFMCommand.点动开);
+                            _MASTER.WriteSingleCoil(this._SlaveID, _StartAddress, true);
+                        }
+                        else
+                        {
+                            _StartAddress = BFMCommand.GetCommandDict(BFMCommand.点动开);
+                            _MASTER.WriteSingleCoil(this._SlaveID, _StartAddress, false);
+                        }
                     }
                 }
             }
@@ -1815,15 +1817,18 @@ namespace text.doors.Common
             {
                 if (sp.IsOpen)
                 {
-                    if (isdown)
+                    lock (syncLock)
                     {
-                        _StartAddress = BFMCommand.GetCommandDict(BFMCommand.点动关);
-                        _MASTER.WriteSingleCoil(this._SlaveID, _StartAddress, true);
-                    }
-                    else
-                    {
-                        _StartAddress = BFMCommand.GetCommandDict(BFMCommand.点动关);
-                        _MASTER.WriteSingleCoil(this._SlaveID, _StartAddress, false);
+                        if (isdown)
+                        {
+                            _StartAddress = BFMCommand.GetCommandDict(BFMCommand.点动关);
+                            _MASTER.WriteSingleCoil(this._SlaveID, _StartAddress, true);
+                        }
+                        else
+                        {
+                            _StartAddress = BFMCommand.GetCommandDict(BFMCommand.点动关);
+                            _MASTER.WriteSingleCoil(this._SlaveID, _StartAddress, false);
+                        }
                     }
                 }
             }
@@ -1843,16 +1848,19 @@ namespace text.doors.Common
             {
                 if (sp.IsOpen)
                 {
-                    _StartAddress = BFMCommand.GetCommandDict(BFMCommand.点动关);
-                    if (_GuanDaoTou)
+                    lock (syncLock)
                     {
-                        _MASTER.WriteSingleCoil(this._SlaveID, _StartAddress, false);
-                        _GuanDaoTou = false;
-                    }
-                    else
-                    {
-                        _MASTER.WriteSingleCoil(this._SlaveID, _StartAddress, true);
-                        _GuanDaoTou = true;
+                        _StartAddress = BFMCommand.GetCommandDict(BFMCommand.点动关);
+                        if (_GuanDaoTou)
+                        {
+                            _MASTER.WriteSingleCoil(this._SlaveID, _StartAddress, false);
+                            _GuanDaoTou = false;
+                        }
+                        else
+                        {
+                            _MASTER.WriteSingleCoil(this._SlaveID, _StartAddress, true);
+                            _GuanDaoTou = true;
+                        }
                     }
                 }
             }
@@ -1871,28 +1879,31 @@ namespace text.doors.Common
         {
             try
             {
-                if (sp.IsOpen)
+                lock (syncLock)
                 {
-                    if (type == "P")
-                        _StartAddress = BFMCommand.GetCommandDict(BFMCommand.P);
-                    else if (type == "I")
-                        _StartAddress = BFMCommand.GetCommandDict(BFMCommand.I);
-                    else if (type == "D")
-                        _StartAddress = BFMCommand.GetCommandDict(BFMCommand.D);
-                    else if (type == "_P")
-                        _StartAddress = BFMCommand.GetCommandDict(BFMCommand._P);
-                    else if (type == "_I")
-                        _StartAddress = BFMCommand.GetCommandDict(BFMCommand._I);
-                    else if (type == "_D")
-                        _StartAddress = BFMCommand.GetCommandDict(BFMCommand._D);
-                    else if (type == "B_P")
-                        _StartAddress = BFMCommand.GetCommandDict(BFMCommand.B_P);
-                    else if (type == "B_I")
-                        _StartAddress = BFMCommand.GetCommandDict(BFMCommand.B_I);
-                    else if (type == "B_D")
-                        _StartAddress = BFMCommand.GetCommandDict(BFMCommand.B_D);
+                    if (sp.IsOpen)
+                    {
+                        if (type == "P")
+                            _StartAddress = BFMCommand.GetCommandDict(BFMCommand.P);
+                        else if (type == "I")
+                            _StartAddress = BFMCommand.GetCommandDict(BFMCommand.I);
+                        else if (type == "D")
+                            _StartAddress = BFMCommand.GetCommandDict(BFMCommand.D);
+                        else if (type == "_P")
+                            _StartAddress = BFMCommand.GetCommandDict(BFMCommand._P);
+                        else if (type == "_I")
+                            _StartAddress = BFMCommand.GetCommandDict(BFMCommand._I);
+                        else if (type == "_D")
+                            _StartAddress = BFMCommand.GetCommandDict(BFMCommand._D);
+                        else if (type == "B_P")
+                            _StartAddress = BFMCommand.GetCommandDict(BFMCommand.B_P);
+                        else if (type == "B_I")
+                            _StartAddress = BFMCommand.GetCommandDict(BFMCommand.B_I);
+                        else if (type == "B_D")
+                            _StartAddress = BFMCommand.GetCommandDict(BFMCommand.B_D);
 
-                    _MASTER.WriteSingleRegister(_SlaveID, _StartAddress, (ushort)value);
+                        _MASTER.WriteSingleRegister(_SlaveID, _StartAddress, (ushort)value);
+                    }
                 }
                 return true;
             }
@@ -1913,31 +1924,34 @@ namespace text.doors.Common
             {
                 if (sp.IsOpen)
                 {
-                    if (type == "P")
-                        _StartAddress = BFMCommand.GetCommandDict(BFMCommand.P);
-                    else if (type == "I")
-                        _StartAddress = BFMCommand.GetCommandDict(BFMCommand.I);
-                    else if (type == "D")
-                        _StartAddress = BFMCommand.GetCommandDict(BFMCommand.D);
+                    lock (syncLock)
+                    {
+                        if (type == "P")
+                            _StartAddress = BFMCommand.GetCommandDict(BFMCommand.P);
+                        else if (type == "I")
+                            _StartAddress = BFMCommand.GetCommandDict(BFMCommand.I);
+                        else if (type == "D")
+                            _StartAddress = BFMCommand.GetCommandDict(BFMCommand.D);
 
-                    else if (type == "_P")
-                        _StartAddress = BFMCommand.GetCommandDict(BFMCommand._P);
-                    else if (type == "_I")
-                        _StartAddress = BFMCommand.GetCommandDict(BFMCommand._I);
-                    else if (type == "_D")
-                        _StartAddress = BFMCommand.GetCommandDict(BFMCommand._D);
+                        else if (type == "_P")
+                            _StartAddress = BFMCommand.GetCommandDict(BFMCommand._P);
+                        else if (type == "_I")
+                            _StartAddress = BFMCommand.GetCommandDict(BFMCommand._I);
+                        else if (type == "_D")
+                            _StartAddress = BFMCommand.GetCommandDict(BFMCommand._D);
 
-                    else if (type == "B_P")
-                        _StartAddress = BFMCommand.GetCommandDict(BFMCommand.B_P);
-                    else if (type == "B_I")
-                        _StartAddress = BFMCommand.GetCommandDict(BFMCommand.B_I);
-                    else if (type == "B_D")
-                        _StartAddress = BFMCommand.GetCommandDict(BFMCommand.B_D);
+                        else if (type == "B_P")
+                            _StartAddress = BFMCommand.GetCommandDict(BFMCommand.B_P);
+                        else if (type == "B_I")
+                            _StartAddress = BFMCommand.GetCommandDict(BFMCommand.B_I);
+                        else if (type == "B_D")
+                            _StartAddress = BFMCommand.GetCommandDict(BFMCommand.B_D);
 
 
-                    ushort[] holding_register = _MASTER.ReadHoldingRegisters(_SlaveID, _StartAddress, _NumOfPoints);
-                    res = int.Parse(holding_register[0].ToString());
-                    IsSuccess = true;
+                        ushort[] holding_register = _MASTER.ReadHoldingRegisters(_SlaveID, _StartAddress, _NumOfPoints);
+                        res = int.Parse(holding_register[0].ToString());
+                        IsSuccess = true;
+                    }
                 }
             }
             catch (Exception ex)
@@ -1960,12 +1974,11 @@ namespace text.doors.Common
             {
                 if (sp.IsOpen)
                 {
-                    var res = SendZYF();
-                    if (!res)
-                        return false;
-
-                    _StartAddress = BFMCommand.GetCommandDict(BFMCommand.改变级差);
-                    _MASTER.WriteSingleRegister(_SlaveID, _StartAddress, (ushort)(value));
+                    lock (syncLock)
+                    {
+                        _StartAddress = BFMCommand.GetCommandDict(BFMCommand.改变级差);
+                        _MASTER.WriteSingleRegister(_SlaveID, _StartAddress, (ushort)(value));
+                    }
                 }
                 return true;
 
@@ -1976,53 +1989,6 @@ namespace text.doors.Common
                 return false;
             }
         }
-
-        ///// <summary>
-        ///// 设置正pmax
-        ///// </summary>
-        //public bool SendZPMAX(string commandValue, string commandStr, double value)
-        //{
-
-        //    _StartAddress = BFMCommand.GetCommandDict(commandValue);
-        //    _MASTER.WriteSingleRegister(_SlaveID, _StartAddress, (ushort)(value));
-
-        //    _StartAddress = BFMCommand.GetCommandDict(commandStr);
-        //    _MASTER.WriteSingleCoil(this._SlaveID, _StartAddress, false);
-        //    _MASTER.WriteSingleCoil(this._SlaveID, _StartAddress, true);
-        //    return true;
-
-
-        //}
-
-
-
-
-        ///// <summary>
-        /////  设置负pmax
-        ///// </summary>
-        //public bool SendFPMAX(double value)
-        //{
-        //    try
-        //    {
-
-        //        {
-        //            var res = SendZYF();
-        //            if (!res)
-        //                return false;
-
-        //            _StartAddress = BFMCommand.GetCommandDict(BFMCommand.改变级差);
-        //            _MASTER.WriteSingleRegister(_SlaveID, _StartAddress, (ushort)(value));
-
-        //            return true;
-        //        }
-
-        //    }
-        //    catch (Exception ex)
-        //    {
-
-        //        return false;
-        //    }
-        //}
 
 
     }

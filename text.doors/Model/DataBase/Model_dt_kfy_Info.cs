@@ -12,6 +12,7 @@ namespace text.doors.Model.DataBase
         public string info_DangH { get; set; }
         public int defJC { get; set; }
 
+        public int CheckLock { get; set; }
         public string z_one_250 { get; set; }
         public string z_one_500 { get; set; }
         public string z_one_750 { get; set; }
@@ -56,9 +57,6 @@ namespace text.doors.Model.DataBase
         public string z_ix_1500 { get; set; }
         public string z_ix_1750 { get; set; }
         public string z_ix_2000 { get; set; }
-
-
-
 
 
         public string f_one_250 { get; set; }
@@ -114,6 +112,55 @@ namespace text.doors.Model.DataBase
         public string _p2 { get; set; }
         public string _p3 { get; set; }
 
-        public int CheckLock { get; set; }
+
+
+
+
+
+        public string z_one_p3jieduan { get; set; }
+        public string z_one_p3canyubianxing { get; set; }
+        public string z_one_pMaxcanyubianxing { get; set; }
+
+        public string z_two_p3jieduan { get; set; }
+        public string z_two_p3canyubianxing { get; set; }
+        public string z_two_pMaxcanyubianxing { get; set; }
+
+        public string z_three_p3jieduan { get; set; }
+        public string z_three_p3canyubianxing { get; set; }
+        public string z_three_pMaxcanyubianxing { get; set; }
+
+        public string z_nd_p3jieduan { get; set; }
+        public string z_nd_p3canyubianxing { get; set; }
+        public string z_nd_pMaxcanyubianxing { get; set; }
+
+        public string z_ix_p3jieduan { get; set; }
+        public string z_ix_p3canyubianxing { get; set; }
+        public string z_ix_pMaxcanyubianxing { get; set; }
+
+
+
+        public string f_one_p3jieduan { get; set; }
+        public string f_one_p3canyubianxing { get; set; }
+        public string f_one_pMaxcanyubianxing { get; set; }
+
+        public string f_two_p3jieduan { get; set; }
+        public string f_two_p3canyubianxing { get; set; }
+        public string f_two_pMaxcanyubianxing { get; set; }
+
+        public string f_three_p3jieduan { get; set; }
+        public string f_three_p3canyubianxing { get; set; }
+        public string f_three_pMaxcanyubianxing { get; set; }
+
+        public string f_nd_p3jieduan { get; set; }
+        public string f_nd_p3canyubianxing { get; set; }
+        public string f_nd_pMaxcanyubianxing { get; set; }
+
+        public string f_ix_p3jieduan { get; set; }
+        public string f_ix_p3canyubianxing { get; set; }
+        public string f_ix_pMaxcanyubianxing { get; set; }
+
+
+
+
     }
 }

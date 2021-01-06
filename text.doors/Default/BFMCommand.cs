@@ -194,6 +194,15 @@ namespace text.doors.Default
         public const string 风压_正压是否计时 = "T23";
         public const string 风压_负压是否计时 = "T26";
 
+        public const string 风压安全_正压是否计时 = "T32";
+        public const string 风压安全_负压是否计时 = "T34";
+
+        //public const string 风压_正压是否计时 = "T23";
+        //public const string 风压_负压是否计时 = "T26";
+
+        //public const string 风压_正压是否计时 = "T23";
+        //public const string 风压_负压是否计时 = "T26";
+
 
         public const string 风压_正压预备_设定值 = "D2200";
         public const string 风压_正压开始_设定值 = "D2202";

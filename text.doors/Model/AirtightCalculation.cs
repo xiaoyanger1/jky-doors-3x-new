@@ -45,7 +45,7 @@ namespace text.doors.Model
         {
             get
             {
-                return (this.Z_S_ZZ_Value + this.Z_J_ZZ_Value) / 2 - (this.Z_S_FJ_Value - this.Z_J_FJ_Value) / 2;
+                return (this.Z_S_ZZ_Value + this.Z_J_ZZ_Value) / 2 - (this.Z_S_FJ_Value + this.Z_J_FJ_Value) / 2;
             }
         }
 
@@ -54,9 +54,9 @@ namespace text.doors.Model
         /// </summary>
         public double _Z_Q_SJ_P
         {
-            //get;set;
             get
             {
+                //todo:更改为三位小数
                 return 293 / 101.3 * (this.kPa / (273 + this.CurrentTemperature)) * _Z_Q;
             }
         }
@@ -68,7 +68,7 @@ namespace text.doors.Model
         {
             get
             {
-                return (this.F_S_ZZ_Value + this.F_J_ZZ_Value) / 2 - (this.F_S_FJ_Value - this.F_J_FJ_Value) / 2;
+                return (this.F_S_ZZ_Value + this.F_J_ZZ_Value) / 2 - (this.F_S_FJ_Value + this.F_J_FJ_Value) / 2;
             }
         }
 
@@ -79,6 +79,7 @@ namespace text.doors.Model
         {
             get
             {
+                //todo:更改为三位小数
                 return 293 / 101.3 * (this.kPa / (273 + this.CurrentTemperature)) * _F_Q;
             }
         }

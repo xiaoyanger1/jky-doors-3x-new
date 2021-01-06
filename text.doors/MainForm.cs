@@ -48,57 +48,161 @@ namespace text.doors
         /// </summary>
         private string _tempTong = "";
 
+        public static Thread bindLableThread;
+
+
+        public static System.Timers.Timer register_tim;
+
+
+
+        public static System.Timers.Timer bind_tim;
+
         public MainForm()
         {
 
             InitializeComponent();
-
-
             //ExamineLAN();
             OpenSerialPortClient();
 
-            //设置高压标零
-            //_serialPortClient.SendGYBD(true);
-
-            //_serialPortClient.SendDYBD(true);
-
-            //DataInit();
             ShowDetectionSet();
 
 
+            //string _name = "建筑外窗（门）气密、水密、抗风压性能检测报告" + "_" + _tempCode + ".xls";
+
+            //var saveExcelUrl = "E:\\" + _name;
+
+            //ExportExcel exportExcel = new ExportExcel(_tempCode);
+            //exportExcel.ExportData(saveExcelUrl);
+
+            //register_tim = new System.Timers.Timer(300);
+            //register_tim.Elapsed += new System.Timers.ElapsedEventHandler(GetRegisterData_Tim);
+            //register_tim.Enabled = true;
 
 
+            //bind_tim = new System.Timers.Timer(500);
+            //bind_tim.Elapsed += new System.Timers.ElapsedEventHandler(GetBindData_Tim);
+            //bind_tim.Enabled = true;
 
-
-            //List<WindPressureDGV> windPressureDGV = new List<WindPressureDGV>();
-            //windPressureDGV.Add(new WindPressureDGV() { PaValue = 250, zzd = 0.3 });
-            //windPressureDGV.Add(new WindPressureDGV() { PaValue = 500, zzd = 0.6 });
-            //windPressureDGV.Add(new WindPressureDGV() { PaValue = 750, zzd = 0.9 });
-            //windPressureDGV.Add(new WindPressureDGV() { PaValue = 1000, zzd = 1.2 });
-            //windPressureDGV.Add(new WindPressureDGV() { PaValue = 1250, zzd = 1.6 });
-            //windPressureDGV.Add(new WindPressureDGV() { PaValue = 1500, zzd = 1.9 });
-            //windPressureDGV.Add(new WindPressureDGV() { PaValue = 1750, zzd = 2.3 });
-            //windPressureDGV.Add(new WindPressureDGV() { PaValue = 2000, zzd = 2.8 });
-
-
-            //double zy = 0;
-            //double fy = 0;
-
-            //Formula.GetKFY(windPressureDGV, 1400, 375, ref zy, ref fy);
-            //if (zy != -100 && fy != -100)
-            //{
-
-            //}
-
-
-
-
-
-
-
+            //实时绑定数据
+            //bindLableThread = new Thread(new ThreadStart(BindFromInput));
+            //bindLableThread.Start();
 
         }
 
+        private void tim_getdate_Tick(object sender, EventArgs e)
+        {
+            if (_serialPortClient.sp.IsOpen)
+            {
+                //RegisterData.Temperature_Value = _temperature = _serialPortClient.GetWDXS();
+                //RegisterData.AtmospherePa_Value = _temppressure = _serialPortClient.GetDQYLXS();
+                //RegisterData.WindSpeed_Value = _serialPortClient.GetFSXS();
+                //RegisterData.CY_High_Value = _serialPortClient.GetCY_High();
+                //RegisterData.CY_Low_Value = _serialPortClient.GetCY_Low();
+
+                _temperature = _serialPortClient.GetWDXS();
+                _temppressure = _serialPortClient.GetDQYLXS();
+
+
+                lbl_wdcgq.Text = _temperature.ToString();
+                lbl_dqylcgq.Text = _temppressure.ToString();
+                lbl_fscgq.Text = _serialPortClient.GetFSXS().ToString();
+                lbl_cygcgq.Text = _serialPortClient.GetCY_High().ToString();
+                lbl_cydcgq.Text = _serialPortClient.GetCY_Low().ToString();
+            }
+        }
+
+        //private void GetRegisterData_Tim(object sender, System.Timers.ElapsedEventArgs e)
+        //{
+        //    if (_serialPortClient.sp.IsOpen)
+        //    {
+        //        RegisterData.Temperature_Value = _temperature = _serialPortClient.GetWDXS();
+        //        RegisterData.AtmospherePa_Value = _temppressure = _serialPortClient.GetDQYLXS();
+        //        RegisterData.WindSpeed_Value = _serialPortClient.GetFSXS();
+        //        RegisterData.CY_High_Value = _serialPortClient.GetCY_High();
+        //        RegisterData.CY_Low_Value = _serialPortClient.GetCY_Low();
+        //    }
+        //}
+        //private void GetWYData_Tim(object sender, System.Timers.ElapsedEventArgs e)
+        //{
+        //    if (_serialPortClient.sp.IsOpen)
+        //    {
+        //        RegisterData.Displace1 = _serialPortClient.GetDisplace1();
+        //        RegisterData.Displace2 = _serialPortClient.GetDisplace2();
+        //        RegisterData.Displace3 = _serialPortClient.GetDisplace3();
+        //    }
+        //}
+
+        //private void GetBindData_Tim(object sender, System.Timers.ElapsedEventArgs e)
+        //{
+        //    lbl_wdcgq.Text = RegisterData.Temperature_Value.ToString();
+        //    lbl_dqylcgq.Text = RegisterData.AtmospherePa_Value.ToString();
+        //    lbl_fscgq.Text = RegisterData.WindSpeed_Value.ToString();
+        //    lbl_cygcgq.Text = RegisterData.CY_High_Value.ToString();
+        //    lbl_cydcgq.Text = RegisterData.CY_Low_Value.ToString();
+        //}
+
+        /// <summary>
+        /// 实时绑定数据
+        /// </summary>
+        //private void BindFromInput()
+        //{
+        //    SetRealTimeData st1 = new SetRealTimeData(Update_lbl_wdcgq_Label);
+        //    SetRealTimeData st2 = new SetRealTimeData(Update_lbl_dqylcgq_Label);
+        //    SetRealTimeData st3 = new SetRealTimeData(Update_lbl_fscgq_Label);
+        //    SetRealTimeData st4 = new SetRealTimeData(Update_lbl_cygcgq_Label);
+        //    SetRealTimeData st5 = new SetRealTimeData(Update_lbl_cydcgq_Label);
+
+        //    while (true)
+        //    {
+        //        if (lbl_wdcgq.InvokeRequired)
+        //            lbl_wdcgq.Invoke(st1, RegisterData.Temperature_Value.ToString());//交给主线程
+        //        else
+        //            lbl_wdcgq.Text = RegisterData.Temperature_Value.ToString();
+
+        //        if (lbl_dqylcgq.InvokeRequired)
+        //            lbl_dqylcgq.Invoke(st2, RegisterData.AtmospherePa_Value.ToString());//交给主线程
+        //        else
+        //            lbl_dqylcgq.Text = RegisterData.AtmospherePa_Value.ToString();
+
+        //        if (lbl_fscgq.InvokeRequired)
+        //            lbl_fscgq.Invoke(st3, RegisterData.WindSpeed_Value.ToString());//交给主线程
+        //        else
+        //            lbl_fscgq.Text = RegisterData.WindSpeed_Value.ToString();
+
+        //        if (lbl_cygcgq.InvokeRequired)
+        //            lbl_cygcgq.Invoke(st4, RegisterData.CY_High_Value.ToString());//交给主线程
+        //        else
+        //            lbl_cygcgq.Text = RegisterData.CY_High_Value.ToString();
+        //        if (lbl_cydcgq.InvokeRequired)
+        //            lbl_cydcgq.Invoke(st5, RegisterData.CY_Low_Value.ToString());//交给主线程
+        //        else
+        //            lbl_cydcgq.Text = RegisterData.CY_Low_Value.ToString();
+        //    }
+        //}
+
+        //委托
+        //public delegate void SetRealTimeData(string value);
+
+        //private void Update_lbl_wdcgq_Label(string value)
+        //{
+        //    lbl_wdcgq.Text = value;
+        //}
+        //private void Update_lbl_dqylcgq_Label(string value)
+        //{
+        //    lbl_dqylcgq.Text = value;
+        //}
+        //private void Update_lbl_fscgq_Label(string value)
+        //{
+        //    lbl_fscgq.Text = value;
+        //}
+        //private void Update_lbl_cygcgq_Label(string value)
+        //{
+        //    lbl_cygcgq.Text = value;
+        //}
+        //private void Update_lbl_cydcgq_Label(string value)
+        //{
+        //    lbl_cydcgq.Text = value;
+        //}
 
         //private void ExamineLAN()
         //{
@@ -134,6 +238,7 @@ namespace text.doors
         //    {
         //    }
         //}
+
 
         private void OpenSerialPortClient()
         {
@@ -204,6 +309,11 @@ namespace text.doors
                     if (con is DetectionSet)
                     {
                     }
+                    else if (con is WindPressureDetection)
+                    {
+                        WindPressureDetection.td.Abort();
+                        ((Form)con).Close();
+                    }
                     else
                     {
                         ((Form)con).Close();
@@ -233,6 +343,11 @@ namespace text.doors
                     if (con is DetectionSet)
                     {
                     }
+                    else if (con is WindPressureDetection)
+                    {
+                        WindPressureDetection.td.Abort();
+                        ((Form)con).Close();
+                    }
                     else
                     {
                         ((Form)con).Close();
@@ -258,6 +373,13 @@ namespace text.doors
                 {
                     if (con is DetectionSet)
                     {
+                    }
+                    else if (con is WindPressureDetection)
+                    {
+                        WindPressureDetection.td.Abort();
+                        DefaultBase.isRelease = true;
+                        Thread.Sleep(1000);
+                        ((Form)con).Close();
                     }
                     else
                     {
@@ -286,6 +408,13 @@ namespace text.doors
                     if (con is DetectionSet)
                     {
                     }
+                    else if (con is WindPressureDetection)
+                    {
+                       
+                        WindPressureDetection.td.Abort();
+                        DefaultBase.isRelease = true;
+                        ((Form)con).Close();
+                    }
                     else
                     {
                         ((Form)con).Close();
@@ -305,40 +434,25 @@ namespace text.doors
 
         private void DataInit()
         {
-            if (_serialPortClient.sp.IsOpen)
-            {
-                #region 获取面板显示
-
-                var temperature = _temperature = _serialPortClient.GetWDXS();
-
-                var temppressure = _temppressure = _serialPortClient.GetDQYLXS();
-
-                var windSpeed = _serialPortClient.GetFSXS();
-
-                var diffPressG = _serialPortClient.GetCYGXS();
-
-                var diffPressD = _serialPortClient.GetCYDXS();
+            #region 获取数据
 
 
-                lbl_wdcgq.Text = temperature.ToString();
-                lbl_dqylcgq.Text = temppressure.ToString();
-                lbl_fscgq.Text = windSpeed.ToString();
-                lbl_cygcgq.Text = diffPressG.ToString();
+            //lbl_wdcgq.Text = temperature.ToString();
+            //lbl_dqylcgq.Text = temppressure.ToString();
+            //lbl_fscgq.Text = windSpeed.ToString();
+            //lbl_cygcgq.Text = diffPressG.ToString();
+            //lbl_cydcgq.Text = diffPressD.ToString();
 
-                lbl_cydcgq.Text = diffPressD.ToString();
+            //抗风压
+            //var displace1 = _serialPortClient.GetDisplace1();
+            //var displace2 = _serialPortClient.GetDisplace2();
+            //var displace3 = _serialPortClient.GetDisplace3();
 
-                //抗风压
-                //var displace1 = _serialPortClient.GetDisplace1();
-                //var displace2 = _serialPortClient.GetDisplace2();
-                //var displace3 = _serialPortClient.GetDisplace3();
+            //lbl_Displace1.Text = displace1.ToString();
+            //lbl_Displace2.Text = displace2.ToString();
+            //lbl_Displace3.Text = displace3.ToString();
 
-                //lbl_Displace1.Text = displace1.ToString();
-                //lbl_Displace2.Text = displace2.ToString();
-                //lbl_Displace3.Text = displace3.ToString();
-
-                #endregion
-
-            }
+            #endregion
         }
 
         private void hsb_WindControl_Scroll(object sender, ScrollEventArgs e)
@@ -350,7 +464,6 @@ namespace text.doors
 
             double value = (hsb_WindControl.Value);
 
-            Logger.Info("发送-" + value);
             var res = _serialPortClient.SendFJKZ(value);
 
             if (!res)
@@ -446,23 +559,27 @@ namespace text.doors
             {
                 try
                 {
-                    //FolderBrowserDialog path = new FolderBrowserDialog();
-                    //path.ShowDialog();
+                    FolderBrowserDialog path = new FolderBrowserDialog();
+                    path.ShowDialog();
 
                     //label3.Visible = true;
-                    //if (string.IsNullOrWhiteSpace(path.SelectedPath))
-                    //{
-                    //    return;
-                    //}
-                    //string _name = "建筑外窗（门）气密、水密、抗风压性能检测报告" + "_" + _tempCode + ".xls";
-
-                    //var saveExcelUrl = path.SelectedPath + "\\" + _name;
+                    if (string.IsNullOrWhiteSpace(path.SelectedPath))
+                    {
+                        return;
+                    }
                     string _name = "建筑外窗（门）气密、水密、抗风压性能检测报告" + "_" + _tempCode + ".xls";
 
-                    var saveExcelUrl = "E:\\" + _name;
+                    var saveExcelUrl = path.SelectedPath + "\\" + _name;
+                    //string _name = "建筑外窗（门）气密、水密、抗风压性能检测报告" + "_" + _tempCode + ".xls";
+
+                    //var saveExcelUrl = "E:\\" + _name;
 
                     ExportExcel exportExcel = new ExportExcel(_tempCode);
-                    exportExcel.ExportData(saveExcelUrl);
+                    var res = exportExcel.ExportData(saveExcelUrl);
+                    if (res)
+                    {
+                        MessageBox.Show("导出成功", "导出成功", MessageBoxButtons.OK, MessageBoxIcon.None, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -503,20 +620,6 @@ namespace text.doors
                 MessageBox.Show("低压归零异常,请确认服务器连接是否成功!", "设置", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
             }
         }
-
-        /// <summary>
-        /// 风速归零
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        //private void btn_fsgl_Click(object sender, EventArgs e)
-        //{
-        //    var res = _serialPortClient.SendFSGL();
-        //    if (!res)
-        //    {
-        //        MessageBox.Show("风速归零异常,请确认服务器连接是否成功!", "设置", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
-        //    }
-        //}
 
         private void btn_OkFj_Click(object sender, EventArgs e)
         {
@@ -645,7 +748,6 @@ namespace text.doors
             if (int.Parse(e.Result.ToString()) == 0)
                 return;
 
-            Logger.Info("获取-" + e.Result.ToString());
             var value = int.Parse(e.Result.ToString()) / 640;
             this.hsb_WindControl.Value = value; ;
             txt_hz.Text = value.ToString();
@@ -662,7 +764,9 @@ namespace text.doors
         {
             if (_serialPortClient.sp.IsOpen)
             {
-                DataInit();
+                // DataInit();
+
+                //  BindFromInput();
 
                 using (BackgroundWorker bw = new BackgroundWorker())
                 {
@@ -738,24 +842,26 @@ namespace text.doors
 
         private void btn_ddk_MouseUp(object sender, MouseEventArgs e)
         {
+
             var res = _serialPortClient.SendDianDongKai(false);
             if (!res)
             {
                 MessageBox.Show("点动开异常,请确认服务器连接是否成功!", "设置", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
                 return;
             }
-           // btn_ddk.BackColor = Color.Green;
+            btn_ddk.BackColor = Color.Transparent;
 
         }
         private void btn_ddk_MouseDown(object sender, MouseEventArgs e)
         {
+
             var res = _serialPortClient.SendDianDongKai(true);
             if (!res)
             {
                 MessageBox.Show("点动开异常,请确认服务器连接是否成功!", "设置", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
                 return;
             }
-            //btn_ddk.BackColor = Color.Transparent;
+            btn_ddk.BackColor = Color.Green;
         }
 
         private void btn_ddg_MouseDown(object sender, MouseEventArgs e)
@@ -766,7 +872,7 @@ namespace text.doors
                 MessageBox.Show("水泵启动异常,请确认服务器连接是否成功!", "设置", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
                 return;
             }
-           // btn_ddg.BackColor = Color.Green;
+            btn_ddg.BackColor = Color.Green;
         }
 
         private void btn_ddg_MouseUp(object sender, MouseEventArgs e)
@@ -777,7 +883,7 @@ namespace text.doors
                 MessageBox.Show("水泵启动异常,请确认服务器连接是否成功!", "设置", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
                 return;
             }
-          //  btn_ddg.BackColor = Color.Transparent;
+            btn_ddg.BackColor = Color.Transparent;
         }
 
         private bool _GuanDaoTou = false;
@@ -791,5 +897,7 @@ namespace text.doors
             }
             btn_gdt.BackColor = _GuanDaoTou ? Color.Green : Color.Transparent;
         }
+
+
     }
 }

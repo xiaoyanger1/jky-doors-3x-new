@@ -82,7 +82,7 @@ namespace text.doors.Default
             FReady,//负压预备
             FStart,//负压开始
             ZYCJY,//正依次加压
-            FYCJY,//正依次加压
+            FYCJY,//负依次加压
             Stop//停止
         }
 

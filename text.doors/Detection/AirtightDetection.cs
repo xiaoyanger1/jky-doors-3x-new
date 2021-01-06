@@ -53,16 +53,6 @@ namespace text.doors.Detection
         double zFc = 0, fFc = 0, zMj = 0, fMj = 0;
 
         public List<ReadT> _readT = new List<ReadT>();
-        /// <summary>
-        /// 操作状态
-        /// </summary>
-        //private bool IsSeccess = false;
-
-        /// <summary>
-        /// 是否首次加载
-        /// </summary>
-        //private bool IsFirst = true;
-
 
         public DateTime dtnow { get; set; }
 
@@ -100,19 +90,6 @@ namespace text.doors.Detection
             QMchartInit();
 
             Clear();
-        }
-
-        public void StopTimer()
-        {
-            this.tim_PainPic.Enabled = false;
-            this.tim_qm.Enabled = false;
-            this.tim_getType.Enabled = false;
-        }
-        public void InitTimer()
-        {
-            this.tim_PainPic.Enabled = true;
-            this.tim_qm.Enabled = true;
-            this.tim_getType.Enabled = true;
         }
 
         /// <summary>
@@ -410,7 +387,6 @@ namespace text.doors.Detection
         /// </summary>
         private void BindLevelIndex(QM_TestCount qm_TestCount)
         {
-
             GetDatabaseLevelIndex(qm_TestCount);
             dgv_levelIndex.DataSource = GetLevelIndex();
             dgv_levelIndex.RowHeadersVisible = false;
@@ -464,7 +440,7 @@ namespace text.doors.Detection
         private void AnimateSeries(Steema.TeeChart.TChart chart, int yl)
         {
             this.qm_Line.Add(DateTime.Now, yl);
-            this.tChart_qm.Axes.Bottom.SetMinMax(dtnow, DateTime.Now.AddSeconds(20));
+            this.tChart_qm.Axes.Bottom.SetMinMax(dtnow, DateTime.Now.AddSeconds(40));
         }
 
         /// <summary>
@@ -479,6 +455,7 @@ namespace text.doors.Detection
         /// <param name="e"></param>
         private void tim_qm_Tick(object sender, EventArgs e)
         {
+
             if (airtightPropertyTest == PublicEnum.AirtightPropertyTest.ZStart || airtightPropertyTest == PublicEnum.AirtightPropertyTest.FStart)
             {
                 if (this.tim_Top10.Enabled == false)
@@ -544,11 +521,11 @@ namespace text.doors.Detection
             int c = 0;
             if (airtightPropertyTest == PublicEnum.AirtightPropertyTest.ZReady || airtightPropertyTest == PublicEnum.AirtightPropertyTest.FReady)
             {
-                c = _serialPortClient.GetCYGXS();
+                c = _serialPortClient.GetCY_High();
             }
             else
             {
-                c = _serialPortClient.GetCYDXS();
+                c = _serialPortClient.GetCY_Low();
             }
 
 
@@ -565,16 +542,23 @@ namespace text.doors.Detection
             {
                 this.tim_Top10.Enabled = false;
 
-                if (airtightPropertyTest != PublicEnum.AirtightPropertyTest.ZYCJY)
+                if (airtightPropertyTest != PublicEnum.AirtightPropertyTest.ZYCJY && airtightPropertyTest != PublicEnum.AirtightPropertyTest.FYCJY)
                 {
                     index = 0;
                 }
-                //gv_list.Enabled = false;
+                else
+                {
+                    btn_ycjy_z.Enabled = true;
+                    btn_ycjyf.Enabled = true;
+                    btn_ycjy_z.BackColor = Color.Transparent;
+                    btn_ycjyf.BackColor = Color.Transparent;
+                }
+                gv_list.Enabled = false;
                 return;
             }
             gv_list.Enabled = true;
 
-            var cyvalue = _serialPortClient.GetCYDXS();
+            var cyvalue = _serialPortClient.GetCY_Low();
 
             //获取风速
             var fsvalue = _serialPortClient.GetFSXS();
@@ -583,11 +567,13 @@ namespace text.doors.Detection
             fsvalue = Formula.MathFlow(fsvalue);
             if (this.tabControl1.SelectedTab.Name == "流量原始数据")
             {
+
                 #region 第一次
                 if (rdb_fjstl.Checked)
                 {
                     if (kpa_Level == PublicEnum.Kpa_Level.liter10)
                     {
+
                         if (cyvalue > 0)
                             pressure_One.AddZYFJ(fsvalue, PublicEnum.Kpa_Level.liter10);
                         else
@@ -1246,20 +1232,24 @@ namespace text.doors.Detection
             //}
             //lbl_setYL.Text = yl.ToString();
 
-            DisableBtnType();
+
 
             var res = _serialPortClient.SetZYYB();
             if (!res)
             {
-                MessageBox.Show("正压预备异常", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
                 return;
             }
-
+            DisableBtnType();
             airtightPropertyTest = PublicEnum.AirtightPropertyTest.ZReady;
+
+            btn_justready.BackColor = Color.Green;
 
             //关闭依次加压
             btn_ycjy_z.Enabled = false;
             btn_ycjyf.Enabled = false;
+
+            btn_ycjy_z.BackColor = Color.Transparent;
+            btn_ycjyf.BackColor = Color.Transparent;
         }
 
         /// <summary>
@@ -1290,6 +1280,11 @@ namespace text.doors.Detection
 
             //IsFirst = false;
             //IsStart = true;
+
+            var res = _serialPortClient.SendZYKS();
+            if (!res)
+                return;
+
             DisableBtnType();
 
             _readT = new List<ReadT>();
@@ -1314,7 +1309,9 @@ namespace text.doors.Detection
                 new Pressure().ClearZ_Z();
             }
 
-            _serialPortClient.SendZYKS();
+
+
+            btn_juststart.BackColor = Color.Green;
 
             airtightPropertyTest = PublicEnum.AirtightPropertyTest.ZStart;
 
@@ -1322,6 +1319,9 @@ namespace text.doors.Detection
             //关闭依次加压
             btn_ycjy_z.Enabled = false;
             btn_ycjyf.Enabled = false;
+
+            btn_ycjy_z.BackColor = Color.Transparent;
+            btn_ycjyf.BackColor = Color.Transparent;
         }
 
         private void btn_loseready_Click(object sender, EventArgs e)
@@ -1337,17 +1337,20 @@ namespace text.doors.Detection
             var res = _serialPortClient.SendFYYB();
             if (!res)
             {
-                MessageBox.Show("负压预备异常", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
                 return;
             }
 
             DisableBtnType();
+            btn_loseready.BackColor = Color.Green;
             airtightPropertyTest = PublicEnum.AirtightPropertyTest.FReady;
 
 
             //关闭依次加压
             btn_ycjy_z.Enabled = false;
             btn_ycjyf.Enabled = false;
+
+            btn_ycjy_z.BackColor = Color.Transparent;
+            btn_ycjyf.BackColor = Color.Transparent;
         }
         /// <summary>
         /// 禁用按钮
@@ -1361,6 +1364,15 @@ namespace text.doors.Detection
             this.btn_juststart.Enabled = false;
             btn_ycjy_z.Enabled = false;
             btn_ycjyf.Enabled = false;
+
+
+
+            btn_justready.BackColor = Color.Transparent;
+            btn_loseready.BackColor = Color.Transparent;
+            btn_losestart.BackColor = Color.Transparent;
+            btn_juststart.BackColor = Color.Transparent;
+            btn_ycjy_z.BackColor = Color.Transparent;
+            btn_ycjyf.BackColor = Color.Transparent;
         }
 
         /// <summary>
@@ -1373,8 +1385,15 @@ namespace text.doors.Detection
             this.btn_losestart.Enabled = true;
             this.btn_datadispose.Enabled = true;
             this.btn_juststart.Enabled = true;
-            btn_ycjy_z.Enabled = true;
-            btn_ycjyf.Enabled = true;
+            //btn_ycjy_z.Enabled = true;
+            //btn_ycjyf.Enabled = true;
+
+            btn_justready.BackColor = Color.Transparent;
+            btn_loseready.BackColor = Color.Transparent;
+            btn_losestart.BackColor = Color.Transparent;
+            btn_juststart.BackColor = Color.Transparent;
+            btn_ycjy_z.BackColor = Color.Transparent;
+            btn_ycjyf.BackColor = Color.Transparent;
         }
 
 
@@ -1395,6 +1414,10 @@ namespace text.doors.Detection
             //lbl_setYL.Text = "-" + yl.ToString();
 
             //IsStart = true;
+
+            var res = _serialPortClient.SendFYKS();
+            if (!res)
+                return;
             DisableBtnType();
 
             _readT = new List<ReadT>();
@@ -1419,14 +1442,18 @@ namespace text.doors.Detection
             {
                 new Pressure().ClearF_Z();
             }
-            _serialPortClient.SendFYKS();
 
+
+            btn_losestart.BackColor = Color.Green;
             airtightPropertyTest = PublicEnum.AirtightPropertyTest.FStart;
 
 
             //关闭依次加压
             btn_ycjy_z.Enabled = false;
             btn_ycjyf.Enabled = false;
+
+            btn_ycjy_z.BackColor = Color.Transparent;
+            btn_ycjyf.BackColor = Color.Transparent;
         }
 
 
@@ -1506,6 +1533,7 @@ namespace text.doors.Detection
             {
                 if (qm_TestCount == QM_TestCount.第一次)
                 {
+                    #region 赋值
                     if (i == 0)
                     {
                         model.qm_s_z_fj10 = this.dgv_ll.Rows[i].Cells["Pressure_Z"].Value.ToString();
@@ -1591,9 +1619,11 @@ namespace text.doors.Detection
                         model.sjz_f_fj = this.dgv_ll.Rows[i].Cells["Pressure_F"].Value.ToString();
                         model.sjz_f_zd = this.dgv_ll.Rows[i].Cells["Pressure_F_Z"].Value.ToString();
                     }
+                    #endregion
                 }
                 else if (qm_TestCount == QM_TestCount.第二次)
                 {
+                    #region 赋值
                     if (i == 0)
                     {
                         model.qm_s_z_fj10 = this.dgv_ll2.Rows[i].Cells["Pressure_Z"].Value.ToString();
@@ -1679,6 +1709,7 @@ namespace text.doors.Detection
                         model.sjz_f_fj = this.dgv_ll2.Rows[i].Cells["Pressure_F"].Value.ToString();
                         model.sjz_f_zd = this.dgv_ll2.Rows[i].Cells["Pressure_F_Z"].Value.ToString();
                     }
+                    #endregion
                 }
             }
             return dal.Add(model);
@@ -1710,7 +1741,7 @@ namespace text.doors.Detection
             List<AirtightCalculation> airtightCalculation = new List<AirtightCalculation>();
             if (qm_TestCount == QM_TestCount.第一次)
             {
-                if (this.dgv_ll.Rows[11].Cells["Pressure_Z_Z"].Value.ToString().ToString() != "0")
+                if (this.dgv_ll.Rows[11].Cells["Pressure_Z_Z"].Value.ToString().ToString() != "0" || this.dgv_ll.Rows[11].Cells["Pressure_F_Z"].Value.ToString().ToString() != "0")
                 {
                     zFc = Formula.GetIndexStitchLengthAndArea(
                         double.Parse(this.dgv_ll.Rows[11].Cells["Pressure_Z_Z"].Value.ToString()),
@@ -1830,7 +1861,7 @@ namespace text.doors.Detection
             }
             else if (qm_TestCount == QM_TestCount.第二次)
             {
-                if (this.dgv_ll2.Rows[11].Cells["Pressure_F_Z"].Value.ToString() != "0")
+                if (this.dgv_ll2.Rows[11].Cells["Pressure_Z_Z"].Value.ToString().ToString() != "0" || this.dgv_ll2.Rows[11].Cells["Pressure_F_Z"].Value.ToString().ToString() != "0")
                 {
                     zFc = Formula.GetIndexStitchLengthAndArea(
                          double.Parse(this.dgv_ll2.Rows[11].Cells["Pressure_Z_Z"].Value.ToString()),
@@ -2009,12 +2040,21 @@ namespace text.doors.Detection
 
         private void btn_stop_Click(object sender, EventArgs e)
         {
-            Stop();
+            var res = _serialPortClient.Stop();
+            if (!res)
+                return;
             this.btn_justready.Enabled = true;
             this.btn_loseready.Enabled = true;
             this.btn_losestart.Enabled = true;
             this.btn_datadispose.Enabled = true;
             this.btn_juststart.Enabled = true;
+
+            btn_datadispose.BackColor = Color.Transparent;
+            btn_justready.BackColor = Color.Transparent;
+            btn_loseready.BackColor = Color.Transparent;
+            btn_losestart.BackColor = Color.Transparent;
+            btn_juststart.BackColor = Color.Transparent;
+
             this.tim_Top10.Enabled = false;
             //lbl_setYL.Text = "0";
             if (this.tabControl1.SelectedTab.Name == "流量原始数据")
@@ -2077,7 +2117,6 @@ namespace text.doors.Detection
             if (airtightPropertyTest == PublicEnum.AirtightPropertyTest.FStart)
             {
                 double value = _serialPortClient.GetFYKSJS();
-
 
                 if (value >= 15)
                 {
@@ -2162,8 +2201,11 @@ namespace text.doors.Detection
                 return;
             }
 
+            //本程序控制
+            btn_ycjy_z.BackColor = Color.Green;
+
             airtightPropertyTest = PublicEnum.AirtightPropertyTest.ZYCJY;
-            this.btn_ycjy_z.Enabled = true;
+            //this.btn_ycjy_z.Enabled = true;
 
 
             //关闭监控按钮
@@ -2171,10 +2213,17 @@ namespace text.doors.Detection
             this.btn_loseready.Enabled = false;
             this.btn_losestart.Enabled = false;
             this.btn_juststart.Enabled = false;
+
+
+            btn_justready.BackColor = Color.Transparent;
+            btn_loseready.BackColor = Color.Transparent;
+            btn_losestart.BackColor = Color.Transparent;
+            btn_juststart.BackColor = Color.Transparent;
         }
 
         private void btn_ycjyf_Click(object sender, EventArgs e)
         {
+            index = 0;
             this.btn_ycjyf.Enabled = false;
             int value = 0;
 
@@ -2192,14 +2241,23 @@ namespace text.doors.Detection
                 MessageBox.Show("负依次加压异常！", "警告！", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
                 return;
             }
+
+
+            //本程序控制
+            btn_ycjyf.BackColor = Color.Green;
             airtightPropertyTest = PublicEnum.AirtightPropertyTest.FYCJY;
-            this.btn_ycjyf.Enabled = true;
+            //this.btn_ycjyf.Enabled = true;
 
             //关闭监控按钮
             this.btn_justready.Enabled = false;
             this.btn_loseready.Enabled = false;
             this.btn_losestart.Enabled = false;
             this.btn_juststart.Enabled = false;
+
+            btn_justready.BackColor = Color.Transparent;
+            btn_loseready.BackColor = Color.Transparent;
+            btn_losestart.BackColor = Color.Transparent;
+            btn_juststart.BackColor = Color.Transparent;
         }
 
         private void tim_getsjz_Tick(object sender, EventArgs e)
@@ -2235,7 +2293,11 @@ namespace text.doors.Detection
 
         private void btn_exit_Click(object sender, EventArgs e)
         {
-            Stop();
+            var res = _serialPortClient.Stop();
+
+            // MessageBox.Show("急停异常", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
+
+            //Stop();
             this.Close();
         }
     }
