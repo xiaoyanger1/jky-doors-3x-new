@@ -259,6 +259,8 @@ namespace text.doors.Common
         /// <returns></returns>
         public static void GetKFY(List<WindPressureDGV> windPressureDGV, int gjcd, double lx, ref double zy, ref double fy)
         {
+            windPressureDGV = windPressureDGV.FindAll(t => t.Pa != "P3阶段" && t.Pa != "P3残余变形" && t.Pa != "PMax/残余变形").ToList();
+
             string errorMsg = "";
 
             //正压
@@ -432,42 +434,88 @@ namespace text.doors.Common
             if (waterTight == null || waterTight.Count == 0)
                 return value;
 
-            if (waterTight.Count == 3)
-            {
-                List<int> list = new List<int>();
-                waterTight.ForEach(t => list.Add(Convert.ToInt32(t.sm_Pa)));
-                list.Sort();
+            //if (waterTight.Count == 3)
+            //{
+            //    List<int> list = new List<int>();
+            //    waterTight.ForEach(t => list.Add(Convert.ToInt32(t.sm_Pa)));
+            //    list.Sort();
 
-                int min = list[0];
-                int intermediate = list[1];
-                int max = list[2];
+            //    int min = list[0];
+            //int intermediate = list[1];
+            //int max = list[2];
 
-                int minlevel = DefaultBase.AirtightLevel.Where(t => t.Value == min).Count() > 0 ? DefaultBase.AirtightLevel.Where(t => t.Value == min).FirstOrDefault().Key : 0;
-                int intermediatelevel = DefaultBase.AirtightLevel.Where(t => t.Value == intermediate).Count() > 0 ? DefaultBase.AirtightLevel.Where(t => t.Value == intermediate).FirstOrDefault().Key : 0;
-                int maxlevel = DefaultBase.AirtightLevel.Where(t => t.Value == max).Count() > 0 ? DefaultBase.AirtightLevel.Where(t => t.Value == max).FirstOrDefault().Key : 0;
+            //     int minlevel = DefaultBase.AirtightLevel.Where(t => t.Value == min).Count() > 0 ? DefaultBase.AirtightLevel.Where(t => t.Value == min).FirstOrDefault().Key : 0;
 
-                if ((maxlevel - intermediatelevel) > 2)
-                {
-                    foreach (var item in DefaultBase.AirtightLevel)
-                    {
-                        if (item.Key == (intermediatelevel + 2))
-                        {
-                            max = item.Value; break;
-                        }
-                    }
-                }
+            //int intermediatelevel = DefaultBase.AirtightLevel.Where(t => t.Value == intermediate).Count() > 0 ? DefaultBase.AirtightLevel.Where(t => t.Value == intermediate).FirstOrDefault().Key : 0;
+            //int maxlevel = DefaultBase.AirtightLevel.Where(t => t.Value == max).Count() > 0 ? DefaultBase.AirtightLevel.Where(t => t.Value == max).FirstOrDefault().Key : 0;
 
-                value = (min + intermediate + max) / 3;
-            }
-            else
-            {
-                foreach (var item in waterTight)
-                    value += int.Parse(item.sm_Pa);
+            //if ((maxlevel - intermediatelevel) > 2)
+            //{
+            //    foreach (var item in DefaultBase.AirtightLevel)
+            //    {
+            //        if (item.Key == (intermediatelevel + 2))
+            //        {
+            //            max = item.Value; break;
+            //        }
+            //    }
+            //}
+            //value = (min + intermediate + max) / 3;
+            //}
+            //else
+            //{
+            //    foreach (var item in waterTight)
+            //        value += int.Parse(item.sm_Pa);
 
-                value = value / waterTight.Count;
-            }
+            //    value = value / waterTight.Count;
+            //}
+            value = int.Parse(waterTight.Min(t => t.sm_Pa));
+
             return Formula.GetWaterTightLevel(value);
         }
+
+        ///old
+        //public int GetWaterTightLevel(List<Model_dt_sm_Info> waterTight)
+        //{
+        //    int value = 0;
+        //    if (waterTight == null || waterTight.Count == 0)
+        //        return value;
+
+        //    if (waterTight.Count == 3)
+        //    {
+        //        List<int> list = new List<int>();
+        //        waterTight.ForEach(t => list.Add(Convert.ToInt32(t.sm_Pa)));
+        //        list.Sort();
+
+        //        int min = list[0];
+        //        int intermediate = list[1];
+        //        int max = list[2];
+
+        //        int minlevel = DefaultBase.AirtightLevel.Where(t => t.Value == min).Count() > 0 ? DefaultBase.AirtightLevel.Where(t => t.Value == min).FirstOrDefault().Key : 0;
+        //        int intermediatelevel = DefaultBase.AirtightLevel.Where(t => t.Value == intermediate).Count() > 0 ? DefaultBase.AirtightLevel.Where(t => t.Value == intermediate).FirstOrDefault().Key : 0;
+        //        int maxlevel = DefaultBase.AirtightLevel.Where(t => t.Value == max).Count() > 0 ? DefaultBase.AirtightLevel.Where(t => t.Value == max).FirstOrDefault().Key : 0;
+
+        //        if ((maxlevel - intermediatelevel) > 2)
+        //        {
+        //            foreach (var item in DefaultBase.AirtightLevel)
+        //            {
+        //                if (item.Key == (intermediatelevel + 2))
+        //                {
+        //                    max = item.Value; break;
+        //                }
+        //            }
+        //        }
+
+        //        value = (min + intermediate + max) / 3;
+        //    }
+        //    else
+        //    {
+        //        foreach (var item in waterTight)
+        //            value += int.Parse(item.sm_Pa);
+
+        //        value = value / waterTight.Count;
+        //    }
+        //    return Formula.GetWaterTightLevel(value);
+        //}
 
 
 
@@ -542,8 +590,8 @@ namespace text.doors.Common
             if (airTight == null || airTight.Count == 0)
                 return 0;
 
-            double zFc = Math.Round(airTight.Sum(t => double.Parse(t.qm_Z_FC)) / airTight.Count, 2);
-            double zMj = Math.Round(airTight.Sum(t => double.Parse(t.qm_Z_MJ)) / airTight.Count, 2);
+            double zFc = Math.Round(double.Parse(airTight.Max(t => t.qm_Z_FC)), 2);//Math.Round(airTight.Sum(t => double.Parse(t.qm_Z_FC)) / airTight.Count, 2);
+            double zMj = Math.Round(double.Parse(airTight.Max(t => t.qm_Z_MJ)), 2);//Math.Round(airTight.Sum(t => double.Parse(t.qm_Z_MJ)) / airTight.Count, 2);
 
             List<int> level = new List<int>();
             level.Add(Formula.GetStitchLengthLevel(zFc));

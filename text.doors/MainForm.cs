@@ -311,7 +311,8 @@ namespace text.doors
                     }
                     else if (con is WindPressureDetection)
                     {
-                        WindPressureDetection.td.Abort();
+                        con.Dispose();
+                        //WindPressureDetection.releaseThread();
                         ((Form)con).Close();
                     }
                     else
@@ -345,7 +346,8 @@ namespace text.doors
                     }
                     else if (con is WindPressureDetection)
                     {
-                        WindPressureDetection.td.Abort();
+                        //WindPressureDetection.releaseThread();
+                        con.Dispose();
                         ((Form)con).Close();
                     }
                     else
@@ -376,9 +378,8 @@ namespace text.doors
                     }
                     else if (con is WindPressureDetection)
                     {
-                        WindPressureDetection.td.Abort();
-                        DefaultBase.isRelease = true;
-                        Thread.Sleep(1000);
+                        //WindPressureDetection.releaseThread();
+                        con.Dispose();
                         ((Form)con).Close();
                     }
                     else
@@ -410,9 +411,7 @@ namespace text.doors
                     }
                     else if (con is WindPressureDetection)
                     {
-                       
-                        WindPressureDetection.td.Abort();
-                        DefaultBase.isRelease = true;
+                        con.Dispose();
                         ((Form)con).Close();
                     }
                     else
@@ -562,7 +561,6 @@ namespace text.doors
                     FolderBrowserDialog path = new FolderBrowserDialog();
                     path.ShowDialog();
 
-                    //label3.Visible = true;
                     if (string.IsNullOrWhiteSpace(path.SelectedPath))
                     {
                         return;

@@ -35,7 +35,6 @@ namespace text.doors.Detection
         //默认
         private List<DefKFYPa> defKFYPa = new List<DefKFYPa>();
 
-        //private static int _CYGXS = 0;
         public static double _displace1 = 0;
         public static double _displace2 = 0;
         public static double _displace3 = 0;
@@ -47,19 +46,21 @@ namespace text.doors.Detection
         /// 抗风压数据位置
         /// </summary>
         private PublicEnum.WindPressureTest? windPressureTest = null;
-        //public static System.Timers.Timer wy_tim;
-        //public static System.Threading.Timer wy_tim;
 
 
         public static System.Timers.Timer tim_fy1;
         public static System.Timers.Timer tim_static1;
         public static Thread td;
 
-
-        //public static System.Timers.Timer bind_tim;
         public WindPressureDetection()
         {
 
+        }
+
+
+        public static void releaseThread()
+        {
+            td.Abort();
         }
 
         public WindPressureDetection(SerialPortClient tcpClient, string tempCode, string tempTong)
@@ -863,9 +864,12 @@ namespace text.doors.Detection
             double fy = 0;
 
             Formula.GetKFY(windPressureDGV, DefaultBase.BarLength, lx, ref zy, ref fy);
-
-            txt_p1.Text = zy > 0 ? Math.Round(zy, 0).ToString() : "0";
-            txt_f_p1.Text = fy > 0 ? Math.Round(fy, 0).ToString() : "0";
+            if (zy != -100)
+            {
+                txt_p1.Text = zy > 0 ? Math.Round(zy, 0).ToString() : "0";
+            }
+            if (fy != -100)
+                txt_f_p1.Text = fy > 0 ? Math.Round(fy, 0).ToString() : "0";
 
             currentkPa = 0;
         }

@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Windows.Media.Converters;
 using text.doors.dal;
 using text.doors.Model;
 using text.doors.Model.DataBase;
@@ -34,15 +35,21 @@ namespace text.doors.Common
         {
             try
             {
+
+                Model_dt_Settings _settings = new DAL_dt_Settings().GetInfoByCode(_tempCode);
+
                 FileStream file = new FileStream(this.templetFileName, FileMode.Open, FileAccess.Read);
                 NPOI.HSSF.UserModel.HSSFWorkbook hssfworkbook = new NPOI.HSSF.UserModel.HSSFWorkbook(file);
                 NPOI.HSSF.UserModel.HSSFSheet ws = new NPOI.HSSF.UserModel.HSSFSheet(hssfworkbook);
 
                 DataTable dt_Settings = new DAL_dt_Settings().Getdt_SettingsByCode(_tempCode);
+
+                List<Model_dt_qm_Info> qm_Info = new DAL_dt_Settings().GetQMListByCode(_tempCode);
+
+                List<Model_dt_sm_Info> sm_Info = new DAL_dt_Settings().GetSMListByCode(_tempCode);
+
                 if (dt_Settings == null || dt_Settings.Rows.Count == 0)
-                {
                     return false;
-                }
 
                 #region   --性能检测报告--
                 ws = (NPOI.HSSF.UserModel.HSSFSheet)hssfworkbook.GetSheet("性能检测报告");
@@ -59,6 +66,7 @@ namespace text.doors.Common
                 //样品
                 ws.GetRow(8).GetCell(3).SetCellValue(dt_Settings.Rows[0]["yangpinmingcheng"].ToString());
                 ws.GetRow(8).GetCell(8).SetCellValue(dt_Settings.Rows[0]["yangpinzhuangtai"].ToString());
+                ws.GetRow(9).GetCell(3).SetCellValue(dt_Settings.Rows[0]["yangpinshangbiao"].ToString());
                 ws.GetRow(9).GetCell(8).SetCellValue(dt_Settings.Rows[0]["guigexinghao"].ToString());
                 //检测
                 ws.GetRow(10).GetCell(3).SetCellValue(dt_Settings.Rows[0]["jiancexiangmu"].ToString());
@@ -68,24 +76,37 @@ namespace text.doors.Common
                 ws.GetRow(12).GetCell(3).SetCellValue(dt_Settings.Rows[0]["jianceyiju"].ToString());
                 ws.GetRow(13).GetCell(3).SetCellValue(dt_Settings.Rows[0]["jianceshebei"].ToString());
 
-                List<Model_dt_sm_Info> smjy = new DAL_dt_Settings().GetSMListByCode(_tempCode);
-                if (smjy != null && smjy.Count > 0)
+
+                if (sm_Info != null && sm_Info.Count > 0)
                 {
-                    if (smjy[0].Method == "波动加压")
-                    {
-                        ws.GetRow(19).GetCell(4).SetCellValue("(采用稳定加压方法检测)");
-                    }
-                    else
-                    {
+                    if (sm_Info[0].Method == "波动加压")
                         ws.GetRow(19).GetCell(4).SetCellValue("(采用波动加压方法检测)");
-                    }
+                    else
+                        ws.GetRow(19).GetCell(4).SetCellValue("(采用稳定加压方法检测)");
                 }
                 //结论
-                ws.GetRow(16).GetCell(8).SetCellValue(0);
-                ws.GetRow(17).GetCell(8).SetCellValue(0);
-                ws.GetRow(18).GetCell(8).SetCellValue(0);
+                Formula formula = new Formula();
 
-                ws.GetRow(20).GetCell(8).SetCellValue(0);
+                var zLevel = formula.Get_Z_AirTightLevel(qm_Info).ToString();
+                var fLevel = formula.Get_F_AirTightLevel(qm_Info).ToString();
+
+                ws.GetRow(16).GetCell(8).SetCellValue(zLevel);
+                ws.GetRow(17).GetCell(8).SetCellValue(fLevel);
+
+                var smLevel = formula.GetWaterTightLevel(sm_Info).ToString();
+                ws.GetRow(18).GetCell(8).SetCellValue(smLevel);
+
+                List<int> kfyValue = new List<int>();
+
+                foreach (var item in _settings.dt_kfy_Info)
+                {
+                    kfyValue.Add(int.Parse(item.p3));
+                    kfyValue.Add(int.Parse(item._p3));
+                }
+                var minValue = kfyValue.Min(t => t);
+                var kfyLevel = Formula.GetWindPressureLevel(minValue).ToString();
+
+                ws.GetRow(20).GetCell(8).SetCellValue(kfyLevel);
                 #endregion
 
                 #region 质量检测报告
@@ -95,6 +116,7 @@ namespace text.doors.Common
                 ws.GetRow(3).GetCell(2).SetCellValue(dt_Settings.Rows[0]["kaiqifengchang"].ToString());
                 ws.GetRow(3).GetCell(9).SetCellValue(dt_Settings.Rows[0]["shijianmianji"].ToString());
                 ws.GetRow(4).GetCell(2).SetCellValue(dt_Settings.Rows[0]["mianbanpinzhong"].ToString());
+                ws.GetRow(4).GetCell(9).SetCellValue(dt_Settings.Rows[0]["anzhuangfangshi"].ToString());
                 ws.GetRow(5).GetCell(2).SetCellValue(dt_Settings.Rows[0]["mianbanxiangqian"].ToString());
                 ws.GetRow(5).GetCell(9).SetCellValue(dt_Settings.Rows[0]["kuangshanmifeng"].ToString());
                 ws.GetRow(6).GetCell(2).SetCellValue(dt_Settings.Rows[0]["dangqianwendu"].ToString());
@@ -111,54 +133,135 @@ namespace text.doors.Common
 
 
                 //工程设计值
-                ws.GetRow(7).GetCell(3).SetCellValue(dt_Settings.Rows[0]["qimidanweifengchangshejizhi"].ToString());
-                ws.GetRow(7).GetCell(7).SetCellValue(dt_Settings.Rows[0]["shuimijingyashejizhi"].ToString());
-                ws.GetRow(7).GetCell(11).SetCellValue(dt_Settings.Rows[0]["kangfengyazhengyashejizhi"].ToString());
+                ws.GetRow(8).GetCell(3).SetCellValue(dt_Settings.Rows[0]["qimidanweifengchangshejizhi"].ToString());
+                ws.GetRow(8).GetCell(8).SetCellValue(dt_Settings.Rows[0]["shuimijingyashejizhi"].ToString());
+                ws.GetRow(8).GetCell(12).SetCellValue(dt_Settings.Rows[0]["kangfengyazhengyashejizhi"].ToString());
 
-                ws.GetRow(8).GetCell(3).SetCellValue(dt_Settings.Rows[0]["qimidanweimianjishejizhi"].ToString());
-                ws.GetRow(8).GetCell(8).SetCellValue(dt_Settings.Rows[0]["shuimidongyashejizhi"].ToString());
-                ws.GetRow(8).GetCell(12).SetCellValue(dt_Settings.Rows[0]["kangfengyafuyashejizhi"].ToString());
+                ws.GetRow(9).GetCell(3).SetCellValue(dt_Settings.Rows[0]["qimidanweimianjishejizhi"].ToString());
+                ws.GetRow(9).GetCell(8).SetCellValue(dt_Settings.Rows[0]["shuimidongyashejizhi"].ToString());
+                ws.GetRow(9).GetCell(12).SetCellValue(dt_Settings.Rows[0]["kangfengyafuyashejizhi"].ToString());
                 //气密性能
-                ws.GetRow(11).GetCell(6).SetCellValue("");
-                ws.GetRow(11).GetCell(9).SetCellValue("");
-                ws.GetRow(12).GetCell(6).SetCellValue("");
-                ws.GetRow(12).GetCell(9).SetCellValue("");
+                double zfc = 0;
+                double zmj = 0;
+                double ffc = 0;
+                double fmj = 0;
+                if (qm_Info != null && qm_Info.Count > 0)
+                {
+                    zfc = double.Parse(qm_Info.FindAll(t => t.testcount == 1).Max(t => t.qm_Z_FC));
+                    zmj = double.Parse(qm_Info.FindAll(t => t.testcount == 1).Max(t => t.qm_Z_MJ));
+                    ffc = double.Parse(qm_Info.FindAll(t => t.testcount == 1).Max(t => t.qm_F_FC));
+                    fmj = double.Parse(qm_Info.FindAll(t => t.testcount == 1).Max(t => t.qm_F_MJ));
+                }
+                ws.GetRow(11).GetCell(6).SetCellValue(zfc);
+                ws.GetRow(11).GetCell(9).SetCellValue(ffc);
+                ws.GetRow(12).GetCell(6).SetCellValue(zmj);
+                ws.GetRow(12).GetCell(9).SetCellValue(fmj);
                 //水密性能
                 ws.GetRow(13).GetCell(3).SetCellValue(dt_Settings.Rows[0]["penlinshuiliang"].ToString());
-                //稳定加压
-                ws.GetRow(14).GetCell(5).SetCellValue("");
-                ws.GetRow(15).GetCell(5).SetCellValue("");
-                //波动
-                ws.GetRow(16).GetCell(3).SetCellValue("");
-                ws.GetRow(17).GetCell(3).SetCellValue("");
-                //抗风压
-                ws.GetRow(18).GetCell(6).SetCellValue("");
-                ws.GetRow(19).GetCell(6).SetCellValue("");
-                ws.GetRow(20).GetCell(6).SetCellValue("");
-                ws.GetRow(21).GetCell(6).SetCellValue("");
 
-                ws.GetRow(22).GetCell(8).SetCellValue("");
-                //风荷载
-                ws.GetRow(23).GetCell(6).SetCellValue("");
-                ws.GetRow(24).GetCell(6).SetCellValue("");
-                ws.GetRow(25).GetCell(6).SetCellValue("");
-                ws.GetRow(26).GetCell(6).SetCellValue("");
+                if (sm_Info?.FindAll(t => t.testcount == 1) != null && sm_Info.FindAll(t => t.testcount == 1).Count > 0)
+                {
+                    if (sm_Info.FindAll(t => t.testcount == 1)[0].Method == "波动加压")
+                    {
+                        //波动
+                        ws.GetRow(16).GetCell(3).SetCellValue("");
+                        ws.GetRow(17).GetCell(3).SetCellValue("");
+                    }
+                    else
+                    {
+                        //稳定加压
+                        var level1 = sm_Info.FindAll(t => t.testcount == 1);
+                        var wdPa = 999;
+                        var wdPaDesc = "";
+                        if (level1 != null && level1.Count > 0)
+                        {
+                            foreach (var item in level1)
+                            {
+                                if ((!item.sm_PaDesc.Contains("〇") && !item.sm_PaDesc.Contains("□")) && int.Parse(item.sm_Pa) < 999)
+                                {
+                                    wdPa = int.Parse(item.sm_Pa);
+                                    wdPaDesc = item.sm_PaDesc;
+                                }
+                            }
+                            if (wdPa == 999)
+                            {
+                                ws.GetRow(14).GetCell(5).SetCellValue("-");
+                                ws.GetRow(15).GetCell(5).SetCellValue("-");
+                            }
+                            else
+                            {
+                                ws.GetRow(14).GetCell(5).SetCellValue(wdPa);
+                                if (wdPa == 0) { ws.GetRow(15).GetCell(5).SetCellValue("0"); }
+                                else if (wdPa == 100) { ws.GetRow(15).GetCell(5).SetCellValue("0"); }
+                                else if (wdPa == 150) { ws.GetRow(15).GetCell(5).SetCellValue("100"); }
+                                else if (wdPa == 200) { ws.GetRow(15).GetCell(5).SetCellValue("150"); }
+                                else if (wdPa == 250) { ws.GetRow(15).GetCell(5).SetCellValue("200"); }
+                                else if (wdPa == 300) { ws.GetRow(15).GetCell(5).SetCellValue("250"); }
+                                else if (wdPa == 350) { ws.GetRow(15).GetCell(5).SetCellValue("300"); }
+                                else if (wdPa == 400) { ws.GetRow(15).GetCell(5).SetCellValue("350"); }
+                                else if (wdPa == 500) { ws.GetRow(15).GetCell(5).SetCellValue("400"); }
+                                else if (wdPa == 600) { ws.GetRow(15).GetCell(5).SetCellValue("500"); }
+                                else if (wdPa == 700) { ws.GetRow(15).GetCell(5).SetCellValue("600"); }
+                            }
+                        }
+                    }
+                }
+
+                //抗风压
+                var kfyList = _settings.dt_kfy_Info;
+                if (kfyList != null && kfyList.Count > 0)
+                {
+                    ws.GetRow(18).GetCell(6).SetCellValue(kfyList.Min(t => t.p1));
+                    ws.GetRow(19).GetCell(6).SetCellValue(kfyList.Min(t => t._p1));
+                    ws.GetRow(20).GetCell(6).SetCellValue(kfyList.Min(t => t.p2));
+                    ws.GetRow(21).GetCell(6).SetCellValue(kfyList.Min(t => t._p2));
+                    ws.GetRow(22).GetCell(8).SetCellValue("");
+                    //风荷载
+                    ws.GetRow(23).GetCell(6).SetCellValue(kfyList.Min(t => t.p3));
+                    ws.GetRow(24).GetCell(6).SetCellValue(kfyList.Min(t => t._p3));
+                    //todo:
+                    ws.GetRow(25).GetCell(6).SetCellValue("");
+                    ws.GetRow(26).GetCell(6).SetCellValue("");
+                }
 
                 //重复
                 //气密性能
-                ws.GetRow(27).GetCell(6).SetCellValue("");
-                ws.GetRow(27).GetCell(9).SetCellValue("");
-                ws.GetRow(28).GetCell(6).SetCellValue("");
-                ws.GetRow(28).GetCell(9).SetCellValue("");
-                //水密性能
-                ws.GetRow(29).GetCell(3).SetCellValue("");
-                //稳定加压
-                ws.GetRow(30).GetCell(5).SetCellValue("");
-                ws.GetRow(31).GetCell(5).SetCellValue("");
-                //波动
-                ws.GetRow(32).GetCell(3).SetCellValue("");
-                ws.GetRow(33).GetCell(3).SetCellValue("");
+                double zfc1 = 0;
+                double zmj1 = 0;
+                double ffc1 = 0;
+                double fmj1 = 0;
+                if (qm_Info.FindAll(t => t.testcount == 2) != null && qm_Info.FindAll(t => t.testcount == 2).Count > 0)
+                {
+                    zfc1 = double.Parse(qm_Info.FindAll(t => t.testcount == 2).Max(t => t.qm_Z_FC));
+                    zmj1 = double.Parse(qm_Info.FindAll(t => t.testcount == 2).Max(t => t.qm_Z_MJ));
+                    ffc1 = double.Parse(qm_Info.FindAll(t => t.testcount == 2).Max(t => t.qm_F_FC));
+                    fmj1 = double.Parse(qm_Info.FindAll(t => t.testcount == 2).Max(t => t.qm_F_MJ));
+                }
 
+                ws.GetRow(27).GetCell(6).SetCellValue(zfc1);
+                ws.GetRow(27).GetCell(9).SetCellValue(ffc1);
+                ws.GetRow(28).GetCell(6).SetCellValue(zmj1);
+                ws.GetRow(28).GetCell(9).SetCellValue(fmj1);
+                //水密性能
+                ws.GetRow(29).GetCell(3).SetCellValue(dt_Settings.Rows[0]["penlinshuiliang"].ToString());
+
+                if (sm_Info?.FindAll(t => t.testcount == 1) != null && sm_Info.FindAll(t => t.testcount == 1).Count > 0)
+                {
+                    if (sm_Info.FindAll(t => t.testcount == 1)[0].Method == "波动加压")
+                    {
+                        //波动
+                        ws.GetRow(32).GetCell(3).SetCellValue("");
+                        ws.GetRow(33).GetCell(3).SetCellValue("");
+                    }
+                    else
+                    {
+                        //稳定加压
+                        ws.GetRow(30).GetCell(5).SetCellValue("");
+                        ws.GetRow(31).GetCell(5).SetCellValue("");
+                    }
+                }
+                //工程检测
+                ws.GetRow(34).GetCell(2).SetCellValue("");
                 //检测结果
                 ws.GetRow(35).GetCell(6).SetCellValue("");
                 ws.GetRow(36).GetCell(6).SetCellValue("");
@@ -166,15 +269,13 @@ namespace text.doors.Common
                 ws.GetRow(38).GetCell(6).SetCellValue("");
                 #endregion
 
-
-                List<Model_dt_qm_Info> qm_Info = new DAL_dt_Settings().GetQMListByCode(_tempCode);
                 #region 气密性
 
                 if (qm_Info != null && qm_Info.Count > 0)
                 {
                     ws = (NPOI.HSSF.UserModel.HSSFSheet)hssfworkbook.GetSheet("气密性");
                     ws.ForceFormulaRecalculation = true;
-                    ws.GetRow(2).GetCell(3).SetCellValue(dt_Settings.Rows[0]["weituobianhao"].ToString());
+                    ws.GetRow(2).GetCell(3).SetCellValue(dt_Settings.Rows[0]["dt_Code"].ToString());
                     ws.GetRow(2).GetCell(5).SetCellValue(dt_Settings.Rows[0]["dangqianwendu"].ToString());
                     ws.GetRow(2).GetCell(7).SetCellValue(dt_Settings.Rows[0]["kaiqifengchang"].ToString());
 
@@ -182,7 +283,7 @@ namespace text.doors.Common
                     ws.GetRow(3).GetCell(5).SetCellValue(dt_Settings.Rows[0]["daqiyali"].ToString());
                     ws.GetRow(3).GetCell(7).SetCellValue(dt_Settings.Rows[0]["shijianmianji"].ToString());
 
-                    #region  气密性
+                    #region  气密性数据
                     var qm = qm_Info.FindAll(t => t.testcount == 1).OrderBy(t => t.info_DangH).ToList();
                     if ((qm != null && qm.Count() > 0))
                     {
@@ -222,15 +323,15 @@ namespace text.doors.Common
 
                                 if (item.sjz_value == "0")
                                 {
-                                    ws.GetRow(18).GetCell(2).SetCellValue("设计值");
+                                    ws.GetRow(18).GetCell(2).SetCellValue("-");
                                 }
                                 else
                                 {
                                     ws.GetRow(18).GetCell(2).SetCellValue(item.sjz_value);
                                 }
 
-                                ws.GetRow(18).GetCell(3).SetCellValue(item.sjz_z_zd);
-                                ws.GetRow(18).GetCell(4).SetCellValue(item.sjz_z_fj);
+                                ws.GetRow(18).GetCell(3).SetCellValue(item.sjz_z_zd == "0" ? "-" : item.sjz_z_zd);
+                                ws.GetRow(18).GetCell(4).SetCellValue(item.sjz_z_fj == "0" ? "-" : item.sjz_z_fj);
 
                                 ws.GetRow(19).GetCell(3).SetCellValue(item.qm_Z_FC);
                                 ws.GetRow(20).GetCell(3).SetCellValue(item.qm_Z_MJ);
@@ -261,15 +362,15 @@ namespace text.doors.Common
 
                                 if (item.sjz_value == "0")
                                 {
-                                    ws.GetRow(34).GetCell(2).SetCellValue("设计值");
+                                    ws.GetRow(34).GetCell(2).SetCellValue("-");
                                 }
                                 else
                                 {
                                     ws.GetRow(34).GetCell(2).SetCellValue(item.sjz_value);
                                 }
 
-                                ws.GetRow(34).GetCell(3).SetCellValue(item.sjz_f_zd);
-                                ws.GetRow(34).GetCell(4).SetCellValue(item.sjz_f_fj);
+                                ws.GetRow(34).GetCell(3).SetCellValue(item.sjz_f_zd == "0" ? "-" : item.sjz_f_zd);
+                                ws.GetRow(34).GetCell(4).SetCellValue(item.sjz_f_fj == "0" ? "-" : item.sjz_f_fj);
 
                                 ws.GetRow(35).GetCell(3).SetCellValue(item.qm_F_FC);
                                 ws.GetRow(36).GetCell(3).SetCellValue(item.qm_F_MJ);
@@ -301,11 +402,11 @@ namespace text.doors.Common
                                 ws.GetRow(17).GetCell(5).SetCellValue(item.qm_j_z_zd10);
                                 ws.GetRow(17).GetCell(6).SetCellValue(item.qm_j_z_fj10);
 
-                                ws.GetRow(18).GetCell(3).SetCellValue(item.sjz_z_zd);
-                                ws.GetRow(18).GetCell(4).SetCellValue(item.sjz_z_fj);
+                                ws.GetRow(18).GetCell(5).SetCellValue(item.sjz_z_zd == "0" ? "-" : item.sjz_z_zd);
+                                ws.GetRow(18).GetCell(6).SetCellValue(item.sjz_z_fj == "0" ? "-" : item.sjz_z_fj);
 
-                                ws.GetRow(19).GetCell(3).SetCellValue(item.qm_Z_FC);
-                                ws.GetRow(20).GetCell(3).SetCellValue(item.qm_Z_MJ);
+                                ws.GetRow(19).GetCell(5).SetCellValue(item.qm_Z_FC);
+                                ws.GetRow(20).GetCell(5).SetCellValue(item.qm_Z_MJ);
                                 //负压
                                 ws.GetRow(23).GetCell(5).SetCellValue(item.qm_s_f_zd10);
                                 ws.GetRow(23).GetCell(6).SetCellValue(item.qm_s_f_fj10);
@@ -330,11 +431,11 @@ namespace text.doors.Common
                                 ws.GetRow(33).GetCell(5).SetCellValue(item.qm_j_f_zd10);
                                 ws.GetRow(33).GetCell(6).SetCellValue(item.qm_j_f_fj10);
 
-                                ws.GetRow(34).GetCell(3).SetCellValue(item.sjz_f_zd);
-                                ws.GetRow(34).GetCell(4).SetCellValue(item.sjz_f_fj);
+                                ws.GetRow(34).GetCell(5).SetCellValue(item.sjz_f_zd == "0" ? "-" : item.sjz_f_zd);
+                                ws.GetRow(34).GetCell(6).SetCellValue(item.sjz_f_fj == "0" ? "-" : item.sjz_f_fj);
 
-                                ws.GetRow(35).GetCell(3).SetCellValue(item.qm_F_FC);
-                                ws.GetRow(36).GetCell(3).SetCellValue(item.qm_F_MJ);
+                                ws.GetRow(35).GetCell(5).SetCellValue(item.qm_F_FC);
+                                ws.GetRow(36).GetCell(5).SetCellValue(item.qm_F_MJ);
                             }
                             else if (index == 3)
                             {
@@ -362,11 +463,11 @@ namespace text.doors.Common
                                 ws.GetRow(17).GetCell(7).SetCellValue(item.qm_j_z_zd10);
                                 ws.GetRow(17).GetCell(8).SetCellValue(item.qm_j_z_fj10);
 
-                                ws.GetRow(18).GetCell(3).SetCellValue(item.sjz_z_zd);
-                                ws.GetRow(18).GetCell(4).SetCellValue(item.sjz_z_fj);
+                                ws.GetRow(18).GetCell(7).SetCellValue(item.sjz_z_zd == "0" ? "-" : item.sjz_z_zd);
+                                ws.GetRow(18).GetCell(8).SetCellValue(item.sjz_z_fj == "0" ? "-" : item.sjz_z_fj);
 
-                                ws.GetRow(19).GetCell(3).SetCellValue(item.qm_Z_FC);
-                                ws.GetRow(20).GetCell(3).SetCellValue(item.qm_Z_MJ);
+                                ws.GetRow(19).GetCell(7).SetCellValue(item.qm_Z_FC);
+                                ws.GetRow(20).GetCell(7).SetCellValue(item.qm_Z_MJ);
                                 //负压
                                 ws.GetRow(23).GetCell(7).SetCellValue(item.qm_s_f_zd10);
                                 ws.GetRow(23).GetCell(8).SetCellValue(item.qm_s_f_fj10);
@@ -391,18 +492,25 @@ namespace text.doors.Common
                                 ws.GetRow(33).GetCell(7).SetCellValue(item.qm_j_f_zd10);
                                 ws.GetRow(33).GetCell(8).SetCellValue(item.qm_j_f_fj10);
 
-                                ws.GetRow(34).GetCell(3).SetCellValue(item.sjz_f_zd);
-                                ws.GetRow(34).GetCell(4).SetCellValue(item.sjz_f_fj);
+                                ws.GetRow(34).GetCell(7).SetCellValue(item.sjz_f_zd == "0" ? "-" : item.sjz_f_zd);
+                                ws.GetRow(34).GetCell(8).SetCellValue(item.sjz_f_fj == "0" ? "-" : item.sjz_f_fj);
 
-                                ws.GetRow(35).GetCell(3).SetCellValue(item.qm_F_FC);
-                                ws.GetRow(36).GetCell(3).SetCellValue(item.qm_F_MJ);
+                                ws.GetRow(35).GetCell(7).SetCellValue(item.qm_F_FC);
+                                ws.GetRow(36).GetCell(7).SetCellValue(item.qm_F_MJ);
                             }
                         }
                         #endregion
                     }
                     #endregion
-                }
 
+                    ws.GetRow(44).GetCell(3).SetCellValue(dt_Settings.Rows[0]["weituobianhao"].ToString());
+                    ws.GetRow(44).GetCell(5).SetCellValue(dt_Settings.Rows[0]["dangqianwendu"].ToString());
+                    ws.GetRow(44).GetCell(7).SetCellValue(dt_Settings.Rows[0]["kaiqifengchang"].ToString());
+
+                    ws.GetRow(45).GetCell(3).SetCellValue(dt_Settings.Rows[0]["jianceriqi"].ToString());
+                    ws.GetRow(45).GetCell(5).SetCellValue(dt_Settings.Rows[0]["daqiyali"].ToString());
+                    ws.GetRow(45).GetCell(7).SetCellValue(dt_Settings.Rows[0]["shijianmianji"].ToString());
+                }
                 #endregion
 
                 #region 重复气密性
@@ -460,15 +568,15 @@ namespace text.doors.Common
 
                                 if (item.sjz_value == "0")
                                 {
-                                    ws.GetRow(18).GetCell(2).SetCellValue("设计值");
+                                    ws.GetRow(18).GetCell(2).SetCellValue("-");
                                 }
                                 else
                                 {
                                     ws.GetRow(18).GetCell(2).SetCellValue(item.sjz_value);
                                 }
 
-                                ws.GetRow(18).GetCell(3).SetCellValue(item.sjz_z_zd);
-                                ws.GetRow(18).GetCell(4).SetCellValue(item.sjz_z_fj);
+                                ws.GetRow(18).GetCell(3).SetCellValue(item.sjz_z_zd == "0" ? "-" : item.sjz_z_zd);
+                                ws.GetRow(18).GetCell(4).SetCellValue(item.sjz_z_fj == "0" ? "-" : item.sjz_z_fj);
 
                                 ws.GetRow(19).GetCell(3).SetCellValue(item.qm_Z_FC);
                                 ws.GetRow(20).GetCell(3).SetCellValue(item.qm_Z_MJ);
@@ -500,24 +608,18 @@ namespace text.doors.Common
 
                                 if (item.sjz_value == "0")
                                 {
-                                    ws.GetRow(34).GetCell(2).SetCellValue("设计值");
+                                    ws.GetRow(34).GetCell(2).SetCellValue("-");
                                 }
                                 else
                                 {
                                     ws.GetRow(34).GetCell(2).SetCellValue(item.sjz_value);
                                 }
 
-                                ws.GetRow(34).GetCell(3).SetCellValue(item.sjz_f_zd);
-                                ws.GetRow(34).GetCell(4).SetCellValue(item.sjz_f_fj);
+                                ws.GetRow(34).GetCell(3).SetCellValue(item.sjz_f_zd == "0" ? "-" : item.sjz_f_zd);
+                                ws.GetRow(34).GetCell(4).SetCellValue(item.sjz_f_fj == "0" ? "-" : item.sjz_f_fj);
 
                                 ws.GetRow(35).GetCell(3).SetCellValue(item.qm_F_FC);
                                 ws.GetRow(36).GetCell(3).SetCellValue(item.qm_F_MJ);
-
-
-                                //画线
-
-
-
                             }
                             else if (index == 2)
                             {
@@ -545,8 +647,8 @@ namespace text.doors.Common
                                 ws.GetRow(17).GetCell(5).SetCellValue(item.qm_j_z_zd10);
                                 ws.GetRow(17).GetCell(6).SetCellValue(item.qm_j_z_fj10);
 
-                                ws.GetRow(18).GetCell(3).SetCellValue(item.sjz_z_zd);
-                                ws.GetRow(18).GetCell(4).SetCellValue(item.sjz_z_fj);
+                                ws.GetRow(18).GetCell(5).SetCellValue(item.sjz_z_zd == "0" ? "-" : item.sjz_z_zd);
+                                ws.GetRow(18).GetCell(6).SetCellValue(item.sjz_z_fj == "0" ? "-" : item.sjz_z_fj);
 
                                 ws.GetRow(19).GetCell(5).SetCellValue(item.qm_Z_FC);
                                 ws.GetRow(20).GetCell(5).SetCellValue(item.qm_Z_MJ);
@@ -574,8 +676,8 @@ namespace text.doors.Common
                                 ws.GetRow(33).GetCell(5).SetCellValue(item.qm_j_f_zd10);
                                 ws.GetRow(33).GetCell(6).SetCellValue(item.qm_j_f_fj10);
 
-                                ws.GetRow(34).GetCell(3).SetCellValue(item.sjz_f_zd);
-                                ws.GetRow(34).GetCell(4).SetCellValue(item.sjz_f_fj);
+                                ws.GetRow(34).GetCell(5).SetCellValue(item.sjz_f_zd == "0" ? "-" : item.sjz_f_zd);
+                                ws.GetRow(34).GetCell(6).SetCellValue(item.sjz_f_fj == "0" ? "-" : item.sjz_f_fj);
 
                                 ws.GetRow(35).GetCell(5).SetCellValue(item.qm_F_FC);
                                 ws.GetRow(36).GetCell(5).SetCellValue(item.qm_F_MJ);
@@ -606,8 +708,8 @@ namespace text.doors.Common
                                 ws.GetRow(17).GetCell(7).SetCellValue(item.qm_j_z_zd10);
                                 ws.GetRow(17).GetCell(8).SetCellValue(item.qm_j_z_fj10);
 
-                                ws.GetRow(18).GetCell(3).SetCellValue(item.sjz_z_zd);
-                                ws.GetRow(18).GetCell(4).SetCellValue(item.sjz_z_fj);
+                                ws.GetRow(18).GetCell(7).SetCellValue(item.sjz_z_zd == "0" ? "-" : item.sjz_z_zd);
+                                ws.GetRow(18).GetCell(8).SetCellValue(item.sjz_z_fj == "0" ? "-" : item.sjz_z_fj);
 
                                 ws.GetRow(19).GetCell(7).SetCellValue(item.qm_Z_FC);
                                 ws.GetRow(20).GetCell(7).SetCellValue(item.qm_Z_MJ);
@@ -635,8 +737,8 @@ namespace text.doors.Common
                                 ws.GetRow(33).GetCell(7).SetCellValue(item.qm_j_f_zd10);
                                 ws.GetRow(33).GetCell(8).SetCellValue(item.qm_j_f_fj10);
 
-                                ws.GetRow(34).GetCell(3).SetCellValue(item.sjz_f_zd);
-                                ws.GetRow(34).GetCell(4).SetCellValue(item.sjz_f_fj);
+                                ws.GetRow(34).GetCell(7).SetCellValue(item.sjz_f_zd == "0" ? "-" : item.sjz_f_zd);
+                                ws.GetRow(34).GetCell(8).SetCellValue(item.sjz_f_fj == "0" ? "-" : item.sjz_f_fj);
 
                                 ws.GetRow(35).GetCell(7).SetCellValue(item.qm_F_FC);
                                 ws.GetRow(36).GetCell(7).SetCellValue(item.qm_F_MJ);
@@ -644,28 +746,35 @@ namespace text.doors.Common
                         }
                         #endregion
                     }
+
+                    ws.GetRow(44).GetCell(3).SetCellValue(dt_Settings.Rows[0]["weituobianhao"].ToString());
+                    ws.GetRow(44).GetCell(5).SetCellValue(dt_Settings.Rows[0]["dangqianwendu"].ToString());
+                    ws.GetRow(44).GetCell(7).SetCellValue(dt_Settings.Rows[0]["kaiqifengchang"].ToString());
+
+                    ws.GetRow(45).GetCell(3).SetCellValue(dt_Settings.Rows[0]["jianceriqi"].ToString());
+                    ws.GetRow(45).GetCell(5).SetCellValue(dt_Settings.Rows[0]["daqiyali"].ToString());
+                    ws.GetRow(45).GetCell(7).SetCellValue(dt_Settings.Rows[0]["shijianmianji"].ToString());
                     #endregion
                 }
                 #endregion
 
-
                 #region  水密性
-                List<Model_dt_sm_Info> sm_Info = new DAL_dt_Settings().GetSMListByCode(_tempCode);
-                if (smjy != null && smjy.Count > 0)
+
+                if (sm_Info != null && sm_Info.Count > 0)
                 {
                     var isBoDong = false;
-                    if (smjy[0].Method == "波动加压")
+                    if (sm_Info[0].Method == "波动加压")
                     {
                         isBoDong = true;
                     }
                     if (isBoDong)
                     {
-                        var sm = smjy.FindAll(t => t.testcount == 1).OrderBy(t => t.info_DangH).ToList();
+                        var sm = sm_Info.FindAll(t => t.testcount == 1).OrderBy(t => t.info_DangH).ToList();
                         if ((sm != null && sm.Count() > 0))
                         {
                             #region 水密性（波动）
                             ws = (NPOI.HSSF.UserModel.HSSFSheet)hssfworkbook.GetSheet("水密性(波动)");
-                            ws.GetRow(1).GetCell(2).SetCellValue(dt_Settings.Rows[0]["weituobianhao"].ToString());
+                            ws.GetRow(1).GetCell(2).SetCellValue(dt_Settings.Rows[0]["dt_Code"].ToString());
                             ws.GetRow(1).GetCell(10).SetCellValue(dt_Settings.Rows[0]["penlinshuiliang"].ToString());
                             ws.GetRow(2).GetCell(1).SetCellValue(dt_Settings.Rows[0]["jianceriqi"].ToString());
                             ws.GetRow(2).GetCell(10).SetCellValue(dt_Settings.Rows[0]["shijianmianji"].ToString());
@@ -673,13 +782,16 @@ namespace text.doors.Common
                             foreach (var item in sm)
                             {
                                 index++;
-                                var res = "否";
-                                if (item.sm_PaDesc.Contains("〇"))
+                                var res = "是";
+                                var isLeakage = true; //是否渗漏
+                                if (item.sm_PaDesc.Contains("〇") || item.sm_PaDesc.Contains("□"))
                                 {
-                                    res = "是";
+                                    res = "否";
+                                    isLeakage = false;
                                 }
                                 if (index == 1)
                                 {
+                                    #region 赋值
                                     if (item.xxyl == "0" && item.sxyl == "0")
                                     {
                                         ws.GetRow(5).GetCell(4).SetCellValue(res);
@@ -739,9 +851,12 @@ namespace text.doors.Common
                                     ws.GetRow(16).GetCell(1).SetCellValue(item.xxyl);
                                     ws.GetRow(16).GetCell(2).SetCellValue("");
                                     ws.GetRow(16).GetCell(3).SetCellValue(item.sxyl);
+
+                                    #endregion
                                 }
                                 else if (index == 2)
                                 {
+                                    #region 赋值
                                     if (item.xxyl == "0" && item.sxyl == "0")
                                     {
                                         ws.GetRow(5).GetCell(7).SetCellValue(res);
@@ -798,9 +913,11 @@ namespace text.doors.Common
                                         ws.GetRow(15).GetCell(7).SetCellValue(res);
                                         ws.GetRow(15).GetCell(8).SetCellValue(item.sm_PaDesc);
                                     }
+                                    #endregion
                                 }
                                 else if (index == 3)
                                 {
+                                    #region 赋值
                                     if (item.xxyl == "0" && item.sxyl == "0")
                                     {
                                         ws.GetRow(5).GetCell(10).SetCellValue(res);
@@ -857,17 +974,17 @@ namespace text.doors.Common
                                         ws.GetRow(15).GetCell(10).SetCellValue(res);
                                         ws.GetRow(15).GetCell(11).SetCellValue(item.sm_PaDesc);
                                     }
+                                    #endregion
                                 }
                             }
                             #endregion
-
                         }
-                        sm = smjy.FindAll(t => t.testcount == 2).OrderBy(t => t.info_DangH).ToList();
+                        sm = sm_Info.FindAll(t => t.testcount == 2).OrderBy(t => t.info_DangH).ToList();
                         if ((sm != null && sm.Count() > 0))
                         {
                             #region 重复水密性（波动）
                             ws = (NPOI.HSSF.UserModel.HSSFSheet)hssfworkbook.GetSheet("重复水密性(波动)");
-                            ws.GetRow(1).GetCell(2).SetCellValue(dt_Settings.Rows[0]["weituobianhao"].ToString());
+                            ws.GetRow(1).GetCell(2).SetCellValue(dt_Settings.Rows[0]["dt_Code"].ToString());
                             ws.GetRow(1).GetCell(10).SetCellValue(dt_Settings.Rows[0]["penlinshuiliang"].ToString());
                             ws.GetRow(2).GetCell(2).SetCellValue(dt_Settings.Rows[0]["jianceriqi"].ToString());
                             ws.GetRow(2).GetCell(10).SetCellValue(dt_Settings.Rows[0]["shijianmianji"].ToString());
@@ -877,7 +994,7 @@ namespace text.doors.Common
                             {
                                 index++;
                                 var res = "否";
-                                if (item.sm_PaDesc.Contains("〇"))
+                                if (item.sm_PaDesc.Contains("〇") || item.sm_PaDesc.Contains("□"))
                                 {
                                     res = "是";
                                 }
@@ -1068,11 +1185,11 @@ namespace text.doors.Common
                     }
                     else
                     {
-                        var sm = smjy.FindAll(t => t.testcount == 1).OrderBy(t => t.info_DangH).ToList();
+                        var sm = sm_Info.FindAll(t => t.testcount == 1).OrderBy(t => t.info_DangH).ToList();
                         if ((sm != null && sm.Count() > 0))
                         {
                             ws = (NPOI.HSSF.UserModel.HSSFSheet)hssfworkbook.GetSheet("水密性(稳定)");
-                            ws.GetRow(1).GetCell(2).SetCellValue(dt_Settings.Rows[0]["weituobianhao"].ToString());
+                            ws.GetRow(1).GetCell(2).SetCellValue(dt_Settings.Rows[0]["dt_Code"].ToString());
                             ws.GetRow(1).GetCell(10).SetCellValue(dt_Settings.Rows[0]["penlinshuiliang"].ToString());
                             ws.GetRow(2).GetCell(2).SetCellValue(dt_Settings.Rows[0]["jianceriqi"].ToString());
                             ws.GetRow(2).GetCell(10).SetCellValue(dt_Settings.Rows[0]["shijianmianji"].ToString());
@@ -1081,209 +1198,1213 @@ namespace text.doors.Common
                             foreach (var item in sm)
                             {
                                 index++;
-                                var res = "否";
-                                if (item.sm_PaDesc.Contains("〇"))
+
+                                var res = "是";
+                                var isLeakage = true; //是否渗漏
+                                if (item.sm_PaDesc.Contains("〇") || item.sm_PaDesc.Contains("□"))
                                 {
-                                    res = "是";
+                                    res = "否";
+                                    isLeakage = false;
                                 }
-                                #region  赋值
+
                                 if (index == 1)
                                 {
+                                    #region  赋值
                                     if (item.gongchengjiance == "0")
-                                    {
-                                        ws.GetRow(16).GetCell(1).SetCellValue("设计值");
-                                    }
+                                        ws.GetRow(16).GetCell(1).SetCellValue("-");
                                     else
                                     {
                                         ws.GetRow(16).GetCell(1).SetCellValue(item.gongchengjiance);
+                                        ws.GetRow(16).GetCell(4).SetCellValue(res);
+                                        ws.GetRow(16).GetCell(5).SetCellValue(item.sm_PaDesc);
                                     }
-
                                     ws.GetRow(17).GetCell(4).SetCellValue(item.sm_Pa);
 
                                     if (item.sm_Pa == "0")
                                     {
-                                        ws.GetRow(5).GetCell(4).SetCellValue(res);
-                                        ws.GetRow(5).GetCell(5).SetCellValue(item.sm_PaDesc);
+                                        if (isLeakage)
+                                        {
+                                        }
+                                        else
+                                        {
+                                            ws.GetRow(5).GetCell(4).SetCellValue(res);
+                                            ws.GetRow(5).GetCell(5).SetCellValue(item.sm_PaDesc);
+                                        }
                                     }
                                     if (item.sm_Pa == "100")
                                     {
-                                        ws.GetRow(6).GetCell(4).SetCellValue(res);
-                                        ws.GetRow(6).GetCell(5).SetCellValue(item.sm_PaDesc);
+                                        if (isLeakage)
+                                        {
+                                            ws.GetRow(5).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(5).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(6).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(6).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(7).GetCell(4).SetCellValue(res);
+                                            ws.GetRow(7).GetCell(5).SetCellValue(item.sm_PaDesc);
+                                        }
+                                        else
+                                        {
+                                            ws.GetRow(5).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(5).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(6).GetCell(4).SetCellValue(res);
+                                            ws.GetRow(6).GetCell(5).SetCellValue(item.sm_PaDesc);
+                                        }
                                     }
                                     if (item.sm_Pa == "150")
                                     {
-                                        ws.GetRow(7).GetCell(4).SetCellValue(res);
-                                        ws.GetRow(7).GetCell(5).SetCellValue(item.sm_PaDesc);
+                                        if (isLeakage)
+                                        {
+                                            ws.GetRow(5).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(5).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(6).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(6).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(7).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(7).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(8).GetCell(4).SetCellValue(res);
+                                            ws.GetRow(8).GetCell(5).SetCellValue(item.sm_PaDesc);
+                                        }
+                                        else
+                                        {
+                                            ws.GetRow(5).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(5).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(6).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(6).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(7).GetCell(4).SetCellValue(res);
+                                            ws.GetRow(7).GetCell(5).SetCellValue(item.sm_PaDesc);
+                                        }
                                     }
                                     if (item.sm_Pa == "200")
                                     {
-                                        ws.GetRow(8).GetCell(4).SetCellValue(res);
-                                        ws.GetRow(8).GetCell(5).SetCellValue(item.sm_PaDesc);
+                                        if (isLeakage)
+                                        {
+                                            ws.GetRow(5).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(5).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(6).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(6).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(7).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(7).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(8).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(8).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(9).GetCell(4).SetCellValue(res);
+                                            ws.GetRow(9).GetCell(5).SetCellValue(item.sm_PaDesc);
+                                        }
+                                        else
+                                        {
+                                            ws.GetRow(5).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(5).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(6).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(6).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(7).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(7).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(8).GetCell(4).SetCellValue(res);
+                                            ws.GetRow(8).GetCell(5).SetCellValue(item.sm_PaDesc);
+                                        }
                                     }
                                     if (item.sm_Pa == "250")
                                     {
-                                        ws.GetRow(9).GetCell(4).SetCellValue(res);
-                                        ws.GetRow(9).GetCell(5).SetCellValue(item.sm_PaDesc);
+                                        if (isLeakage)
+                                        {
+                                            ws.GetRow(5).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(5).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(6).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(6).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(7).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(7).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(8).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(8).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(9).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(9).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(10).GetCell(4).SetCellValue(res);
+                                            ws.GetRow(10).GetCell(5).SetCellValue(item.sm_PaDesc);
+                                        }
+                                        else
+                                        {
+                                            ws.GetRow(5).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(5).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(6).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(6).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(7).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(7).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(8).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(8).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(9).GetCell(4).SetCellValue(res);
+                                            ws.GetRow(9).GetCell(5).SetCellValue(item.sm_PaDesc);
+                                        }
                                     }
                                     if (item.sm_Pa == "300")
                                     {
-                                        ws.GetRow(10).GetCell(4).SetCellValue(res);
-                                        ws.GetRow(10).GetCell(5).SetCellValue(item.sm_PaDesc);
+                                        if (isLeakage)
+                                        {
+                                            ws.GetRow(5).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(5).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(6).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(6).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(7).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(7).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(8).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(8).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(9).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(9).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(10).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(10).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(11).GetCell(4).SetCellValue(res);
+                                            ws.GetRow(11).GetCell(5).SetCellValue(item.sm_PaDesc);
+                                        }
+                                        else
+                                        {
+                                            ws.GetRow(5).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(5).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(6).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(6).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(7).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(7).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(8).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(8).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(9).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(9).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(10).GetCell(4).SetCellValue(res);
+                                            ws.GetRow(10).GetCell(5).SetCellValue(item.sm_PaDesc);
+                                        }
                                     }
                                     if (item.sm_Pa == "350")
                                     {
-                                        ws.GetRow(11).GetCell(4).SetCellValue(res);
-                                        ws.GetRow(11).GetCell(5).SetCellValue(item.sm_PaDesc);
+                                        if (isLeakage)
+                                        {
+                                            ws.GetRow(5).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(5).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(6).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(6).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(7).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(7).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(8).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(8).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(9).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(9).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(10).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(10).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(11).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(11).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(12).GetCell(4).SetCellValue(res);
+                                            ws.GetRow(12).GetCell(5).SetCellValue(item.sm_PaDesc);
+
+                                        }
+                                        else
+                                        {
+                                            ws.GetRow(5).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(5).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(6).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(6).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(7).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(7).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(8).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(8).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(9).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(9).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(10).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(10).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(11).GetCell(4).SetCellValue(res);
+                                            ws.GetRow(11).GetCell(5).SetCellValue(item.sm_PaDesc);
+                                        }
                                     }
                                     if (item.sm_Pa == "400")
                                     {
-                                        ws.GetRow(12).GetCell(4).SetCellValue(res);
-                                        ws.GetRow(12).GetCell(5).SetCellValue(item.sm_PaDesc);
+                                        if (isLeakage)
+                                        {
+                                            ws.GetRow(5).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(5).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(6).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(6).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(7).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(7).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(8).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(8).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(9).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(9).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(10).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(10).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(11).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(11).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(12).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(12).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(13).GetCell(4).SetCellValue(res);
+                                            ws.GetRow(13).GetCell(5).SetCellValue(item.sm_PaDesc);
+                                        }
+                                        else
+                                        {
+                                            ws.GetRow(5).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(5).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(6).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(6).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(7).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(7).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(8).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(8).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(9).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(9).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(10).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(10).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(11).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(11).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(12).GetCell(4).SetCellValue(res);
+                                            ws.GetRow(12).GetCell(5).SetCellValue(item.sm_PaDesc);
+                                        }
                                     }
                                     if (item.sm_Pa == "500")
                                     {
-                                        ws.GetRow(13).GetCell(4).SetCellValue(res);
-                                        ws.GetRow(13).GetCell(5).SetCellValue(item.sm_PaDesc);
+                                        if (isLeakage)
+                                        {
+                                            ws.GetRow(5).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(5).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(6).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(6).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(7).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(7).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(8).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(8).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(9).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(9).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(10).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(10).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(11).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(11).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(12).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(12).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(13).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(13).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(14).GetCell(4).SetCellValue(res);
+                                            ws.GetRow(14).GetCell(5).SetCellValue(item.sm_PaDesc);
+                                        }
+                                        else
+                                        {
+                                            ws.GetRow(5).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(5).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(6).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(6).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(7).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(7).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(8).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(8).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(9).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(9).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(10).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(10).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(11).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(11).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(12).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(12).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(13).GetCell(4).SetCellValue(res);
+                                            ws.GetRow(13).GetCell(5).SetCellValue(item.sm_PaDesc);
+                                        }
                                     }
                                     if (item.sm_Pa == "600")
                                     {
-                                        ws.GetRow(14).GetCell(4).SetCellValue(res);
-                                        ws.GetRow(14).GetCell(5).SetCellValue(item.sm_PaDesc);
+                                        if (isLeakage)
+                                        {
+                                            ws.GetRow(5).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(5).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(6).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(6).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(7).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(7).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(8).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(8).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(9).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(9).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(10).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(10).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(11).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(11).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(12).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(12).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(13).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(13).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(14).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(14).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(15).GetCell(4).SetCellValue(res);
+                                            ws.GetRow(15).GetCell(5).SetCellValue(item.sm_PaDesc);
+                                        }
+                                        else
+                                        {
+                                            ws.GetRow(5).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(5).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(6).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(6).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(7).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(7).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(8).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(8).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(9).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(9).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(10).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(10).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(11).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(11).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(12).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(12).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(13).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(13).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(14).GetCell(4).SetCellValue(res);
+                                            ws.GetRow(14).GetCell(5).SetCellValue(item.sm_PaDesc);
+                                        }
                                     }
                                     if (item.sm_Pa == "700")
                                     {
-                                        ws.GetRow(15).GetCell(4).SetCellValue(res);
-                                        ws.GetRow(15).GetCell(5).SetCellValue(item.sm_PaDesc);
+                                        if (isLeakage)
+                                        {
+                                            ws.GetRow(5).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(5).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(6).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(6).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(7).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(7).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(8).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(8).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(9).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(9).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(10).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(10).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(11).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(11).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(12).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(12).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(13).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(13).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(14).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(14).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(15).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(15).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(16).GetCell(4).SetCellValue(res);
+                                            ws.GetRow(16).GetCell(5).SetCellValue(item.sm_PaDesc);
+                                        }
+                                        else
+                                        {
+                                            ws.GetRow(5).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(5).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(6).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(6).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(7).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(7).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(8).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(8).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(9).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(9).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(10).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(10).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(11).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(11).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(12).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(12).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(13).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(13).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(14).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(14).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(15).GetCell(4).SetCellValue(res);
+                                            ws.GetRow(15).GetCell(5).SetCellValue(item.sm_PaDesc);
+                                        }
                                     }
+
+                                    #endregion
                                 }
                                 else if (index == 2)
                                 {
+                                    #region 赋值
+                                    if (item.gongchengjiance == "0") { }
+                                    else
+                                    {
+                                        ws.GetRow(16).GetCell(7).SetCellValue(res);
+                                        ws.GetRow(16).GetCell(8).SetCellValue(item.sm_PaDesc);
+                                    }
                                     ws.GetRow(17).GetCell(7).SetCellValue(item.sm_Pa);
                                     if (item.sm_Pa == "0")
                                     {
-                                        ws.GetRow(5).GetCell(7).SetCellValue(res);
-                                        ws.GetRow(5).GetCell(8).SetCellValue(item.sm_PaDesc);
+                                        if (isLeakage)
+                                        {
+                                        }
+                                        else
+                                        {
+                                            ws.GetRow(5).GetCell(7).SetCellValue(res);
+                                            ws.GetRow(5).GetCell(8).SetCellValue(item.sm_PaDesc);
+                                        }
                                     }
+
                                     if (item.sm_Pa == "100")
                                     {
-                                        ws.GetRow(6).GetCell(7).SetCellValue(res);
-                                        ws.GetRow(6).GetCell(8).SetCellValue(item.sm_PaDesc);
+                                        if (isLeakage)
+                                        {
+                                            ws.GetRow(5).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(5).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(6).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(6).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(7).GetCell(7).SetCellValue(res);
+                                            ws.GetRow(7).GetCell(8).SetCellValue(item.sm_PaDesc);
+                                        }
+                                        else
+                                        {
+                                            ws.GetRow(5).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(5).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(6).GetCell(7).SetCellValue(res);
+                                            ws.GetRow(6).GetCell(8).SetCellValue(item.sm_PaDesc);
+                                        }
                                     }
                                     if (item.sm_Pa == "150")
                                     {
-                                        ws.GetRow(7).GetCell(7).SetCellValue(res);
-                                        ws.GetRow(7).GetCell(8).SetCellValue(item.sm_PaDesc);
+                                        if (isLeakage)
+                                        {
+                                            ws.GetRow(5).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(5).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(6).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(6).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(7).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(7).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(8).GetCell(7).SetCellValue(res);
+                                            ws.GetRow(8).GetCell(8).SetCellValue(item.sm_PaDesc);
+                                        }
+                                        else
+                                        {
+                                            ws.GetRow(5).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(5).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(6).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(6).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(7).GetCell(7).SetCellValue(res);
+                                            ws.GetRow(7).GetCell(8).SetCellValue(item.sm_PaDesc);
+                                        }
                                     }
                                     if (item.sm_Pa == "200")
                                     {
-                                        ws.GetRow(8).GetCell(7).SetCellValue(res);
-                                        ws.GetRow(8).GetCell(8).SetCellValue(item.sm_PaDesc);
+                                        if (isLeakage)
+                                        {
+                                            ws.GetRow(5).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(5).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(6).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(6).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(7).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(7).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(8).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(8).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(9).GetCell(7).SetCellValue(res);
+                                            ws.GetRow(9).GetCell(8).SetCellValue(item.sm_PaDesc);
+                                        }
+                                        else
+                                        {
+                                            ws.GetRow(5).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(5).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(6).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(6).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(7).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(7).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(8).GetCell(7).SetCellValue(res);
+                                            ws.GetRow(8).GetCell(8).SetCellValue(item.sm_PaDesc);
+                                        }
                                     }
                                     if (item.sm_Pa == "250")
                                     {
-                                        ws.GetRow(9).GetCell(7).SetCellValue(res);
-                                        ws.GetRow(9).GetCell(8).SetCellValue(item.sm_PaDesc);
+                                        if (isLeakage)
+                                        {
+                                            ws.GetRow(5).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(5).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(6).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(6).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(7).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(7).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(8).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(8).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(9).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(9).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(10).GetCell(7).SetCellValue(res);
+                                            ws.GetRow(10).GetCell(8).SetCellValue(item.sm_PaDesc);
+                                        }
+                                        else
+                                        {
+                                            ws.GetRow(5).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(5).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(6).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(6).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(7).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(7).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(8).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(8).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(9).GetCell(7).SetCellValue(res);
+                                            ws.GetRow(9).GetCell(8).SetCellValue(item.sm_PaDesc);
+                                        }
                                     }
                                     if (item.sm_Pa == "300")
                                     {
-                                        ws.GetRow(10).GetCell(7).SetCellValue(res);
-                                        ws.GetRow(10).GetCell(8).SetCellValue(item.sm_PaDesc);
+                                        if (isLeakage)
+                                        {
+                                            ws.GetRow(5).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(5).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(6).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(6).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(7).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(7).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(8).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(8).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(9).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(9).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(10).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(10).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(11).GetCell(7).SetCellValue(res);
+                                            ws.GetRow(11).GetCell(8).SetCellValue(item.sm_PaDesc);
+                                        }
+                                        else
+                                        {
+                                            ws.GetRow(5).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(5).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(6).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(6).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(7).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(7).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(8).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(8).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(9).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(9).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(10).GetCell(7).SetCellValue(res);
+                                            ws.GetRow(10).GetCell(8).SetCellValue(item.sm_PaDesc);
+                                        }
                                     }
                                     if (item.sm_Pa == "350")
                                     {
-                                        ws.GetRow(11).GetCell(7).SetCellValue(res);
-                                        ws.GetRow(11).GetCell(8).SetCellValue(item.sm_PaDesc);
+                                        if (isLeakage)
+                                        {
+                                            ws.GetRow(5).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(5).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(6).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(6).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(7).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(7).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(8).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(8).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(9).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(9).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(10).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(10).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(11).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(11).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(12).GetCell(7).SetCellValue(res);
+                                            ws.GetRow(12).GetCell(8).SetCellValue(item.sm_PaDesc);
+
+                                        }
+                                        else
+                                        {
+                                            ws.GetRow(5).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(5).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(6).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(6).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(7).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(7).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(8).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(8).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(9).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(9).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(10).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(10).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(11).GetCell(7).SetCellValue(res);
+                                            ws.GetRow(11).GetCell(8).SetCellValue(item.sm_PaDesc);
+                                        }
                                     }
                                     if (item.sm_Pa == "400")
                                     {
-                                        ws.GetRow(12).GetCell(7).SetCellValue(res);
-                                        ws.GetRow(12).GetCell(8).SetCellValue(item.sm_PaDesc);
+                                        if (isLeakage)
+                                        {
+                                            ws.GetRow(5).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(5).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(6).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(6).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(7).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(7).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(8).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(8).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(9).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(9).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(10).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(10).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(11).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(11).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(12).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(12).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(13).GetCell(7).SetCellValue(res);
+                                            ws.GetRow(13).GetCell(8).SetCellValue(item.sm_PaDesc);
+                                        }
+                                        else
+                                        {
+                                            ws.GetRow(5).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(5).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(6).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(6).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(7).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(7).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(8).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(8).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(9).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(9).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(10).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(10).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(11).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(11).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(12).GetCell(7).SetCellValue(res);
+                                            ws.GetRow(12).GetCell(8).SetCellValue(item.sm_PaDesc);
+                                        }
                                     }
                                     if (item.sm_Pa == "500")
                                     {
-                                        ws.GetRow(13).GetCell(7).SetCellValue(res);
-                                        ws.GetRow(13).GetCell(8).SetCellValue(item.sm_PaDesc);
+                                        if (isLeakage)
+                                        {
+                                            ws.GetRow(5).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(5).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(6).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(6).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(7).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(7).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(8).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(8).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(9).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(9).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(10).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(10).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(11).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(11).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(12).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(12).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(13).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(13).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(14).GetCell(7).SetCellValue(res);
+                                            ws.GetRow(14).GetCell(8).SetCellValue(item.sm_PaDesc);
+                                        }
+                                        else
+                                        {
+                                            ws.GetRow(5).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(5).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(6).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(6).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(7).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(7).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(8).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(8).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(9).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(9).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(10).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(10).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(11).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(11).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(12).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(12).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(13).GetCell(7).SetCellValue(res);
+                                            ws.GetRow(13).GetCell(8).SetCellValue(item.sm_PaDesc);
+                                        }
                                     }
                                     if (item.sm_Pa == "600")
                                     {
-                                        ws.GetRow(14).GetCell(7).SetCellValue(res);
-                                        ws.GetRow(14).GetCell(8).SetCellValue(item.sm_PaDesc);
+                                        if (isLeakage)
+                                        {
+                                            ws.GetRow(5).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(5).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(6).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(6).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(7).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(7).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(8).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(8).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(9).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(9).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(10).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(10).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(11).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(11).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(12).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(12).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(13).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(13).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(14).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(14).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(15).GetCell(7).SetCellValue(res);
+                                            ws.GetRow(15).GetCell(8).SetCellValue(item.sm_PaDesc);
+                                        }
+                                        else
+                                        {
+                                            ws.GetRow(5).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(5).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(6).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(6).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(7).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(7).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(8).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(8).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(9).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(9).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(10).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(10).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(11).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(11).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(12).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(12).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(13).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(13).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(14).GetCell(7).SetCellValue(res);
+                                            ws.GetRow(14).GetCell(8).SetCellValue(item.sm_PaDesc);
+                                        }
                                     }
                                     if (item.sm_Pa == "700")
                                     {
-                                        ws.GetRow(15).GetCell(7).SetCellValue(res);
-                                        ws.GetRow(15).GetCell(8).SetCellValue(item.sm_PaDesc);
+                                        if (isLeakage)
+                                        {
+                                            ws.GetRow(5).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(5).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(6).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(6).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(7).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(7).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(8).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(8).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(9).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(9).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(10).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(10).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(11).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(11).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(12).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(12).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(13).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(13).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(14).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(14).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(15).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(15).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(16).GetCell(7).SetCellValue(res);
+                                            ws.GetRow(16).GetCell(8).SetCellValue(item.sm_PaDesc);
+                                        }
+                                        else
+                                        {
+                                            ws.GetRow(5).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(5).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(6).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(6).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(7).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(7).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(8).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(8).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(9).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(9).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(10).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(10).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(11).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(11).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(12).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(12).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(13).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(13).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(14).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(14).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(15).GetCell(7).SetCellValue(res);
+                                            ws.GetRow(15).GetCell(8).SetCellValue(item.sm_PaDesc);
+                                        }
                                     }
+                                    #endregion
                                 }
                                 else if (index == 3)
                                 {
+                                    #region 赋值
+                                    if (item.gongchengjiance == "0") { }
+                                    else
+                                    {
+                                        ws.GetRow(16).GetCell(10).SetCellValue(res);
+                                        ws.GetRow(16).GetCell(11).SetCellValue(item.sm_PaDesc);
+                                    }
                                     ws.GetRow(17).GetCell(10).SetCellValue(item.sm_Pa);
                                     if (item.sm_Pa == "0")
                                     {
-                                        ws.GetRow(5).GetCell(10).SetCellValue(res);
-                                        ws.GetRow(5).GetCell(11).SetCellValue(item.sm_PaDesc);
+                                        if (isLeakage)
+                                        {
+                                        }
+                                        else
+                                        {
+                                            ws.GetRow(5).GetCell(10).SetCellValue(res);
+                                            ws.GetRow(5).GetCell(11).SetCellValue(item.sm_PaDesc);
+                                        }
                                     }
+
                                     if (item.sm_Pa == "100")
                                     {
-                                        ws.GetRow(6).GetCell(10).SetCellValue(res);
-                                        ws.GetRow(6).GetCell(11).SetCellValue(item.sm_PaDesc);
+                                        if (isLeakage)
+                                        {
+                                            ws.GetRow(5).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(5).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(6).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(6).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(7).GetCell(10).SetCellValue(res);
+                                            ws.GetRow(7).GetCell(11).SetCellValue(item.sm_PaDesc);
+                                        }
+                                        else
+                                        {
+                                            ws.GetRow(5).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(5).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(6).GetCell(10).SetCellValue(res);
+                                            ws.GetRow(6).GetCell(11).SetCellValue(item.sm_PaDesc);
+                                        }
                                     }
                                     if (item.sm_Pa == "150")
                                     {
-                                        ws.GetRow(7).GetCell(10).SetCellValue(res);
-                                        ws.GetRow(7).GetCell(11).SetCellValue(item.sm_PaDesc);
+                                        if (isLeakage)
+                                        {
+                                            ws.GetRow(5).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(5).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(6).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(6).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(7).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(7).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(8).GetCell(10).SetCellValue(res);
+                                            ws.GetRow(8).GetCell(11).SetCellValue(item.sm_PaDesc);
+                                        }
+                                        else
+                                        {
+                                            ws.GetRow(5).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(5).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(6).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(6).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(7).GetCell(10).SetCellValue(res);
+                                            ws.GetRow(7).GetCell(11).SetCellValue(item.sm_PaDesc);
+                                        }
                                     }
                                     if (item.sm_Pa == "200")
                                     {
-                                        ws.GetRow(8).GetCell(10).SetCellValue(res);
-                                        ws.GetRow(8).GetCell(11).SetCellValue(item.sm_PaDesc);
+                                        if (isLeakage)
+                                        {
+                                            ws.GetRow(5).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(5).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(6).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(6).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(7).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(7).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(8).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(8).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(9).GetCell(10).SetCellValue(res);
+                                            ws.GetRow(9).GetCell(11).SetCellValue(item.sm_PaDesc);
+                                        }
+                                        else
+                                        {
+                                            ws.GetRow(5).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(5).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(6).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(6).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(7).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(7).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(8).GetCell(10).SetCellValue(res);
+                                            ws.GetRow(8).GetCell(11).SetCellValue(item.sm_PaDesc);
+                                        }
                                     }
                                     if (item.sm_Pa == "250")
                                     {
-                                        ws.GetRow(9).GetCell(10).SetCellValue(res);
-                                        ws.GetRow(9).GetCell(11).SetCellValue(item.sm_PaDesc);
+                                        if (isLeakage)
+                                        {
+                                            ws.GetRow(5).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(5).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(6).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(6).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(7).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(7).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(8).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(8).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(9).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(9).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(10).GetCell(10).SetCellValue(res);
+                                            ws.GetRow(10).GetCell(11).SetCellValue(item.sm_PaDesc);
+                                        }
+                                        else
+                                        {
+                                            ws.GetRow(5).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(5).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(6).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(6).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(7).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(7).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(8).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(8).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(9).GetCell(10).SetCellValue(res);
+                                            ws.GetRow(9).GetCell(11).SetCellValue(item.sm_PaDesc);
+                                        }
                                     }
                                     if (item.sm_Pa == "300")
                                     {
-                                        ws.GetRow(10).GetCell(10).SetCellValue(res);
-                                        ws.GetRow(10).GetCell(11).SetCellValue(item.sm_PaDesc);
+                                        if (isLeakage)
+                                        {
+                                            ws.GetRow(5).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(5).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(6).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(6).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(7).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(7).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(8).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(8).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(9).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(9).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(10).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(10).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(11).GetCell(10).SetCellValue(res);
+                                            ws.GetRow(11).GetCell(11).SetCellValue(item.sm_PaDesc);
+                                        }
+                                        else
+                                        {
+                                            ws.GetRow(5).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(5).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(6).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(6).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(7).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(7).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(8).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(8).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(9).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(9).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(10).GetCell(10).SetCellValue(res);
+                                            ws.GetRow(10).GetCell(11).SetCellValue(item.sm_PaDesc);
+                                        }
                                     }
                                     if (item.sm_Pa == "350")
                                     {
-                                        ws.GetRow(11).GetCell(10).SetCellValue(res);
-                                        ws.GetRow(11).GetCell(11).SetCellValue(item.sm_PaDesc);
+                                        if (isLeakage)
+                                        {
+                                            ws.GetRow(5).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(5).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(6).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(6).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(7).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(7).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(8).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(8).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(9).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(9).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(10).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(10).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(11).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(11).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(12).GetCell(10).SetCellValue(res);
+                                            ws.GetRow(12).GetCell(11).SetCellValue(item.sm_PaDesc);
+
+                                        }
+                                        else
+                                        {
+                                            ws.GetRow(5).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(5).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(6).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(6).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(7).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(7).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(8).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(8).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(9).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(9).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(10).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(10).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(11).GetCell(10).SetCellValue(res);
+                                            ws.GetRow(11).GetCell(11).SetCellValue(item.sm_PaDesc);
+                                        }
                                     }
                                     if (item.sm_Pa == "400")
                                     {
-                                        ws.GetRow(12).GetCell(10).SetCellValue(res);
-                                        ws.GetRow(12).GetCell(11).SetCellValue(item.sm_PaDesc);
+                                        if (isLeakage)
+                                        {
+                                            ws.GetRow(5).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(5).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(6).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(6).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(7).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(7).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(8).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(8).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(9).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(9).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(10).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(10).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(11).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(11).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(12).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(12).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(13).GetCell(10).SetCellValue(res);
+                                            ws.GetRow(13).GetCell(11).SetCellValue(item.sm_PaDesc);
+                                        }
+                                        else
+                                        {
+                                            ws.GetRow(5).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(5).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(6).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(6).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(7).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(7).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(8).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(8).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(9).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(9).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(10).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(10).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(11).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(11).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(12).GetCell(10).SetCellValue(res);
+                                            ws.GetRow(12).GetCell(11).SetCellValue(item.sm_PaDesc);
+                                        }
                                     }
                                     if (item.sm_Pa == "500")
                                     {
-                                        ws.GetRow(13).GetCell(10).SetCellValue(res);
-                                        ws.GetRow(13).GetCell(11).SetCellValue(item.sm_PaDesc);
+                                        if (isLeakage)
+                                        {
+                                            ws.GetRow(5).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(5).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(6).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(6).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(7).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(7).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(8).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(8).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(9).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(9).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(10).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(10).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(11).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(11).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(12).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(12).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(13).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(13).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(14).GetCell(10).SetCellValue(res);
+                                            ws.GetRow(14).GetCell(11).SetCellValue(item.sm_PaDesc);
+                                        }
+                                        else
+                                        {
+                                            ws.GetRow(5).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(5).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(6).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(6).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(7).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(7).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(8).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(8).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(9).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(9).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(10).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(10).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(11).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(11).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(12).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(12).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(13).GetCell(10).SetCellValue(res);
+                                            ws.GetRow(13).GetCell(11).SetCellValue(item.sm_PaDesc);
+                                        }
                                     }
                                     if (item.sm_Pa == "600")
                                     {
-                                        ws.GetRow(14).GetCell(10).SetCellValue(res);
-                                        ws.GetRow(14).GetCell(11).SetCellValue(item.sm_PaDesc);
+                                        if (isLeakage)
+                                        {
+                                            ws.GetRow(5).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(5).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(6).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(6).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(7).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(7).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(8).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(8).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(9).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(9).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(10).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(10).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(11).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(11).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(12).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(12).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(13).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(13).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(14).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(14).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(15).GetCell(10).SetCellValue(res);
+                                            ws.GetRow(15).GetCell(11).SetCellValue(item.sm_PaDesc);
+                                        }
+                                        else
+                                        {
+                                            ws.GetRow(5).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(5).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(6).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(6).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(7).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(7).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(8).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(8).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(9).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(9).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(10).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(10).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(11).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(11).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(12).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(12).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(13).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(13).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(14).GetCell(10).SetCellValue(res);
+                                            ws.GetRow(14).GetCell(11).SetCellValue(item.sm_PaDesc);
+                                        }
                                     }
                                     if (item.sm_Pa == "700")
                                     {
-                                        ws.GetRow(15).GetCell(10).SetCellValue(res);
-                                        ws.GetRow(15).GetCell(11).SetCellValue(item.sm_PaDesc);
+                                        if (isLeakage)
+                                        {
+                                            ws.GetRow(5).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(5).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(6).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(6).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(7).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(7).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(8).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(8).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(9).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(9).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(10).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(10).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(11).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(11).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(12).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(12).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(13).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(13).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(14).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(14).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(15).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(15).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(16).GetCell(10).SetCellValue(res);
+                                            ws.GetRow(16).GetCell(11).SetCellValue(item.sm_PaDesc);
+                                        }
+                                        else
+                                        {
+                                            ws.GetRow(5).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(5).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(6).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(6).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(7).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(7).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(8).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(8).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(9).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(9).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(10).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(10).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(11).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(11).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(12).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(12).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(13).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(13).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(14).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(14).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(15).GetCell(10).SetCellValue(res);
+                                            ws.GetRow(15).GetCell(11).SetCellValue(item.sm_PaDesc);
+                                        }
                                     }
+                                    #endregion
                                 }
-                                #endregion
+
                             }
                             #endregion
                         }
 
-                        sm = smjy.FindAll(t => t.testcount == 2).OrderBy(t => t.info_DangH).ToList();
+                        sm = sm_Info.FindAll(t => t.testcount == 2).OrderBy(t => t.info_DangH).ToList();
                         if ((sm != null && sm.Count() > 0))
                         {
                             ws = (NPOI.HSSF.UserModel.HSSFSheet)hssfworkbook.GetSheet("重复水密性(稳定)");
-                            ws.GetRow(1).GetCell(1).SetCellValue(dt_Settings.Rows[0]["weituobianhao"].ToString());
+                            ws.GetRow(1).GetCell(1).SetCellValue(dt_Settings.Rows[0]["dt_Code"].ToString());
                             ws.GetRow(1).GetCell(10).SetCellValue(dt_Settings.Rows[0]["penlinshuiliang"].ToString());
                             ws.GetRow(2).GetCell(1).SetCellValue(dt_Settings.Rows[0]["jianceriqi"].ToString());
                             ws.GetRow(2).GetCell(10).SetCellValue(dt_Settings.Rows[0]["shijianmianji"].ToString());
@@ -1292,198 +2413,1204 @@ namespace text.doors.Common
                             foreach (var item in sm)
                             {
                                 index++;
-                                var res = "否";
-                                if (item.sm_PaDesc.Contains("〇"))
+
+                                var res = "是";
+                                var isLeakage = true; //是否渗漏
+                                if (item.sm_PaDesc.Contains("〇") || item.sm_PaDesc.Contains("□"))
                                 {
-                                    res = "是";
+                                    res = "否";
+                                    isLeakage = false;
                                 }
-                                #region  赋值
+
                                 if (index == 1)
                                 {
+                                    #region  赋值
                                     if (item.gongchengjiance == "0")
-                                    {
-                                        ws.GetRow(16).GetCell(1).SetCellValue("设计值");
-                                    }
+                                        ws.GetRow(16).GetCell(1).SetCellValue("-");
                                     else
                                     {
                                         ws.GetRow(16).GetCell(1).SetCellValue(item.gongchengjiance);
+                                        ws.GetRow(16).GetCell(4).SetCellValue(res);
+                                        ws.GetRow(16).GetCell(5).SetCellValue(item.sm_PaDesc);
                                     }
                                     ws.GetRow(17).GetCell(4).SetCellValue(item.sm_Pa);
+
                                     if (item.sm_Pa == "0")
                                     {
-                                        ws.GetRow(5).GetCell(4).SetCellValue(res);
-                                        ws.GetRow(5).GetCell(5).SetCellValue(item.sm_PaDesc);
+                                        if (isLeakage)
+                                        {
+                                        }
+                                        else
+                                        {
+                                            ws.GetRow(5).GetCell(4).SetCellValue(res);
+                                            ws.GetRow(5).GetCell(5).SetCellValue(item.sm_PaDesc);
+                                        }
                                     }
                                     if (item.sm_Pa == "100")
                                     {
-                                        ws.GetRow(6).GetCell(4).SetCellValue(res);
-                                        ws.GetRow(6).GetCell(5).SetCellValue(item.sm_PaDesc);
+                                        if (isLeakage)
+                                        {
+                                            ws.GetRow(5).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(5).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(6).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(6).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(7).GetCell(4).SetCellValue(res);
+                                            ws.GetRow(7).GetCell(5).SetCellValue(item.sm_PaDesc);
+                                        }
+                                        else
+                                        {
+                                            ws.GetRow(5).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(5).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(6).GetCell(4).SetCellValue(res);
+                                            ws.GetRow(6).GetCell(5).SetCellValue(item.sm_PaDesc);
+                                        }
                                     }
                                     if (item.sm_Pa == "150")
                                     {
-                                        ws.GetRow(7).GetCell(4).SetCellValue(res);
-                                        ws.GetRow(7).GetCell(5).SetCellValue(item.sm_PaDesc);
+                                        if (isLeakage)
+                                        {
+                                            ws.GetRow(5).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(5).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(6).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(6).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(7).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(7).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(8).GetCell(4).SetCellValue(res);
+                                            ws.GetRow(8).GetCell(5).SetCellValue(item.sm_PaDesc);
+                                        }
+                                        else
+                                        {
+                                            ws.GetRow(5).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(5).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(6).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(6).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(7).GetCell(4).SetCellValue(res);
+                                            ws.GetRow(7).GetCell(5).SetCellValue(item.sm_PaDesc);
+                                        }
                                     }
                                     if (item.sm_Pa == "200")
                                     {
-                                        ws.GetRow(8).GetCell(4).SetCellValue(res);
-                                        ws.GetRow(8).GetCell(5).SetCellValue(item.sm_PaDesc);
+                                        if (isLeakage)
+                                        {
+                                            ws.GetRow(5).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(5).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(6).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(6).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(7).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(7).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(8).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(8).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(9).GetCell(4).SetCellValue(res);
+                                            ws.GetRow(9).GetCell(5).SetCellValue(item.sm_PaDesc);
+                                        }
+                                        else
+                                        {
+                                            ws.GetRow(5).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(5).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(6).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(6).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(7).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(7).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(8).GetCell(4).SetCellValue(res);
+                                            ws.GetRow(8).GetCell(5).SetCellValue(item.sm_PaDesc);
+                                        }
                                     }
                                     if (item.sm_Pa == "250")
                                     {
-                                        ws.GetRow(9).GetCell(4).SetCellValue(res);
-                                        ws.GetRow(9).GetCell(5).SetCellValue(item.sm_PaDesc);
+                                        if (isLeakage)
+                                        {
+                                            ws.GetRow(5).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(5).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(6).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(6).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(7).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(7).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(8).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(8).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(9).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(9).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(10).GetCell(4).SetCellValue(res);
+                                            ws.GetRow(10).GetCell(5).SetCellValue(item.sm_PaDesc);
+                                        }
+                                        else
+                                        {
+                                            ws.GetRow(5).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(5).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(6).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(6).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(7).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(7).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(8).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(8).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(9).GetCell(4).SetCellValue(res);
+                                            ws.GetRow(9).GetCell(5).SetCellValue(item.sm_PaDesc);
+                                        }
                                     }
                                     if (item.sm_Pa == "300")
                                     {
-                                        ws.GetRow(10).GetCell(4).SetCellValue(res);
-                                        ws.GetRow(10).GetCell(5).SetCellValue(item.sm_PaDesc);
+                                        if (isLeakage)
+                                        {
+                                            ws.GetRow(5).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(5).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(6).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(6).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(7).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(7).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(8).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(8).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(9).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(9).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(10).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(10).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(11).GetCell(4).SetCellValue(res);
+                                            ws.GetRow(11).GetCell(5).SetCellValue(item.sm_PaDesc);
+                                        }
+                                        else
+                                        {
+                                            ws.GetRow(5).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(5).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(6).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(6).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(7).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(7).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(8).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(8).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(9).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(9).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(10).GetCell(4).SetCellValue(res);
+                                            ws.GetRow(10).GetCell(5).SetCellValue(item.sm_PaDesc);
+                                        }
                                     }
                                     if (item.sm_Pa == "350")
                                     {
-                                        ws.GetRow(11).GetCell(4).SetCellValue(res);
-                                        ws.GetRow(11).GetCell(5).SetCellValue(item.sm_PaDesc);
+                                        if (isLeakage)
+                                        {
+                                            ws.GetRow(5).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(5).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(6).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(6).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(7).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(7).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(8).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(8).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(9).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(9).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(10).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(10).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(11).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(11).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(12).GetCell(4).SetCellValue(res);
+                                            ws.GetRow(12).GetCell(5).SetCellValue(item.sm_PaDesc);
+
+                                        }
+                                        else
+                                        {
+                                            ws.GetRow(5).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(5).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(6).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(6).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(7).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(7).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(8).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(8).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(9).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(9).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(10).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(10).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(11).GetCell(4).SetCellValue(res);
+                                            ws.GetRow(11).GetCell(5).SetCellValue(item.sm_PaDesc);
+                                        }
                                     }
                                     if (item.sm_Pa == "400")
                                     {
-                                        ws.GetRow(12).GetCell(4).SetCellValue(res);
-                                        ws.GetRow(12).GetCell(5).SetCellValue(item.sm_PaDesc);
+                                        if (isLeakage)
+                                        {
+                                            ws.GetRow(5).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(5).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(6).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(6).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(7).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(7).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(8).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(8).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(9).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(9).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(10).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(10).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(11).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(11).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(12).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(12).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(13).GetCell(4).SetCellValue(res);
+                                            ws.GetRow(13).GetCell(5).SetCellValue(item.sm_PaDesc);
+                                        }
+                                        else
+                                        {
+                                            ws.GetRow(5).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(5).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(6).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(6).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(7).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(7).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(8).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(8).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(9).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(9).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(10).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(10).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(11).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(11).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(12).GetCell(4).SetCellValue(res);
+                                            ws.GetRow(12).GetCell(5).SetCellValue(item.sm_PaDesc);
+                                        }
                                     }
                                     if (item.sm_Pa == "500")
                                     {
-                                        ws.GetRow(13).GetCell(4).SetCellValue(res);
-                                        ws.GetRow(13).GetCell(5).SetCellValue(item.sm_PaDesc);
+                                        if (isLeakage)
+                                        {
+                                            ws.GetRow(5).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(5).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(6).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(6).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(7).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(7).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(8).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(8).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(9).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(9).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(10).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(10).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(11).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(11).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(12).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(12).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(13).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(13).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(14).GetCell(4).SetCellValue(res);
+                                            ws.GetRow(14).GetCell(5).SetCellValue(item.sm_PaDesc);
+                                        }
+                                        else
+                                        {
+                                            ws.GetRow(5).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(5).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(6).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(6).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(7).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(7).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(8).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(8).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(9).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(9).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(10).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(10).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(11).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(11).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(12).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(12).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(13).GetCell(4).SetCellValue(res);
+                                            ws.GetRow(13).GetCell(5).SetCellValue(item.sm_PaDesc);
+                                        }
                                     }
                                     if (item.sm_Pa == "600")
                                     {
-                                        ws.GetRow(14).GetCell(4).SetCellValue(res);
-                                        ws.GetRow(14).GetCell(5).SetCellValue(item.sm_PaDesc);
+                                        if (isLeakage)
+                                        {
+                                            ws.GetRow(5).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(5).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(6).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(6).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(7).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(7).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(8).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(8).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(9).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(9).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(10).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(10).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(11).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(11).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(12).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(12).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(13).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(13).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(14).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(14).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(15).GetCell(4).SetCellValue(res);
+                                            ws.GetRow(15).GetCell(5).SetCellValue(item.sm_PaDesc);
+                                        }
+                                        else
+                                        {
+                                            ws.GetRow(5).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(5).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(6).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(6).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(7).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(7).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(8).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(8).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(9).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(9).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(10).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(10).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(11).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(11).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(12).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(12).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(13).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(13).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(14).GetCell(4).SetCellValue(res);
+                                            ws.GetRow(14).GetCell(5).SetCellValue(item.sm_PaDesc);
+                                        }
                                     }
                                     if (item.sm_Pa == "700")
                                     {
-                                        ws.GetRow(15).GetCell(4).SetCellValue(res);
-                                        ws.GetRow(15).GetCell(5).SetCellValue(item.sm_PaDesc);
+                                        if (isLeakage)
+                                        {
+                                            ws.GetRow(5).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(5).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(6).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(6).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(7).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(7).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(8).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(8).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(9).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(9).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(10).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(10).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(11).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(11).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(12).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(12).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(13).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(13).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(14).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(14).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(15).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(15).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(16).GetCell(4).SetCellValue(res);
+                                            ws.GetRow(16).GetCell(5).SetCellValue(item.sm_PaDesc);
+                                        }
+                                        else
+                                        {
+                                            ws.GetRow(5).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(5).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(6).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(6).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(7).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(7).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(8).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(8).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(9).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(9).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(10).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(10).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(11).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(11).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(12).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(12).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(13).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(13).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(14).GetCell(4).SetCellValue("否");
+                                            ws.GetRow(14).GetCell(5).SetCellValue("-");
+                                            ws.GetRow(15).GetCell(4).SetCellValue(res);
+                                            ws.GetRow(15).GetCell(5).SetCellValue(item.sm_PaDesc);
+                                        }
                                     }
+
+                                    #endregion
                                 }
                                 else if (index == 2)
                                 {
+                                    #region 赋值
+                                    if (item.gongchengjiance == "0") { }
+                                    else
+                                    {
+                                        ws.GetRow(16).GetCell(7).SetCellValue(res);
+                                        ws.GetRow(16).GetCell(8).SetCellValue(item.sm_PaDesc);
+                                    }
                                     ws.GetRow(17).GetCell(7).SetCellValue(item.sm_Pa);
                                     if (item.sm_Pa == "0")
                                     {
-                                        ws.GetRow(5).GetCell(7).SetCellValue(res);
-                                        ws.GetRow(5).GetCell(8).SetCellValue(item.sm_PaDesc);
+                                        if (isLeakage)
+                                        {
+                                        }
+                                        else
+                                        {
+                                            ws.GetRow(5).GetCell(7).SetCellValue(res);
+                                            ws.GetRow(5).GetCell(8).SetCellValue(item.sm_PaDesc);
+                                        }
                                     }
+
                                     if (item.sm_Pa == "100")
                                     {
-                                        ws.GetRow(6).GetCell(7).SetCellValue(res);
-                                        ws.GetRow(6).GetCell(8).SetCellValue(item.sm_PaDesc);
+                                        if (isLeakage)
+                                        {
+                                            ws.GetRow(5).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(5).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(6).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(6).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(7).GetCell(7).SetCellValue(res);
+                                            ws.GetRow(7).GetCell(8).SetCellValue(item.sm_PaDesc);
+                                        }
+                                        else
+                                        {
+                                            ws.GetRow(5).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(5).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(6).GetCell(7).SetCellValue(res);
+                                            ws.GetRow(6).GetCell(8).SetCellValue(item.sm_PaDesc);
+                                        }
                                     }
                                     if (item.sm_Pa == "150")
                                     {
-                                        ws.GetRow(7).GetCell(7).SetCellValue(res);
-                                        ws.GetRow(7).GetCell(8).SetCellValue(item.sm_PaDesc);
+                                        if (isLeakage)
+                                        {
+                                            ws.GetRow(5).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(5).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(6).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(6).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(7).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(7).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(8).GetCell(7).SetCellValue(res);
+                                            ws.GetRow(8).GetCell(8).SetCellValue(item.sm_PaDesc);
+                                        }
+                                        else
+                                        {
+                                            ws.GetRow(5).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(5).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(6).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(6).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(7).GetCell(7).SetCellValue(res);
+                                            ws.GetRow(7).GetCell(8).SetCellValue(item.sm_PaDesc);
+                                        }
                                     }
                                     if (item.sm_Pa == "200")
                                     {
-                                        ws.GetRow(8).GetCell(7).SetCellValue(res);
-                                        ws.GetRow(8).GetCell(8).SetCellValue(item.sm_PaDesc);
+                                        if (isLeakage)
+                                        {
+                                            ws.GetRow(5).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(5).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(6).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(6).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(7).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(7).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(8).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(8).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(9).GetCell(7).SetCellValue(res);
+                                            ws.GetRow(9).GetCell(8).SetCellValue(item.sm_PaDesc);
+                                        }
+                                        else
+                                        {
+                                            ws.GetRow(5).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(5).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(6).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(6).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(7).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(7).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(8).GetCell(7).SetCellValue(res);
+                                            ws.GetRow(8).GetCell(8).SetCellValue(item.sm_PaDesc);
+                                        }
                                     }
                                     if (item.sm_Pa == "250")
                                     {
-                                        ws.GetRow(9).GetCell(7).SetCellValue(res);
-                                        ws.GetRow(9).GetCell(8).SetCellValue(item.sm_PaDesc);
+                                        if (isLeakage)
+                                        {
+                                            ws.GetRow(5).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(5).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(6).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(6).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(7).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(7).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(8).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(8).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(9).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(9).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(10).GetCell(7).SetCellValue(res);
+                                            ws.GetRow(10).GetCell(8).SetCellValue(item.sm_PaDesc);
+                                        }
+                                        else
+                                        {
+                                            ws.GetRow(5).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(5).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(6).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(6).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(7).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(7).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(8).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(8).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(9).GetCell(7).SetCellValue(res);
+                                            ws.GetRow(9).GetCell(8).SetCellValue(item.sm_PaDesc);
+                                        }
                                     }
                                     if (item.sm_Pa == "300")
                                     {
-                                        ws.GetRow(10).GetCell(7).SetCellValue(res);
-                                        ws.GetRow(10).GetCell(8).SetCellValue(item.sm_PaDesc);
+                                        if (isLeakage)
+                                        {
+                                            ws.GetRow(5).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(5).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(6).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(6).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(7).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(7).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(8).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(8).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(9).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(9).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(10).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(10).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(11).GetCell(7).SetCellValue(res);
+                                            ws.GetRow(11).GetCell(8).SetCellValue(item.sm_PaDesc);
+                                        }
+                                        else
+                                        {
+                                            ws.GetRow(5).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(5).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(6).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(6).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(7).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(7).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(8).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(8).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(9).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(9).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(10).GetCell(7).SetCellValue(res);
+                                            ws.GetRow(10).GetCell(8).SetCellValue(item.sm_PaDesc);
+                                        }
                                     }
                                     if (item.sm_Pa == "350")
                                     {
-                                        ws.GetRow(11).GetCell(7).SetCellValue(res);
-                                        ws.GetRow(11).GetCell(8).SetCellValue(item.sm_PaDesc);
+                                        if (isLeakage)
+                                        {
+                                            ws.GetRow(5).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(5).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(6).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(6).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(7).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(7).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(8).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(8).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(9).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(9).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(10).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(10).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(11).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(11).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(12).GetCell(7).SetCellValue(res);
+                                            ws.GetRow(12).GetCell(8).SetCellValue(item.sm_PaDesc);
+
+                                        }
+                                        else
+                                        {
+                                            ws.GetRow(5).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(5).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(6).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(6).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(7).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(7).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(8).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(8).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(9).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(9).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(10).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(10).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(11).GetCell(7).SetCellValue(res);
+                                            ws.GetRow(11).GetCell(8).SetCellValue(item.sm_PaDesc);
+                                        }
                                     }
                                     if (item.sm_Pa == "400")
                                     {
-                                        ws.GetRow(12).GetCell(7).SetCellValue(res);
-                                        ws.GetRow(12).GetCell(8).SetCellValue(item.sm_PaDesc);
+                                        if (isLeakage)
+                                        {
+                                            ws.GetRow(5).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(5).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(6).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(6).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(7).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(7).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(8).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(8).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(9).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(9).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(10).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(10).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(11).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(11).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(12).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(12).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(13).GetCell(7).SetCellValue(res);
+                                            ws.GetRow(13).GetCell(8).SetCellValue(item.sm_PaDesc);
+                                        }
+                                        else
+                                        {
+                                            ws.GetRow(5).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(5).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(6).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(6).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(7).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(7).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(8).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(8).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(9).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(9).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(10).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(10).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(11).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(11).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(12).GetCell(7).SetCellValue(res);
+                                            ws.GetRow(12).GetCell(8).SetCellValue(item.sm_PaDesc);
+                                        }
                                     }
                                     if (item.sm_Pa == "500")
                                     {
-                                        ws.GetRow(13).GetCell(7).SetCellValue(res);
-                                        ws.GetRow(13).GetCell(8).SetCellValue(item.sm_PaDesc);
+                                        if (isLeakage)
+                                        {
+                                            ws.GetRow(5).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(5).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(6).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(6).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(7).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(7).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(8).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(8).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(9).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(9).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(10).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(10).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(11).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(11).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(12).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(12).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(13).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(13).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(14).GetCell(7).SetCellValue(res);
+                                            ws.GetRow(14).GetCell(8).SetCellValue(item.sm_PaDesc);
+                                        }
+                                        else
+                                        {
+                                            ws.GetRow(5).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(5).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(6).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(6).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(7).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(7).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(8).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(8).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(9).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(9).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(10).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(10).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(11).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(11).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(12).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(12).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(13).GetCell(7).SetCellValue(res);
+                                            ws.GetRow(13).GetCell(8).SetCellValue(item.sm_PaDesc);
+                                        }
                                     }
                                     if (item.sm_Pa == "600")
                                     {
-                                        ws.GetRow(14).GetCell(7).SetCellValue(res);
-                                        ws.GetRow(14).GetCell(8).SetCellValue(item.sm_PaDesc);
+                                        if (isLeakage)
+                                        {
+                                            ws.GetRow(5).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(5).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(6).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(6).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(7).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(7).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(8).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(8).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(9).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(9).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(10).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(10).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(11).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(11).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(12).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(12).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(13).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(13).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(14).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(14).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(15).GetCell(7).SetCellValue(res);
+                                            ws.GetRow(15).GetCell(8).SetCellValue(item.sm_PaDesc);
+                                        }
+                                        else
+                                        {
+                                            ws.GetRow(5).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(5).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(6).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(6).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(7).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(7).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(8).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(8).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(9).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(9).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(10).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(10).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(11).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(11).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(12).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(12).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(13).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(13).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(14).GetCell(7).SetCellValue(res);
+                                            ws.GetRow(14).GetCell(8).SetCellValue(item.sm_PaDesc);
+                                        }
                                     }
                                     if (item.sm_Pa == "700")
                                     {
-                                        ws.GetRow(15).GetCell(7).SetCellValue(res);
-                                        ws.GetRow(15).GetCell(8).SetCellValue(item.sm_PaDesc);
+                                        if (isLeakage)
+                                        {
+                                            ws.GetRow(5).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(5).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(6).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(6).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(7).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(7).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(8).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(8).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(9).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(9).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(10).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(10).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(11).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(11).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(12).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(12).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(13).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(13).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(14).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(14).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(15).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(15).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(16).GetCell(7).SetCellValue(res);
+                                            ws.GetRow(16).GetCell(8).SetCellValue(item.sm_PaDesc);
+                                        }
+                                        else
+                                        {
+                                            ws.GetRow(5).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(5).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(6).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(6).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(7).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(7).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(8).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(8).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(9).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(9).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(10).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(10).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(11).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(11).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(12).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(12).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(13).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(13).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(14).GetCell(7).SetCellValue("否");
+                                            ws.GetRow(14).GetCell(8).SetCellValue("-");
+                                            ws.GetRow(15).GetCell(7).SetCellValue(res);
+                                            ws.GetRow(15).GetCell(8).SetCellValue(item.sm_PaDesc);
+                                        }
                                     }
+                                    #endregion
                                 }
                                 else if (index == 3)
                                 {
+                                    #region 赋值
+                                    if (item.gongchengjiance == "0") { }
+                                    else
+                                    {
+                                        ws.GetRow(16).GetCell(10).SetCellValue(res);
+                                        ws.GetRow(16).GetCell(11).SetCellValue(item.sm_PaDesc);
+                                    }
                                     ws.GetRow(17).GetCell(10).SetCellValue(item.sm_Pa);
                                     if (item.sm_Pa == "0")
                                     {
-                                        ws.GetRow(5).GetCell(10).SetCellValue(res);
-                                        ws.GetRow(5).GetCell(11).SetCellValue(item.sm_PaDesc);
+                                        if (isLeakage)
+                                        {
+                                        }
+                                        else
+                                        {
+                                            ws.GetRow(5).GetCell(10).SetCellValue(res);
+                                            ws.GetRow(5).GetCell(11).SetCellValue(item.sm_PaDesc);
+                                        }
                                     }
+
                                     if (item.sm_Pa == "100")
                                     {
-                                        ws.GetRow(6).GetCell(10).SetCellValue(res);
-                                        ws.GetRow(6).GetCell(11).SetCellValue(item.sm_PaDesc);
+                                        if (isLeakage)
+                                        {
+                                            ws.GetRow(5).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(5).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(6).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(6).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(7).GetCell(10).SetCellValue(res);
+                                            ws.GetRow(7).GetCell(11).SetCellValue(item.sm_PaDesc);
+                                        }
+                                        else
+                                        {
+                                            ws.GetRow(5).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(5).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(6).GetCell(10).SetCellValue(res);
+                                            ws.GetRow(6).GetCell(11).SetCellValue(item.sm_PaDesc);
+                                        }
                                     }
                                     if (item.sm_Pa == "150")
                                     {
-                                        ws.GetRow(7).GetCell(10).SetCellValue(res);
-                                        ws.GetRow(7).GetCell(11).SetCellValue(item.sm_PaDesc);
+                                        if (isLeakage)
+                                        {
+                                            ws.GetRow(5).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(5).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(6).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(6).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(7).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(7).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(8).GetCell(10).SetCellValue(res);
+                                            ws.GetRow(8).GetCell(11).SetCellValue(item.sm_PaDesc);
+                                        }
+                                        else
+                                        {
+                                            ws.GetRow(5).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(5).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(6).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(6).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(7).GetCell(10).SetCellValue(res);
+                                            ws.GetRow(7).GetCell(11).SetCellValue(item.sm_PaDesc);
+                                        }
                                     }
                                     if (item.sm_Pa == "200")
                                     {
-                                        ws.GetRow(8).GetCell(10).SetCellValue(res);
-                                        ws.GetRow(8).GetCell(11).SetCellValue(item.sm_PaDesc);
+                                        if (isLeakage)
+                                        {
+                                            ws.GetRow(5).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(5).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(6).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(6).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(7).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(7).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(8).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(8).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(9).GetCell(10).SetCellValue(res);
+                                            ws.GetRow(9).GetCell(11).SetCellValue(item.sm_PaDesc);
+                                        }
+                                        else
+                                        {
+                                            ws.GetRow(5).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(5).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(6).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(6).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(7).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(7).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(8).GetCell(10).SetCellValue(res);
+                                            ws.GetRow(8).GetCell(11).SetCellValue(item.sm_PaDesc);
+                                        }
                                     }
                                     if (item.sm_Pa == "250")
                                     {
-                                        ws.GetRow(9).GetCell(10).SetCellValue(res);
-                                        ws.GetRow(9).GetCell(11).SetCellValue(item.sm_PaDesc);
+                                        if (isLeakage)
+                                        {
+                                            ws.GetRow(5).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(5).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(6).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(6).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(7).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(7).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(8).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(8).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(9).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(9).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(10).GetCell(10).SetCellValue(res);
+                                            ws.GetRow(10).GetCell(11).SetCellValue(item.sm_PaDesc);
+                                        }
+                                        else
+                                        {
+                                            ws.GetRow(5).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(5).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(6).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(6).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(7).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(7).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(8).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(8).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(9).GetCell(10).SetCellValue(res);
+                                            ws.GetRow(9).GetCell(11).SetCellValue(item.sm_PaDesc);
+                                        }
                                     }
                                     if (item.sm_Pa == "300")
                                     {
-                                        ws.GetRow(10).GetCell(10).SetCellValue(res);
-                                        ws.GetRow(10).GetCell(11).SetCellValue(item.sm_PaDesc);
+                                        if (isLeakage)
+                                        {
+                                            ws.GetRow(5).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(5).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(6).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(6).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(7).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(7).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(8).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(8).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(9).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(9).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(10).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(10).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(11).GetCell(10).SetCellValue(res);
+                                            ws.GetRow(11).GetCell(11).SetCellValue(item.sm_PaDesc);
+                                        }
+                                        else
+                                        {
+                                            ws.GetRow(5).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(5).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(6).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(6).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(7).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(7).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(8).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(8).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(9).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(9).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(10).GetCell(10).SetCellValue(res);
+                                            ws.GetRow(10).GetCell(11).SetCellValue(item.sm_PaDesc);
+                                        }
                                     }
                                     if (item.sm_Pa == "350")
                                     {
-                                        ws.GetRow(11).GetCell(10).SetCellValue(res);
-                                        ws.GetRow(11).GetCell(11).SetCellValue(item.sm_PaDesc);
+                                        if (isLeakage)
+                                        {
+                                            ws.GetRow(5).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(5).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(6).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(6).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(7).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(7).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(8).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(8).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(9).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(9).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(10).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(10).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(11).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(11).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(12).GetCell(10).SetCellValue(res);
+                                            ws.GetRow(12).GetCell(11).SetCellValue(item.sm_PaDesc);
+
+                                        }
+                                        else
+                                        {
+                                            ws.GetRow(5).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(5).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(6).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(6).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(7).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(7).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(8).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(8).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(9).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(9).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(10).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(10).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(11).GetCell(10).SetCellValue(res);
+                                            ws.GetRow(11).GetCell(11).SetCellValue(item.sm_PaDesc);
+                                        }
                                     }
                                     if (item.sm_Pa == "400")
                                     {
-                                        ws.GetRow(12).GetCell(10).SetCellValue(res);
-                                        ws.GetRow(12).GetCell(11).SetCellValue(item.sm_PaDesc);
+                                        if (isLeakage)
+                                        {
+                                            ws.GetRow(5).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(5).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(6).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(6).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(7).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(7).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(8).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(8).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(9).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(9).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(10).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(10).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(11).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(11).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(12).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(12).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(13).GetCell(10).SetCellValue(res);
+                                            ws.GetRow(13).GetCell(11).SetCellValue(item.sm_PaDesc);
+                                        }
+                                        else
+                                        {
+                                            ws.GetRow(5).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(5).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(6).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(6).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(7).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(7).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(8).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(8).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(9).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(9).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(10).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(10).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(11).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(11).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(12).GetCell(10).SetCellValue(res);
+                                            ws.GetRow(12).GetCell(11).SetCellValue(item.sm_PaDesc);
+                                        }
                                     }
                                     if (item.sm_Pa == "500")
                                     {
-                                        ws.GetRow(13).GetCell(10).SetCellValue(res);
-                                        ws.GetRow(13).GetCell(11).SetCellValue(item.sm_PaDesc);
+                                        if (isLeakage)
+                                        {
+                                            ws.GetRow(5).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(5).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(6).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(6).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(7).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(7).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(8).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(8).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(9).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(9).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(10).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(10).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(11).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(11).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(12).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(12).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(13).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(13).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(14).GetCell(10).SetCellValue(res);
+                                            ws.GetRow(14).GetCell(11).SetCellValue(item.sm_PaDesc);
+                                        }
+                                        else
+                                        {
+                                            ws.GetRow(5).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(5).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(6).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(6).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(7).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(7).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(8).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(8).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(9).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(9).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(10).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(10).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(11).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(11).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(12).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(12).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(13).GetCell(10).SetCellValue(res);
+                                            ws.GetRow(13).GetCell(11).SetCellValue(item.sm_PaDesc);
+                                        }
                                     }
                                     if (item.sm_Pa == "600")
                                     {
-                                        ws.GetRow(14).GetCell(10).SetCellValue(res);
-                                        ws.GetRow(14).GetCell(11).SetCellValue(item.sm_PaDesc);
+                                        if (isLeakage)
+                                        {
+                                            ws.GetRow(5).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(5).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(6).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(6).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(7).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(7).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(8).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(8).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(9).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(9).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(10).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(10).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(11).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(11).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(12).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(12).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(13).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(13).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(14).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(14).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(15).GetCell(10).SetCellValue(res);
+                                            ws.GetRow(15).GetCell(11).SetCellValue(item.sm_PaDesc);
+                                        }
+                                        else
+                                        {
+                                            ws.GetRow(5).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(5).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(6).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(6).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(7).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(7).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(8).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(8).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(9).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(9).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(10).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(10).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(11).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(11).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(12).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(12).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(13).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(13).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(14).GetCell(10).SetCellValue(res);
+                                            ws.GetRow(14).GetCell(11).SetCellValue(item.sm_PaDesc);
+                                        }
                                     }
                                     if (item.sm_Pa == "700")
                                     {
-                                        ws.GetRow(15).GetCell(10).SetCellValue(res);
-                                        ws.GetRow(15).GetCell(11).SetCellValue(item.sm_PaDesc);
+                                        if (isLeakage)
+                                        {
+                                            ws.GetRow(5).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(5).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(6).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(6).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(7).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(7).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(8).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(8).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(9).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(9).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(10).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(10).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(11).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(11).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(12).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(12).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(13).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(13).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(14).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(14).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(15).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(15).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(16).GetCell(10).SetCellValue(res);
+                                            ws.GetRow(16).GetCell(11).SetCellValue(item.sm_PaDesc);
+                                        }
+                                        else
+                                        {
+                                            ws.GetRow(5).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(5).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(6).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(6).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(7).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(7).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(8).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(8).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(9).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(9).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(10).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(10).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(11).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(11).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(12).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(12).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(13).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(13).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(14).GetCell(10).SetCellValue("否");
+                                            ws.GetRow(14).GetCell(11).SetCellValue("-");
+                                            ws.GetRow(15).GetCell(10).SetCellValue(res);
+                                            ws.GetRow(15).GetCell(11).SetCellValue(item.sm_PaDesc);
+                                        }
                                     }
+                                    #endregion
                                 }
-                                #endregion
+
                             }
                             #endregion
                         }
@@ -1496,11 +3623,30 @@ namespace text.doors.Common
                 ws.ForceFormulaRecalculation = true;
                 ws.GetRow(1).GetCell(1).SetCellValue(dt_Settings.Rows[0]["weituobianhao"].ToString());
                 ws.GetRow(2).GetCell(1).SetCellValue(dt_Settings.Rows[0]["jianceriqi"].ToString());
-                ws.GetRow(2).GetCell(4).SetCellValue("");
+                ws.GetRow(2).GetCell(6).SetCellValue("");
                 ws.GetRow(2).GetCell(11).SetCellValue("");
-                ws.GetRow(3).GetCell(1).SetCellValue("");
-                ws.GetRow(3).GetCell(4).SetCellValue("");
+                ws.GetRow(3).GetCell(1).SetCellValue(dt_Settings.Rows[0]["ganjianchangdu"].ToString());
+                ws.GetRow(3).GetCell(6).SetCellValue("");
                 ws.GetRow(3).GetCell(11).SetCellValue("");
+
+
+
+                ws.GetRow(28).GetCell(1).SetCellValue(dt_Settings.Rows[0]["weituobianhao"].ToString());
+                ws.GetRow(29).GetCell(1).SetCellValue(dt_Settings.Rows[0]["jianceriqi"].ToString());
+                ws.GetRow(29).GetCell(6).SetCellValue("");
+                ws.GetRow(29).GetCell(11).SetCellValue("");
+                ws.GetRow(30).GetCell(1).SetCellValue(dt_Settings.Rows[0]["ganjianchangdu"].ToString());
+                ws.GetRow(30).GetCell(6).SetCellValue("");
+                ws.GetRow(30).GetCell(11).SetCellValue("");
+
+
+                ws.GetRow(55).GetCell(1).SetCellValue(dt_Settings.Rows[0]["weituobianhao"].ToString());
+                ws.GetRow(56).GetCell(1).SetCellValue(dt_Settings.Rows[0]["jianceriqi"].ToString());
+                ws.GetRow(56).GetCell(6).SetCellValue("");
+                ws.GetRow(56).GetCell(11).SetCellValue("");
+                ws.GetRow(57).GetCell(1).SetCellValue(dt_Settings.Rows[0]["ganjianchangdu"].ToString());
+                ws.GetRow(57).GetCell(6).SetCellValue("");
+                ws.GetRow(57).GetCell(11).SetCellValue("");
 
                 var databaseDefPa = 250;
 
@@ -1511,58 +3657,212 @@ namespace text.doors.Common
                     var dr1 = kfy_Info1.Rows[0];
                     var jc = int.Parse(dr1["defJC"].ToString());
 
-                    for (int i = 1; i < 9; i++)
+                    for (int i = 1; i < 12; i++)
                     {
-                        ws.GetRow(i + 6).GetCell(0).SetCellValue(jc * i);
-                        ws.GetRow(i + 6).GetCell(1).SetCellValue(dr1["z_one_" + (databaseDefPa * i)].ToString());
-                        ws.GetRow(i + 6).GetCell(2).SetCellValue(dr1["z_two_" + (databaseDefPa * i)].ToString());
-                        ws.GetRow(i + 6).GetCell(3).SetCellValue(dr1["z_three_" + (databaseDefPa * i)].ToString());
-                        ws.GetRow(i + 6).GetCell(4).SetCellValue(dr1["z_nd_" + (databaseDefPa * i)].ToString());
+                        if (i == 9)
+                        {
+                            ws.GetRow(15).GetCell(0).SetCellValue("P3阶段");
+                            ws.GetRow(15).GetCell(1).SetCellValue(dr1["z_one_p3jieduan"].ToString());
+                            ws.GetRow(15).GetCell(2).SetCellValue(dr1["z_two_p3jieduan"].ToString());
+                            ws.GetRow(15).GetCell(3).SetCellValue(dr1["z_three_p3jieduan"].ToString());
+                            ws.GetRow(15).GetCell(4).SetCellValue(dr1["z_nd_p3jieduan"].ToString());
 
-                        ws.GetRow(i + 33).GetCell(0).SetCellValue(-(jc * i));
-                        ws.GetRow(i + 33).GetCell(1).SetCellValue(dr1["f_one_" + (databaseDefPa * i)].ToString());
-                        ws.GetRow(i + 33).GetCell(2).SetCellValue(dr1["f_two_" + (databaseDefPa * i)].ToString());
-                        ws.GetRow(i + 33).GetCell(3).SetCellValue(dr1["f_three_" + (databaseDefPa * i)].ToString());
-                        ws.GetRow(i + 33).GetCell(4).SetCellValue(dr1["f_nd_" + (databaseDefPa * i)].ToString());
+                            ws.GetRow(42).GetCell(0).SetCellValue("-P3阶段");
+                            ws.GetRow(42).GetCell(1).SetCellValue(dr1["f_one_p3jieduan"].ToString());
+                            ws.GetRow(42).GetCell(2).SetCellValue(dr1["f_two_p3jieduan"].ToString());
+                            ws.GetRow(42).GetCell(3).SetCellValue(dr1["f_three_p3jieduan"].ToString());
+                            ws.GetRow(42).GetCell(4).SetCellValue(dr1["f_nd_p3jieduan"].ToString());
+                        }
+                        else if (i == 10)
+                        {
+                            ws.GetRow(16).GetCell(0).SetCellValue("P3残余变形");
+                            ws.GetRow(16).GetCell(1).SetCellValue(dr1["z_one_p3canyubianxing"].ToString());
+                            ws.GetRow(16).GetCell(2).SetCellValue(dr1["z_two_p3canyubianxing"].ToString());
+                            ws.GetRow(16).GetCell(3).SetCellValue(dr1["z_three_p3canyubianxing"].ToString());
+                            ws.GetRow(16).GetCell(4).SetCellValue(dr1["z_nd_p3canyubianxing"].ToString());
+
+                            ws.GetRow(43).GetCell(0).SetCellValue("-P3残余变形");
+                            ws.GetRow(43).GetCell(1).SetCellValue(dr1["f_one_p3canyubianxing"].ToString());
+                            ws.GetRow(43).GetCell(2).SetCellValue(dr1["f_two_p3canyubianxing"].ToString());
+                            ws.GetRow(43).GetCell(3).SetCellValue(dr1["f_three_p3canyubianxing"].ToString());
+                            ws.GetRow(43).GetCell(4).SetCellValue(dr1["f_nd_p3canyubianxing"].ToString());
+                        }
+                        else if (i == 11)
+                        {
+                            ws.GetRow(17).GetCell(0).SetCellValue("PMax/残余变形");
+                            ws.GetRow(17).GetCell(1).SetCellValue(dr1["z_one_pMaxcanyubianxing"].ToString());
+                            ws.GetRow(17).GetCell(2).SetCellValue(dr1["z_two_pMaxcanyubianxing"].ToString());
+                            ws.GetRow(17).GetCell(3).SetCellValue(dr1["z_three_pMaxcanyubianxing"].ToString());
+                            ws.GetRow(17).GetCell(4).SetCellValue(dr1["z_nd_pMaxcanyubianxing"].ToString());
+
+                            ws.GetRow(44).GetCell(0).SetCellValue("-PMax/残余变形");
+                            ws.GetRow(44).GetCell(1).SetCellValue(dr1["f_one_pMaxcanyubianxing"].ToString());
+                            ws.GetRow(44).GetCell(2).SetCellValue(dr1["f_two_pMaxcanyubianxing"].ToString());
+                            ws.GetRow(44).GetCell(3).SetCellValue(dr1["f_three_pMaxcanyubianxing"].ToString());
+                            ws.GetRow(44).GetCell(4).SetCellValue(dr1["f_nd_pMaxcanyubianxing"].ToString());
+                        }
+                        else
+                        {
+                            ws.GetRow(i + 6).GetCell(0).SetCellValue(jc * i);
+                            ws.GetRow(i + 6).GetCell(1).SetCellValue(dr1["z_one_" + (databaseDefPa * i)].ToString());
+                            ws.GetRow(i + 6).GetCell(2).SetCellValue(dr1["z_two_" + (databaseDefPa * i)].ToString());
+                            ws.GetRow(i + 6).GetCell(3).SetCellValue(dr1["z_three_" + (databaseDefPa * i)].ToString());
+                            ws.GetRow(i + 6).GetCell(4).SetCellValue(dr1["z_nd_" + (databaseDefPa * i)].ToString());
+
+                            ws.GetRow(i + 33).GetCell(0).SetCellValue(-(jc * i));
+                            ws.GetRow(i + 33).GetCell(1).SetCellValue(dr1["f_one_" + (databaseDefPa * i)].ToString());
+                            ws.GetRow(i + 33).GetCell(2).SetCellValue(dr1["f_two_" + (databaseDefPa * i)].ToString());
+                            ws.GetRow(i + 33).GetCell(3).SetCellValue(dr1["f_three_" + (databaseDefPa * i)].ToString());
+                            ws.GetRow(i + 33).GetCell(4).SetCellValue(dr1["f_nd_" + (databaseDefPa * i)].ToString());
+                        }
                     }
+
+                    ws.GetRow(18).GetCell(2).SetCellValue(dr1["p1"].ToString());
+                    ws.GetRow(19).GetCell(2).SetCellValue(dr1["p2"].ToString());
+                    ws.GetRow(20).GetCell(2).SetCellValue(dr1["p3"].ToString());
+                    ws.GetRow(21).GetCell(2).SetCellValue("");
+
+                    ws.GetRow(45).GetCell(2).SetCellValue(dr1["_p1"].ToString());
+                    ws.GetRow(46).GetCell(2).SetCellValue(dr1["_p2"].ToString());
+                    ws.GetRow(47).GetCell(2).SetCellValue(dr1["_p3"].ToString());
+                    ws.GetRow(48).GetCell(2).SetCellValue("");
                 }
 
                 DataTable kfy_Info2 = new DAL_dt_kfy_Info().GetkfyByCodeAndTong(_tempCode, "第2樘");
                 if (kfy_Info2 != null && kfy_Info2.Rows.Count > 0)
                 {
                     var dr2 = kfy_Info2.Rows[0];
-                    for (int i = 1; i < 9; i++)
+                    for (int i = 1; i < 12; i++)
                     {
-                        ws.GetRow(i + 6).GetCell(5).SetCellValue(dr2["z_one_" + (databaseDefPa * i)].ToString());
-                        ws.GetRow(i + 6).GetCell(6).SetCellValue(dr2["z_two_" + (databaseDefPa * i)].ToString());
-                        ws.GetRow(i + 6).GetCell(7).SetCellValue(dr2["z_three_" + (databaseDefPa * i)].ToString());
-                        ws.GetRow(i + 6).GetCell(8).SetCellValue(dr2["z_nd_" + (databaseDefPa * i)].ToString());
+                        if (i == 9)
+                        {
+                            ws.GetRow(15).GetCell(0).SetCellValue("P3阶段");
+                            ws.GetRow(15).GetCell(5).SetCellValue(dr2["z_one_p3jieduan"].ToString());
+                            ws.GetRow(15).GetCell(6).SetCellValue(dr2["z_two_p3jieduan"].ToString());
+                            ws.GetRow(15).GetCell(7).SetCellValue(dr2["z_three_p3jieduan"].ToString());
+                            ws.GetRow(15).GetCell(8).SetCellValue(dr2["z_nd_p3jieduan"].ToString());
 
-                        ws.GetRow(i + 33).GetCell(5).SetCellValue(dr2["f_one_" + (databaseDefPa * i)].ToString());
-                        ws.GetRow(i + 33).GetCell(6).SetCellValue(dr2["f_two_" + (databaseDefPa * i)].ToString());
-                        ws.GetRow(i + 33).GetCell(7).SetCellValue(dr2["f_three_" + (databaseDefPa * i)].ToString());
-                        ws.GetRow(i + 33).GetCell(8).SetCellValue(dr2["f_nd_" + (databaseDefPa * i)].ToString());
+                            ws.GetRow(42).GetCell(0).SetCellValue("-P3阶段");
+                            ws.GetRow(42).GetCell(5).SetCellValue(dr2["f_one_p3jieduan"].ToString());
+                            ws.GetRow(42).GetCell(6).SetCellValue(dr2["f_two_p3jieduan"].ToString());
+                            ws.GetRow(42).GetCell(7).SetCellValue(dr2["f_three_p3jieduan"].ToString());
+                            ws.GetRow(42).GetCell(8).SetCellValue(dr2["f_nd_p3jieduan"].ToString());
+                        }
+                        else if (i == 10)
+                        {
+
+                            ws.GetRow(16).GetCell(5).SetCellValue(dr2["z_one_p3canyubianxing"].ToString());
+                            ws.GetRow(16).GetCell(6).SetCellValue(dr2["z_two_p3canyubianxing"].ToString());
+                            ws.GetRow(16).GetCell(7).SetCellValue(dr2["z_three_p3canyubianxing"].ToString());
+                            ws.GetRow(16).GetCell(8).SetCellValue(dr2["z_nd_p3canyubianxing"].ToString());
+
+                            ws.GetRow(43).GetCell(5).SetCellValue(dr2["f_one_p3canyubianxing"].ToString());
+                            ws.GetRow(43).GetCell(6).SetCellValue(dr2["f_two_p3canyubianxing"].ToString());
+                            ws.GetRow(43).GetCell(7).SetCellValue(dr2["f_three_p3canyubianxing"].ToString());
+                            ws.GetRow(43).GetCell(8).SetCellValue(dr2["f_nd_p3canyubianxing"].ToString());
+                        }
+                        else if (i == 11)
+                        {
+                            ws.GetRow(17).GetCell(5).SetCellValue(dr2["z_one_pMaxcanyubianxing"].ToString());
+                            ws.GetRow(17).GetCell(6).SetCellValue(dr2["z_two_pMaxcanyubianxing"].ToString());
+                            ws.GetRow(17).GetCell(7).SetCellValue(dr2["z_three_pMaxcanyubianxing"].ToString());
+                            ws.GetRow(17).GetCell(8).SetCellValue(dr2["z_nd_pMaxcanyubianxing"].ToString());
+
+                            ws.GetRow(44).GetCell(5).SetCellValue(dr2["f_one_pMaxcanyubianxing"].ToString());
+                            ws.GetRow(44).GetCell(6).SetCellValue(dr2["f_two_pMaxcanyubianxing"].ToString());
+                            ws.GetRow(44).GetCell(7).SetCellValue(dr2["f_three_pMaxcanyubianxing"].ToString());
+                            ws.GetRow(44).GetCell(8).SetCellValue(dr2["f_nd_pMaxcanyubianxing"].ToString());
+                        }
+                        else
+                        {
+                            ws.GetRow(i + 6).GetCell(5).SetCellValue(dr2["z_one_" + (databaseDefPa * i)].ToString());
+                            ws.GetRow(i + 6).GetCell(6).SetCellValue(dr2["z_two_" + (databaseDefPa * i)].ToString());
+                            ws.GetRow(i + 6).GetCell(7).SetCellValue(dr2["z_three_" + (databaseDefPa * i)].ToString());
+                            ws.GetRow(i + 6).GetCell(8).SetCellValue(dr2["z_nd_" + (databaseDefPa * i)].ToString());
+
+                            ws.GetRow(i + 33).GetCell(5).SetCellValue(dr2["f_one_" + (databaseDefPa * i)].ToString());
+                            ws.GetRow(i + 33).GetCell(6).SetCellValue(dr2["f_two_" + (databaseDefPa * i)].ToString());
+                            ws.GetRow(i + 33).GetCell(7).SetCellValue(dr2["f_three_" + (databaseDefPa * i)].ToString());
+                            ws.GetRow(i + 33).GetCell(8).SetCellValue(dr2["f_nd_" + (databaseDefPa * i)].ToString());
+                        }
                     }
+                    ws.GetRow(18).GetCell(6).SetCellValue(dr2["p1"].ToString());
+                    ws.GetRow(19).GetCell(6).SetCellValue(dr2["p2"].ToString());
+                    ws.GetRow(20).GetCell(6).SetCellValue(dr2["p3"].ToString());
+                    ws.GetRow(21).GetCell(6).SetCellValue("");
+
+                    ws.GetRow(45).GetCell(6).SetCellValue(dr2["_p1"].ToString());
+                    ws.GetRow(46).GetCell(6).SetCellValue(dr2["_p2"].ToString());
+                    ws.GetRow(47).GetCell(6).SetCellValue(dr2["_p3"].ToString());
+                    ws.GetRow(48).GetCell(6).SetCellValue("");
                 }
 
                 DataTable kfy_Info3 = new DAL_dt_kfy_Info().GetkfyByCodeAndTong(_tempCode, "第3樘");
                 if (kfy_Info3 != null && kfy_Info3.Rows.Count > 0)
                 {
                     var dr3 = kfy_Info3.Rows[0];
-                    for (int i = 1; i < 9; i++)
+                    for (int i = 1; i < 12; i++)
                     {
-                        ws.GetRow(i + 6).GetCell(9).SetCellValue(dr3["z_one_" + (databaseDefPa * i)].ToString());
-                        ws.GetRow(i + 6).GetCell(10).SetCellValue(dr3["z_two_" + (databaseDefPa * i)].ToString());
-                        ws.GetRow(i + 6).GetCell(11).SetCellValue(dr3["z_three_" + (databaseDefPa * i)].ToString());
-                        ws.GetRow(i + 6).GetCell(12).SetCellValue(dr3["z_nd_" + (databaseDefPa * i)].ToString());
+                        if (i == 9)
+                        {
+                            ws.GetRow(15).GetCell(9).SetCellValue(dr3["z_one_p3jieduan"].ToString());
+                            ws.GetRow(15).GetCell(10).SetCellValue(dr3["z_two_p3jieduan"].ToString());
+                            ws.GetRow(15).GetCell(11).SetCellValue(dr3["z_three_p3jieduan"].ToString());
+                            ws.GetRow(15).GetCell(12).SetCellValue(dr3["z_nd_p3jieduan"].ToString());
 
-                        ws.GetRow(i + 33).GetCell(9).SetCellValue(dr3["f_one_" + (databaseDefPa * i)].ToString());
-                        ws.GetRow(i + 33).GetCell(10).SetCellValue(dr3["f_two_" + (databaseDefPa * i)].ToString());
-                        ws.GetRow(i + 33).GetCell(11).SetCellValue(dr3["f_three_" + (databaseDefPa * i)].ToString());
-                        ws.GetRow(i + 33).GetCell(12).SetCellValue(dr3["f_nd_" + (databaseDefPa * i)].ToString());
+                            ws.GetRow(42).GetCell(9).SetCellValue(dr3["f_one_p3jieduan"].ToString());
+                            ws.GetRow(42).GetCell(10).SetCellValue(dr3["f_two_p3jieduan"].ToString());
+                            ws.GetRow(42).GetCell(11).SetCellValue(dr3["f_three_p3jieduan"].ToString());
+                            ws.GetRow(42).GetCell(12).SetCellValue(dr3["f_nd_p3jieduan"].ToString());
+                        }
+                        else if (i == 10)
+                        {
+                            ws.GetRow(16).GetCell(9).SetCellValue(dr3["z_one_p3canyubianxing"].ToString());
+                            ws.GetRow(16).GetCell(10).SetCellValue(dr3["z_two_p3canyubianxing"].ToString());
+                            ws.GetRow(16).GetCell(11).SetCellValue(dr3["z_three_p3canyubianxing"].ToString());
+                            ws.GetRow(16).GetCell(12).SetCellValue(dr3["z_nd_p3canyubianxing"].ToString());
+
+                            ws.GetRow(43).GetCell(9).SetCellValue(dr3["f_one_p3canyubianxing"].ToString());
+                            ws.GetRow(43).GetCell(10).SetCellValue(dr3["f_two_p3canyubianxing"].ToString());
+                            ws.GetRow(43).GetCell(11).SetCellValue(dr3["f_three_p3canyubianxing"].ToString());
+                            ws.GetRow(43).GetCell(12).SetCellValue(dr3["f_nd_p3canyubianxing"].ToString());
+                        }
+                        else if (i == 11)
+                        {
+                            ws.GetRow(17).GetCell(9).SetCellValue(dr3["z_one_pMaxcanyubianxing"].ToString());
+                            ws.GetRow(17).GetCell(10).SetCellValue(dr3["z_two_pMaxcanyubianxing"].ToString());
+                            ws.GetRow(17).GetCell(11).SetCellValue(dr3["z_three_pMaxcanyubianxing"].ToString());
+                            ws.GetRow(17).GetCell(12).SetCellValue(dr3["z_nd_pMaxcanyubianxing"].ToString());
+
+                            ws.GetRow(44).GetCell(9).SetCellValue(dr3["f_one_pMaxcanyubianxing"].ToString());
+                            ws.GetRow(44).GetCell(10).SetCellValue(dr3["f_two_pMaxcanyubianxing"].ToString());
+                            ws.GetRow(44).GetCell(11).SetCellValue(dr3["f_three_pMaxcanyubianxing"].ToString());
+                            ws.GetRow(44).GetCell(12).SetCellValue(dr3["f_nd_pMaxcanyubianxing"].ToString());
+                        }
+                        else
+                        {
+                            ws.GetRow(i + 6).GetCell(9).SetCellValue(dr3["z_one_" + (databaseDefPa * i)].ToString());
+                            ws.GetRow(i + 6).GetCell(10).SetCellValue(dr3["z_two_" + (databaseDefPa * i)].ToString());
+                            ws.GetRow(i + 6).GetCell(11).SetCellValue(dr3["z_three_" + (databaseDefPa * i)].ToString());
+                            ws.GetRow(i + 6).GetCell(12).SetCellValue(dr3["z_nd_" + (databaseDefPa * i)].ToString());
+
+                            ws.GetRow(i + 33).GetCell(9).SetCellValue(dr3["f_one_" + (databaseDefPa * i)].ToString());
+                            ws.GetRow(i + 33).GetCell(10).SetCellValue(dr3["f_two_" + (databaseDefPa * i)].ToString());
+                            ws.GetRow(i + 33).GetCell(11).SetCellValue(dr3["f_three_" + (databaseDefPa * i)].ToString());
+                            ws.GetRow(i + 33).GetCell(12).SetCellValue(dr3["f_nd_" + (databaseDefPa * i)].ToString());
+                        }
                     }
-                }
 
+                    ws.GetRow(18).GetCell(10).SetCellValue(dr3["p1"].ToString());
+                    ws.GetRow(19).GetCell(10).SetCellValue(dr3["p2"].ToString());
+                    ws.GetRow(20).GetCell(10).SetCellValue(dr3["p3"].ToString());
+                    ws.GetRow(21).GetCell(10).SetCellValue("");
+
+                    ws.GetRow(45).GetCell(10).SetCellValue(dr3["_p1"].ToString());
+                    ws.GetRow(46).GetCell(10).SetCellValue(dr3["_p2"].ToString());
+                    ws.GetRow(47).GetCell(10).SetCellValue(dr3["_p3"].ToString());
+                    ws.GetRow(48).GetCell(10).SetCellValue("");
+                }
                 #endregion
 
                 ws.ForceFormulaRecalculation = true;
@@ -1570,9 +3870,8 @@ namespace text.doors.Common
                 using (FileStream filess = File.OpenWrite(outFilePath))
                 {
                     hssfworkbook.Write(filess);
-                    
-                }
 
+                }
             }
             catch (Exception ex)
             {
@@ -1581,105 +3880,6 @@ namespace text.doors.Common
             }
             return true;
         }
-
-
-        //private GetSMIndex()
-        //{
-        //    List<AirtightCalculation> airtightCalculation = new List<AirtightCalculation>();
-        //    airtightCalculation.Add(new AirtightCalculation()
-        //    {
-        //        PaValue = 10,
-        //        Z_S_ZZ_Value = double.Parse(this.dgv_ll.Rows[0].Cells["Pressure_Z_Z"].Value.ToString()),
-        //        Z_J_ZZ_Value = double.Parse(this.dgv_ll.Rows[10].Cells["Pressure_Z_Z"].Value.ToString()),
-        //        Z_S_FJ_Value = double.Parse(this.dgv_ll.Rows[0].Cells["Pressure_Z"].Value.ToString()),
-        //        Z_J_FJ_Value = double.Parse(this.dgv_ll.Rows[10].Cells["Pressure_Z"].Value.ToString()),
-
-        //        F_S_ZZ_Value = double.Parse(this.dgv_ll.Rows[0].Cells["Pressure_F_Z"].Value.ToString()),
-        //        F_J_ZZ_Value = double.Parse(this.dgv_ll.Rows[10].Cells["Pressure_F_Z"].Value.ToString()),
-        //        F_S_FJ_Value = double.Parse(this.dgv_ll.Rows[0].Cells["Pressure_F"].Value.ToString()),
-        //        F_J_FJ_Value = double.Parse(this.dgv_ll.Rows[10].Cells["Pressure_F"].Value.ToString()),
-
-        //        // _Z_Q_SJ_P=17.478,
-        //        kPa = kPa,
-        //        CurrentTemperature = tempTemperature
-        //    });
-        //    airtightCalculation.Add(new AirtightCalculation()
-        //    {
-        //        PaValue = 30,
-        //        Z_S_ZZ_Value = double.Parse(this.dgv_ll.Rows[1].Cells["Pressure_F_Z"].Value.ToString()),
-        //        Z_J_ZZ_Value = double.Parse(this.dgv_ll.Rows[9].Cells["Pressure_F_Z"].Value.ToString()),
-        //        Z_S_FJ_Value = double.Parse(this.dgv_ll.Rows[1].Cells["Pressure_F"].Value.ToString()),
-        //        Z_J_FJ_Value = double.Parse(this.dgv_ll.Rows[9].Cells["Pressure_F"].Value.ToString()),
-
-        //        F_S_ZZ_Value = double.Parse(this.dgv_ll.Rows[1].Cells["Pressure_F_Z"].Value.ToString()),
-        //        F_J_ZZ_Value = double.Parse(this.dgv_ll.Rows[9].Cells["Pressure_F_Z"].Value.ToString()),
-        //        F_S_FJ_Value = double.Parse(this.dgv_ll.Rows[1].Cells["Pressure_F"].Value.ToString()),
-        //        F_J_FJ_Value = double.Parse(this.dgv_ll.Rows[9].Cells["Pressure_F"].Value.ToString()),
-        //        //  _Z_Q_SJ_P = 22.062,
-        //        kPa = kPa,
-        //        CurrentTemperature = tempTemperature
-        //    });
-        //    airtightCalculation.Add(new AirtightCalculation()
-        //    {
-        //        PaValue = 50,
-        //        Z_S_ZZ_Value = double.Parse(this.dgv_ll.Rows[2].Cells["Pressure_Z_Z"].Value.ToString()),
-        //        Z_J_ZZ_Value = double.Parse(this.dgv_ll.Rows[8].Cells["Pressure_Z_Z"].Value.ToString()),
-        //        Z_S_FJ_Value = double.Parse(this.dgv_ll.Rows[2].Cells["Pressure_Z"].Value.ToString()),
-        //        Z_J_FJ_Value = double.Parse(this.dgv_ll.Rows[8].Cells["Pressure_Z"].Value.ToString()),
-
-        //        F_S_ZZ_Value = double.Parse(this.dgv_ll.Rows[2].Cells["Pressure_F_Z"].Value.ToString()),
-        //        F_J_ZZ_Value = double.Parse(this.dgv_ll.Rows[8].Cells["Pressure_F_Z"].Value.ToString()),
-        //        F_S_FJ_Value = double.Parse(this.dgv_ll.Rows[2].Cells["Pressure_F"].Value.ToString()),
-        //        F_J_FJ_Value = double.Parse(this.dgv_ll.Rows[8].Cells["Pressure_F"].Value.ToString()),
-        //        kPa = kPa,
-        //        // _Z_Q_SJ_P = 25.786,
-        //        CurrentTemperature = tempTemperature
-        //    });
-        //    airtightCalculation.Add(new AirtightCalculation()
-        //    {
-        //        PaValue = 70,
-        //        Z_S_ZZ_Value = double.Parse(this.dgv_ll.Rows[3].Cells["Pressure_Z_Z"].Value.ToString()),
-        //        Z_J_ZZ_Value = double.Parse(this.dgv_ll.Rows[7].Cells["Pressure_Z_Z"].Value.ToString()),
-        //        Z_S_FJ_Value = double.Parse(this.dgv_ll.Rows[3].Cells["Pressure_Z"].Value.ToString()),
-        //        Z_J_FJ_Value = double.Parse(this.dgv_ll.Rows[7].Cells["Pressure_Z"].Value.ToString()),
-
-        //        F_S_ZZ_Value = double.Parse(this.dgv_ll.Rows[3].Cells["Pressure_F_Z"].Value.ToString()),
-        //        F_J_ZZ_Value = double.Parse(this.dgv_ll.Rows[7].Cells["Pressure_F_Z"].Value.ToString()),
-        //        F_S_FJ_Value = double.Parse(this.dgv_ll.Rows[3].Cells["Pressure_F"].Value.ToString()),
-        //        F_J_FJ_Value = double.Parse(this.dgv_ll.Rows[7].Cells["Pressure_F"].Value.ToString()),
-        //        kPa = kPa,
-        //        //  _Z_Q_SJ_P = 35.815,
-        //        CurrentTemperature = tempTemperature
-        //    });
-        //    airtightCalculation.Add(new AirtightCalculation()
-        //    {
-        //        PaValue = 100,
-        //        Z_S_ZZ_Value = double.Parse(this.dgv_ll.Rows[4].Cells["Pressure_Z_Z"].Value.ToString()),
-        //        Z_J_ZZ_Value = double.Parse(this.dgv_ll.Rows[6].Cells["Pressure_Z_Z"].Value.ToString()),
-        //        Z_S_FJ_Value = double.Parse(this.dgv_ll.Rows[4].Cells["Pressure_Z"].Value.ToString()),
-        //        Z_J_FJ_Value = double.Parse(this.dgv_ll.Rows[4].Cells["Pressure_Z"].Value.ToString()),
-
-        //        F_S_ZZ_Value = double.Parse(this.dgv_ll.Rows[4].Cells["Pressure_F_Z"].Value.ToString()),
-        //        F_J_ZZ_Value = double.Parse(this.dgv_ll.Rows[6].Cells["Pressure_F_Z"].Value.ToString()),
-        //        F_S_FJ_Value = double.Parse(this.dgv_ll.Rows[4].Cells["Pressure_F"].Value.ToString()),
-        //        F_J_FJ_Value = double.Parse(this.dgv_ll.Rows[4].Cells["Pressure_F"].Value.ToString()),
-        //        kPa = kPa,
-        //        // _Z_Q_SJ_P = 63.893,
-        //        CurrentTemperature = tempTemperature
-        //    });
-
-        //    //获取分级指标
-        //    var indexStitchLengthAndArea = Formula.GetJK_IndexStitchLengthAndArea(airtightCalculation, stitchLength, sumArea);
-        //    if (indexStitchLengthAndArea != null)
-        //    {
-        //        zFc = indexStitchLengthAndArea.ZY_FC;
-        //        fFc = indexStitchLengthAndArea.FY_FC;
-        //        zMj = indexStitchLengthAndArea.ZY_MJ;
-        //        fMj = indexStitchLengthAndArea.FY_MJ;
-        //    }
-        //}
-
-
     }
 
 }
