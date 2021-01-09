@@ -39,7 +39,6 @@ namespace text.doors.Detection
         public static double _displace2 = 0;
         public static double _displace3 = 0;
 
-        public static Thread bindLableThread;
 
         public List<WindPressureDGV> windPressureDGV = new List<WindPressureDGV>();
         /// <summary>
@@ -55,12 +54,6 @@ namespace text.doors.Detection
         public WindPressureDetection()
         {
 
-        }
-
-
-        public static void releaseThread()
-        {
-            td.Abort();
         }
 
         public WindPressureDetection(SerialPortClient tcpClient, string tempCode, string tempTong)
@@ -86,6 +79,7 @@ namespace text.doors.Detection
             BindData(false);
 
             td = new Thread(BindFromInput);
+            td.IsBackground = true;
             td.Start();
 
         }
@@ -268,6 +262,8 @@ namespace text.doors.Detection
                 DataRow dr = dt.Rows[0];
                 //极差
                 txt_gbjc.Text = dr["defJC"].ToString();
+                txt_lx.Text = dr["lx"].ToString();
+                txt_desc.Text = dr["desc"].ToString();
                 //绑定锁点
                 if (dr["CheckLock"].ToString() == "1")
                     rdb_DWDD1.Checked = true;
@@ -336,6 +332,10 @@ namespace text.doors.Detection
                 this.txt_f_p1.Text = dr["_p1"] == null ? "0" : dr["_p1"].ToString();
                 this.txt_f_p2.Text = dr["_p2"] == null ? "0" : dr["_p2"].ToString();
                 this.txt_f_p3.Text = dr["_p3"] == null ? "0" : dr["_p3"].ToString();
+                this.txt_zpmax.Text = dr["z_pMax"] == null ? "0" : dr["z_pMax"].ToString();
+                this.txt_fpmax.Text = dr["f_pMax"] == null ? "0" : dr["f_pMax"].ToString();
+
+
             }
             else
             {
@@ -434,153 +434,154 @@ namespace text.doors.Detection
             model.dt_Code = _tempCode;
             model.info_DangH = _tempTong;
             model.defJC = defJC;
+            model.lx = int.Parse(txt_lx.Text);
             for (int i = 0; i < 11; i++)
             {
                 #region 获取
                 if (i == 0)
                 {
-                    model.z_one_250 = this.dgv_WindPressure.Rows[i].Cells["zwy1"].Value.ToString();
-                    model.z_two_250 = this.dgv_WindPressure.Rows[i].Cells["zwy2"].Value.ToString();
-                    model.z_three_250 = this.dgv_WindPressure.Rows[i].Cells["zwy3"].Value.ToString();
-                    model.z_nd_250 = this.dgv_WindPressure.Rows[i].Cells["zzd"].Value.ToString();
-                    model.z_ix_250 = this.dgv_WindPressure.Rows[i].Cells["zlx"].Value.ToString();
-                    model.f_one_250 = this.dgv_WindPressure.Rows[i].Cells["fwy1"].Value.ToString();
-                    model.f_two_250 = this.dgv_WindPressure.Rows[i].Cells["fwy2"].Value.ToString();
-                    model.f_three_250 = this.dgv_WindPressure.Rows[i].Cells["fwy3"].Value.ToString();
-                    model.f_nd_250 = this.dgv_WindPressure.Rows[i].Cells["fzd"].Value.ToString();
-                    model.f_ix_250 = this.dgv_WindPressure.Rows[i].Cells["flx"].Value.ToString();
+                    model.z_one_250 = double.Parse(this.dgv_WindPressure.Rows[i].Cells["zwy1"].Value.ToString()).ToString("f2");
+                    model.z_two_250 = double.Parse(this.dgv_WindPressure.Rows[i].Cells["zwy2"].Value.ToString()).ToString("f2");
+                    model.z_three_250 = double.Parse(this.dgv_WindPressure.Rows[i].Cells["zwy3"].Value.ToString()).ToString("f2");
+                    model.z_nd_250 = double.Parse(this.dgv_WindPressure.Rows[i].Cells["zzd"].Value.ToString()).ToString("f2");
+                    model.z_ix_250 = double.Parse(this.dgv_WindPressure.Rows[i].Cells["zlx"].Value.ToString()).ToString("f2");
+                    model.f_one_250 = double.Parse(this.dgv_WindPressure.Rows[i].Cells["fwy1"].Value.ToString()).ToString("f2");
+                    model.f_two_250 = double.Parse(this.dgv_WindPressure.Rows[i].Cells["fwy2"].Value.ToString()).ToString("f2");
+                    model.f_three_250 = double.Parse(this.dgv_WindPressure.Rows[i].Cells["fwy3"].Value.ToString()).ToString("f2");
+                    model.f_nd_250 = double.Parse(this.dgv_WindPressure.Rows[i].Cells["fzd"].Value.ToString()).ToString("f2");
+                    model.f_ix_250 = double.Parse(this.dgv_WindPressure.Rows[i].Cells["flx"].Value.ToString()).ToString("f2");
                 }
                 if (i == 1)
                 {
-                    model.z_one_500 = this.dgv_WindPressure.Rows[i].Cells["zwy1"].Value.ToString();
-                    model.z_two_500 = this.dgv_WindPressure.Rows[i].Cells["zwy2"].Value.ToString();
-                    model.z_three_500 = this.dgv_WindPressure.Rows[i].Cells["zwy3"].Value.ToString();
-                    model.z_nd_500 = this.dgv_WindPressure.Rows[i].Cells["zzd"].Value.ToString();
-                    model.z_ix_500 = this.dgv_WindPressure.Rows[i].Cells["zlx"].Value.ToString();
-                    model.f_one_500 = this.dgv_WindPressure.Rows[i].Cells["fwy1"].Value.ToString();
-                    model.f_two_500 = this.dgv_WindPressure.Rows[i].Cells["fwy2"].Value.ToString();
-                    model.f_three_500 = this.dgv_WindPressure.Rows[i].Cells["fwy3"].Value.ToString();
-                    model.f_nd_500 = this.dgv_WindPressure.Rows[i].Cells["fzd"].Value.ToString();
-                    model.f_ix_500 = this.dgv_WindPressure.Rows[i].Cells["flx"].Value.ToString();
+                    model.z_one_500 = double.Parse(this.dgv_WindPressure.Rows[i].Cells["zwy1"].Value.ToString()).ToString("f2");
+                    model.z_two_500 = double.Parse(this.dgv_WindPressure.Rows[i].Cells["zwy2"].Value.ToString()).ToString("f2");
+                    model.z_three_500 = double.Parse(this.dgv_WindPressure.Rows[i].Cells["zwy3"].Value.ToString()).ToString("f2");
+                    model.z_nd_500 = double.Parse(this.dgv_WindPressure.Rows[i].Cells["zzd"].Value.ToString()).ToString("f2");
+                    model.z_ix_500 = double.Parse(this.dgv_WindPressure.Rows[i].Cells["zlx"].Value.ToString()).ToString("f2");
+                    model.f_one_500 = double.Parse(this.dgv_WindPressure.Rows[i].Cells["fwy1"].Value.ToString()).ToString("f2");
+                    model.f_two_500 = double.Parse(this.dgv_WindPressure.Rows[i].Cells["fwy2"].Value.ToString()).ToString("f2");
+                    model.f_three_500 = double.Parse(this.dgv_WindPressure.Rows[i].Cells["fwy3"].Value.ToString()).ToString("f2");
+                    model.f_nd_500 = double.Parse(this.dgv_WindPressure.Rows[i].Cells["fzd"].Value.ToString()).ToString("f2");
+                    model.f_ix_500 = double.Parse(this.dgv_WindPressure.Rows[i].Cells["flx"].Value.ToString()).ToString("f2");
                 }
                 if (i == 2)
                 {
-                    model.z_one_750 = this.dgv_WindPressure.Rows[i].Cells["zwy1"].Value.ToString();
-                    model.z_two_750 = this.dgv_WindPressure.Rows[i].Cells["zwy2"].Value.ToString();
-                    model.z_three_750 = this.dgv_WindPressure.Rows[i].Cells["zwy3"].Value.ToString();
-                    model.z_nd_750 = this.dgv_WindPressure.Rows[i].Cells["zzd"].Value.ToString();
-                    model.z_ix_750 = this.dgv_WindPressure.Rows[i].Cells["zlx"].Value.ToString();
-                    model.f_one_750 = this.dgv_WindPressure.Rows[i].Cells["fwy1"].Value.ToString();
-                    model.f_two_750 = this.dgv_WindPressure.Rows[i].Cells["fwy2"].Value.ToString();
-                    model.f_three_750 = this.dgv_WindPressure.Rows[i].Cells["fwy3"].Value.ToString();
-                    model.f_nd_750 = this.dgv_WindPressure.Rows[i].Cells["fzd"].Value.ToString();
-                    model.f_ix_750 = this.dgv_WindPressure.Rows[i].Cells["flx"].Value.ToString();
+                    model.z_one_750 = double.Parse(this.dgv_WindPressure.Rows[i].Cells["zwy1"].Value.ToString()).ToString("f2");
+                    model.z_two_750 = double.Parse(this.dgv_WindPressure.Rows[i].Cells["zwy2"].Value.ToString()).ToString("f2");
+                    model.z_three_750 = double.Parse(this.dgv_WindPressure.Rows[i].Cells["zwy3"].Value.ToString()).ToString("f2");
+                    model.z_nd_750 = double.Parse(this.dgv_WindPressure.Rows[i].Cells["zzd"].Value.ToString()).ToString("f2");
+                    model.z_ix_750 = double.Parse(this.dgv_WindPressure.Rows[i].Cells["zlx"].Value.ToString()).ToString("f2");
+                    model.f_one_750 = double.Parse(this.dgv_WindPressure.Rows[i].Cells["fwy1"].Value.ToString()).ToString("f2");
+                    model.f_two_750 = double.Parse(this.dgv_WindPressure.Rows[i].Cells["fwy2"].Value.ToString()).ToString("f2");
+                    model.f_three_750 = double.Parse(this.dgv_WindPressure.Rows[i].Cells["fwy3"].Value.ToString()).ToString("f2");
+                    model.f_nd_750 = double.Parse(this.dgv_WindPressure.Rows[i].Cells["fzd"].Value.ToString()).ToString("f2");
+                    model.f_ix_750 = double.Parse(this.dgv_WindPressure.Rows[i].Cells["flx"].Value.ToString()).ToString("f2");
                 }
                 if (i == 3)
                 {
-                    model.z_one_1000 = this.dgv_WindPressure.Rows[i].Cells["zwy1"].Value.ToString();
-                    model.z_two_1000 = this.dgv_WindPressure.Rows[i].Cells["zwy2"].Value.ToString();
-                    model.z_three_1000 = this.dgv_WindPressure.Rows[i].Cells["zwy3"].Value.ToString();
-                    model.z_nd_1000 = this.dgv_WindPressure.Rows[i].Cells["zzd"].Value.ToString();
-                    model.z_ix_1000 = this.dgv_WindPressure.Rows[i].Cells["zlx"].Value.ToString();
-                    model.f_one_1000 = this.dgv_WindPressure.Rows[i].Cells["fwy1"].Value.ToString();
-                    model.f_two_1000 = this.dgv_WindPressure.Rows[i].Cells["fwy2"].Value.ToString();
-                    model.f_three_1000 = this.dgv_WindPressure.Rows[i].Cells["fwy3"].Value.ToString();
-                    model.f_nd_1000 = this.dgv_WindPressure.Rows[i].Cells["fzd"].Value.ToString();
-                    model.f_ix_1000 = this.dgv_WindPressure.Rows[i].Cells["flx"].Value.ToString();
+                    model.z_one_1000 = double.Parse(this.dgv_WindPressure.Rows[i].Cells["zwy1"].Value.ToString()).ToString("f2");
+                    model.z_two_1000 = double.Parse(this.dgv_WindPressure.Rows[i].Cells["zwy2"].Value.ToString()).ToString("f2");
+                    model.z_three_1000 = double.Parse(this.dgv_WindPressure.Rows[i].Cells["zwy3"].Value.ToString()).ToString("f2");
+                    model.z_nd_1000 = double.Parse(this.dgv_WindPressure.Rows[i].Cells["zzd"].Value.ToString()).ToString("f2");
+                    model.z_ix_1000 = double.Parse(this.dgv_WindPressure.Rows[i].Cells["zlx"].Value.ToString()).ToString("f2");
+                    model.f_one_1000 = double.Parse(this.dgv_WindPressure.Rows[i].Cells["fwy1"].Value.ToString()).ToString("f2");
+                    model.f_two_1000 = double.Parse(this.dgv_WindPressure.Rows[i].Cells["fwy2"].Value.ToString()).ToString("f2");
+                    model.f_three_1000 = double.Parse(this.dgv_WindPressure.Rows[i].Cells["fwy3"].Value.ToString()).ToString("f2");
+                    model.f_nd_1000 = double.Parse(this.dgv_WindPressure.Rows[i].Cells["fzd"].Value.ToString()).ToString("f2");
+                    model.f_ix_1000 = double.Parse(this.dgv_WindPressure.Rows[i].Cells["flx"].Value.ToString()).ToString("f2");
                 }
                 if (i == 4)
                 {
-                    model.z_one_1250 = this.dgv_WindPressure.Rows[i].Cells["zwy1"].Value.ToString();
-                    model.z_two_1250 = this.dgv_WindPressure.Rows[i].Cells["zwy2"].Value.ToString();
-                    model.z_three_1250 = this.dgv_WindPressure.Rows[i].Cells["zwy3"].Value.ToString();
-                    model.z_nd_1250 = this.dgv_WindPressure.Rows[i].Cells["zzd"].Value.ToString();
-                    model.z_ix_1250 = this.dgv_WindPressure.Rows[i].Cells["zlx"].Value.ToString();
-                    model.f_one_1250 = this.dgv_WindPressure.Rows[i].Cells["fwy1"].Value.ToString();
-                    model.f_two_1250 = this.dgv_WindPressure.Rows[i].Cells["fwy2"].Value.ToString();
-                    model.f_three_1250 = this.dgv_WindPressure.Rows[i].Cells["fwy3"].Value.ToString();
-                    model.f_nd_1250 = this.dgv_WindPressure.Rows[i].Cells["fzd"].Value.ToString();
-                    model.f_ix_1250 = this.dgv_WindPressure.Rows[i].Cells["flx"].Value.ToString();
+                    model.z_one_1250 = double.Parse(this.dgv_WindPressure.Rows[i].Cells["zwy1"].Value.ToString()).ToString("f2");
+                    model.z_two_1250 = double.Parse(this.dgv_WindPressure.Rows[i].Cells["zwy2"].Value.ToString()).ToString("f2");
+                    model.z_three_1250 = double.Parse(this.dgv_WindPressure.Rows[i].Cells["zwy3"].Value.ToString()).ToString("f2");
+                    model.z_nd_1250 = double.Parse(this.dgv_WindPressure.Rows[i].Cells["zzd"].Value.ToString()).ToString("f2");
+                    model.z_ix_1250 = double.Parse(this.dgv_WindPressure.Rows[i].Cells["zlx"].Value.ToString()).ToString("f2");
+                    model.f_one_1250 = double.Parse(this.dgv_WindPressure.Rows[i].Cells["fwy1"].Value.ToString()).ToString("f2");
+                    model.f_two_1250 = double.Parse(this.dgv_WindPressure.Rows[i].Cells["fwy2"].Value.ToString()).ToString("f2");
+                    model.f_three_1250 = double.Parse(this.dgv_WindPressure.Rows[i].Cells["fwy3"].Value.ToString()).ToString("f2");
+                    model.f_nd_1250 = double.Parse(this.dgv_WindPressure.Rows[i].Cells["fzd"].Value.ToString()).ToString("f2");
+                    model.f_ix_1250 = double.Parse(this.dgv_WindPressure.Rows[i].Cells["flx"].Value.ToString()).ToString("f2");
                 }
                 if (i == 5)
                 {
-                    model.z_one_1500 = this.dgv_WindPressure.Rows[i].Cells["zwy1"].Value.ToString();
-                    model.z_two_1500 = this.dgv_WindPressure.Rows[i].Cells["zwy2"].Value.ToString();
-                    model.z_three_1500 = this.dgv_WindPressure.Rows[i].Cells["zwy3"].Value.ToString();
-                    model.z_nd_1500 = this.dgv_WindPressure.Rows[i].Cells["zzd"].Value.ToString();
-                    model.z_ix_1500 = this.dgv_WindPressure.Rows[i].Cells["zlx"].Value.ToString();
-                    model.f_one_1500 = this.dgv_WindPressure.Rows[i].Cells["fwy1"].Value.ToString();
-                    model.f_two_1500 = this.dgv_WindPressure.Rows[i].Cells["fwy2"].Value.ToString();
-                    model.f_three_1500 = this.dgv_WindPressure.Rows[i].Cells["fwy3"].Value.ToString();
-                    model.f_nd_1500 = this.dgv_WindPressure.Rows[i].Cells["fzd"].Value.ToString();
-                    model.f_ix_1500 = this.dgv_WindPressure.Rows[i].Cells["flx"].Value.ToString();
+                    model.z_one_1500 = double.Parse(this.dgv_WindPressure.Rows[i].Cells["zwy1"].Value.ToString()).ToString("f2");
+                    model.z_two_1500 = double.Parse(this.dgv_WindPressure.Rows[i].Cells["zwy2"].Value.ToString()).ToString("f2");
+                    model.z_three_1500 = double.Parse(this.dgv_WindPressure.Rows[i].Cells["zwy3"].Value.ToString()).ToString("f2");
+                    model.z_nd_1500 = double.Parse(this.dgv_WindPressure.Rows[i].Cells["zzd"].Value.ToString()).ToString("f2");
+                    model.z_ix_1500 = double.Parse(this.dgv_WindPressure.Rows[i].Cells["zlx"].Value.ToString()).ToString("f2");
+                    model.f_one_1500 = double.Parse(this.dgv_WindPressure.Rows[i].Cells["fwy1"].Value.ToString()).ToString("f2");
+                    model.f_two_1500 = double.Parse(this.dgv_WindPressure.Rows[i].Cells["fwy2"].Value.ToString()).ToString("f2");
+                    model.f_three_1500 = double.Parse(this.dgv_WindPressure.Rows[i].Cells["fwy3"].Value.ToString()).ToString("f2");
+                    model.f_nd_1500 = double.Parse(this.dgv_WindPressure.Rows[i].Cells["fzd"].Value.ToString()).ToString("f2");
+                    model.f_ix_1500 = double.Parse(this.dgv_WindPressure.Rows[i].Cells["flx"].Value.ToString()).ToString("f2");
                 }
                 if (i == 6)
                 {
-                    model.z_one_1750 = this.dgv_WindPressure.Rows[i].Cells["zwy1"].Value.ToString();
-                    model.z_two_1750 = this.dgv_WindPressure.Rows[i].Cells["zwy2"].Value.ToString();
-                    model.z_three_1750 = this.dgv_WindPressure.Rows[i].Cells["zwy3"].Value.ToString();
-                    model.z_nd_1750 = this.dgv_WindPressure.Rows[i].Cells["zzd"].Value.ToString();
-                    model.z_ix_1750 = this.dgv_WindPressure.Rows[i].Cells["zlx"].Value.ToString();
-                    model.f_one_1750 = this.dgv_WindPressure.Rows[i].Cells["fwy1"].Value.ToString();
-                    model.f_two_1750 = this.dgv_WindPressure.Rows[i].Cells["fwy2"].Value.ToString();
-                    model.f_three_1750 = this.dgv_WindPressure.Rows[i].Cells["fwy3"].Value.ToString();
-                    model.f_nd_1750 = this.dgv_WindPressure.Rows[i].Cells["fzd"].Value.ToString();
-                    model.f_ix_1750 = this.dgv_WindPressure.Rows[i].Cells["flx"].Value.ToString();
+                    model.z_one_1750 = double.Parse(this.dgv_WindPressure.Rows[i].Cells["zwy1"].Value.ToString()).ToString("f2");
+                    model.z_two_1750 = double.Parse(this.dgv_WindPressure.Rows[i].Cells["zwy2"].Value.ToString()).ToString("f2");
+                    model.z_three_1750 = double.Parse(this.dgv_WindPressure.Rows[i].Cells["zwy3"].Value.ToString()).ToString("f2");
+                    model.z_nd_1750 = double.Parse(this.dgv_WindPressure.Rows[i].Cells["zzd"].Value.ToString()).ToString("f2");
+                    model.z_ix_1750 = double.Parse(this.dgv_WindPressure.Rows[i].Cells["zlx"].Value.ToString()).ToString("f2");
+                    model.f_one_1750 = double.Parse(this.dgv_WindPressure.Rows[i].Cells["fwy1"].Value.ToString()).ToString("f2");
+                    model.f_two_1750 = double.Parse(this.dgv_WindPressure.Rows[i].Cells["fwy2"].Value.ToString()).ToString("f2");
+                    model.f_three_1750 = double.Parse(this.dgv_WindPressure.Rows[i].Cells["fwy3"].Value.ToString()).ToString("f2");
+                    model.f_nd_1750 = double.Parse(this.dgv_WindPressure.Rows[i].Cells["fzd"].Value.ToString()).ToString("f2");
+                    model.f_ix_1750 = double.Parse(this.dgv_WindPressure.Rows[i].Cells["flx"].Value.ToString()).ToString("f2");
                 }
                 if (i == 7)
                 {
-                    model.z_one_2000 = this.dgv_WindPressure.Rows[i].Cells["zwy1"].Value.ToString();
-                    model.z_two_2000 = this.dgv_WindPressure.Rows[i].Cells["zwy2"].Value.ToString();
-                    model.z_three_2000 = this.dgv_WindPressure.Rows[i].Cells["zwy3"].Value.ToString();
-                    model.z_nd_2000 = this.dgv_WindPressure.Rows[i].Cells["zzd"].Value.ToString();
-                    model.z_ix_2000 = this.dgv_WindPressure.Rows[i].Cells["zlx"].Value.ToString();
-                    model.f_one_2000 = this.dgv_WindPressure.Rows[i].Cells["fwy1"].Value.ToString();
-                    model.f_two_2000 = this.dgv_WindPressure.Rows[i].Cells["fwy2"].Value.ToString();
-                    model.f_three_2000 = this.dgv_WindPressure.Rows[i].Cells["fwy3"].Value.ToString();
-                    model.f_nd_2000 = this.dgv_WindPressure.Rows[i].Cells["fzd"].Value.ToString();
-                    model.f_ix_2000 = this.dgv_WindPressure.Rows[i].Cells["flx"].Value.ToString();
+                    model.z_one_2000 = double.Parse(this.dgv_WindPressure.Rows[i].Cells["zwy1"].Value.ToString()).ToString("f2");
+                    model.z_two_2000 = double.Parse(this.dgv_WindPressure.Rows[i].Cells["zwy2"].Value.ToString()).ToString("f2");
+                    model.z_three_2000 = double.Parse(this.dgv_WindPressure.Rows[i].Cells["zwy3"].Value.ToString()).ToString("f2");
+                    model.z_nd_2000 = double.Parse(this.dgv_WindPressure.Rows[i].Cells["zzd"].Value.ToString()).ToString("f2");
+                    model.z_ix_2000 = double.Parse(this.dgv_WindPressure.Rows[i].Cells["zlx"].Value.ToString()).ToString("f2");
+                    model.f_one_2000 = double.Parse(this.dgv_WindPressure.Rows[i].Cells["fwy1"].Value.ToString()).ToString("f2");
+                    model.f_two_2000 = double.Parse(this.dgv_WindPressure.Rows[i].Cells["fwy2"].Value.ToString()).ToString("f2");
+                    model.f_three_2000 = double.Parse(this.dgv_WindPressure.Rows[i].Cells["fwy3"].Value.ToString()).ToString("f2");
+                    model.f_nd_2000 = double.Parse(this.dgv_WindPressure.Rows[i].Cells["fzd"].Value.ToString()).ToString("f2");
+                    model.f_ix_2000 = double.Parse(this.dgv_WindPressure.Rows[i].Cells["flx"].Value.ToString()).ToString("f2");
                 }
                 if (i == 8)
                 {
-                    model.z_one_p3jieduan = this.dgv_WindPressure.Rows[i].Cells["zwy1"].Value.ToString();
-                    model.z_two_p3jieduan = this.dgv_WindPressure.Rows[i].Cells["zwy2"].Value.ToString();
-                    model.z_three_p3jieduan = this.dgv_WindPressure.Rows[i].Cells["zwy3"].Value.ToString();
-                    model.z_nd_p3jieduan = this.dgv_WindPressure.Rows[i].Cells["zzd"].Value.ToString();
-                    model.z_ix_p3jieduan = this.dgv_WindPressure.Rows[i].Cells["zlx"].Value.ToString();
+                    model.z_one_p3jieduan = double.Parse(this.dgv_WindPressure.Rows[i].Cells["zwy1"].Value.ToString()).ToString("f2");
+                    model.z_two_p3jieduan = double.Parse(this.dgv_WindPressure.Rows[i].Cells["zwy2"].Value.ToString()).ToString("f2");
+                    model.z_three_p3jieduan = double.Parse(this.dgv_WindPressure.Rows[i].Cells["zwy3"].Value.ToString()).ToString("f2");
+                    model.z_nd_p3jieduan = double.Parse(this.dgv_WindPressure.Rows[i].Cells["zzd"].Value.ToString()).ToString("f2");
+                    model.z_ix_p3jieduan = double.Parse(this.dgv_WindPressure.Rows[i].Cells["zlx"].Value.ToString()).ToString("f2");
 
 
-                    model.f_one_p3jieduan = this.dgv_WindPressure.Rows[i].Cells["fwy1"].Value.ToString();
-                    model.f_two_p3jieduan = this.dgv_WindPressure.Rows[i].Cells["fwy2"].Value.ToString();
-                    model.f_three_p3jieduan = this.dgv_WindPressure.Rows[i].Cells["fwy3"].Value.ToString();
-                    model.f_nd_p3jieduan = this.dgv_WindPressure.Rows[i].Cells["fzd"].Value.ToString();
-                    model.f_ix_p3jieduan = this.dgv_WindPressure.Rows[i].Cells["flx"].Value.ToString();
+                    model.f_one_p3jieduan = double.Parse(this.dgv_WindPressure.Rows[i].Cells["fwy1"].Value.ToString()).ToString("f2");
+                    model.f_two_p3jieduan = double.Parse(this.dgv_WindPressure.Rows[i].Cells["fwy2"].Value.ToString()).ToString("f2");
+                    model.f_three_p3jieduan = double.Parse(this.dgv_WindPressure.Rows[i].Cells["fwy3"].Value.ToString()).ToString("f2");
+                    model.f_nd_p3jieduan = double.Parse(this.dgv_WindPressure.Rows[i].Cells["fzd"].Value.ToString()).ToString("f2");
+                    model.f_ix_p3jieduan = double.Parse(this.dgv_WindPressure.Rows[i].Cells["flx"].Value.ToString()).ToString("f2");
                 }
                 if (i == 9)
                 {
-                    model.z_one_p3canyubianxing = this.dgv_WindPressure.Rows[i].Cells["zwy1"].Value.ToString();
-                    model.z_two_p3canyubianxing = this.dgv_WindPressure.Rows[i].Cells["zwy2"].Value.ToString();
-                    model.z_three_p3canyubianxing = this.dgv_WindPressure.Rows[i].Cells["zwy3"].Value.ToString();
-                    model.z_nd_p3canyubianxing = this.dgv_WindPressure.Rows[i].Cells["zzd"].Value.ToString();
-                    model.z_ix_p3canyubianxing = this.dgv_WindPressure.Rows[i].Cells["zlx"].Value.ToString();
-                    model.f_one_p3canyubianxing = this.dgv_WindPressure.Rows[i].Cells["fwy1"].Value.ToString();
-                    model.f_two_p3canyubianxing = this.dgv_WindPressure.Rows[i].Cells["fwy2"].Value.ToString();
-                    model.f_three_p3canyubianxing = this.dgv_WindPressure.Rows[i].Cells["fwy3"].Value.ToString();
-                    model.f_nd_p3canyubianxing = this.dgv_WindPressure.Rows[i].Cells["fzd"].Value.ToString();
-                    model.f_ix_p3canyubianxing = this.dgv_WindPressure.Rows[i].Cells["flx"].Value.ToString();
+                    model.z_one_p3canyubianxing = double.Parse(this.dgv_WindPressure.Rows[i].Cells["zwy1"].Value.ToString()).ToString("f2");
+                    model.z_two_p3canyubianxing = double.Parse(this.dgv_WindPressure.Rows[i].Cells["zwy2"].Value.ToString()).ToString("f2");
+                    model.z_three_p3canyubianxing = double.Parse(this.dgv_WindPressure.Rows[i].Cells["zwy3"].Value.ToString()).ToString("f2");
+                    model.z_nd_p3canyubianxing = double.Parse(this.dgv_WindPressure.Rows[i].Cells["zzd"].Value.ToString()).ToString("f2");
+                    model.z_ix_p3canyubianxing = double.Parse(this.dgv_WindPressure.Rows[i].Cells["zlx"].Value.ToString()).ToString("f2");
+                    model.f_one_p3canyubianxing = double.Parse(this.dgv_WindPressure.Rows[i].Cells["fwy1"].Value.ToString()).ToString("f2");
+                    model.f_two_p3canyubianxing = double.Parse(this.dgv_WindPressure.Rows[i].Cells["fwy2"].Value.ToString()).ToString("f2");
+                    model.f_three_p3canyubianxing = double.Parse(this.dgv_WindPressure.Rows[i].Cells["fwy3"].Value.ToString()).ToString("f2");
+                    model.f_nd_p3canyubianxing = double.Parse(this.dgv_WindPressure.Rows[i].Cells["fzd"].Value.ToString()).ToString("f2");
+                    model.f_ix_p3canyubianxing = double.Parse(this.dgv_WindPressure.Rows[i].Cells["flx"].Value.ToString()).ToString("f2");
                 }
                 if (i == 10)
                 {
-                    model.z_one_pMaxcanyubianxing = this.dgv_WindPressure.Rows[i].Cells["zwy1"].Value.ToString();
-                    model.z_two_pMaxcanyubianxing = this.dgv_WindPressure.Rows[i].Cells["zwy2"].Value.ToString();
-                    model.z_three_pMaxcanyubianxing = this.dgv_WindPressure.Rows[i].Cells["zwy3"].Value.ToString();
-                    model.z_nd_pMaxcanyubianxing = this.dgv_WindPressure.Rows[i].Cells["zzd"].Value.ToString();
-                    model.z_ix_pMaxcanyubianxing = this.dgv_WindPressure.Rows[i].Cells["zlx"].Value.ToString();
-                    model.f_one_pMaxcanyubianxing = this.dgv_WindPressure.Rows[i].Cells["fwy1"].Value.ToString();
-                    model.f_two_pMaxcanyubianxing = this.dgv_WindPressure.Rows[i].Cells["fwy2"].Value.ToString();
-                    model.f_three_pMaxcanyubianxing = this.dgv_WindPressure.Rows[i].Cells["fwy3"].Value.ToString();
-                    model.f_nd_pMaxcanyubianxing = this.dgv_WindPressure.Rows[i].Cells["fzd"].Value.ToString();
-                    model.f_ix_pMaxcanyubianxing = this.dgv_WindPressure.Rows[i].Cells["flx"].Value.ToString();
+                    model.z_one_pMaxcanyubianxing = double.Parse(this.dgv_WindPressure.Rows[i].Cells["zwy1"].Value.ToString()).ToString("f2");
+                    model.z_two_pMaxcanyubianxing = double.Parse(this.dgv_WindPressure.Rows[i].Cells["zwy2"].Value.ToString()).ToString("f2");
+                    model.z_three_pMaxcanyubianxing = double.Parse(this.dgv_WindPressure.Rows[i].Cells["zwy3"].Value.ToString()).ToString("f2");
+                    model.z_nd_pMaxcanyubianxing = double.Parse(this.dgv_WindPressure.Rows[i].Cells["zzd"].Value.ToString()).ToString("f2");
+                    model.z_ix_pMaxcanyubianxing = double.Parse(this.dgv_WindPressure.Rows[i].Cells["zlx"].Value.ToString()).ToString("f2");
+                    model.f_one_pMaxcanyubianxing = double.Parse(this.dgv_WindPressure.Rows[i].Cells["fwy1"].Value.ToString()).ToString("f2");
+                    model.f_two_pMaxcanyubianxing = double.Parse(this.dgv_WindPressure.Rows[i].Cells["fwy2"].Value.ToString()).ToString("f2");
+                    model.f_three_pMaxcanyubianxing = double.Parse(this.dgv_WindPressure.Rows[i].Cells["fwy3"].Value.ToString()).ToString("f2");
+                    model.f_nd_pMaxcanyubianxing = double.Parse(this.dgv_WindPressure.Rows[i].Cells["fzd"].Value.ToString()).ToString("f2");
+                    model.f_ix_pMaxcanyubianxing = double.Parse(this.dgv_WindPressure.Rows[i].Cells["flx"].Value.ToString()).ToString("f2");
                 }
                 #endregion
             }
@@ -590,6 +591,10 @@ namespace text.doors.Detection
             model._p1 = txt_f_p1.Text;
             model._p2 = txt_f_p2.Text;
             model._p3 = txt_f_p3.Text;
+
+            model.pMax = txt_zpmax.Text;
+            model._pMax = txt_fpmax.Text;
+            model.desc = txt_desc.Text;
             model.CheckLock = rdb_DWDD1.Checked ? 1 : rdb_DWDD3.Checked ? 3 : 0;
             return dal.Add_kfy_Info(model);
         }

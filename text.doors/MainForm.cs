@@ -378,7 +378,6 @@ namespace text.doors
                     }
                     else if (con is WindPressureDetection)
                     {
-                        //WindPressureDetection.releaseThread();
                         con.Dispose();
                         ((Form)con).Close();
                     }
@@ -568,10 +567,6 @@ namespace text.doors
                     string _name = "建筑外窗（门）气密、水密、抗风压性能检测报告" + "_" + _tempCode + ".xls";
 
                     var saveExcelUrl = path.SelectedPath + "\\" + _name;
-                    //string _name = "建筑外窗（门）气密、水密、抗风压性能检测报告" + "_" + _tempCode + ".xls";
-
-                    //var saveExcelUrl = "E:\\" + _name;
-
                     ExportExcel exportExcel = new ExportExcel(_tempCode);
                     var res = exportExcel.ExportData(saveExcelUrl);
                     if (res)

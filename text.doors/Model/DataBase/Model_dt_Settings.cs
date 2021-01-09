@@ -66,6 +66,9 @@ namespace text.doors.Model.DataBase
         public string kangfengyafuyashejizhi { get; set; }
         public string danshandansuodian { get; set; }
 
+        public string kangfengyazhengp3shejizhi { get; set; }
+        public string kangfengyazhengpmaxshejizhi { get; set; }
+
 
         public List<Model_dt_Info> dt_InfoList { get; set; }
         public List<Model_dt_qm_Info> dt_qm_Info { get; set; }

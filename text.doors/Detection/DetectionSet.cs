@@ -190,6 +190,9 @@ namespace text.doors.Detection
                     this.txt_kangfengyafuyashejizhi.Text = dt.Rows[0]["kangfengyafuyashejizhi"].ToString();
                     this.cbb_danshandansuodian.Text = dt.Rows[0]["danshandansuodian"].ToString();
 
+                    this.txt_kangfengyazhengp3shejizhi.Text = dt.Rows[0]["kangfengyazhengp3shejizhi"].ToString();
+                    this.txt_kangfengyazhengpmaxshejizhi.Text = dt.Rows[0]["kangfengyazhengpmaxshejizhi"].ToString();
+
 
                     _tempCode = dt.Rows[0]["dt_Code"].ToString();
                     if (_tempTong == "")
@@ -272,6 +275,8 @@ namespace text.doors.Detection
             model.kangfengyazhengyashejizhi = this.txt_kangfengyazhengyashejizhi.Text;
             model.kangfengyafuyashejizhi = this.txt_kangfengyafuyashejizhi.Text;
             model.danshandansuodian = this.cbb_danshandansuodian.Text;
+            model.kangfengyazhengp3shejizhi = this.txt_kangfengyazhengp3shejizhi.Text;
+            model.kangfengyazhengpmaxshejizhi = this.txt_kangfengyazhengpmaxshejizhi.Text;
             return model;
         }
 

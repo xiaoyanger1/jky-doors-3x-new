@@ -108,12 +108,11 @@ namespace text.doors.Model.DataBase
         public string p1 { get; set; }
         public string p2 { get; set; }
         public string p3 { get; set; }
+        public string pMax { get; set; }
         public string _p1 { get; set; }
         public string _p2 { get; set; }
         public string _p3 { get; set; }
-
-
-
+        public string _pMax { get; set; }
 
 
 
@@ -159,7 +158,7 @@ namespace text.doors.Model.DataBase
         public string f_ix_p3canyubianxing { get; set; }
         public string f_ix_pMaxcanyubianxing { get; set; }
 
-
+        public int lx { get; set; }
 
 
     }

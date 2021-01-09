@@ -163,9 +163,45 @@ namespace text.doors.Common
                 {
                     if (sm_Info.FindAll(t => t.testcount == 1)[0].Method == "波动加压")
                     {
+                        //稳定
+                        ws.GetRow(14).GetCell(5).SetCellValue("-");
+                        ws.GetRow(15).GetCell(5).SetCellValue("-");
+
                         //波动
-                        ws.GetRow(16).GetCell(3).SetCellValue("");
-                        ws.GetRow(17).GetCell(3).SetCellValue("");
+                        var level1 = sm_Info.FindAll(t => t.testcount == 1);
+                        var wdPa = 999;
+                        var wdPaDesc = "";
+                        if (level1 != null && level1.Count > 0)
+                        {
+                            foreach (var item in level1)
+                            {
+                                if ((!item.sm_PaDesc.Contains("〇") && !item.sm_PaDesc.Contains("□")) && int.Parse(item.sm_Pa) < 999)
+                                {
+                                    wdPa = int.Parse(item.sm_Pa);
+                                    wdPaDesc = item.sm_PaDesc;
+                                }
+                            }
+                            if (wdPa == 999)
+                            {
+                                ws.GetRow(16).GetCell(5).SetCellValue("-");
+                                ws.GetRow(17).GetCell(5).SetCellValue("-");
+                            }
+                            else
+                            {
+                                ws.GetRow(16).GetCell(5).SetCellValue(wdPa);
+                                if (wdPa == 0) { ws.GetRow(17).GetCell(5).SetCellValue("0"); }
+                                else if (wdPa == 100) { ws.GetRow(17).GetCell(5).SetCellValue("0"); }
+                                else if (wdPa == 150) { ws.GetRow(17).GetCell(5).SetCellValue("100"); }
+                                else if (wdPa == 200) { ws.GetRow(17).GetCell(5).SetCellValue("150"); }
+                                else if (wdPa == 250) { ws.GetRow(17).GetCell(5).SetCellValue("200"); }
+                                else if (wdPa == 300) { ws.GetRow(17).GetCell(5).SetCellValue("250"); }
+                                else if (wdPa == 350) { ws.GetRow(17).GetCell(5).SetCellValue("300"); }
+                                else if (wdPa == 400) { ws.GetRow(17).GetCell(5).SetCellValue("350"); }
+                                else if (wdPa == 500) { ws.GetRow(17).GetCell(5).SetCellValue("400"); }
+                                else if (wdPa == 600) { ws.GetRow(17).GetCell(5).SetCellValue("500"); }
+                                else if (wdPa == 700) { ws.GetRow(17).GetCell(5).SetCellValue("600"); }
+                            }
+                        }
                     }
                     else
                     {
@@ -204,6 +240,9 @@ namespace text.doors.Common
                                 else if (wdPa == 700) { ws.GetRow(15).GetCell(5).SetCellValue("600"); }
                             }
                         }
+
+                        ws.GetRow(16).GetCell(5).SetCellValue("-");
+                        ws.GetRow(17).GetCell(5).SetCellValue("-");
                     }
                 }
 
@@ -215,17 +254,14 @@ namespace text.doors.Common
                     ws.GetRow(19).GetCell(6).SetCellValue(kfyList.Min(t => t._p1));
                     ws.GetRow(20).GetCell(6).SetCellValue(kfyList.Min(t => t.p2));
                     ws.GetRow(21).GetCell(6).SetCellValue(kfyList.Min(t => t._p2));
-                    ws.GetRow(22).GetCell(8).SetCellValue("");
                     //风荷载
                     ws.GetRow(23).GetCell(6).SetCellValue(kfyList.Min(t => t.p3));
                     ws.GetRow(24).GetCell(6).SetCellValue(kfyList.Min(t => t._p3));
-                    //todo:
-                    ws.GetRow(25).GetCell(6).SetCellValue("");
-                    ws.GetRow(26).GetCell(6).SetCellValue("");
+                    ws.GetRow(25).GetCell(6).SetCellValue(kfyList.Min(t => t.pMax));
+                    ws.GetRow(26).GetCell(6).SetCellValue(kfyList.Min(t => t._pMax));
                 }
 
-                //重复
-                //气密性能
+                //重复气密性能
                 double zfc1 = 0;
                 double zmj1 = 0;
                 double ffc1 = 0;
@@ -249,19 +285,94 @@ namespace text.doors.Common
                 {
                     if (sm_Info.FindAll(t => t.testcount == 1)[0].Method == "波动加压")
                     {
+                        #region  波动加压
+                        //稳定
+                        ws.GetRow(30).GetCell(5).SetCellValue("-");
+                        ws.GetRow(31).GetCell(5).SetCellValue("-");
+
                         //波动
-                        ws.GetRow(32).GetCell(3).SetCellValue("");
-                        ws.GetRow(33).GetCell(3).SetCellValue("");
+                        var level1 = sm_Info.FindAll(t => t.testcount == 1);
+                        var wdPa = 999;
+                        var wdPaDesc = "";
+                        if (level1 != null && level1.Count > 0)
+                        {
+                            foreach (var item in level1)
+                            {
+                                if ((!item.sm_PaDesc.Contains("〇") && !item.sm_PaDesc.Contains("□")) && int.Parse(item.sm_Pa) < 999)
+                                {
+                                    wdPa = int.Parse(item.sm_Pa);
+                                    wdPaDesc = item.sm_PaDesc;
+                                }
+                            }
+                            if (wdPa == 999)
+                            {
+                                ws.GetRow(32).GetCell(5).SetCellValue("-");
+                                ws.GetRow(33).GetCell(5).SetCellValue("-");
+                            }
+                            else
+                            {
+                                ws.GetRow(32).GetCell(5).SetCellValue(wdPa);
+                                if (wdPa == 0) { ws.GetRow(33).GetCell(5).SetCellValue("0"); }
+                                else if (wdPa == 100) { ws.GetRow(33).GetCell(5).SetCellValue("0"); }
+                                else if (wdPa == 150) { ws.GetRow(33).GetCell(5).SetCellValue("100"); }
+                                else if (wdPa == 200) { ws.GetRow(33).GetCell(5).SetCellValue("150"); }
+                                else if (wdPa == 250) { ws.GetRow(33).GetCell(5).SetCellValue("200"); }
+                                else if (wdPa == 300) { ws.GetRow(33).GetCell(5).SetCellValue("250"); }
+                                else if (wdPa == 350) { ws.GetRow(33).GetCell(5).SetCellValue("300"); }
+                                else if (wdPa == 400) { ws.GetRow(33).GetCell(5).SetCellValue("350"); }
+                                else if (wdPa == 500) { ws.GetRow(33).GetCell(5).SetCellValue("400"); }
+                                else if (wdPa == 600) { ws.GetRow(33).GetCell(5).SetCellValue("500"); }
+                                else if (wdPa == 700) { ws.GetRow(33).GetCell(5).SetCellValue("600"); }
+                            }
+                        }
+                        #endregion
                     }
                     else
                     {
+                        #region  稳定加压
                         //稳定加压
-                        ws.GetRow(30).GetCell(5).SetCellValue("");
-                        ws.GetRow(31).GetCell(5).SetCellValue("");
+                        var level1 = sm_Info.FindAll(t => t.testcount == 1);
+                        var wdPa = 999;
+                        var wdPaDesc = "";
+                        if (level1 != null && level1.Count > 0)
+                        {
+                            foreach (var item in level1)
+                            {
+                                if ((!item.sm_PaDesc.Contains("〇") && !item.sm_PaDesc.Contains("□")) && int.Parse(item.sm_Pa) < 999)
+                                {
+                                    wdPa = int.Parse(item.sm_Pa);
+                                    wdPaDesc = item.sm_PaDesc;
+                                }
+                            }
+                            if (wdPa == 999)
+                            {
+                                ws.GetRow(30).GetCell(5).SetCellValue("-");
+                                ws.GetRow(31).GetCell(5).SetCellValue("-");
+                            }
+                            else
+                            {
+                                ws.GetRow(30).GetCell(5).SetCellValue(wdPa);
+                                if (wdPa == 0) { ws.GetRow(31).GetCell(5).SetCellValue("0"); }
+                                else if (wdPa == 100) { ws.GetRow(31).GetCell(5).SetCellValue("0"); }
+                                else if (wdPa == 150) { ws.GetRow(31).GetCell(5).SetCellValue("100"); }
+                                else if (wdPa == 200) { ws.GetRow(31).GetCell(5).SetCellValue("150"); }
+                                else if (wdPa == 250) { ws.GetRow(31).GetCell(5).SetCellValue("200"); }
+                                else if (wdPa == 300) { ws.GetRow(31).GetCell(5).SetCellValue("250"); }
+                                else if (wdPa == 350) { ws.GetRow(31).GetCell(5).SetCellValue("300"); }
+                                else if (wdPa == 400) { ws.GetRow(31).GetCell(5).SetCellValue("350"); }
+                                else if (wdPa == 500) { ws.GetRow(31).GetCell(5).SetCellValue("400"); }
+                                else if (wdPa == 600) { ws.GetRow(31).GetCell(5).SetCellValue("500"); }
+                                else if (wdPa == 700) { ws.GetRow(31).GetCell(5).SetCellValue("600"); }
+                            }
+                        }
+
+                        ws.GetRow(32).GetCell(5).SetCellValue("-");
+                        ws.GetRow(33).GetCell(5).SetCellValue("-");
+                        #endregion
                     }
                 }
-                //工程检测
-                ws.GetRow(34).GetCell(2).SetCellValue("");
+
+                //todo:
                 //检测结果
                 ws.GetRow(35).GetCell(6).SetCellValue("");
                 ws.GetRow(36).GetCell(6).SetCellValue("");
@@ -3624,29 +3735,28 @@ namespace text.doors.Common
                 ws.GetRow(1).GetCell(1).SetCellValue(dt_Settings.Rows[0]["weituobianhao"].ToString());
                 ws.GetRow(2).GetCell(1).SetCellValue(dt_Settings.Rows[0]["jianceriqi"].ToString());
                 ws.GetRow(2).GetCell(6).SetCellValue("");
-                ws.GetRow(2).GetCell(11).SetCellValue("");
+                ws.GetRow(2).GetCell(11).SetCellValue(dt_Settings.Rows[0]["kangfengyazhengp3shejizhi"].ToString());
                 ws.GetRow(3).GetCell(1).SetCellValue(dt_Settings.Rows[0]["ganjianchangdu"].ToString());
                 ws.GetRow(3).GetCell(6).SetCellValue("");
-                ws.GetRow(3).GetCell(11).SetCellValue("");
-
+                ws.GetRow(3).GetCell(11).SetCellValue(dt_Settings.Rows[0]["kangfengyazhengpmaxshejizhi"].ToString());
 
 
                 ws.GetRow(28).GetCell(1).SetCellValue(dt_Settings.Rows[0]["weituobianhao"].ToString());
                 ws.GetRow(29).GetCell(1).SetCellValue(dt_Settings.Rows[0]["jianceriqi"].ToString());
                 ws.GetRow(29).GetCell(6).SetCellValue("");
-                ws.GetRow(29).GetCell(11).SetCellValue("");
+                ws.GetRow(29).GetCell(11).SetCellValue(dt_Settings.Rows[0]["kangfengyazhengp3shejizhi"].ToString());
                 ws.GetRow(30).GetCell(1).SetCellValue(dt_Settings.Rows[0]["ganjianchangdu"].ToString());
                 ws.GetRow(30).GetCell(6).SetCellValue("");
-                ws.GetRow(30).GetCell(11).SetCellValue("");
+                ws.GetRow(30).GetCell(11).SetCellValue(dt_Settings.Rows[0]["kangfengyazhengpmaxshejizhi"].ToString());
 
 
                 ws.GetRow(55).GetCell(1).SetCellValue(dt_Settings.Rows[0]["weituobianhao"].ToString());
                 ws.GetRow(56).GetCell(1).SetCellValue(dt_Settings.Rows[0]["jianceriqi"].ToString());
                 ws.GetRow(56).GetCell(6).SetCellValue("");
-                ws.GetRow(56).GetCell(11).SetCellValue("");
+                ws.GetRow(56).GetCell(11).SetCellValue(dt_Settings.Rows[0]["kangfengyazhengp3shejizhi"].ToString());
                 ws.GetRow(57).GetCell(1).SetCellValue(dt_Settings.Rows[0]["ganjianchangdu"].ToString());
                 ws.GetRow(57).GetCell(6).SetCellValue("");
-                ws.GetRow(57).GetCell(11).SetCellValue("");
+                ws.GetRow(57).GetCell(11).SetCellValue(dt_Settings.Rows[0]["kangfengyazhengpmaxshejizhi"].ToString());
 
                 var databaseDefPa = 250;
 
@@ -3726,6 +3836,8 @@ namespace text.doors.Common
                     ws.GetRow(46).GetCell(2).SetCellValue(dr1["_p2"].ToString());
                     ws.GetRow(47).GetCell(2).SetCellValue(dr1["_p3"].ToString());
                     ws.GetRow(48).GetCell(2).SetCellValue("");
+
+                    ws.GetRow(49).GetCell(2).SetCellValue(dr1["desc"].ToString());
                 }
 
                 DataTable kfy_Info2 = new DAL_dt_kfy_Info().GetkfyByCodeAndTong(_tempCode, "第2樘");
@@ -3795,6 +3907,8 @@ namespace text.doors.Common
                     ws.GetRow(46).GetCell(6).SetCellValue(dr2["_p2"].ToString());
                     ws.GetRow(47).GetCell(6).SetCellValue(dr2["_p3"].ToString());
                     ws.GetRow(48).GetCell(6).SetCellValue("");
+
+                    ws.GetRow(49).GetCell(6).SetCellValue(dr2["desc"].ToString());
                 }
 
                 DataTable kfy_Info3 = new DAL_dt_kfy_Info().GetkfyByCodeAndTong(_tempCode, "第3樘");
@@ -3862,10 +3976,12 @@ namespace text.doors.Common
                     ws.GetRow(46).GetCell(10).SetCellValue(dr3["_p2"].ToString());
                     ws.GetRow(47).GetCell(10).SetCellValue(dr3["_p3"].ToString());
                     ws.GetRow(48).GetCell(10).SetCellValue("");
+
+
+                    ws.GetRow(49).GetCell(10).SetCellValue(dr3["desc"].ToString());
                 }
                 #endregion
 
-                ws.ForceFormulaRecalculation = true;
 
                 using (FileStream filess = File.OpenWrite(outFilePath))
                 {

@@ -145,7 +145,7 @@ f_nd_p3canyubianxing ,
 f_nd_pMaxcanyubianxing ,
 f_ix_p3jieduan ,
 f_ix_p3canyubianxing ,
-f_ix_pMaxcanyubianxing 
+f_ix_pMaxcanyubianxing ,z_pMax,f_pMax,lx
 ) 
 values(
 '{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}','{9}','{10}','{11}','{12}','{13}','{14}','{15}','{16}','{17}','{18}','{19}','{20}',
@@ -182,7 +182,9 @@ values(
 '{117}',
 '{118}',
 '{119}',
-'{120}')",
+'{120}',
+'{121}',
+'{122}',{121})",
   model.dt_Code,
   model.info_DangH,
   model.z_one_250,
@@ -303,7 +305,10 @@ model.f_nd_p3canyubianxing,
 model.f_nd_pMaxcanyubianxing,
 model.f_ix_p3jieduan,
 model.f_ix_p3canyubianxing,
-model.f_ix_pMaxcanyubianxing
+model.f_ix_pMaxcanyubianxing,
+model.pMax,
+model._pMax,
+model.lx
   );
             #endregion
             var res = SQLiteHelper.ExecuteNonQuery(sql) > 0 ? true : false;

@@ -1519,13 +1519,13 @@ namespace text.doors.Detection
                 model.dt_Code = _tempCode;
                 if (desc == "单位缝长")
                 {
-                    model.qm_Z_FC = this.dgv_levelIndex.Rows[i].Cells["PressureZ"].Value.ToString();
-                    model.qm_F_FC = this.dgv_levelIndex.Rows[i].Cells["PressureF"].Value.ToString();
+                    model.qm_Z_FC = double.Parse(this.dgv_levelIndex.Rows[i].Cells["PressureZ"].Value.ToString()).ToString("f2");
+                    model.qm_F_FC = double.Parse(this.dgv_levelIndex.Rows[i].Cells["PressureF"].Value.ToString()).ToString("f2");
                 }
                 else if (desc == "单位面积")
                 {
-                    model.qm_Z_MJ = this.dgv_levelIndex.Rows[i].Cells["PressureZ"].Value.ToString();
-                    model.qm_F_MJ = this.dgv_levelIndex.Rows[i].Cells["PressureF"].Value.ToString();
+                    model.qm_Z_MJ = double.Parse(this.dgv_levelIndex.Rows[i].Cells["PressureZ"].Value.ToString()).ToString("f2");
+                    model.qm_F_MJ = double.Parse(this.dgv_levelIndex.Rows[i].Cells["PressureF"].Value.ToString()).ToString("f2");
                 }
             }
 
@@ -1536,88 +1536,88 @@ namespace text.doors.Detection
                     #region 赋值
                     if (i == 0)
                     {
-                        model.qm_s_z_fj10 = this.dgv_ll.Rows[i].Cells["Pressure_Z"].Value.ToString();
-                        model.qm_s_z_zd10 = this.dgv_ll.Rows[i].Cells["Pressure_Z_Z"].Value.ToString();
-                        model.qm_s_f_fj10 = this.dgv_ll.Rows[i].Cells["Pressure_F"].Value.ToString();
-                        model.qm_s_f_zd10 = this.dgv_ll.Rows[i].Cells["Pressure_F_Z"].Value.ToString();
+                        model.qm_s_z_fj10 = double.Parse(this.dgv_ll.Rows[i].Cells["Pressure_Z"].Value.ToString()).ToString("f2");
+                        model.qm_s_z_zd10 = double.Parse(this.dgv_ll.Rows[i].Cells["Pressure_Z_Z"].Value.ToString()).ToString("f2");
+                        model.qm_s_f_fj10 = double.Parse(this.dgv_ll.Rows[i].Cells["Pressure_F"].Value.ToString()).ToString("f2");
+                        model.qm_s_f_zd10 = double.Parse(this.dgv_ll.Rows[i].Cells["Pressure_F_Z"].Value.ToString()).ToString("f2");
                     }
                     if (i == 1)
                     {
-                        model.qm_s_z_fj30 = this.dgv_ll.Rows[i].Cells["Pressure_Z"].Value.ToString();
-                        model.qm_s_z_zd30 = this.dgv_ll.Rows[i].Cells["Pressure_Z_Z"].Value.ToString();
-                        model.qm_s_f_fj30 = this.dgv_ll.Rows[i].Cells["Pressure_F"].Value.ToString();
-                        model.qm_s_f_zd30 = this.dgv_ll.Rows[i].Cells["Pressure_F_Z"].Value.ToString();
+                        model.qm_s_z_fj30 = double.Parse(this.dgv_ll.Rows[i].Cells["Pressure_Z"].Value.ToString()).ToString("f2");
+                        model.qm_s_z_zd30 = double.Parse(this.dgv_ll.Rows[i].Cells["Pressure_Z_Z"].Value.ToString()).ToString("f2");
+                        model.qm_s_f_fj30 = double.Parse(this.dgv_ll.Rows[i].Cells["Pressure_F"].Value.ToString()).ToString("f2");
+                        model.qm_s_f_zd30 = double.Parse(this.dgv_ll.Rows[i].Cells["Pressure_F_Z"].Value.ToString()).ToString("f2");
                     }
                     if (i == 2)
                     {
-                        model.qm_s_z_fj50 = this.dgv_ll.Rows[i].Cells["Pressure_Z"].Value.ToString();
-                        model.qm_s_z_zd50 = this.dgv_ll.Rows[i].Cells["Pressure_Z_Z"].Value.ToString();
-                        model.qm_s_f_fj50 = this.dgv_ll.Rows[i].Cells["Pressure_F"].Value.ToString();
-                        model.qm_s_f_zd50 = this.dgv_ll.Rows[i].Cells["Pressure_F_Z"].Value.ToString();
+                        model.qm_s_z_fj50 = double.Parse(this.dgv_ll.Rows[i].Cells["Pressure_Z"].Value.ToString()).ToString("f2");
+                        model.qm_s_z_zd50 = double.Parse(this.dgv_ll.Rows[i].Cells["Pressure_Z_Z"].Value.ToString()).ToString("f2");
+                        model.qm_s_f_fj50 = double.Parse(this.dgv_ll.Rows[i].Cells["Pressure_F"].Value.ToString()).ToString("f2");
+                        model.qm_s_f_zd50 = double.Parse(this.dgv_ll.Rows[i].Cells["Pressure_F_Z"].Value.ToString()).ToString("f2");
                     }
                     if (i == 3)
                     {
-                        model.qm_s_z_fj70 = this.dgv_ll.Rows[i].Cells["Pressure_Z"].Value.ToString();
-                        model.qm_s_z_zd70 = this.dgv_ll.Rows[i].Cells["Pressure_Z_Z"].Value.ToString();
-                        model.qm_s_f_fj70 = this.dgv_ll.Rows[i].Cells["Pressure_F"].Value.ToString();
-                        model.qm_s_f_zd70 = this.dgv_ll.Rows[i].Cells["Pressure_F_Z"].Value.ToString();
+                        model.qm_s_z_fj70 = double.Parse(this.dgv_ll.Rows[i].Cells["Pressure_Z"].Value.ToString()).ToString("f2");
+                        model.qm_s_z_zd70 = double.Parse(this.dgv_ll.Rows[i].Cells["Pressure_Z_Z"].Value.ToString()).ToString("f2");
+                        model.qm_s_f_fj70 = double.Parse(this.dgv_ll.Rows[i].Cells["Pressure_F"].Value.ToString()).ToString("f2");
+                        model.qm_s_f_zd70 = double.Parse(this.dgv_ll.Rows[i].Cells["Pressure_F_Z"].Value.ToString()).ToString("f2");
                     }
                     if (i == 4)
                     {
-                        model.qm_s_z_fj100 = this.dgv_ll.Rows[i].Cells["Pressure_Z"].Value.ToString();
-                        model.qm_s_z_zd100 = this.dgv_ll.Rows[i].Cells["Pressure_Z_Z"].Value.ToString();
-                        model.qm_s_f_fj100 = this.dgv_ll.Rows[i].Cells["Pressure_F"].Value.ToString();
-                        model.qm_s_f_zd100 = this.dgv_ll.Rows[i].Cells["Pressure_F_Z"].Value.ToString();
+                        model.qm_s_z_fj100 = double.Parse(this.dgv_ll.Rows[i].Cells["Pressure_Z"].Value.ToString()).ToString("f2");
+                        model.qm_s_z_zd100 = double.Parse(this.dgv_ll.Rows[i].Cells["Pressure_Z_Z"].Value.ToString()).ToString("f2");
+                        model.qm_s_f_fj100 = double.Parse(this.dgv_ll.Rows[i].Cells["Pressure_F"].Value.ToString()).ToString("f2");
+                        model.qm_s_f_zd100 = double.Parse(this.dgv_ll.Rows[i].Cells["Pressure_F_Z"].Value.ToString()).ToString("f2");
                     }
                     if (i == 5)
                     {
-                        model.qm_s_z_fj150 = this.dgv_ll.Rows[i].Cells["Pressure_Z"].Value.ToString();
-                        model.qm_s_z_zd150 = this.dgv_ll.Rows[i].Cells["Pressure_Z_Z"].Value.ToString();
-                        model.qm_s_f_fj150 = this.dgv_ll.Rows[i].Cells["Pressure_F"].Value.ToString();
-                        model.qm_s_f_zd150 = this.dgv_ll.Rows[i].Cells["Pressure_F_Z"].Value.ToString();
+                        model.qm_s_z_fj150 = double.Parse(this.dgv_ll.Rows[i].Cells["Pressure_Z"].Value.ToString()).ToString("f2");
+                        model.qm_s_z_zd150 = double.Parse(this.dgv_ll.Rows[i].Cells["Pressure_Z_Z"].Value.ToString()).ToString("f2");
+                        model.qm_s_f_fj150 = double.Parse(this.dgv_ll.Rows[i].Cells["Pressure_F"].Value.ToString()).ToString("f2");
+                        model.qm_s_f_zd150 = double.Parse(this.dgv_ll.Rows[i].Cells["Pressure_F_Z"].Value.ToString()).ToString("f2");
                     }
                     if (i == 6)
                     {
-                        model.qm_j_z_fj100 = this.dgv_ll.Rows[i].Cells["Pressure_Z"].Value.ToString();
-                        model.qm_j_z_zd100 = this.dgv_ll.Rows[i].Cells["Pressure_Z_Z"].Value.ToString();
-                        model.qm_j_f_fj100 = this.dgv_ll.Rows[i].Cells["Pressure_F"].Value.ToString();
-                        model.qm_j_f_zd100 = this.dgv_ll.Rows[i].Cells["Pressure_F_Z"].Value.ToString();
+                        model.qm_j_z_fj100 = double.Parse(this.dgv_ll.Rows[i].Cells["Pressure_Z"].Value.ToString()).ToString("f2");
+                        model.qm_j_z_zd100 = double.Parse(this.dgv_ll.Rows[i].Cells["Pressure_Z_Z"].Value.ToString()).ToString("f2");
+                        model.qm_j_f_fj100 = double.Parse(this.dgv_ll.Rows[i].Cells["Pressure_F"].Value.ToString()).ToString("f2");
+                        model.qm_j_f_zd100 = double.Parse(this.dgv_ll.Rows[i].Cells["Pressure_F_Z"].Value.ToString()).ToString("f2");
                     }
                     if (i == 7)
                     {
-                        model.qm_j_z_fj70 = this.dgv_ll.Rows[i].Cells["Pressure_Z"].Value.ToString();
-                        model.qm_j_z_zd70 = this.dgv_ll.Rows[i].Cells["Pressure_Z_Z"].Value.ToString();
-                        model.qm_j_f_fj70 = this.dgv_ll.Rows[i].Cells["Pressure_F"].Value.ToString();
-                        model.qm_j_f_zd70 = this.dgv_ll.Rows[i].Cells["Pressure_F_Z"].Value.ToString();
+                        model.qm_j_z_fj70 = double.Parse(this.dgv_ll.Rows[i].Cells["Pressure_Z"].Value.ToString()).ToString("f2");
+                        model.qm_j_z_zd70 = double.Parse(this.dgv_ll.Rows[i].Cells["Pressure_Z_Z"].Value.ToString()).ToString("f2");
+                        model.qm_j_f_fj70 = double.Parse(this.dgv_ll.Rows[i].Cells["Pressure_F"].Value.ToString()).ToString("f2");
+                        model.qm_j_f_zd70 = double.Parse(this.dgv_ll.Rows[i].Cells["Pressure_F_Z"].Value.ToString()).ToString("f2");
                     }
                     if (i == 8)
                     {
-                        model.qm_j_z_fj50 = this.dgv_ll.Rows[i].Cells["Pressure_Z"].Value.ToString();
-                        model.qm_j_z_zd50 = this.dgv_ll.Rows[i].Cells["Pressure_Z_Z"].Value.ToString();
-                        model.qm_j_f_fj50 = this.dgv_ll.Rows[i].Cells["Pressure_F"].Value.ToString();
-                        model.qm_j_f_zd50 = this.dgv_ll.Rows[i].Cells["Pressure_F_Z"].Value.ToString();
+                        model.qm_j_z_fj50 = double.Parse(this.dgv_ll.Rows[i].Cells["Pressure_Z"].Value.ToString()).ToString("f2");
+                        model.qm_j_z_zd50 = double.Parse(this.dgv_ll.Rows[i].Cells["Pressure_Z_Z"].Value.ToString()).ToString("f2");
+                        model.qm_j_f_fj50 = double.Parse(this.dgv_ll.Rows[i].Cells["Pressure_F"].Value.ToString()).ToString("f2");
+                        model.qm_j_f_zd50 = double.Parse(this.dgv_ll.Rows[i].Cells["Pressure_F_Z"].Value.ToString()).ToString("f2");
                     }
                     if (i == 9)
                     {
-                        model.qm_j_z_fj30 = this.dgv_ll.Rows[i].Cells["Pressure_Z"].Value.ToString();
-                        model.qm_j_z_zd30 = this.dgv_ll.Rows[i].Cells["Pressure_Z_Z"].Value.ToString();
-                        model.qm_j_f_fj30 = this.dgv_ll.Rows[i].Cells["Pressure_F"].Value.ToString();
-                        model.qm_j_f_zd30 = this.dgv_ll.Rows[i].Cells["Pressure_F_Z"].Value.ToString();
+                        model.qm_j_z_fj30 = double.Parse(this.dgv_ll.Rows[i].Cells["Pressure_Z"].Value.ToString()).ToString("f2");
+                        model.qm_j_z_zd30 = double.Parse(this.dgv_ll.Rows[i].Cells["Pressure_Z_Z"].Value.ToString()).ToString("f2");
+                        model.qm_j_f_fj30 = double.Parse(this.dgv_ll.Rows[i].Cells["Pressure_F"].Value.ToString()).ToString("f2");
+                        model.qm_j_f_zd30 = double.Parse(this.dgv_ll.Rows[i].Cells["Pressure_F_Z"].Value.ToString()).ToString("f2");
                     }
                     if (i == 10)
                     {
-                        model.qm_j_z_fj10 = this.dgv_ll.Rows[i].Cells["Pressure_Z"].Value.ToString();
-                        model.qm_j_z_zd10 = this.dgv_ll.Rows[i].Cells["Pressure_Z_Z"].Value.ToString();
-                        model.qm_j_f_fj10 = this.dgv_ll.Rows[i].Cells["Pressure_F"].Value.ToString();
-                        model.qm_j_f_zd10 = this.dgv_ll.Rows[i].Cells["Pressure_F_Z"].Value.ToString();
+                        model.qm_j_z_fj10 = double.Parse(this.dgv_ll.Rows[i].Cells["Pressure_Z"].Value.ToString()).ToString("f2");
+                        model.qm_j_z_zd10 = double.Parse(this.dgv_ll.Rows[i].Cells["Pressure_Z_Z"].Value.ToString()).ToString("f2");
+                        model.qm_j_f_fj10 = double.Parse(this.dgv_ll.Rows[i].Cells["Pressure_F"].Value.ToString()).ToString("f2");
+                        model.qm_j_f_zd10 = double.Parse(this.dgv_ll.Rows[i].Cells["Pressure_F_Z"].Value.ToString()).ToString("f2");
                     }
                     if (i == 11)
                     {
                         model.sjz_value = txt_ycjy_z.Text;
-                        model.sjz_z_fj = this.dgv_ll.Rows[i].Cells["Pressure_Z"].Value.ToString();
-                        model.sjz_z_zd = this.dgv_ll.Rows[i].Cells["Pressure_Z_Z"].Value.ToString();
-                        model.sjz_f_fj = this.dgv_ll.Rows[i].Cells["Pressure_F"].Value.ToString();
-                        model.sjz_f_zd = this.dgv_ll.Rows[i].Cells["Pressure_F_Z"].Value.ToString();
+                        model.sjz_z_fj = double.Parse(this.dgv_ll.Rows[i].Cells["Pressure_Z"].Value.ToString()).ToString("f2");
+                        model.sjz_z_zd = double.Parse(this.dgv_ll.Rows[i].Cells["Pressure_Z_Z"].Value.ToString()).ToString("f2");
+                        model.sjz_f_fj = double.Parse(this.dgv_ll.Rows[i].Cells["Pressure_F"].Value.ToString()).ToString("f2");
+                        model.sjz_f_zd = double.Parse(this.dgv_ll.Rows[i].Cells["Pressure_F_Z"].Value.ToString()).ToString("f2");
                     }
                     #endregion
                 }
@@ -1626,88 +1626,88 @@ namespace text.doors.Detection
                     #region 赋值
                     if (i == 0)
                     {
-                        model.qm_s_z_fj10 = this.dgv_ll2.Rows[i].Cells["Pressure_Z"].Value.ToString();
-                        model.qm_s_z_zd10 = this.dgv_ll2.Rows[i].Cells["Pressure_Z_Z"].Value.ToString();
-                        model.qm_s_f_fj10 = this.dgv_ll2.Rows[i].Cells["Pressure_F"].Value.ToString();
-                        model.qm_s_f_zd10 = this.dgv_ll2.Rows[i].Cells["Pressure_F_Z"].Value.ToString();
+                        model.qm_s_z_fj10 = double.Parse(this.dgv_ll2.Rows[i].Cells["Pressure_Z"].Value.ToString()).ToString("f2");
+                        model.qm_s_z_zd10 = double.Parse(this.dgv_ll2.Rows[i].Cells["Pressure_Z_Z"].Value.ToString()).ToString("f2");
+                        model.qm_s_f_fj10 = double.Parse(this.dgv_ll2.Rows[i].Cells["Pressure_F"].Value.ToString()).ToString("f2");
+                        model.qm_s_f_zd10 = double.Parse(this.dgv_ll2.Rows[i].Cells["Pressure_F_Z"].Value.ToString()).ToString("f2");
                     }
                     if (i == 1)
                     {
-                        model.qm_s_z_fj30 = this.dgv_ll2.Rows[i].Cells["Pressure_Z"].Value.ToString();
-                        model.qm_s_z_zd30 = this.dgv_ll2.Rows[i].Cells["Pressure_Z_Z"].Value.ToString();
-                        model.qm_s_f_fj30 = this.dgv_ll2.Rows[i].Cells["Pressure_F"].Value.ToString();
-                        model.qm_s_f_zd30 = this.dgv_ll2.Rows[i].Cells["Pressure_F_Z"].Value.ToString();
+                        model.qm_s_z_fj30 = double.Parse(this.dgv_ll2.Rows[i].Cells["Pressure_Z"].Value.ToString()).ToString("f2");
+                        model.qm_s_z_zd30 = double.Parse(this.dgv_ll2.Rows[i].Cells["Pressure_Z_Z"].Value.ToString()).ToString("f2");
+                        model.qm_s_f_fj30 = double.Parse(this.dgv_ll2.Rows[i].Cells["Pressure_F"].Value.ToString()).ToString("f2");
+                        model.qm_s_f_zd30 = double.Parse(this.dgv_ll2.Rows[i].Cells["Pressure_F_Z"].Value.ToString()).ToString("f2");
                     }
                     if (i == 2)
                     {
-                        model.qm_s_z_fj50 = this.dgv_ll2.Rows[i].Cells["Pressure_Z"].Value.ToString();
-                        model.qm_s_z_zd50 = this.dgv_ll2.Rows[i].Cells["Pressure_Z_Z"].Value.ToString();
-                        model.qm_s_f_fj50 = this.dgv_ll2.Rows[i].Cells["Pressure_F"].Value.ToString();
-                        model.qm_s_f_zd50 = this.dgv_ll2.Rows[i].Cells["Pressure_F_Z"].Value.ToString();
+                        model.qm_s_z_fj50 = double.Parse(this.dgv_ll2.Rows[i].Cells["Pressure_Z"].Value.ToString()).ToString("f2");
+                        model.qm_s_z_zd50 = double.Parse(this.dgv_ll2.Rows[i].Cells["Pressure_Z_Z"].Value.ToString()).ToString("f2");
+                        model.qm_s_f_fj50 = double.Parse(this.dgv_ll2.Rows[i].Cells["Pressure_F"].Value.ToString()).ToString("f2");
+                        model.qm_s_f_zd50 = double.Parse(this.dgv_ll2.Rows[i].Cells["Pressure_F_Z"].Value.ToString()).ToString("f2");
                     }
                     if (i == 3)
                     {
-                        model.qm_s_z_fj70 = this.dgv_ll2.Rows[i].Cells["Pressure_Z"].Value.ToString();
-                        model.qm_s_z_zd70 = this.dgv_ll2.Rows[i].Cells["Pressure_Z_Z"].Value.ToString();
-                        model.qm_s_f_fj70 = this.dgv_ll2.Rows[i].Cells["Pressure_F"].Value.ToString();
-                        model.qm_s_f_zd70 = this.dgv_ll2.Rows[i].Cells["Pressure_F_Z"].Value.ToString();
+                        model.qm_s_z_fj70 = double.Parse(this.dgv_ll2.Rows[i].Cells["Pressure_Z"].Value.ToString()).ToString("f2");
+                        model.qm_s_z_zd70 = double.Parse(this.dgv_ll2.Rows[i].Cells["Pressure_Z_Z"].Value.ToString()).ToString("f2");
+                        model.qm_s_f_fj70 = double.Parse(this.dgv_ll2.Rows[i].Cells["Pressure_F"].Value.ToString()).ToString("f2");
+                        model.qm_s_f_zd70 = double.Parse(this.dgv_ll2.Rows[i].Cells["Pressure_F_Z"].Value.ToString()).ToString("f2");
                     }
                     if (i == 4)
                     {
-                        model.qm_s_z_fj100 = this.dgv_ll2.Rows[i].Cells["Pressure_Z"].Value.ToString();
-                        model.qm_s_z_zd100 = this.dgv_ll2.Rows[i].Cells["Pressure_Z_Z"].Value.ToString();
-                        model.qm_s_f_fj100 = this.dgv_ll2.Rows[i].Cells["Pressure_F"].Value.ToString();
-                        model.qm_s_f_zd100 = this.dgv_ll2.Rows[i].Cells["Pressure_F_Z"].Value.ToString();
+                        model.qm_s_z_fj100 = double.Parse(this.dgv_ll2.Rows[i].Cells["Pressure_Z"].Value.ToString()).ToString("f2");
+                        model.qm_s_z_zd100 = double.Parse(this.dgv_ll2.Rows[i].Cells["Pressure_Z_Z"].Value.ToString()).ToString("f2");
+                        model.qm_s_f_fj100 = double.Parse(this.dgv_ll2.Rows[i].Cells["Pressure_F"].Value.ToString()).ToString("f2");
+                        model.qm_s_f_zd100 = double.Parse(this.dgv_ll2.Rows[i].Cells["Pressure_F_Z"].Value.ToString()).ToString("f2");
                     }
                     if (i == 5)
                     {
-                        model.qm_s_z_fj150 = this.dgv_ll2.Rows[i].Cells["Pressure_Z"].Value.ToString();
-                        model.qm_s_z_zd150 = this.dgv_ll2.Rows[i].Cells["Pressure_Z_Z"].Value.ToString();
-                        model.qm_s_f_fj150 = this.dgv_ll2.Rows[i].Cells["Pressure_F"].Value.ToString();
-                        model.qm_s_f_zd150 = this.dgv_ll2.Rows[i].Cells["Pressure_F_Z"].Value.ToString();
+                        model.qm_s_z_fj150 = double.Parse(this.dgv_ll2.Rows[i].Cells["Pressure_Z"].Value.ToString()).ToString("f2");
+                        model.qm_s_z_zd150 = double.Parse(this.dgv_ll2.Rows[i].Cells["Pressure_Z_Z"].Value.ToString()).ToString("f2");
+                        model.qm_s_f_fj150 = double.Parse(this.dgv_ll2.Rows[i].Cells["Pressure_F"].Value.ToString()).ToString("f2");
+                        model.qm_s_f_zd150 = double.Parse(this.dgv_ll2.Rows[i].Cells["Pressure_F_Z"].Value.ToString()).ToString("f2");
                     }
                     if (i == 6)
                     {
-                        model.qm_j_z_fj100 = this.dgv_ll2.Rows[i].Cells["Pressure_Z"].Value.ToString();
-                        model.qm_j_z_zd100 = this.dgv_ll2.Rows[i].Cells["Pressure_Z_Z"].Value.ToString();
-                        model.qm_j_f_fj100 = this.dgv_ll2.Rows[i].Cells["Pressure_F"].Value.ToString();
-                        model.qm_j_f_zd100 = this.dgv_ll2.Rows[i].Cells["Pressure_F_Z"].Value.ToString();
+                        model.qm_j_z_fj100 = double.Parse(this.dgv_ll2.Rows[i].Cells["Pressure_Z"].Value.ToString()).ToString("f2");
+                        model.qm_j_z_zd100 = double.Parse(this.dgv_ll2.Rows[i].Cells["Pressure_Z_Z"].Value.ToString()).ToString("f2");
+                        model.qm_j_f_fj100 = double.Parse(this.dgv_ll2.Rows[i].Cells["Pressure_F"].Value.ToString()).ToString("f2");
+                        model.qm_j_f_zd100 = double.Parse(this.dgv_ll2.Rows[i].Cells["Pressure_F_Z"].Value.ToString()).ToString("f2");
                     }
                     if (i == 7)
                     {
-                        model.qm_j_z_fj70 = this.dgv_ll2.Rows[i].Cells["Pressure_Z"].Value.ToString();
-                        model.qm_j_z_zd70 = this.dgv_ll2.Rows[i].Cells["Pressure_Z_Z"].Value.ToString();
-                        model.qm_j_f_fj70 = this.dgv_ll2.Rows[i].Cells["Pressure_F"].Value.ToString();
-                        model.qm_j_f_zd70 = this.dgv_ll2.Rows[i].Cells["Pressure_F_Z"].Value.ToString();
+                        model.qm_j_z_fj70 = double.Parse(this.dgv_ll2.Rows[i].Cells["Pressure_Z"].Value.ToString()).ToString("f2");
+                        model.qm_j_z_zd70 = double.Parse(this.dgv_ll2.Rows[i].Cells["Pressure_Z_Z"].Value.ToString()).ToString("f2");
+                        model.qm_j_f_fj70 = double.Parse(this.dgv_ll2.Rows[i].Cells["Pressure_F"].Value.ToString()).ToString("f2");
+                        model.qm_j_f_zd70 = double.Parse(this.dgv_ll2.Rows[i].Cells["Pressure_F_Z"].Value.ToString()).ToString("f2");
                     }
                     if (i == 8)
                     {
-                        model.qm_j_z_fj50 = this.dgv_ll2.Rows[i].Cells["Pressure_Z"].Value.ToString();
-                        model.qm_j_z_zd50 = this.dgv_ll2.Rows[i].Cells["Pressure_Z_Z"].Value.ToString();
-                        model.qm_j_f_fj50 = this.dgv_ll2.Rows[i].Cells["Pressure_F"].Value.ToString();
-                        model.qm_j_f_zd50 = this.dgv_ll2.Rows[i].Cells["Pressure_F_Z"].Value.ToString();
+                        model.qm_j_z_fj50 = double.Parse(this.dgv_ll2.Rows[i].Cells["Pressure_Z"].Value.ToString()).ToString("f2");
+                        model.qm_j_z_zd50 = double.Parse(this.dgv_ll2.Rows[i].Cells["Pressure_Z_Z"].Value.ToString()).ToString("f2");
+                        model.qm_j_f_fj50 = double.Parse(this.dgv_ll2.Rows[i].Cells["Pressure_F"].Value.ToString()).ToString("f2");
+                        model.qm_j_f_zd50 = double.Parse(this.dgv_ll2.Rows[i].Cells["Pressure_F_Z"].Value.ToString()).ToString("f2");
                     }
                     if (i == 9)
                     {
-                        model.qm_j_z_fj30 = this.dgv_ll2.Rows[i].Cells["Pressure_Z"].Value.ToString();
-                        model.qm_j_z_zd30 = this.dgv_ll2.Rows[i].Cells["Pressure_Z_Z"].Value.ToString();
-                        model.qm_j_f_fj30 = this.dgv_ll2.Rows[i].Cells["Pressure_F"].Value.ToString();
-                        model.qm_j_f_zd30 = this.dgv_ll2.Rows[i].Cells["Pressure_F_Z"].Value.ToString();
+                        model.qm_j_z_fj30 = double.Parse(this.dgv_ll2.Rows[i].Cells["Pressure_Z"].Value.ToString()).ToString("f2");
+                        model.qm_j_z_zd30 = double.Parse(this.dgv_ll2.Rows[i].Cells["Pressure_Z_Z"].Value.ToString()).ToString("f2");
+                        model.qm_j_f_fj30 = double.Parse(this.dgv_ll2.Rows[i].Cells["Pressure_F"].Value.ToString()).ToString("f2");
+                        model.qm_j_f_zd30 = double.Parse(this.dgv_ll2.Rows[i].Cells["Pressure_F_Z"].Value.ToString()).ToString("f2");
                     }
                     if (i == 10)
                     {
-                        model.qm_j_z_fj10 = this.dgv_ll2.Rows[i].Cells["Pressure_Z"].Value.ToString();
-                        model.qm_j_z_zd10 = this.dgv_ll2.Rows[i].Cells["Pressure_Z_Z"].Value.ToString();
-                        model.qm_j_f_fj10 = this.dgv_ll2.Rows[i].Cells["Pressure_F"].Value.ToString();
-                        model.qm_j_f_zd10 = this.dgv_ll2.Rows[i].Cells["Pressure_F_Z"].Value.ToString();
+                        model.qm_j_z_fj10 = double.Parse(this.dgv_ll2.Rows[i].Cells["Pressure_Z"].Value.ToString()).ToString("f2");
+                        model.qm_j_z_zd10 = double.Parse(this.dgv_ll2.Rows[i].Cells["Pressure_Z_Z"].Value.ToString()).ToString("f2");
+                        model.qm_j_f_fj10 = double.Parse(this.dgv_ll2.Rows[i].Cells["Pressure_F"].Value.ToString()).ToString("f2");
+                        model.qm_j_f_zd10 = double.Parse(this.dgv_ll2.Rows[i].Cells["Pressure_F_Z"].Value.ToString()).ToString("f2");
                     }
                     if (i == 11)
                     {
                         model.sjz_value = txt_ycjy_z.Text;
-                        model.sjz_z_fj = this.dgv_ll2.Rows[i].Cells["Pressure_Z"].Value.ToString();
-                        model.sjz_z_zd = this.dgv_ll2.Rows[i].Cells["Pressure_Z_Z"].Value.ToString();
-                        model.sjz_f_fj = this.dgv_ll2.Rows[i].Cells["Pressure_F"].Value.ToString();
-                        model.sjz_f_zd = this.dgv_ll2.Rows[i].Cells["Pressure_F_Z"].Value.ToString();
+                        model.sjz_z_fj = double.Parse(this.dgv_ll2.Rows[i].Cells["Pressure_Z"].Value.ToString()).ToString("f2");
+                        model.sjz_z_zd = double.Parse(this.dgv_ll2.Rows[i].Cells["Pressure_Z_Z"].Value.ToString()).ToString("f2");
+                        model.sjz_f_fj = double.Parse(this.dgv_ll2.Rows[i].Cells["Pressure_F"].Value.ToString()).ToString("f2");
+                        model.sjz_f_zd = double.Parse(this.dgv_ll2.Rows[i].Cells["Pressure_F_Z"].Value.ToString()).ToString("f2");
                     }
                     #endregion
                 }

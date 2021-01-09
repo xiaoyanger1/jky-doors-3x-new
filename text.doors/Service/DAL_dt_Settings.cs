@@ -73,13 +73,15 @@ namespace text.doors.dal
                                         danshandansuodian,
 
                                         dt_Code,
-                                        dt_Create
+                                        dt_Create,
+                                        kangfengyazhengp3shejizhi,
+                                        kangfengyazhengpmaxshejizhi
                                         )
                                         VALUES
                                         (
                                         '{0}','{1}','{2}' ,'{3}','{4}' , '{5}' , '{6}','{7}' ,'{8}' ,'{9}' , '{10}','{11}'  ,  '{12}' ,'{13}' ,'{14}' ,'{15}'  ,'{16}' ,'{17}','{18}' , '{19}' ,
                                         '{20}' , '{21}' ,'{22}' ,'{23}','{24}' ,'{25}' ,'{26}' ,'{27}','{28}' , '{29}' ,'{30}','{31}' ,'{32}','{33}','{34}' ,'{35}' ,'{36}' ,'{37}' ,'{38}' ,
-                                        '{39}' ,'{40}','{41}' ,datetime('now'))",
+                                        '{39}' ,'{40}','{41}' ,datetime('now'),'{42}','{43}')",
                                         model.weituobianhao,
                                         model.weituodanwei,
                                         model.dizhi,
@@ -123,8 +125,9 @@ namespace text.doors.dal
                                         model.kangfengyazhengyashejizhi,
                                         model.kangfengyafuyashejizhi,
                                         model.danshandansuodian,
-
-                                        model.dt_Code
+                                        model.dt_Code,
+                                        model.kangfengyazhengp3shejizhi,
+                                        model.kangfengyazhengpmaxshejizhi
                                         );
             res = SQLiteHelper.ExecuteNonQuery(sql) > 0 ? true : false;
             #endregion
@@ -186,19 +189,6 @@ namespace text.doors.dal
                     model.qm_F_FC = item["qm_F_FC"].ToString();
                     model.qm_Z_MJ = item["qm_Z_MJ"].ToString();
                     model.qm_F_MJ = item["qm_F_MJ"].ToString();
-                    //model.qm_s_z_fj100 = item["qm_s_z_fj100"].ToString();
-                    //model.qm_s_z_fj150 = item["qm_s_z_fj150"].ToString();
-                    //model.qm_j_z_fj100 = item["qm_j_z_fj100"].ToString();
-                    //model.qm_s_z_zd100 = item["qm_s_z_zd100"].ToString();
-                    //model.qm_s_z_zd150 = item["qm_s_z_zd150"].ToString();
-                    //model.qm_j_z_zd100 = item["qm_j_z_zd100"].ToString();
-                    //model.qm_s_f_fj100 = item["qm_s_f_fj100"].ToString();
-                    //model.qm_s_f_fj150 = item["qm_s_f_fj150"].ToString();
-                    //model.qm_j_f_fj100 = item["qm_j_f_fj100"].ToString();
-                    //model.qm_s_f_zd100 = item["qm_s_f_zd100"].ToString();
-                    //model.qm_s_f_zd150 = item["qm_s_f_zd150"].ToString();
-                    //model.qm_j_f_zd100 = item["qm_j_f_zd100"].ToString();
-
 
                     model.qm_s_z_fj10 = item["qm_s_z_fj10"].ToString();
                     model.qm_s_z_fj30 = item["qm_s_z_fj30"].ToString();
