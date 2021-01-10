@@ -96,27 +96,33 @@ namespace text.doors.Detection
 
             while (true)
             {
+                try
+                {
+                    if (lbl_wy1.InvokeRequired)
+                        lbl_wy1.Invoke(st1, _serialPortClient.GetDisplace1().ToString());
+                    else
+                        lbl_wy1.Text = _serialPortClient.GetDisplace1().ToString();
 
-                if (lbl_wy1.InvokeRequired)
-                    lbl_wy1.Invoke(st1, _serialPortClient.GetDisplace1().ToString());
-                else
-                    lbl_wy1.Text = _serialPortClient.GetDisplace1().ToString();
+                    if (lbl_wy2.InvokeRequired)
+                        lbl_wy2.Invoke(st2, _serialPortClient.GetDisplace2().ToString());
+                    else
+                        lbl_wy2.Text = _serialPortClient.GetDisplace2().ToString();
 
-                if (lbl_wy2.InvokeRequired)
-                    lbl_wy2.Invoke(st2, _serialPortClient.GetDisplace2().ToString());
-                else
-                    lbl_wy2.Text = _serialPortClient.GetDisplace2().ToString();
+                    if (lbl_wy3.InvokeRequired)
+                        lbl_wy3.Invoke(st3, _serialPortClient.GetDisplace3().ToString());
+                    else
+                        lbl_wy3.Text = _serialPortClient.GetDisplace3().ToString();
 
-                if (lbl_wy3.InvokeRequired)
-                    lbl_wy3.Invoke(st3, _serialPortClient.GetDisplace3().ToString());
-                else
-                    lbl_wy3.Text = _serialPortClient.GetDisplace3().ToString();
-
-                if (lbl_dqyl.InvokeRequired)
-                    lbl_dqyl.Invoke(st4, _serialPortClient.GetCY_High().ToString());
-                else
-                    lbl_dqyl.Text = _serialPortClient.GetCY_High().ToString();
-
+                    if (lbl_dqyl.InvokeRequired)
+                        lbl_dqyl.Invoke(st4, _serialPortClient.GetCY_High().ToString());
+                    else
+                        lbl_dqyl.Text = _serialPortClient.GetCY_High().ToString();
+                }
+                catch (Exception ex)
+                {
+                    td.Abort();
+                    //Logger.Info(ex);
+                }
             }
         }
 
@@ -426,7 +432,6 @@ namespace text.doors.Detection
         }
 
 
-
         private bool AddKfyInfo(int defJC)
         {
             DAL_dt_kfy_Info dal = new DAL_dt_kfy_Info();
@@ -620,6 +625,7 @@ namespace text.doors.Detection
 
             windPressureTest = PublicEnum.WindPressureTest.ZRepeatedly;
             DisableBtnType();
+            btn_zff.BackColor = Color.Green;
         }
 
         private void btn_zyyb_Click(object sender, EventArgs e)
@@ -633,14 +639,13 @@ namespace text.doors.Detection
                 MessageBox.Show("正压预备异常！", "警告！", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
                 return;
             }
-            //double yl = _serialPortClient.Read_FY_Btn_SetValue("ZYYB");
-
-            //lbl_setYL.Text = yl.ToString();
 
             windPressureTest = PublicEnum.WindPressureTest.ZReady;
+
             DisableBtnType();
 
-            // this.tim_fy.Enabled = true;
+            btn_zyyb.BackColor = Color.Green;
+
         }
 
         private void btn_zyks_Click(object sender, EventArgs e)
@@ -654,9 +659,12 @@ namespace text.doors.Detection
                 //MessageBox.Show("正压开始异常！", "警告！", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
                 return;
             }
-
+      
             windPressureTest = PublicEnum.WindPressureTest.ZStart;
+
+       
             DisableBtnType();
+            btn_zyks.BackColor = Color.Green;
             complete = new List<int>();
 
 
@@ -679,7 +687,6 @@ namespace text.doors.Detection
                     complete.Add(val.Value);
                     currentkPa = val.Value;
 
-                    //tim_static.Enabled = true;
                     tim_static1 = new System.Timers.Timer(500);
                     tim_static1.Elapsed += new System.Timers.ElapsedEventHandler(staticTimer);  //到达时间的时候执行倒计时事件timeout；
                     tim_static1.Enabled = true;
@@ -698,7 +705,6 @@ namespace text.doors.Detection
                     tim_static1 = new System.Timers.Timer(500);
                     tim_static1.Elapsed += new System.Timers.ElapsedEventHandler(staticTimer);  //到达时间的时候执行倒计时事件timeout；
                     tim_static1.Enabled = true;
-                    //tim_static.Enabled = true;
                 }
             }
 
@@ -835,7 +841,7 @@ namespace text.doors.Detection
 
             windPressureTest = PublicEnum.WindPressureTest.FReady;
             DisableBtnType();
-            // this.tim_fy.Enabled = true;
+            btn_fyyb.BackColor = Color.Green;
         }
 
         private void btn_fyks_Click(object sender, EventArgs e)
@@ -852,7 +858,7 @@ namespace text.doors.Detection
 
             windPressureTest = PublicEnum.WindPressureTest.FStart;
             DisableBtnType();
-            //this.tim_fy.Enabled = true;
+            btn_fyks.BackColor = Color.Green;
             complete = new List<int>();
 
             tim_fy1 = new System.Timers.Timer(1000);
@@ -902,6 +908,7 @@ namespace text.doors.Detection
             windPressureTest = PublicEnum.WindPressureTest.FRepeatedly;
             this.tim_fy.Enabled = true;
             DisableBtnType();
+            btn_fff.BackColor = Color.Green;
         }
 
         private void btn_zaq_Click(object sender, EventArgs e)
@@ -925,7 +932,7 @@ namespace text.doors.Detection
             windPressureTest = PublicEnum.WindPressureTest.ZSafety;
             //this.tim_fy.Enabled = true;
             DisableBtnType();
-
+            btn_zaq.BackColor = Color.Green;
             tim_fy1 = new System.Timers.Timer(1000);
             tim_fy1.Elapsed += new System.Timers.ElapsedEventHandler(fyTimer);  //到达时间的时候执行倒计时事件timeout；
             tim_fy1.Enabled = true;
@@ -1240,6 +1247,16 @@ namespace text.doors.Detection
             this.btn_zaq.Enabled = true;
             this.btnfaq.Enabled = true;
             this.btn_datahandle.Enabled = true;
+
+            this.btn_zyyb.BackColor = Color.Transparent;
+            this.btn_zyks.BackColor = Color.Transparent;
+            this.btn_fyyb.BackColor = Color.Transparent;
+            this.btn_fyks.BackColor = Color.Transparent;
+            this.btn_zff.BackColor = Color.Transparent;
+            this.btn_fff.BackColor = Color.Transparent;
+            this.btn_zaq.BackColor = Color.Transparent;
+            this.btnfaq.BackColor = Color.Transparent;
+            this.btn_datahandle.BackColor = Color.Transparent;
         }
 
         /// <summary>
@@ -1256,6 +1273,18 @@ namespace text.doors.Detection
             this.btn_zaq.Enabled = false;
             this.btnfaq.Enabled = false;
             this.btn_datahandle.Enabled = false;
+
+            this.btn_zyyb.BackColor = Color.Transparent;
+            this.btn_zyks.BackColor = Color.Transparent;
+            this.btn_fyyb.BackColor = Color.Transparent;
+            this.btn_fyks.BackColor = Color.Transparent;
+
+            this.btn_zff.BackColor = Color.Transparent;
+            this.btn_fff.BackColor = Color.Transparent;
+            this.btn_zaq.BackColor = Color.Transparent;
+            this.btnfaq.BackColor = Color.Transparent;
+            this.btn_datahandle.BackColor = Color.Transparent;
+
         }
 
 
@@ -1281,6 +1310,7 @@ namespace text.doors.Detection
             windPressureTest = PublicEnum.WindPressureTest.FSafety;
             DisableBtnType();
 
+            btnfaq.BackColor = Color.Green;
             tim_fy1 = new System.Timers.Timer(1000);
             tim_fy1.Elapsed += new System.Timers.ElapsedEventHandler(fyTimer);  //到达时间的时候执行倒计时事件timeout；
             tim_fy1.Enabled = true;

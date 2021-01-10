@@ -76,82 +76,82 @@ namespace text.doors.Model
 
         }
 
-        public List<Pressure> ClearZ_F()
-        {
-            ZYFJ_10 = new List<double>();
-            ZYFJ_30 = new List<double>();
-            ZYFJ_50 = new List<double>();
-            ZYFJ_70 = new List<double>();
-            ZYFJ_100 = new List<double>();
-            ZYFJ150 = new List<double>();
-            ZYFJ100 = new List<double>();
-            ZYFJ70 = new List<double>();
-            ZYFJ50 = new List<double>();
-            ZYFJ30 = new List<double>();
-            ZYFJ10 = new List<double>();
-            ZYFJ_YCJY = new List<double>();
+        //public List<Pressure> ClearZ_F()
+        //{
+        //    ZYFJ_10 = new List<double>();
+        //    ZYFJ_30 = new List<double>();
+        //    ZYFJ_50 = new List<double>();
+        //    ZYFJ_70 = new List<double>();
+        //    ZYFJ_100 = new List<double>();
+        //    ZYFJ150 = new List<double>();
+        //    ZYFJ100 = new List<double>();
+        //    ZYFJ70 = new List<double>();
+        //    ZYFJ50 = new List<double>();
+        //    ZYFJ30 = new List<double>();
+        //    ZYFJ10 = new List<double>();
+        //    ZYFJ_YCJY = new List<double>();
 
 
-            Pressure_Z = 0;
-            return GetPressure();
-        }
+        //    Pressure_Z = 0;
+        //    return GetPressure();
+        //}
 
 
-        public List<Pressure> ClearZ_Z()
-        {
-            ZYZD_10 = new List<double>();
-            ZYZD_30 = new List<double>();
-            ZYZD_50 = new List<double>();
-            ZYZD_70 = new List<double>();
-            ZYZD_100 = new List<double>();
-            ZYZD150 = new List<double>();
-            ZYZD100 = new List<double>();
-            ZYZD70 = new List<double>();
-            ZYZD50 = new List<double>();
-            ZYZD30 = new List<double>();
-            ZYZD10 = new List<double>();
-            ZYZD_YCJY = new List<double>();
+        //public List<Pressure> ClearZ_Z()
+        //{
+        //    ZYZD_10 = new List<double>();
+        //    ZYZD_30 = new List<double>();
+        //    ZYZD_50 = new List<double>();
+        //    ZYZD_70 = new List<double>();
+        //    ZYZD_100 = new List<double>();
+        //    ZYZD150 = new List<double>();
+        //    ZYZD100 = new List<double>();
+        //    ZYZD70 = new List<double>();
+        //    ZYZD50 = new List<double>();
+        //    ZYZD30 = new List<double>();
+        //    ZYZD10 = new List<double>();
+        //    ZYZD_YCJY = new List<double>();
 
-            Pressure_Z_Z = 0.00;
-            return GetPressure();
-        }
-        public List<Pressure> ClearF_F()
-        {
-            FYFJ_10 = new List<double>();
-            FYFJ_30 = new List<double>();
-            FYFJ_50 = new List<double>();
-            FYFJ_70 = new List<double>();
-            FYFJ_100 = new List<double>();
-            FYFJ150 = new List<double>();
-            FYFJ100 = new List<double>();
-            FYFJ70 = new List<double>();
-            FYFJ50 = new List<double>();
-            FYFJ30 = new List<double>();
-            FYFJ10 = new List<double>();
-            FYFJ_YCJY = new List<double>();
+        //    Pressure_Z_Z = 0.00;
+        //    return GetPressure();
+        //}
+        //public List<Pressure> ClearF_F()
+        //{
+        //    FYFJ_10 = new List<double>();
+        //    FYFJ_30 = new List<double>();
+        //    FYFJ_50 = new List<double>();
+        //    FYFJ_70 = new List<double>();
+        //    FYFJ_100 = new List<double>();
+        //    FYFJ150 = new List<double>();
+        //    FYFJ100 = new List<double>();
+        //    FYFJ70 = new List<double>();
+        //    FYFJ50 = new List<double>();
+        //    FYFJ30 = new List<double>();
+        //    FYFJ10 = new List<double>();
+        //    FYFJ_YCJY = new List<double>();
 
-            Pressure_F = 0.00;
-            return GetPressure();
-        }
+        //    Pressure_F = 0.00;
+        //    return GetPressure();
+        //}
 
-        public List<Pressure> ClearF_Z()
-        {
-            FYZD_10 = new List<double>();
-            FYZD_30 = new List<double>();
-            FYZD_50 = new List<double>();
-            FYZD_70 = new List<double>();
-            FYZD_100 = new List<double>();
-            FYZD150 = new List<double>();
-            FYZD100 = new List<double>();
-            FYZD70 = new List<double>();
-            FYZD50 = new List<double>();
-            FYZD30 = new List<double>();
-            FYZD10 = new List<double>();
-            FYZD_YCJY = new List<double>();
+        //public List<Pressure> ClearF_Z()
+        //{
+        //    FYZD_10 = new List<double>();
+        //    FYZD_30 = new List<double>();
+        //    FYZD_50 = new List<double>();
+        //    FYZD_70 = new List<double>();
+        //    FYZD_100 = new List<double>();
+        //    FYZD150 = new List<double>();
+        //    FYZD100 = new List<double>();
+        //    FYZD70 = new List<double>();
+        //    FYZD50 = new List<double>();
+        //    FYZD30 = new List<double>();
+        //    FYZD10 = new List<double>();
+        //    FYZD_YCJY = new List<double>();
 
-            Pressure_F_Z = 0.00;
-            return GetPressure();
-        }
+        //    Pressure_F_Z = 0.00;
+        //    return GetPressure();
+        //}
 
         ////实验次数
         //public int TestCount { get; set; }

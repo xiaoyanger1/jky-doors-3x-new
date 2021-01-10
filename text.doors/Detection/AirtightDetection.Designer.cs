@@ -29,7 +29,6 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AirtightDetection));
             this.tc_RealTimeSurveillance = new System.Windows.Forms.TabControl();
             this.page_airtight = new System.Windows.Forms.TabPage();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
@@ -459,12 +458,10 @@
             // rdb_zdstl
             // 
             this.rdb_zdstl.AutoSize = true;
-            this.rdb_zdstl.Checked = true;
             this.rdb_zdstl.Location = new System.Drawing.Point(160, 13);
             this.rdb_zdstl.Name = "rdb_zdstl";
             this.rdb_zdstl.Size = new System.Drawing.Size(83, 16);
             this.rdb_zdstl.TabIndex = 0;
-            this.rdb_zdstl.TabStop = true;
             this.rdb_zdstl.Tag = "stl";
             this.rdb_zdstl.Text = "总的渗透量";
             this.rdb_zdstl.UseVisualStyleBackColor = true;
@@ -512,10 +509,12 @@
             // rdb_fjstl
             // 
             this.rdb_fjstl.AutoSize = true;
+            this.rdb_fjstl.Checked = true;
             this.rdb_fjstl.Location = new System.Drawing.Point(38, 14);
             this.rdb_fjstl.Name = "rdb_fjstl";
             this.rdb_fjstl.Size = new System.Drawing.Size(83, 16);
             this.rdb_fjstl.TabIndex = 0;
+            this.rdb_fjstl.TabStop = true;
             this.rdb_fjstl.Tag = "stl";
             this.rdb_fjstl.Text = "附加渗透量";
             this.rdb_fjstl.UseVisualStyleBackColor = true;

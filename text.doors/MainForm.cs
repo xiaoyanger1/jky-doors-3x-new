@@ -393,6 +393,7 @@ namespace text.doors
             rts.TopLevel = false;
             rts.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             rts.Parent = this.pl_showItem;
+
             rts.Show();
 
         }
@@ -606,12 +607,15 @@ namespace text.doors
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
+        /// 
+        private bool _DiyaGuiLing = false;
         private void btn_dyZero_Click(object sender, EventArgs e)
         {
             if (!_serialPortClient.SendDYBD())
             {
                 MessageBox.Show("低压归零异常,请确认服务器连接是否成功!", "设置", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
             }
+            btn_dyZero.BackColor = _DiyaGuiLing ? Color.Green : Color.Transparent;
         }
 
         private void btn_OkFj_Click(object sender, EventArgs e)

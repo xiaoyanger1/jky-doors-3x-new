@@ -20,6 +20,7 @@ using Young.Core.Common;
 using text.doors.Model.DataBase;
 using text.doors.Default;
 using static text.doors.Default.PublicEnum;
+using NPOI.SS.Formula.Functions;
 
 namespace text.doors.Detection
 {
@@ -56,6 +57,9 @@ namespace text.doors.Detection
 
         public DateTime dtnow { get; set; }
 
+        private static List<Pressure> pressureList = new List<Pressure>();
+
+
         public AirtightDetection()
         {
         }
@@ -77,12 +81,14 @@ namespace text.doors.Detection
         {
             if (this.tabControl1.SelectedTab.Name == "流量原始数据")
             {
-                BindFlowBase(QM_TestCount.第一次);
+                GetPressureFlow(QM_TestCount.第一次);
+                BindFlowBase();
                 BindLevelIndex(QM_TestCount.第一次);
             }
             else if (this.tabControl1.SelectedTab.Name == "重复流量数据")
             {
-                BindFlowBase(QM_TestCount.第二次);
+                GetPressureFlow(QM_TestCount.第一次);
+                BindFlowBase();
                 BindLevelIndex(QM_TestCount.第二次);
             }
 
@@ -106,29 +112,57 @@ namespace text.doors.Detection
         /// 获取流量数据
         /// </summary>
         /// <returns></returns>
-        public List<Pressure> GetPressureFlow(PublicEnum.QM_TestCount qm_TestCount)
+        public void GetPressureFlow(PublicEnum.QM_TestCount qm_TestCount)
         {
-            var pressureList = GetWindSpeedBase((int)qm_TestCount);
+            GetWindSpeedBase((int)qm_TestCount);
 
-            foreach (var item in pressureList)
-            {
-                item.PressurePa = item.PressurePa;
-                item.Pressure_Z = item.Pressure_Z;
-                item.Pressure_Z_Z = item.Pressure_Z_Z;
-                item.Pressure_F = item.Pressure_F;
-                item.Pressure_F_Z = item.Pressure_F_Z;
-            }
-            return pressureList;
+            //foreach (var item in pressureList)
+            //{
+            //    item.PressurePa = item.PressurePa;
+            //    item.Pressure_Z = item.Pressure_Z;
+            //    item.Pressure_Z_Z = item.Pressure_Z_Z;
+            //    item.Pressure_F = item.Pressure_F;
+            //    item.Pressure_F_Z = item.Pressure_F_Z;
+            //}
         }
 
         /// <summary>
         /// 绑定流量
         /// </summary>
-        private void BindFlowBase(QM_TestCount qm_TestCount)
+        private void BindFlowBase()
         {
-            if (qm_TestCount == QM_TestCount.第一次)
+            //dgv_ll.DataSource = null;
+            //dgv_ll.DataSource = pressureList;//GetPressureFlow(QM_TestCount.第一次);
+
+            //dgv_ll.RowHeadersVisible = false;
+            //dgv_ll.AllowUserToResizeColumns = false;
+            //dgv_ll.AllowUserToResizeRows = false;
+            //dgv_ll.Columns[0].HeaderText = "压力Pa";
+            //dgv_ll.Columns[0].Width = 50;
+            //dgv_ll.Columns[0].ReadOnly = true;
+            //dgv_ll.Columns[0].DataPropertyName = "PressurePa";
+            //dgv_ll.Columns[1].HeaderText = "正压附加";
+            //dgv_ll.Columns[1].Width = 54;
+            //dgv_ll.Columns[1].DataPropertyName = "Pressure_Z";
+            //dgv_ll.Columns[2].HeaderText = "正压总的";
+            //dgv_ll.Columns[2].Width = 54;
+            //dgv_ll.Columns[2].DataPropertyName = "Pressure_Z_Z";
+            //dgv_ll.Columns[3].HeaderText = "负压附加";
+            //dgv_ll.Columns[3].Width = 54;
+            //dgv_ll.Columns[3].DataPropertyName = "Pressure_F";
+            //dgv_ll.Columns[4].HeaderText = "负压总的";
+            //dgv_ll.Columns[4].Width = 54;
+            //dgv_ll.Columns[4].DataPropertyName = "Pressure_F_Z";
+
+            //dgv_ll.Columns["Pressure_Z"].DefaultCellStyle.Format = "N2";
+            //dgv_ll.Columns["Pressure_Z_Z"].DefaultCellStyle.Format = "N2";
+            //dgv_ll.Columns["Pressure_F"].DefaultCellStyle.Format = "N2";
+            //dgv_ll.Columns["Pressure_F_Z"].DefaultCellStyle.Format = "N2";
+
+            if (this.tabControl1.SelectedTab.Name == "流量原始数据")
             {
-                dgv_ll.DataSource = GetPressureFlow(QM_TestCount.第一次);
+                dgv_ll.DataSource = null;
+                dgv_ll.DataSource = pressureList;
 
                 dgv_ll.RowHeadersVisible = false;
                 dgv_ll.AllowUserToResizeColumns = false;
@@ -155,9 +189,10 @@ namespace text.doors.Detection
                 dgv_ll.Columns["Pressure_F"].DefaultCellStyle.Format = "N2";
                 dgv_ll.Columns["Pressure_F_Z"].DefaultCellStyle.Format = "N2";
             }
-            else if (qm_TestCount == QM_TestCount.第二次)
+            else
             {
-                dgv_ll2.DataSource = GetPressureFlow(QM_TestCount.第二次);
+                dgv_ll2.DataSource = null;
+                dgv_ll2.DataSource = pressureList;
 
                 dgv_ll2.RowHeadersVisible = false;
                 dgv_ll2.AllowUserToResizeColumns = false;
@@ -183,7 +218,6 @@ namespace text.doors.Detection
                 dgv_ll2.Columns["Pressure_Z_Z"].DefaultCellStyle.Format = "N2";
                 dgv_ll2.Columns["Pressure_F"].DefaultCellStyle.Format = "N2";
                 dgv_ll2.Columns["Pressure_F_Z"].DefaultCellStyle.Format = "N2";
-
             }
         }
 
@@ -193,7 +227,7 @@ namespace text.doors.Detection
         /// </summary>
         private List<Pressure> GetWindSpeedBase(int qm_TestCount)
         {
-            List<Pressure> pressureList = new List<Pressure>();
+            pressureList = new List<Pressure>();
             List<Model_dt_qm_Info> qm_Info = new DAL_dt_Settings().GetQMListByCode(_tempCode);
 
             if (qm_Info != null && qm_Info.Count > 0)
@@ -212,6 +246,7 @@ namespace text.doors.Detection
                         //绑定风速
                         foreach (var item in qm)
                         {
+                            #region 赋值
                             Pressure model4 = new Pressure();
                             model4.Pressure_F = string.IsNullOrWhiteSpace(item.qm_s_f_fj10) ? 0 : double.Parse(item.qm_s_f_fj10);
                             model4.Pressure_F_Z = string.IsNullOrWhiteSpace(item.qm_s_f_zd10) ? 0 : double.Parse(item.qm_s_f_zd10);
@@ -320,6 +355,7 @@ namespace text.doors.Detection
                             model12.Pressure_Z_Z = 0;
                             model12.PressurePa = "设计值";
                             pressureList.Add(model12);
+                            #endregion
                         }
 
                     }
@@ -328,7 +364,6 @@ namespace text.doors.Detection
                         this.btn_justready.Enabled = false;
                         this.btn_loseready.Enabled = false;
                         this.btn_losestart.Enabled = false;
-                        //this.btn_datadispose.Enabled = false;
                         this.btn_juststart.Enabled = false;
 
                         txt_ycjy_z.Text = qm[0].sjz_value;
@@ -538,7 +573,13 @@ namespace text.doors.Detection
         private void tim_Top10_Tick(object sender, EventArgs e)
         {
             index++;
-            if (index > 5)
+
+            if (index < 4)
+            {
+                return;
+            }
+
+            if (index > 8)
             {
                 this.tim_Top10.Enabled = false;
 
@@ -563,17 +604,33 @@ namespace text.doors.Detection
             //获取风速
             var fsvalue = _serialPortClient.GetFSXS();
 
+            if (rdb_zdstl.Checked)
+            {
+                Logger.Info($"总的风速：{fsvalue}当前级别：{kpa_Level}");
+            }
+            else
+            {
+                Logger.Info($"附加风速：{fsvalue}当前级别：{kpa_Level}");
+            }
+
             //转换流量
             fsvalue = Formula.MathFlow(fsvalue);
+
+            if (rdb_zdstl.Checked)
+            {
+                Logger.Info($"总的风速：{fsvalue}当前级别：{kpa_Level}");
+            }
+            else
+            {
+                Logger.Info($"附加风速：{fsvalue}当前级别：{kpa_Level}");
+            }
             if (this.tabControl1.SelectedTab.Name == "流量原始数据")
             {
-
                 #region 第一次
                 if (rdb_fjstl.Checked)
                 {
                     if (kpa_Level == PublicEnum.Kpa_Level.liter10)
                     {
-
                         if (cyvalue > 0)
                             pressure_One.AddZYFJ(fsvalue, PublicEnum.Kpa_Level.liter10);
                         else
@@ -1270,16 +1327,6 @@ namespace text.doors.Detection
         private void btn_juststart_Click(object sender, EventArgs e)
         {
             index = 0;
-            //double yl = _serialPortClient.GetZYYBYLZ(ref IsSeccess, "ZYKS");
-            //if (!IsSeccess)
-            //{
-            //    MessageBox.Show("读取设定值异常", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
-            //    return;
-            //}
-            //lbl_setYL.Text = yl.ToString();
-
-            //IsFirst = false;
-            //IsStart = true;
 
             var res = _serialPortClient.SendZYKS();
             if (!res)
@@ -1300,16 +1347,23 @@ namespace text.doors.Detection
             _readT.Add(new ReadT() { Key = BFMCommand.正压_30TimeStart, Order = 10, IsRead = false });
             _readT.Add(new ReadT() { Key = BFMCommand.正压_10TimeStart, Order = 11, IsRead = false });
 
+
             if (rdb_fjstl.Checked)
             {
-                new Pressure().ClearZ_F();
+                foreach (var item in pressureList)
+                {
+                    item.Pressure_Z = 0;
+                }
             }
             else if (rdb_zdstl.Checked)
             {
-                new Pressure().ClearZ_Z();
+                foreach (var item in pressureList)
+                {
+                    item.Pressure_Z_Z = 0;
+                }
+
             }
-
-
+            BindFlowBase();
 
             btn_juststart.BackColor = Color.Green;
 
@@ -1405,15 +1459,6 @@ namespace text.doors.Detection
         private void btn_losestart_Click(object sender, EventArgs e)
         {
             index = 0;
-            //IsFirst = false;
-            //double yl = _serialPortClient.GetZYYBYLZ(ref IsSeccess, "FYKS");
-            //if (!IsSeccess)
-            //{
-            //    return;
-            //}
-            //lbl_setYL.Text = "-" + yl.ToString();
-
-            //IsStart = true;
 
             var res = _serialPortClient.SendFYKS();
             if (!res)
@@ -1434,14 +1479,23 @@ namespace text.doors.Detection
             _readT.Add(new ReadT() { Key = BFMCommand.负压_30TimeStart, Order = 10, IsRead = false });
             _readT.Add(new ReadT() { Key = BFMCommand.负压_10TimeStart, Order = 11, IsRead = false });
 
+
+
             if (rdb_fjstl.Checked)
             {
-                new Pressure().ClearF_F();
+                foreach (var item in pressureList)
+                {
+                    item.Pressure_F = 0;
+                }
             }
             else if (rdb_zdstl.Checked)
             {
-                new Pressure().ClearF_Z();
+                foreach (var item in pressureList)
+                {
+                    item.Pressure_F_Z = 0;
+                }
             }
+            BindFlowBase();
 
 
             btn_losestart.BackColor = Color.Green;
@@ -2056,15 +2110,7 @@ namespace text.doors.Detection
             btn_juststart.BackColor = Color.Transparent;
 
             this.tim_Top10.Enabled = false;
-            //lbl_setYL.Text = "0";
-            if (this.tabControl1.SelectedTab.Name == "流量原始数据")
-            {
-                BindFlowBase(QM_TestCount.第一次);
-            }
-            else if (this.tabControl1.SelectedTab.Name == "重复流量数据")
-            {
-                BindFlowBase(QM_TestCount.第二次);
-            }
+            BindFlowBase();
             airtightPropertyTest = PublicEnum.AirtightPropertyTest.Stop;
         }
 
@@ -2132,16 +2178,63 @@ namespace text.doors.Detection
         {
             try
             {
-                if (!_serialPortClient.sp.IsOpen)
-                    return;
+                //if (this.tabControl1.SelectedTab.Name == "流量原始数据")
+                //{
+                //    BindFlowBase(QM_TestCount.第一次);
+                //}
+                //else if (this.tabControl1.SelectedTab.Name == "重复流量数据")
+                //{
+                //    BindFlowBase(QM_TestCount.第二次);
+                //}
+
                 if (this.tabControl1.SelectedTab.Name == "流量原始数据")
                 {
-                    BindFlowBase(QM_TestCount.第一次);
+                    var oneList = pressure_One.GetPressure();
+
+                    for (int i = 0; i < oneList.Count; i++)
+                    {
+                        if (oneList[i].Pressure_F > 0)
+                        {
+                            pressureList[i].Pressure_F = oneList[i].Pressure_F;
+                        }
+                        if (oneList[i].Pressure_F_Z > 0)
+                        {
+                            pressureList[i].Pressure_F_Z = oneList[i].Pressure_F_Z;
+                        }
+                        if (oneList[i].Pressure_Z > 0)
+                        {
+                            pressureList[i].Pressure_Z = oneList[i].Pressure_Z;
+                        }
+                        if (oneList[i].Pressure_Z_Z > 0)
+                        {
+                            pressureList[i].Pressure_Z_Z = oneList[i].Pressure_Z_Z;
+                        }
+                    }
                 }
                 else if (this.tabControl1.SelectedTab.Name == "重复流量数据")
                 {
-                    BindFlowBase(QM_TestCount.第二次);
+                    var twoList = pressure_Two.GetPressure();
+                    for (int i = 0; i < twoList.Count; i++)
+                    {
+                        if (twoList[i].Pressure_F > 0)
+                        {
+                            pressureList[i].Pressure_F = twoList[i].Pressure_F;
+                        }
+                        if (twoList[i].Pressure_F_Z > 0)
+                        {
+                            pressureList[i].Pressure_F_Z = twoList[i].Pressure_F_Z;
+                        }
+                        if (twoList[i].Pressure_Z > 0)
+                        {
+                            pressureList[i].Pressure_Z = twoList[i].Pressure_Z;
+                        }
+                        if (twoList[i].Pressure_Z_Z > 0)
+                        {
+                            pressureList[i].Pressure_Z_Z = twoList[i].Pressure_Z_Z;
+                        }
+                    }
                 }
+                BindFlowBase();
             }
             catch (Exception ex)
             {
@@ -2161,26 +2254,27 @@ namespace text.doors.Detection
 
         private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
         {
+            //if (this.tabControl1.SelectedTab.Name == "流量原始数据")
+            //{
+            //    BindFlowBase(QM_TestCount.第一次);
+            //    BindLevelIndex(QM_TestCount.第一次);
+            //}
+            //else if (this.tabControl1.SelectedTab.Name == "重复流量数据")
+            //{
+            //    BindFlowBase(QM_TestCount.第二次);
+            //    BindLevelIndex(QM_TestCount.第二次);
+            //}
+
             if (this.tabControl1.SelectedTab.Name == "流量原始数据")
             {
-                BindFlowBase(QM_TestCount.第一次);
-                BindLevelIndex(QM_TestCount.第一次);
+                GetPressureFlow(QM_TestCount.第一次);
             }
             else if (this.tabControl1.SelectedTab.Name == "重复流量数据")
             {
-                BindFlowBase(QM_TestCount.第二次);
-                BindLevelIndex(QM_TestCount.第二次);
+                GetPressureFlow(QM_TestCount.第二次);
             }
+            BindFlowBase();
         }
-
-        //private void tim_readcy_Tick(object sender, EventArgs e)
-        //{
-        //    if (!_serialPortClient.sp.IsOpen)
-        //        return;
-        //    var value = _serialPortClient.GetCYDXS();
-
-        //    lbl_dqyl.Text = value.ToString();
-        //}
 
         private void btn_ycjy_z_Click(object sender, EventArgs e)
         {
@@ -2200,12 +2294,29 @@ namespace text.doors.Detection
                 MessageBox.Show("正依次加压！", "警告！", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
                 return;
             }
+            //重复做
+            if (rdb_fjstl.Checked)
+            {
+                foreach (var item in pressureList)
+                {
+                    item.Pressure_Z = 0;
+                }
+            }
+            else if (rdb_zdstl.Checked)
+            {
+                foreach (var item in pressureList)
+                {
+                    item.Pressure_Z_Z = 0;
+                }
+
+            }
+            BindFlowBase();
+
 
             //本程序控制
             btn_ycjy_z.BackColor = Color.Green;
 
             airtightPropertyTest = PublicEnum.AirtightPropertyTest.ZYCJY;
-            //this.btn_ycjy_z.Enabled = true;
 
 
             //关闭监控按钮
@@ -2242,11 +2353,25 @@ namespace text.doors.Detection
                 return;
             }
 
+            if (rdb_fjstl.Checked)
+            {
+                foreach (var item in pressureList)
+                {
+                    item.Pressure_F = 0;
+                }
+            }
+            else if (rdb_zdstl.Checked)
+            {
+                foreach (var item in pressureList)
+                {
+                    item.Pressure_F_Z = 0;
+                }
+            }
+            BindFlowBase();
 
             //本程序控制
             btn_ycjyf.BackColor = Color.Green;
             airtightPropertyTest = PublicEnum.AirtightPropertyTest.FYCJY;
-            //this.btn_ycjyf.Enabled = true;
 
             //关闭监控按钮
             this.btn_justready.Enabled = false;
