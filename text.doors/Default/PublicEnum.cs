@@ -142,6 +142,18 @@ namespace text.doors.Default
             /// <summary>
             /// 结束
             /// </summary>
+            /// 
+            /// <summary>
+            /// 正pmax
+            /// </summary>
+            ZPmax,
+            /// <summary>
+            /// 负pmax
+            /// </summary>
+            FPmax,
+            /// <summary>
+            /// 结束
+            /// </summary>
             Stop
         }
 

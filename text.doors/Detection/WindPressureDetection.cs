@@ -158,7 +158,7 @@ namespace text.doors.Detection
 
             //改变极差默认
             var jcValue = _serialPortClient.GetKFYjC();
-            txt_gbjc.Text = jcValue == 0 ? "250" : jcValue.ToString();
+            txt_gbjc.Text = jcValue.ToString();
 
 
             dtnow = DateTime.Now;
@@ -262,12 +262,16 @@ namespace text.doors.Detection
         private List<WindPressureDGV> GetWindPressureDGV()
         {
             windPressureDGV = new List<WindPressureDGV>();
+            if (int.Parse(txt_gbjc.Text) == 0)
+            {
+                return windPressureDGV;
+            }
             var dt = new DAL_dt_kfy_Info().GetkfyByCodeAndTong(_tempCode, _tempTong);
             if (dt != null && dt.Rows.Count > 0)
             {
                 DataRow dr = dt.Rows[0];
                 //极差
-                txt_gbjc.Text = dr["defJC"].ToString();
+                //txt_gbjc.Text = dr["defJC"].ToString();
                 txt_lx.Text = dr["lx"].ToString();
                 txt_desc.Text = dr["desc"].ToString();
                 //绑定锁点
@@ -659,10 +663,10 @@ namespace text.doors.Detection
                 //MessageBox.Show("正压开始异常！", "警告！", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
                 return;
             }
-      
+
             windPressureTest = PublicEnum.WindPressureTest.ZStart;
 
-       
+
             DisableBtnType();
             btn_zyks.BackColor = Color.Green;
             complete = new List<int>();
@@ -1203,7 +1207,7 @@ namespace text.doors.Detection
                     this.tim_fy.Enabled = false;
                 }
             }
-            else if (windPressureTest == PublicEnum.WindPressureTest.ZSafety)
+            else if (windPressureTest == PublicEnum.WindPressureTest.ZSafety || windPressureTest == PublicEnum.WindPressureTest.ZPmax)
             {
 
                 int value = _serialPortClient.Read_FY_BtnType(BFMCommand.正安全结束, ref IsSeccess);
@@ -1218,7 +1222,7 @@ namespace text.doors.Detection
                     this.tim_fy.Enabled = false;
                 }
             }
-            else if (windPressureTest == PublicEnum.WindPressureTest.FSafety)
+            else if (windPressureTest == PublicEnum.WindPressureTest.FSafety || windPressureTest == PublicEnum.WindPressureTest.FPmax)
             {
                 int value = _serialPortClient.Read_FY_BtnType(BFMCommand.负安全结束, ref IsSeccess);
                 if (!IsSeccess)
@@ -1247,6 +1251,8 @@ namespace text.doors.Detection
             this.btn_zaq.Enabled = true;
             this.btnfaq.Enabled = true;
             this.btn_datahandle.Enabled = true;
+            this.btn_zpmax.Enabled = true;
+            this.btn_fpmax.Enabled = true;
 
             this.btn_zyyb.BackColor = Color.Transparent;
             this.btn_zyks.BackColor = Color.Transparent;
@@ -1257,6 +1263,9 @@ namespace text.doors.Detection
             this.btn_zaq.BackColor = Color.Transparent;
             this.btnfaq.BackColor = Color.Transparent;
             this.btn_datahandle.BackColor = Color.Transparent;
+
+            this.btn_zpmax.BackColor = Color.Transparent;
+            this.btn_fpmax.BackColor = Color.Transparent;
         }
 
         /// <summary>
@@ -1274,6 +1283,10 @@ namespace text.doors.Detection
             this.btnfaq.Enabled = false;
             this.btn_datahandle.Enabled = false;
 
+            this.btn_zpmax.Enabled = false;
+
+            this.btn_fpmax.Enabled = false;
+
             this.btn_zyyb.BackColor = Color.Transparent;
             this.btn_zyks.BackColor = Color.Transparent;
             this.btn_fyyb.BackColor = Color.Transparent;
@@ -1284,6 +1297,10 @@ namespace text.doors.Detection
             this.btn_zaq.BackColor = Color.Transparent;
             this.btnfaq.BackColor = Color.Transparent;
             this.btn_datahandle.BackColor = Color.Transparent;
+
+            this.btn_zpmax.BackColor = Color.Transparent;
+
+            this.btn_fpmax.BackColor = Color.Transparent;
 
         }
 
@@ -1534,6 +1551,11 @@ namespace text.doors.Detection
                 MessageBox.Show("正pmax！", "警告！", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
                 return;
             }
+            windPressureTest = PublicEnum.WindPressureTest.ZPmax;
+
+            DisableBtnType();
+
+            btn_zpmax.BackColor = Color.Green;
         }
 
         private void btn_fpmax_Click(object sender, EventArgs e)
@@ -1546,6 +1568,11 @@ namespace text.doors.Detection
                 MessageBox.Show("负pmax！", "警告！", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
                 return;
             }
+            windPressureTest = PublicEnum.WindPressureTest.FPmax;
+
+            DisableBtnType();
+
+            btn_fpmax.BackColor = Color.Green;
         }
 
         private void btn_zp3cybx_Click(object sender, EventArgs e)

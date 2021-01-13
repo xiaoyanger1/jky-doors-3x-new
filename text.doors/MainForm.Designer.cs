@@ -108,7 +108,6 @@
             this.label4 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.btn_OkFj = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.txt_hz = new System.Windows.Forms.TextBox();
             this.hsb_WindControl = new System.Windows.Forms.HScrollBar();
@@ -876,7 +875,6 @@
             // 
             // groupBox2
             // 
-            this.groupBox2.Controls.Add(this.btn_OkFj);
             this.groupBox2.Controls.Add(this.label1);
             this.groupBox2.Controls.Add(this.txt_hz);
             this.groupBox2.Controls.Add(this.hsb_WindControl);
@@ -887,20 +885,10 @@
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "风机控制：";
             // 
-            // btn_OkFj
-            // 
-            this.btn_OkFj.Location = new System.Drawing.Point(93, 47);
-            this.btn_OkFj.Name = "btn_OkFj";
-            this.btn_OkFj.Size = new System.Drawing.Size(71, 23);
-            this.btn_OkFj.TabIndex = 0;
-            this.btn_OkFj.Text = "应用此值";
-            this.btn_OkFj.UseVisualStyleBackColor = true;
-            this.btn_OkFj.Click += new System.EventHandler(this.btn_OkFj_Click);
-            // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(71, 56);
+            this.label1.Location = new System.Drawing.Point(97, 24);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(17, 12);
             this.label1.TabIndex = 0;
@@ -909,7 +897,7 @@
             // txt_hz
             // 
             this.txt_hz.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.txt_hz.Location = new System.Drawing.Point(17, 48);
+            this.txt_hz.Location = new System.Drawing.Point(37, 20);
             this.txt_hz.Name = "txt_hz";
             this.txt_hz.Size = new System.Drawing.Size(48, 21);
             this.txt_hz.TabIndex = 0;
@@ -918,8 +906,8 @@
             // hsb_WindControl
             // 
             this.hsb_WindControl.LargeChange = 6;
-            this.hsb_WindControl.Location = new System.Drawing.Point(16, 22);
-            this.hsb_WindControl.Maximum = 32000;
+            this.hsb_WindControl.Location = new System.Drawing.Point(14, 48);
+            this.hsb_WindControl.Maximum = 50;
             this.hsb_WindControl.Name = "hsb_WindControl";
             this.hsb_WindControl.Size = new System.Drawing.Size(148, 17);
             this.hsb_WindControl.TabIndex = 0;
@@ -1034,7 +1022,6 @@
         private System.Windows.Forms.Panel pl_set;
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.GroupBox groupBox2;
-        private System.Windows.Forms.Button btn_OkFj;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox txt_hz;
         private System.Windows.Forms.HScrollBar hsb_WindControl;

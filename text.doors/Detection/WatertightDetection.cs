@@ -47,8 +47,9 @@ namespace text.doors.Detection
 
 
         public DateTime dtnow { get; set; }
-        public WatertightDetection(){
-           
+        public WatertightDetection()
+        {
+
         }
 
         public WatertightDetection(SerialPortClient serialPortClient, string tempCode, string tempTong)
@@ -531,10 +532,15 @@ namespace text.doors.Detection
             this.btn_ready.Enabled = true;
             this.btn_start.Enabled = true;
             this.btn_next.Enabled = true;
+            this.btn_upKpa.Enabled = true;
+            this.btn_shuibeng.Enabled = true;
 
             btn_ready.BackColor = Color.Transparent;
             btn_start.BackColor = Color.Transparent;
             btn_next.BackColor = Color.Transparent;
+
+            btn_upKpa.BackColor = Color.Transparent;
+            btn_shuibeng.BackColor = Color.Transparent;
 
             waterTightPropertyTest = PublicEnum.WaterTightPropertyTest.Stop;
         }
@@ -563,7 +569,7 @@ namespace text.doors.Detection
             this.btn_next.Enabled = false;
             this.btn_next.Enabled = false;
             this.btn_shuibeng.Enabled = false;
-
+            this.btn_upKpa.Enabled = false;
 
 
 
@@ -1137,10 +1143,14 @@ namespace text.doors.Detection
                     this.btn_start.Enabled = true;
                     this.btn_next.Enabled = true;
                     this.btn_shuibeng.Enabled = true;
+                    this.btn_upKpa.Enabled = true;
+                    this.btn_shuibeng.Enabled = true;
 
                     btn_ready.BackColor = Color.Transparent;
                     btn_start.BackColor = Color.Transparent;
                     btn_next.BackColor = Color.Transparent;
+                    btn_shuibeng.BackColor = Color.Transparent;
+                    btn_upKpa.BackColor = Color.Transparent;
                     btn_shuibeng.BackColor = Color.Transparent;
                 }
             }

@@ -459,9 +459,9 @@ namespace text.doors
             if (hsb_WindControl.Value == 0)
                 txt_hz.Text = "0.00";
             else
-                txt_hz.Text = (hsb_WindControl.Value / 640).ToString();
+                txt_hz.Text = (hsb_WindControl.Value).ToString();
 
-            double value = (hsb_WindControl.Value);
+            double value = (hsb_WindControl.Value) * 640;
 
             var res = _serialPortClient.SendFJKZ(value);
 
@@ -611,7 +611,7 @@ namespace text.doors
         private bool _DiyaGuiLing = false;
         private void btn_dyZero_Click(object sender, EventArgs e)
         {
-            if (!_serialPortClient.SendDYBD())
+            if (!_serialPortClient.SendDYBD(ref _DiyaGuiLing))
             {
                 MessageBox.Show("低压归零异常,请确认服务器连接是否成功!", "设置", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
             }
@@ -621,13 +621,13 @@ namespace text.doors
         private void btn_OkFj_Click(object sender, EventArgs e)
         {
             //0-50HZ滚动条 标示0-4000值
-            double value = double.Parse(txt_hz.Text) * 640;
-            var res = _serialPortClient.SendFJKZ(value);
+            //double value = double.Parse(txt_hz.Text) * 640;
+            //var res = _serialPortClient.SendFJKZ(value);
 
-            if (!res)
-            {
-                MessageBox.Show("风机控制异常,请确认服务器连接是否成功!", "控制", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
-            }
+            //if (!res)
+            //{
+            //    MessageBox.Show("风机控制异常,请确认服务器连接是否成功!", "控制", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
+            //}
         }
 
         private void toolStripMenuItem1_Click(object sender, EventArgs e)
@@ -742,11 +742,11 @@ namespace text.doors
         {
             if (e.Result == null)
                 return;
-            if (int.Parse(e.Result.ToString()) == 0)
-                return;
+            //if (int.Parse(e.Result.ToString()) == 0)
+            //    return;
 
             var value = int.Parse(e.Result.ToString()) / 640;
-            this.hsb_WindControl.Value = value; ;
+            // this.hsb_WindControl.Value = value; ;
             txt_hz.Text = value.ToString();
         }
 

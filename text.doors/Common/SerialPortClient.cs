@@ -1236,7 +1236,7 @@ namespace text.doors.Common
         /// <summary>
         /// 设置低压标0
         /// </summary>
-        public bool SendDYBD(bool logon = false)
+        public bool SendDYBD(ref bool _DiyaGuiLing, bool logon = false)
         {
             try
             {
@@ -1247,11 +1247,15 @@ namespace text.doors.Common
                         _StartAddress = BFMCommand.GetCommandDict(BFMCommand.低压标0_交替型按钮);
                         bool[] readCoils = _MASTER.ReadCoils(_SlaveID, _StartAddress, _NumOfPoints);
                         if (readCoils[0])
+                        {
                             _MASTER.WriteSingleCoil(this._SlaveID, _StartAddress, false);
+                            _DiyaGuiLing = false;
+                        }
                         else
                         {
                             if (logon == false)
                                 _MASTER.WriteSingleCoil(this._SlaveID, _StartAddress, true);
+                            _DiyaGuiLing = true;
                         }
                     }
                 }

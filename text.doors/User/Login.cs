@@ -16,7 +16,7 @@ namespace text.doors
             InitializeComponent();
 
 
-            //var _tempCode = "20210107-1";
+            //var _tempCode = "20210111-2";
             //string _name = "建筑外窗（门）气密、水密、抗风压性能检测报告" + "_" + _tempCode + ".xls";
 
             //var saveExcelUrl = "E:\\" + _name;

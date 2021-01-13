@@ -227,7 +227,7 @@
             // panel3
             // 
             this.panel3.Controls.Add(this.label19);
-            this.panel3.Location = new System.Drawing.Point(19, 398);
+            this.panel3.Location = new System.Drawing.Point(19, 413);
             this.panel3.Name = "panel3";
             this.panel3.Size = new System.Drawing.Size(91, 23);
             this.panel3.TabIndex = 55;
@@ -272,7 +272,7 @@
             // panel2
             // 
             this.panel2.Controls.Add(this.label28);
-            this.panel2.Location = new System.Drawing.Point(481, 398);
+            this.panel2.Location = new System.Drawing.Point(481, 413);
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(376, 23);
             this.panel2.TabIndex = 55;
@@ -290,7 +290,7 @@
             // panel1
             // 
             this.panel1.Controls.Add(this.label27);
-            this.panel1.Location = new System.Drawing.Point(110, 398);
+            this.panel1.Location = new System.Drawing.Point(110, 413);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(371, 23);
             this.panel1.TabIndex = 54;
@@ -345,7 +345,7 @@
             this.tChart_qm.Panel.MarginRight = 2D;
             this.tChart_qm.Panel.MarginTop = 0D;
             this.tChart_qm.Series.Add(this.qm_Line);
-            this.tChart_qm.Size = new System.Drawing.Size(840, 313);
+            this.tChart_qm.Size = new System.Drawing.Size(840, 333);
             this.tChart_qm.TabIndex = 52;
             this.tChart_qm.MouseDown += new System.Windows.Forms.MouseEventHandler(this.tChart_qm_MouseDown);
             // 
@@ -421,7 +421,7 @@
             this.dgv_WindPressure.AllowUserToResizeColumns = false;
             this.dgv_WindPressure.AllowUserToResizeRows = false;
             this.dgv_WindPressure.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgv_WindPressure.Location = new System.Drawing.Point(19, 423);
+            this.dgv_WindPressure.Location = new System.Drawing.Point(19, 438);
             this.dgv_WindPressure.Name = "dgv_WindPressure";
             this.dgv_WindPressure.RowTemplate.Height = 23;
             this.dgv_WindPressure.Size = new System.Drawing.Size(840, 290);
@@ -668,7 +668,7 @@
             this.btn_fff.Name = "btn_fff";
             this.btn_fff.Size = new System.Drawing.Size(75, 23);
             this.btn_fff.TabIndex = 26;
-            this.btn_fff.Text = "复反复";
+            this.btn_fff.Text = "负反复";
             this.btn_fff.UseVisualStyleBackColor = true;
             this.btn_fff.Click += new System.EventHandler(this.btn_fff_Click);
             // 

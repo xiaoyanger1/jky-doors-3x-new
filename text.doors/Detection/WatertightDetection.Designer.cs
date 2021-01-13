@@ -32,6 +32,8 @@
             this.tc_RealTimeSurveillance = new System.Windows.Forms.TabControl();
             this.page_watertight = new System.Windows.Forms.TabPage();
             this.lbl_max = new System.Windows.Forms.Label();
+            this.groupBox6 = new System.Windows.Forms.GroupBox();
+            this.txt_desc = new System.Windows.Forms.TextBox();
             this.groupBox10 = new System.Windows.Forms.GroupBox();
             this.lbldqyl = new System.Windows.Forms.Label();
             this.label19 = new System.Windows.Forms.Label();
@@ -43,6 +45,7 @@
             this.sm_Line = new Steema.TeeChart.Styles.FastLine();
             this.lbl_sdyl = new System.Windows.Forms.Label();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.btn_shuibeng = new System.Windows.Forms.Button();
             this.btn_stop = new System.Windows.Forms.Button();
             this.btn_next = new System.Windows.Forms.Button();
             this.btn_start = new System.Windows.Forms.Button();
@@ -64,8 +67,6 @@
             this.cbb_2_600Pa = new System.Windows.Forms.ComboBox();
             this.label12 = new System.Windows.Forms.Label();
             this.txt_zgfy = new System.Windows.Forms.TextBox();
-            this.groupBox6 = new System.Windows.Forms.GroupBox();
-            this.txt_desc = new System.Windows.Forms.TextBox();
             this.btn_2sjcl = new System.Windows.Forms.Button();
             this.label10 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
@@ -146,9 +147,9 @@
             this.tim_upNext = new System.Windows.Forms.Timer(this.components);
             this.tim_sm = new System.Windows.Forms.Timer(this.components);
             this.tim_getType = new System.Windows.Forms.Timer(this.components);
-            this.btn_shuibeng = new System.Windows.Forms.Button();
             this.tc_RealTimeSurveillance.SuspendLayout();
             this.page_watertight.SuspendLayout();
+            this.groupBox6.SuspendLayout();
             this.groupBox10.SuspendLayout();
             this.groupBox8.SuspendLayout();
             this.chart_cms_sm_click.SuspendLayout();
@@ -157,7 +158,6 @@
             this.groupBox7.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.水密.SuspendLayout();
-            this.groupBox6.SuspendLayout();
             this.重复水密.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
@@ -201,6 +201,24 @@
             this.lbl_max.TabIndex = 30;
             this.lbl_max.Text = "0";
             this.lbl_max.Visible = false;
+            // 
+            // groupBox6
+            // 
+            this.groupBox6.Controls.Add(this.txt_desc);
+            this.groupBox6.Location = new System.Drawing.Point(873, 520);
+            this.groupBox6.Name = "groupBox6";
+            this.groupBox6.Size = new System.Drawing.Size(277, 92);
+            this.groupBox6.TabIndex = 4;
+            this.groupBox6.TabStop = false;
+            this.groupBox6.Text = "水密实验备注";
+            // 
+            // txt_desc
+            // 
+            this.txt_desc.Location = new System.Drawing.Point(6, 20);
+            this.txt_desc.Multiline = true;
+            this.txt_desc.Name = "txt_desc";
+            this.txt_desc.Size = new System.Drawing.Size(265, 64);
+            this.txt_desc.TabIndex = 1;
             // 
             // groupBox10
             // 
@@ -424,6 +442,17 @@
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "国标检测";
             // 
+            // btn_shuibeng
+            // 
+            this.btn_shuibeng.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.btn_shuibeng.Location = new System.Drawing.Point(59, 20);
+            this.btn_shuibeng.Name = "btn_shuibeng";
+            this.btn_shuibeng.Size = new System.Drawing.Size(50, 23);
+            this.btn_shuibeng.TabIndex = 4;
+            this.btn_shuibeng.Text = "水泵";
+            this.btn_shuibeng.UseVisualStyleBackColor = true;
+            this.btn_shuibeng.Click += new System.EventHandler(this.btn_shuibeng_Click);
+            // 
             // btn_stop
             // 
             this.btn_stop.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
@@ -567,7 +596,7 @@
             this.btn_upKpa.Name = "btn_upKpa";
             this.btn_upKpa.Size = new System.Drawing.Size(74, 23);
             this.btn_upKpa.TabIndex = 2;
-            this.btn_upKpa.Text = "依次加压";
+            this.btn_upKpa.Text = "以此加压";
             this.btn_upKpa.UseVisualStyleBackColor = true;
             this.btn_upKpa.Click += new System.EventHandler(this.btn_upKpa_Click);
             // 
@@ -696,24 +725,6 @@
             this.txt_zgfy.TabIndex = 0;
             this.txt_zgfy.Text = "0";
             this.txt_zgfy.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txt_zgfy_KeyPress);
-            // 
-            // groupBox6
-            // 
-            this.groupBox6.Controls.Add(this.txt_desc);
-            this.groupBox6.Location = new System.Drawing.Point(873, 520);
-            this.groupBox6.Name = "groupBox6";
-            this.groupBox6.Size = new System.Drawing.Size(277, 92);
-            this.groupBox6.TabIndex = 4;
-            this.groupBox6.TabStop = false;
-            this.groupBox6.Text = "水密实验备注";
-            // 
-            // txt_desc
-            // 
-            this.txt_desc.Location = new System.Drawing.Point(6, 20);
-            this.txt_desc.Multiline = true;
-            this.txt_desc.Name = "txt_desc";
-            this.txt_desc.Size = new System.Drawing.Size(265, 64);
-            this.txt_desc.TabIndex = 1;
             // 
             // btn_2sjcl
             // 
@@ -2015,17 +2026,6 @@
             this.tim_getType.Interval = 500;
             this.tim_getType.Tick += new System.EventHandler(this.tim_getType_Tick);
             // 
-            // btn_shuibeng
-            // 
-            this.btn_shuibeng.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.btn_shuibeng.Location = new System.Drawing.Point(59, 20);
-            this.btn_shuibeng.Name = "btn_shuibeng";
-            this.btn_shuibeng.Size = new System.Drawing.Size(50, 23);
-            this.btn_shuibeng.TabIndex = 4;
-            this.btn_shuibeng.Text = "水泵";
-            this.btn_shuibeng.UseVisualStyleBackColor = true;
-            this.btn_shuibeng.Click += new System.EventHandler(this.btn_shuibeng_Click);
-            // 
             // WatertightDetection
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -2038,6 +2038,8 @@
             this.tc_RealTimeSurveillance.ResumeLayout(false);
             this.page_watertight.ResumeLayout(false);
             this.page_watertight.PerformLayout();
+            this.groupBox6.ResumeLayout(false);
+            this.groupBox6.PerformLayout();
             this.groupBox10.ResumeLayout(false);
             this.groupBox10.PerformLayout();
             this.groupBox8.ResumeLayout(false);
@@ -2050,8 +2052,6 @@
             this.tabControl1.ResumeLayout(false);
             this.水密.ResumeLayout(false);
             this.水密.PerformLayout();
-            this.groupBox6.ResumeLayout(false);
-            this.groupBox6.PerformLayout();
             this.重复水密.ResumeLayout(false);
             this.重复水密.PerformLayout();
             this.groupBox1.ResumeLayout(false);

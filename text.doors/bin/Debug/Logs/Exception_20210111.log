@@ -1,0 +1,7 @@
+------------------------------------------------------------
+2021-01-11 15:08:56,767 [1] - System.InvalidOperationException: 序列不包含任何元素
+   在 System.Linq.Enumerable.Min(IEnumerable`1 source)
+   在 System.Linq.Enumerable.Min[TSource](IEnumerable`1 source, Func`2 selector)
+   在 text.doors.Common.ExportExcel.ExportData(String outFilePath) 位置 E:\08-GitHub\jky-doors-3x-new\text.doors\Common\ExportExcel.cs:行号 106
+   在 text.doors.Login..ctor() 位置 E:\08-GitHub\jky-doors-3x-new\text.doors\User\Login.cs:行号 25
+   在 text.doors.Program.Main() 位置 E:\08-GitHub\jky-doors-3x-new\text.doors\Program.cs:行号 41

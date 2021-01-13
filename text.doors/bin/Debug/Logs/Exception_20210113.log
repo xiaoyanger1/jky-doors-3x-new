@@ -1,0 +1,47 @@
+------------------------------------------------------------
+------------------------------------------------------------
+2021-01-13 22:43:31,729 [1] - System.ArgumentException: 列“z_one_0”不属于表 Table。
+   在 System.Data.DataRow.GetDataColumn(String columnName)
+   在 System.Data.DataRow.get_Item(String columnName)
+   在 text.doors.Detection.WindPressureDetection.GetWindPressureDGV() 位置 E:\08-GitHub\jky-doors-3x-new\text.doors\Detection\WindPressureDetection.cs:行号 288
+   在 text.doors.Detection.WindPressureDetection.BindData(Boolean isUpdate) 位置 E:\08-GitHub\jky-doors-3x-new\text.doors\Detection\WindPressureDetection.cs:行号 185
+   在 text.doors.Detection.WindPressureDetection..ctor(SerialPortClient tcpClient, String tempCode, String tempTong) 位置 E:\08-GitHub\jky-doors-3x-new\text.doors\Detection\WindPressureDetection.cs:行号 79
+   在 text.doors.MainForm.ShowWindPressure() 位置 E:\08-GitHub\jky-doors-3x-new\text.doors\MainForm.cs:行号 425
+   在 text.doors.MainForm.tsb_WindPressure_Click(Object sender, EventArgs e) 位置 E:\08-GitHub\jky-doors-3x-new\text.doors\MainForm.cs:行号 724
+   在 System.Windows.Forms.ToolStripItem.RaiseEvent(Object key, EventArgs e)
+   在 System.Windows.Forms.ToolStripButton.OnClick(EventArgs e)
+   在 System.Windows.Forms.ToolStripItem.HandleClick(EventArgs e)
+   在 System.Windows.Forms.ToolStripItem.HandleMouseUp(MouseEventArgs e)
+   在 System.Windows.Forms.ToolStripItem.FireEventInteractive(EventArgs e, ToolStripItemEventType met)
+   在 System.Windows.Forms.ToolStripItem.FireEvent(EventArgs e, ToolStripItemEventType met)
+   在 System.Windows.Forms.ToolStrip.OnMouseUp(MouseEventArgs mea)
+   在 System.Windows.Forms.Control.WmMouseUp(Message& m, MouseButtons button, Int32 clicks)
+   在 System.Windows.Forms.Control.WndProc(Message& m)
+   在 System.Windows.Forms.ScrollableControl.WndProc(Message& m)
+   在 System.Windows.Forms.ToolStrip.WndProc(Message& m)
+   在 System.Windows.Forms.Control.ControlNativeWindow.OnMessage(Message& m)
+   在 System.Windows.Forms.Control.ControlNativeWindow.WndProc(Message& m)
+   在 System.Windows.Forms.NativeWindow.Callback(IntPtr hWnd, Int32 msg, IntPtr wparam, IntPtr lparam)
+------------------------------------------------------------
+2021-01-13 22:46:55,989 [1] - System.ArgumentException: 列“z_one_0”不属于表 Table。
+   在 System.Data.DataRow.GetDataColumn(String columnName)
+   在 System.Data.DataRow.get_Item(String columnName)
+   在 text.doors.Detection.WindPressureDetection.GetWindPressureDGV() 位置 E:\08-GitHub\jky-doors-3x-new\text.doors\Detection\WindPressureDetection.cs:行号 288
+   在 text.doors.Detection.WindPressureDetection.BindData(Boolean isUpdate) 位置 E:\08-GitHub\jky-doors-3x-new\text.doors\Detection\WindPressureDetection.cs:行号 185
+   在 text.doors.Detection.WindPressureDetection..ctor(SerialPortClient tcpClient, String tempCode, String tempTong) 位置 E:\08-GitHub\jky-doors-3x-new\text.doors\Detection\WindPressureDetection.cs:行号 79
+   在 text.doors.MainForm.ShowWindPressure() 位置 E:\08-GitHub\jky-doors-3x-new\text.doors\MainForm.cs:行号 425
+   在 text.doors.MainForm.tsb_WindPressure_Click(Object sender, EventArgs e) 位置 E:\08-GitHub\jky-doors-3x-new\text.doors\MainForm.cs:行号 724
+   在 System.Windows.Forms.ToolStripItem.RaiseEvent(Object key, EventArgs e)
+   在 System.Windows.Forms.ToolStripButton.OnClick(EventArgs e)
+   在 System.Windows.Forms.ToolStripItem.HandleClick(EventArgs e)
+   在 System.Windows.Forms.ToolStripItem.HandleMouseUp(MouseEventArgs e)
+   在 System.Windows.Forms.ToolStripItem.FireEventInteractive(EventArgs e, ToolStripItemEventType met)
+   在 System.Windows.Forms.ToolStripItem.FireEvent(EventArgs e, ToolStripItemEventType met)
+   在 System.Windows.Forms.ToolStrip.OnMouseUp(MouseEventArgs mea)
+   在 System.Windows.Forms.Control.WmMouseUp(Message& m, MouseButtons button, Int32 clicks)
+   在 System.Windows.Forms.Control.WndProc(Message& m)
+   在 System.Windows.Forms.ScrollableControl.WndProc(Message& m)
+   在 System.Windows.Forms.ToolStrip.WndProc(Message& m)
+   在 System.Windows.Forms.Control.ControlNativeWindow.OnMessage(Message& m)
+   在 System.Windows.Forms.Control.ControlNativeWindow.WndProc(Message& m)
+   在 System.Windows.Forms.NativeWindow.Callback(IntPtr hWnd, Int32 msg, IntPtr wparam, IntPtr lparam)

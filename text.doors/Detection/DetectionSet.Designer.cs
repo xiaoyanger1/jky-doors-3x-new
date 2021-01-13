@@ -30,6 +30,12 @@
         {
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.检验参数设置 = new System.Windows.Forms.TabPage();
+            this.label23 = new System.Windows.Forms.Label();
+            this.txt_kangfengyazhengpmaxshejizhi = new System.Windows.Forms.TextBox();
+            this.txt_kfengyazhengpmaxshejizhi = new System.Windows.Forms.Label();
+            this.label54 = new System.Windows.Forms.Label();
+            this.txt_kangfengyazhengp3shejizhi = new System.Windows.Forms.TextBox();
+            this.label62 = new System.Windows.Forms.Label();
             this.cb_jianceyiju = new System.Windows.Forms.TextBox();
             this.label22 = new System.Windows.Forms.Label();
             this.label14 = new System.Windows.Forms.Label();
@@ -134,12 +140,6 @@
             this.label2 = new System.Windows.Forms.Label();
             this.btn_JianYanBianHao = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
-            this.label23 = new System.Windows.Forms.Label();
-            this.txt_kangfengyazhengpmaxshejizhi = new System.Windows.Forms.TextBox();
-            this.txt_kfengyazhengpmaxshejizhi = new System.Windows.Forms.Label();
-            this.label54 = new System.Windows.Forms.Label();
-            this.txt_kangfengyazhengp3shejizhi = new System.Windows.Forms.TextBox();
-            this.label62 = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.检验参数设置.SuspendLayout();
             this.SuspendLayout();
@@ -272,6 +272,58 @@
             this.检验参数设置.Size = new System.Drawing.Size(940, 605);
             this.检验参数设置.TabIndex = 0;
             this.检验参数设置.Text = "检验参数设置";
+            // 
+            // label23
+            // 
+            this.label23.AutoSize = true;
+            this.label23.Location = new System.Drawing.Point(914, 471);
+            this.label23.Name = "label23";
+            this.label23.Size = new System.Drawing.Size(23, 12);
+            this.label23.TabIndex = 254;
+            this.label23.Text = "KPa";
+            // 
+            // txt_kangfengyazhengpmaxshejizhi
+            // 
+            this.txt_kangfengyazhengpmaxshejizhi.Location = new System.Drawing.Point(816, 468);
+            this.txt_kangfengyazhengpmaxshejizhi.Name = "txt_kangfengyazhengpmaxshejizhi";
+            this.txt_kangfengyazhengpmaxshejizhi.Size = new System.Drawing.Size(89, 21);
+            this.txt_kangfengyazhengpmaxshejizhi.TabIndex = 253;
+            // 
+            // txt_kfengyazhengpmaxshejizhi
+            // 
+            this.txt_kfengyazhengpmaxshejizhi.AutoSize = true;
+            this.txt_kfengyazhengpmaxshejizhi.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.txt_kfengyazhengpmaxshejizhi.Location = new System.Drawing.Point(683, 470);
+            this.txt_kfengyazhengpmaxshejizhi.Name = "txt_kfengyazhengpmaxshejizhi";
+            this.txt_kfengyazhengpmaxshejizhi.Size = new System.Drawing.Size(137, 12);
+            this.txt_kfengyazhengpmaxshejizhi.TabIndex = 252;
+            this.txt_kfengyazhengpmaxshejizhi.Text = "抗风压负PMax设计值：";
+            // 
+            // label54
+            // 
+            this.label54.AutoSize = true;
+            this.label54.Location = new System.Drawing.Point(914, 439);
+            this.label54.Name = "label54";
+            this.label54.Size = new System.Drawing.Size(23, 12);
+            this.label54.TabIndex = 251;
+            this.label54.Text = "KPa";
+            // 
+            // txt_kangfengyazhengp3shejizhi
+            // 
+            this.txt_kangfengyazhengp3shejizhi.Location = new System.Drawing.Point(816, 436);
+            this.txt_kangfengyazhengp3shejizhi.Name = "txt_kangfengyazhengp3shejizhi";
+            this.txt_kangfengyazhengp3shejizhi.Size = new System.Drawing.Size(89, 21);
+            this.txt_kangfengyazhengp3shejizhi.TabIndex = 250;
+            // 
+            // label62
+            // 
+            this.label62.AutoSize = true;
+            this.label62.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label62.Location = new System.Drawing.Point(683, 438);
+            this.label62.Name = "label62";
+            this.label62.Size = new System.Drawing.Size(137, 12);
+            this.label62.TabIndex = 249;
+            this.label62.Text = "抗风压正Pmax设计值：";
             // 
             // cb_jianceyiju
             // 
@@ -1236,58 +1288,6 @@
             this.label1.Size = new System.Drawing.Size(70, 12);
             this.label1.TabIndex = 97;
             this.label1.Text = "检验编号：";
-            // 
-            // label23
-            // 
-            this.label23.AutoSize = true;
-            this.label23.Location = new System.Drawing.Point(914, 471);
-            this.label23.Name = "label23";
-            this.label23.Size = new System.Drawing.Size(23, 12);
-            this.label23.TabIndex = 254;
-            this.label23.Text = "KPa";
-            // 
-            // txt_kangfengyazhengpmaxshejizhi
-            // 
-            this.txt_kangfengyazhengpmaxshejizhi.Location = new System.Drawing.Point(816, 468);
-            this.txt_kangfengyazhengpmaxshejizhi.Name = "txt_kangfengyazhengpmaxshejizhi";
-            this.txt_kangfengyazhengpmaxshejizhi.Size = new System.Drawing.Size(89, 21);
-            this.txt_kangfengyazhengpmaxshejizhi.TabIndex = 253;
-            // 
-            // txt_kfengyazhengpmaxshejizhi
-            // 
-            this.txt_kfengyazhengpmaxshejizhi.AutoSize = true;
-            this.txt_kfengyazhengpmaxshejizhi.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.txt_kfengyazhengpmaxshejizhi.Location = new System.Drawing.Point(683, 470);
-            this.txt_kfengyazhengpmaxshejizhi.Name = "txt_kfengyazhengpmaxshejizhi";
-            this.txt_kfengyazhengpmaxshejizhi.Size = new System.Drawing.Size(137, 12);
-            this.txt_kfengyazhengpmaxshejizhi.TabIndex = 252;
-            this.txt_kfengyazhengpmaxshejizhi.Text = "抗风压正PMax设计值：";
-            // 
-            // label54
-            // 
-            this.label54.AutoSize = true;
-            this.label54.Location = new System.Drawing.Point(914, 439);
-            this.label54.Name = "label54";
-            this.label54.Size = new System.Drawing.Size(23, 12);
-            this.label54.TabIndex = 251;
-            this.label54.Text = "KPa";
-            // 
-            // txt_kangfengyazhengp3shejizhi
-            // 
-            this.txt_kangfengyazhengp3shejizhi.Location = new System.Drawing.Point(816, 436);
-            this.txt_kangfengyazhengp3shejizhi.Name = "txt_kangfengyazhengp3shejizhi";
-            this.txt_kangfengyazhengp3shejizhi.Size = new System.Drawing.Size(89, 21);
-            this.txt_kangfengyazhengp3shejizhi.TabIndex = 250;
-            // 
-            // label62
-            // 
-            this.label62.AutoSize = true;
-            this.label62.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.label62.Location = new System.Drawing.Point(683, 438);
-            this.label62.Name = "label62";
-            this.label62.Size = new System.Drawing.Size(123, 12);
-            this.label62.TabIndex = 249;
-            this.label62.Text = "抗风压正P3设计值：";
             // 
             // DetectionSet
             // 

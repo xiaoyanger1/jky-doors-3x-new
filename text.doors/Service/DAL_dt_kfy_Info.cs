@@ -184,7 +184,7 @@ values(
 '{119}',
 '{120}',
 '{121}',
-'{122}',{121})",
+'{122}',{123})",
   model.dt_Code,
   model.info_DangH,
   model.z_one_250,

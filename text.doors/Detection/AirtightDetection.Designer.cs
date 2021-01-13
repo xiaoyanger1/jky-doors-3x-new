@@ -138,7 +138,7 @@
             this.btn_ycjy_z.Name = "btn_ycjy_z";
             this.btn_ycjy_z.Size = new System.Drawing.Size(95, 23);
             this.btn_ycjy_z.TabIndex = 22;
-            this.btn_ycjy_z.Text = "正压依次加压";
+            this.btn_ycjy_z.Text = "正压以此加压";
             this.btn_ycjy_z.UseVisualStyleBackColor = true;
             this.btn_ycjy_z.Click += new System.EventHandler(this.btn_ycjy_z_Click);
             // 
@@ -176,7 +176,7 @@
             this.btn_ycjyf.Name = "btn_ycjyf";
             this.btn_ycjyf.Size = new System.Drawing.Size(95, 23);
             this.btn_ycjyf.TabIndex = 25;
-            this.btn_ycjyf.Text = "负压依次加压";
+            this.btn_ycjyf.Text = "负压以此加压";
             this.btn_ycjyf.UseVisualStyleBackColor = true;
             this.btn_ycjyf.Click += new System.EventHandler(this.btn_ycjyf_Click);
             // 
