@@ -21,7 +21,8 @@ namespace text.doors.Model
         {
             get
             {
-                return System.Math.Abs(Math.Round(this.zwy2 - (this.zwy1 + this.zwy3) / 2, 2));
+                //return System.Math.Abs(Math.Round(this.zwy2 - (this.zwy1 + this.zwy3) / 2, 2, MidpointRounding.AwayFromZero));
+                return (double)Math.Round(decimal.Parse((this.zwy2 - (this.zwy1 + this.zwy3) / 2).ToString()), 2, MidpointRounding.AwayFromZero);
             }
         }
         public int zlx

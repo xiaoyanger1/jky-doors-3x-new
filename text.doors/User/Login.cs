@@ -16,13 +16,13 @@ namespace text.doors
             InitializeComponent();
 
 
-            var _tempCode = "20210114-4";
-            string _name = "建筑外窗（门）气密、水密、抗风压性能检测报告" + "_" + _tempCode + ".xls";
+            //var _tempCode = "20210114-4";
+            //string _name = "建筑外窗（门）气密、水密、抗风压性能检测报告" + "_" + _tempCode + ".xls";
 
-            var saveExcelUrl = "E:\\" + _name;
+            //var saveExcelUrl = "E:\\" + _name;
 
-            ExportExcel exportExcel = new ExportExcel(_tempCode);
-            var res = exportExcel.ExportData(saveExcelUrl);
+            //ExportExcel exportExcel = new ExportExcel(_tempCode);
+            //var res = exportExcel.ExportData(saveExcelUrl);
 
             Init();
         }

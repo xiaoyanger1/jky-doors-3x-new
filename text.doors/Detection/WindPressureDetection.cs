@@ -61,6 +61,20 @@ namespace text.doors.Detection
         public WindPressureDetection(SerialPortClient tcpClient, string tempCode, string tempTong)
         {
             InitializeComponent();
+
+            //var lx2 = 375;
+
+            //var zy = 0.00;
+            //var fy = 0.00;
+            //windPressureDGV.Add(new WindPressureDGV() { PaValue = 250, zwy1 = 0.04, zwy2 = 0.76, zwy3 = 0.03 });
+            //windPressureDGV.Add(new WindPressureDGV() { PaValue = 500, zwy1 = 0.10, zwy2 = 1.42, zwy3 = 0.07 });
+            //windPressureDGV.Add(new WindPressureDGV() { PaValue = 750, zwy1 = 0.17, zwy2 = 2.09, zwy3 = 0.14 });
+            //windPressureDGV.Add(new WindPressureDGV() { PaValue = 1000, zwy1 = 0.29, zwy2 = 2.83, zwy3 = 0.23 });
+            //windPressureDGV.Add(new WindPressureDGV() { PaValue = 1250, zwy1 = 0.44, zwy2 = 3.61, zwy3 = 3.22 });
+
+
+            //Formula.GetKFY(windPressureDGV, 1240, lx2, ref zy, ref fy);
+
             this._serialPortClient = tcpClient;
             this._tempCode = tempCode;
             this._tempTong = tempTong;
@@ -803,15 +817,15 @@ namespace text.doors.Detection
 
                 if (windPressureTest == PublicEnum.WindPressureTest.ZStart || windPressureTest == PublicEnum.WindPressureTest.ZSafety)
                 {
-                    pa.zwy1 = Math.Round(ave1 / average.Count, 2);
-                    pa.zwy2 = Math.Round(ave2 / average.Count, 2);
-                    pa.zwy3 = Math.Round(ave3 / average.Count, 2);
+                    pa.zwy1 = Math.Round(ave1 / average.Count, 2, MidpointRounding.AwayFromZero);
+                    pa.zwy2 = Math.Round(ave2 / average.Count, 2, MidpointRounding.AwayFromZero);
+                    pa.zwy3 = Math.Round(ave3 / average.Count, 2, MidpointRounding.AwayFromZero);
                 }
                 else if (windPressureTest == PublicEnum.WindPressureTest.FStart || windPressureTest == PublicEnum.WindPressureTest.FSafety)
                 {
-                    pa.fwy1 = Math.Round(ave1 / average.Count, 2);
-                    pa.fwy2 = Math.Round(ave2 / average.Count, 2);
-                    pa.fwy3 = Math.Round(ave3 / average.Count, 2);
+                    pa.fwy1 = Math.Round(ave1 / average.Count, 2, MidpointRounding.AwayFromZero);
+                    pa.fwy2 = Math.Round(ave2 / average.Count, 2, MidpointRounding.AwayFromZero);
+                    pa.fwy3 = Math.Round(ave3 / average.Count, 2, MidpointRounding.AwayFromZero);
                 }
 
                 //清空初始化
@@ -1076,15 +1090,15 @@ namespace text.doors.Detection
 
                 if (windPressureTest == PublicEnum.WindPressureTest.ZStart || windPressureTest == PublicEnum.WindPressureTest.ZSafety)
                 {
-                    pa.zwy1 = Math.Round(ave1 / average.Count, 2);
-                    pa.zwy2 = Math.Round(ave2 / average.Count, 2);
-                    pa.zwy3 = Math.Round(ave3 / average.Count, 2);
+                    pa.zwy1 = Math.Round(ave1 / average.Count, 2, MidpointRounding.AwayFromZero);
+                    pa.zwy2 = Math.Round(ave2 / average.Count, 2, MidpointRounding.AwayFromZero);
+                    pa.zwy3 = Math.Round(ave3 / average.Count, 2, MidpointRounding.AwayFromZero);
                 }
                 else if (windPressureTest == PublicEnum.WindPressureTest.FStart || windPressureTest == PublicEnum.WindPressureTest.FSafety)
                 {
-                    pa.fwy1 = Math.Round(ave1 / average.Count, 2);
-                    pa.fwy2 = Math.Round(ave2 / average.Count, 2);
-                    pa.fwy3 = Math.Round(ave3 / average.Count, 2);
+                    pa.fwy1 = Math.Round(ave1 / average.Count, 2, MidpointRounding.AwayFromZero);
+                    pa.fwy2 = Math.Round(ave2 / average.Count, 2, MidpointRounding.AwayFromZero);
+                    pa.fwy3 = Math.Round(ave3 / average.Count, 2, MidpointRounding.AwayFromZero);
                 }
 
                 //清空初始化

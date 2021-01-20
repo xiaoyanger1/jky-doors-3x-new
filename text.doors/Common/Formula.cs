@@ -270,8 +270,8 @@ namespace text.doors.Common
             var z_isSuccess = Formula.LinearRegression(z_point, ref _z_a, ref _z_b, ref errorMsg);
             if (z_isSuccess)
             {
-                var y = Math.Round(gjcd / lx, 2, MidpointRounding.AwayFromZero);
-                zy = Math.Round((y - _z_a) / _z_b, 2, MidpointRounding.AwayFromZero);
+                var y = gjcd / lx;
+                zy = Math.Round((y - _z_b) / _z_a, 2, MidpointRounding.AwayFromZero);
             }
             else
             {
@@ -287,7 +287,7 @@ namespace text.doors.Common
             if (f_isSuccess)
             {
                 var y = Math.Round(gjcd / lx, 2, MidpointRounding.AwayFromZero);
-                fy = Math.Round((y - _f_a) / _f_b, 2, MidpointRounding.AwayFromZero);
+                fy = Math.Round((y - _f_b) / _f_a, 2, MidpointRounding.AwayFromZero);
             }
             else
             {
@@ -339,8 +339,10 @@ namespace text.doors.Common
             //回归系数a
             double RCA = averagey - RCB * averagex;
 
-            b = Math.Round(RCB, 4, MidpointRounding.AwayFromZero);
-            a = Math.Round(RCA, 4, MidpointRounding.AwayFromZero);
+            //b = Math.Round(RCB, 4, MidpointRounding.AwayFromZero);
+            //a = Math.Round(RCA, 4, MidpointRounding.AwayFromZero);
+            a = RCB;
+            b = RCA;
             return true;
         }
 
