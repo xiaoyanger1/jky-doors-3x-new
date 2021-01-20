@@ -114,6 +114,8 @@ namespace text.doors.Detection
                     {
                         this.rdb_wdjy.Checked = true;
                     }
+
+                    txt_ycjy.Text = sm[0].gongchengjiance;
                     var flish = "";
                     var two = "";
                     string[] temp = null;
@@ -1456,7 +1458,7 @@ namespace text.doors.Detection
             model.sm_PaDesc = CheckPosition + "," + CheckProblem;
             model.sm_Remark = txt_desc_cf.Text;
             model.testcount = 2;
-
+            model.gongchengjiance = txt_ycjy.Text;
 
             if (this.rdb_bdjy.Checked == true)
             {

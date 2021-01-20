@@ -510,11 +510,14 @@ namespace text.doors.dal
                     model.p1 = item["p1"].ToString();
                     model.p2 = item["p2"].ToString();
                     model.p3 = item["p3"].ToString();
+                    model.pMax = item["z_pMax"].ToString();
                     model._p1 = item["_p1"].ToString();
                     model._p2 = item["_p2"].ToString();
                     model._p3 = item["_p3"].ToString();
+                    model._pMax = item["f_pMax"].ToString();
                     model.CheckLock = int.Parse(item["CheckLock"].ToString());
                     model.info_DangH = item["info_DangH"].ToString();
+                    model.testtype = int.Parse(item["testtype"].ToString());
 
                     list.Add(model);
                     #endregion

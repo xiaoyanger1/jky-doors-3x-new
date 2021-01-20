@@ -257,15 +257,44 @@ namespace text.doors.Common
             var kfyList = _settings.dt_kfy_Info;
             if (kfyList != null && kfyList.Count > 0)
             {
-                ws.GetRow(18).GetCell(6).SetCellValue(kfyList.Min(t => t.p1));
-                ws.GetRow(19).GetCell(6).SetCellValue(kfyList.Min(t => t._p1));
-                ws.GetRow(20).GetCell(6).SetCellValue(kfyList.Min(t => t.p2));
-                ws.GetRow(21).GetCell(6).SetCellValue(kfyList.Min(t => t._p2));
-                //风荷载
-                ws.GetRow(23).GetCell(6).SetCellValue(kfyList.Min(t => t.p3));
-                ws.GetRow(24).GetCell(6).SetCellValue(kfyList.Min(t => t._p3));
-                ws.GetRow(25).GetCell(6).SetCellValue(kfyList.Min(t => t.pMax));
-                ws.GetRow(26).GetCell(6).SetCellValue(kfyList.Min(t => t._pMax));
+                if (kfyList[0].testtype == 2)
+                {
+                    //风荷载
+                    ws.GetRow(35).GetCell(6).SetCellValue(kfyList.Min(t => t.p3));
+                    ws.GetRow(36).GetCell(6).SetCellValue(kfyList.Min(t => t._p3));
+                    ws.GetRow(37).GetCell(6).SetCellValue(kfyList.Min(t => t.pMax));
+                    ws.GetRow(38).GetCell(6).SetCellValue(kfyList.Min(t => t._pMax));
+
+                    ws.GetRow(18).GetCell(6).SetCellValue("-");
+                    ws.GetRow(19).GetCell(6).SetCellValue("-");
+                    ws.GetRow(20).GetCell(6).SetCellValue("-");
+                    ws.GetRow(21).GetCell(6).SetCellValue("-");
+                    //风荷载
+                    ws.GetRow(23).GetCell(6).SetCellValue("-");
+                    ws.GetRow(24).GetCell(6).SetCellValue("-");
+                    ws.GetRow(25).GetCell(6).SetCellValue("-");
+                    ws.GetRow(26).GetCell(6).SetCellValue("-");
+                }
+                else
+                {
+                    ws.GetRow(18).GetCell(6).SetCellValue(kfyList.Min(t => t.p1));
+                    ws.GetRow(19).GetCell(6).SetCellValue(kfyList.Min(t => t._p1));
+                    ws.GetRow(20).GetCell(6).SetCellValue(kfyList.Min(t => t.p2));
+                    ws.GetRow(21).GetCell(6).SetCellValue(kfyList.Min(t => t._p2));
+                    //风荷载
+                    ws.GetRow(23).GetCell(6).SetCellValue(kfyList.Min(t => t.p3));
+                    ws.GetRow(24).GetCell(6).SetCellValue(kfyList.Min(t => t._p3));
+                    ws.GetRow(25).GetCell(6).SetCellValue(kfyList.Min(t => t.pMax));
+                    ws.GetRow(26).GetCell(6).SetCellValue(kfyList.Min(t => t._pMax));
+                    //风荷载
+                    ws.GetRow(35).GetCell(6).SetCellValue("-");
+                    ws.GetRow(36).GetCell(6).SetCellValue("-");
+                    ws.GetRow(37).GetCell(6).SetCellValue("-");
+                    ws.GetRow(38).GetCell(6).SetCellValue("-");
+                }
+
+
+
             }
 
             //重复气密性能
@@ -288,7 +317,7 @@ namespace text.doors.Common
             //水密性能
             ws.GetRow(29).GetCell(3).SetCellValue(dt_Settings.Rows[0]["penlinshuiliang"].ToString());
 
-            if (sm_Info?.FindAll(t => t.testcount == 1) != null && sm_Info.FindAll(t => t.testcount == 1).Count > 0)
+            if (sm_Info?.FindAll(t => t.testcount == 2) != null && sm_Info.FindAll(t => t.testcount == 1).Count > 0)
             {
                 if (sm_Info.FindAll(t => t.testcount == 1)[0].Method == "波动加压")
                 {
@@ -338,7 +367,7 @@ namespace text.doors.Common
                 {
                     #region  稳定加压
                     //稳定加压
-                    var level1 = sm_Info.FindAll(t => t.testcount == 1);
+                    var level1 = sm_Info.FindAll(t => t.testcount == 2);
                     var wdPa = 999;
                     var wdPaDesc = "";
                     if (level1 != null && level1.Count > 0)
@@ -379,12 +408,7 @@ namespace text.doors.Common
                 }
             }
 
-            //todo:
-            //检测结果
-            ws.GetRow(35).GetCell(6).SetCellValue("");
-            ws.GetRow(36).GetCell(6).SetCellValue("");
-            ws.GetRow(37).GetCell(6).SetCellValue("");
-            ws.GetRow(38).GetCell(6).SetCellValue("");
+
             #endregion
 
             #region 气密性
@@ -621,7 +645,7 @@ namespace text.doors.Common
                 }
                 #endregion
 
-                ws.GetRow(44).GetCell(3).SetCellValue(dt_Settings.Rows[0]["weituobianhao"].ToString());
+                ws.GetRow(44).GetCell(3).SetCellValue(dt_Settings.Rows[0]["dt_Code"].ToString());
                 ws.GetRow(44).GetCell(5).SetCellValue(dt_Settings.Rows[0]["dangqianwendu"].ToString());
                 ws.GetRow(44).GetCell(7).SetCellValue(dt_Settings.Rows[0]["kaiqifengchang"].ToString());
 
@@ -638,7 +662,7 @@ namespace text.doors.Common
 
                 ws = (NPOI.HSSF.UserModel.HSSFSheet)hssfworkbook.GetSheet("重复气密性");
                 ws.ForceFormulaRecalculation = true;
-                ws.GetRow(2).GetCell(3).SetCellValue(dt_Settings.Rows[0]["weituobianhao"].ToString());
+                ws.GetRow(2).GetCell(3).SetCellValue(dt_Settings.Rows[0]["dt_Code"].ToString());
                 ws.GetRow(2).GetCell(5).SetCellValue(dt_Settings.Rows[0]["dangqianwendu"].ToString());
                 ws.GetRow(2).GetCell(7).SetCellValue(dt_Settings.Rows[0]["kaiqifengchang"].ToString());
 
@@ -650,6 +674,7 @@ namespace text.doors.Common
                 var qm = qm_Info.FindAll(t => t.testcount == 2).OrderBy(t => t.info_DangH).ToList();
                 if ((qm != null && qm.Count() > 0))
                 {
+                    ws.ForceFormulaRecalculation = true;
                     //1检测 2.工程检测
                     var testtype = qm[0].testtype;
                     var index = 0;
@@ -865,7 +890,7 @@ namespace text.doors.Common
                     #endregion
                 }
 
-                ws.GetRow(44).GetCell(3).SetCellValue(dt_Settings.Rows[0]["weituobianhao"].ToString());
+                ws.GetRow(44).GetCell(3).SetCellValue(dt_Settings.Rows[0]["dt_Code"].ToString());
                 ws.GetRow(44).GetCell(5).SetCellValue(dt_Settings.Rows[0]["dangqianwendu"].ToString());
                 ws.GetRow(44).GetCell(7).SetCellValue(dt_Settings.Rows[0]["kaiqifengchang"].ToString());
 
@@ -885,6 +910,37 @@ namespace text.doors.Common
                 {
                     isBoDong = true;
                 }
+
+                ws = (NPOI.HSSF.UserModel.HSSFSheet)hssfworkbook.GetSheet("水密性(稳定)");
+                ws.GetRow(1).GetCell(2).SetCellValue(dt_Settings.Rows[0]["dt_Code"].ToString());
+                ws.GetRow(1).GetCell(10).SetCellValue(dt_Settings.Rows[0]["penlinshuiliang"].ToString());
+                ws.GetRow(2).GetCell(2).SetCellValue(dt_Settings.Rows[0]["jianceriqi"].ToString());
+                ws.GetRow(2).GetCell(10).SetCellValue(dt_Settings.Rows[0]["shijianmianji"].ToString());
+
+                ws = (NPOI.HSSF.UserModel.HSSFSheet)hssfworkbook.GetSheet("重复水密性(稳定)");
+                ws.GetRow(1).GetCell(2).SetCellValue(dt_Settings.Rows[0]["dt_Code"].ToString());
+                ws.GetRow(1).GetCell(10).SetCellValue(dt_Settings.Rows[0]["penlinshuiliang"].ToString());
+                ws.GetRow(2).GetCell(2).SetCellValue(dt_Settings.Rows[0]["jianceriqi"].ToString());
+                ws.GetRow(2).GetCell(10).SetCellValue(dt_Settings.Rows[0]["shijianmianji"].ToString());
+
+                #region 水密性（波动）
+                ws = (NPOI.HSSF.UserModel.HSSFSheet)hssfworkbook.GetSheet("水密性(波动)");
+                ws.GetRow(1).GetCell(2).SetCellValue(dt_Settings.Rows[0]["dt_Code"].ToString());
+                ws.GetRow(1).GetCell(10).SetCellValue(dt_Settings.Rows[0]["penlinshuiliang"].ToString());
+                ws.GetRow(2).GetCell(2).SetCellValue(dt_Settings.Rows[0]["jianceriqi"].ToString());
+                ws.GetRow(2).GetCell(10).SetCellValue(dt_Settings.Rows[0]["shijianmianji"].ToString());
+                #endregion
+
+
+
+
+                ws = (NPOI.HSSF.UserModel.HSSFSheet)hssfworkbook.GetSheet("重复水密性(波动)");
+                ws.GetRow(1).GetCell(2).SetCellValue(dt_Settings.Rows[0]["dt_Code"].ToString());
+                ws.GetRow(1).GetCell(10).SetCellValue(dt_Settings.Rows[0]["penlinshuiliang"].ToString());
+                ws.GetRow(2).GetCell(2).SetCellValue(dt_Settings.Rows[0]["jianceriqi"].ToString());
+                ws.GetRow(2).GetCell(10).SetCellValue(dt_Settings.Rows[0]["shijianmianji"].ToString());
+
+
                 if (isBoDong)
                 {
                     var sm = sm_Info.FindAll(t => t.testcount == 1).OrderBy(t => t.info_DangH).ToList();
@@ -894,7 +950,7 @@ namespace text.doors.Common
                         ws = (NPOI.HSSF.UserModel.HSSFSheet)hssfworkbook.GetSheet("水密性(波动)");
                         ws.GetRow(1).GetCell(2).SetCellValue(dt_Settings.Rows[0]["dt_Code"].ToString());
                         ws.GetRow(1).GetCell(10).SetCellValue(dt_Settings.Rows[0]["penlinshuiliang"].ToString());
-                        ws.GetRow(2).GetCell(1).SetCellValue(dt_Settings.Rows[0]["jianceriqi"].ToString());
+                        ws.GetRow(2).GetCell(2).SetCellValue(dt_Settings.Rows[0]["jianceriqi"].ToString());
                         ws.GetRow(2).GetCell(10).SetCellValue(dt_Settings.Rows[0]["shijianmianji"].ToString());
                         var index = 0;
                         foreach (var item in sm)
@@ -1097,6 +1153,7 @@ namespace text.doors.Common
                         }
                         #endregion
                     }
+
                     sm = sm_Info.FindAll(t => t.testcount == 2).OrderBy(t => t.info_DangH).ToList();
                     if ((sm != null && sm.Count() > 0))
                     {
@@ -2518,13 +2575,14 @@ namespace text.doors.Common
                         #endregion
                     }
 
+
                     sm = sm_Info.FindAll(t => t.testcount == 2).OrderBy(t => t.info_DangH).ToList();
                     if ((sm != null && sm.Count() > 0))
                     {
                         ws = (NPOI.HSSF.UserModel.HSSFSheet)hssfworkbook.GetSheet("重复水密性(稳定)");
-                        ws.GetRow(1).GetCell(1).SetCellValue(dt_Settings.Rows[0]["dt_Code"].ToString());
+                        ws.GetRow(1).GetCell(2).SetCellValue(dt_Settings.Rows[0]["dt_Code"].ToString());
                         ws.GetRow(1).GetCell(10).SetCellValue(dt_Settings.Rows[0]["penlinshuiliang"].ToString());
-                        ws.GetRow(2).GetCell(1).SetCellValue(dt_Settings.Rows[0]["jianceriqi"].ToString());
+                        ws.GetRow(2).GetCell(2).SetCellValue(dt_Settings.Rows[0]["jianceriqi"].ToString());
                         ws.GetRow(2).GetCell(10).SetCellValue(dt_Settings.Rows[0]["shijianmianji"].ToString());
                         #region 重复水密性（稳定）
                         var index = 0;
@@ -3732,38 +3790,40 @@ namespace text.doors.Common
                         }
                         #endregion
                     }
+
                 }
             }
             #endregion
 
             #region 抗风压
             ws = (NPOI.HSSF.UserModel.HSSFSheet)hssfworkbook.GetSheet("抗风压");
-            ws.ForceFormulaRecalculation = true;
-            ws.GetRow(1).GetCell(1).SetCellValue(dt_Settings.Rows[0]["weituobianhao"].ToString());
+
+            ws.GetRow(1).GetCell(1).SetCellValue(dt_Settings.Rows[0]["dt_Code"].ToString());
             ws.GetRow(2).GetCell(1).SetCellValue(dt_Settings.Rows[0]["jianceriqi"].ToString());
-            ws.GetRow(2).GetCell(6).SetCellValue("");
-            ws.GetRow(2).GetCell(11).SetCellValue(dt_Settings.Rows[0]["kangfengyazhengp3shejizhi"].ToString());
+
+
+            ws.GetRow(2).GetCell(11).SetCellValue(dt_Settings.Rows[0]["kangfengyazhengyashejizhi"].ToString());
             ws.GetRow(3).GetCell(1).SetCellValue(dt_Settings.Rows[0]["ganjianchangdu"].ToString());
-            ws.GetRow(3).GetCell(6).SetCellValue("");
-            ws.GetRow(3).GetCell(11).SetCellValue(dt_Settings.Rows[0]["kangfengyazhengpmaxshejizhi"].ToString());
+
+            ws.GetRow(3).GetCell(11).SetCellValue(dt_Settings.Rows[0]["kangfengyazhengp3shejizhi"].ToString());
 
 
-            ws.GetRow(28).GetCell(1).SetCellValue(dt_Settings.Rows[0]["weituobianhao"].ToString());
+            ws.GetRow(28).GetCell(1).SetCellValue(dt_Settings.Rows[0]["dt_Code"].ToString());
             ws.GetRow(29).GetCell(1).SetCellValue(dt_Settings.Rows[0]["jianceriqi"].ToString());
-            ws.GetRow(29).GetCell(6).SetCellValue("");
-            ws.GetRow(29).GetCell(11).SetCellValue(dt_Settings.Rows[0]["kangfengyazhengp3shejizhi"].ToString());
+
+            ws.GetRow(29).GetCell(11).SetCellValue(dt_Settings.Rows[0]["kangfengyazhengyashejizhi"].ToString());
             ws.GetRow(30).GetCell(1).SetCellValue(dt_Settings.Rows[0]["ganjianchangdu"].ToString());
-            ws.GetRow(30).GetCell(6).SetCellValue("");
-            ws.GetRow(30).GetCell(11).SetCellValue(dt_Settings.Rows[0]["kangfengyazhengpmaxshejizhi"].ToString());
+
+            ws.GetRow(30).GetCell(11).SetCellValue(dt_Settings.Rows[0]["kangfengyazhengp3shejizhi"].ToString());
 
 
-            ws.GetRow(55).GetCell(1).SetCellValue(dt_Settings.Rows[0]["weituobianhao"].ToString());
+            ws.GetRow(55).GetCell(1).SetCellValue(dt_Settings.Rows[0]["dt_Code"].ToString());
             ws.GetRow(56).GetCell(1).SetCellValue(dt_Settings.Rows[0]["jianceriqi"].ToString());
-            ws.GetRow(56).GetCell(6).SetCellValue("");
-            ws.GetRow(56).GetCell(11).SetCellValue(dt_Settings.Rows[0]["kangfengyazhengp3shejizhi"].ToString());
+
+            ws.GetRow(56).GetCell(11).SetCellValue(dt_Settings.Rows[0]["kangfengyazhengyashejizhi"].ToString());
             ws.GetRow(57).GetCell(1).SetCellValue(dt_Settings.Rows[0]["ganjianchangdu"].ToString());
-            ws.GetRow(57).GetCell(6).SetCellValue("");
-            ws.GetRow(57).GetCell(11).SetCellValue(dt_Settings.Rows[0]["kangfengyazhengpmaxshejizhi"].ToString());
+
+            ws.GetRow(57).GetCell(11).SetCellValue(dt_Settings.Rows[0]["kangfengyazhengp3shejizhi"].ToString());
 
             var databaseDefPa = 250;
 
@@ -3771,7 +3831,22 @@ namespace text.doors.Common
 
             if (kfy_Info1 != null && kfy_Info1.Rows.Count > 0)
             {
+                ws.ForceFormulaRecalculation = true;
                 var dr1 = kfy_Info1.Rows[0];
+                var ganjianchangdu = double.Parse(dt_Settings.Rows[0]["ganjianchangdu"].ToString());
+                var lx = double.Parse(dr1["lx"].ToString());
+
+                //最大面法线挠度;
+                var zdmfxnd = Math.Round((ganjianchangdu / lx), 2);
+
+                ws.GetRow(3).GetCell(6).SetCellValue(zdmfxnd);
+                ws.GetRow(30).GetCell(6).SetCellValue(zdmfxnd);
+                ws.GetRow(57).GetCell(6).SetCellValue(zdmfxnd);
+
+                ws.GetRow(2).GetCell(6).SetCellValue(Math.Round(zdmfxnd * 2.5, 2));
+                ws.GetRow(29).GetCell(6).SetCellValue(Math.Round(zdmfxnd * 2.5, 2));
+                ws.GetRow(56).GetCell(6).SetCellValue(Math.Round(zdmfxnd * 2.5, 2));
+
                 var jc = int.Parse(dr1["defJC"].ToString());
 
                 for (int i = 1; i < 12; i++)
@@ -3785,10 +3860,10 @@ namespace text.doors.Common
                         ws.GetRow(15).GetCell(4).SetCellValue(dr1["z_nd_p3jieduan"].ToString());
 
                         ws.GetRow(42).GetCell(0).SetCellValue("-P3阶段");
-                        ws.GetRow(42).GetCell(1).SetCellValue(dr1["f_one_p3jieduan"].ToString());
-                        ws.GetRow(42).GetCell(2).SetCellValue(dr1["f_two_p3jieduan"].ToString());
-                        ws.GetRow(42).GetCell(3).SetCellValue(dr1["f_three_p3jieduan"].ToString());
-                        ws.GetRow(42).GetCell(4).SetCellValue(dr1["f_nd_p3jieduan"].ToString());
+                        ws.GetRow(42).GetCell(1).SetCellValue("-" + dr1["f_one_p3jieduan"].ToString());
+                        ws.GetRow(42).GetCell(2).SetCellValue("-" + dr1["f_two_p3jieduan"].ToString());
+                        ws.GetRow(42).GetCell(3).SetCellValue("-" + dr1["f_three_p3jieduan"].ToString());
+                        ws.GetRow(42).GetCell(4).SetCellValue("-" + dr1["f_nd_p3jieduan"].ToString());
                     }
                     else if (i == 10)
                     {
@@ -3799,10 +3874,10 @@ namespace text.doors.Common
                         ws.GetRow(16).GetCell(4).SetCellValue(dr1["z_nd_p3canyubianxing"].ToString());
 
                         ws.GetRow(43).GetCell(0).SetCellValue("-P3残余变形");
-                        ws.GetRow(43).GetCell(1).SetCellValue(dr1["f_one_p3canyubianxing"].ToString());
-                        ws.GetRow(43).GetCell(2).SetCellValue(dr1["f_two_p3canyubianxing"].ToString());
-                        ws.GetRow(43).GetCell(3).SetCellValue(dr1["f_three_p3canyubianxing"].ToString());
-                        ws.GetRow(43).GetCell(4).SetCellValue(dr1["f_nd_p3canyubianxing"].ToString());
+                        ws.GetRow(43).GetCell(1).SetCellValue("-" + dr1["f_one_p3canyubianxing"].ToString());
+                        ws.GetRow(43).GetCell(2).SetCellValue("-" + dr1["f_two_p3canyubianxing"].ToString());
+                        ws.GetRow(43).GetCell(3).SetCellValue("-" + dr1["f_three_p3canyubianxing"].ToString());
+                        ws.GetRow(43).GetCell(4).SetCellValue("-" + dr1["f_nd_p3canyubianxing"].ToString());
                     }
                     else if (i == 11)
                     {
@@ -3813,38 +3888,74 @@ namespace text.doors.Common
                         ws.GetRow(17).GetCell(4).SetCellValue(dr1["z_nd_pMaxcanyubianxing"].ToString());
 
                         ws.GetRow(44).GetCell(0).SetCellValue("-PMax/残余变形");
-                        ws.GetRow(44).GetCell(1).SetCellValue(dr1["f_one_pMaxcanyubianxing"].ToString());
-                        ws.GetRow(44).GetCell(2).SetCellValue(dr1["f_two_pMaxcanyubianxing"].ToString());
-                        ws.GetRow(44).GetCell(3).SetCellValue(dr1["f_three_pMaxcanyubianxing"].ToString());
-                        ws.GetRow(44).GetCell(4).SetCellValue(dr1["f_nd_pMaxcanyubianxing"].ToString());
+                        ws.GetRow(44).GetCell(1).SetCellValue("-" + dr1["f_one_pMaxcanyubianxing"].ToString());
+                        ws.GetRow(44).GetCell(2).SetCellValue("-" + dr1["f_two_pMaxcanyubianxing"].ToString());
+                        ws.GetRow(44).GetCell(3).SetCellValue("-" + dr1["f_three_pMaxcanyubianxing"].ToString());
+                        ws.GetRow(44).GetCell(4).SetCellValue("-" + dr1["f_nd_pMaxcanyubianxing"].ToString());
                     }
                     else
                     {
-                        ws.GetRow(i + 6).GetCell(0).SetCellValue(jc * i);
-                        ws.GetRow(i + 6).GetCell(1).SetCellValue(dr1["z_one_" + (databaseDefPa * i)].ToString());
-                        ws.GetRow(i + 6).GetCell(2).SetCellValue(dr1["z_two_" + (databaseDefPa * i)].ToString());
-                        ws.GetRow(i + 6).GetCell(3).SetCellValue(dr1["z_three_" + (databaseDefPa * i)].ToString());
-                        ws.GetRow(i + 6).GetCell(4).SetCellValue(dr1["z_nd_" + (databaseDefPa * i)].ToString());
+                        if (dr1["z_nd_" + (databaseDefPa * i)].ToString() != "0.00")
+                        {
+                            ws.GetRow(i + 6).GetCell(0).SetCellValue(jc * i);
+                            ws.GetRow(i + 6).GetCell(1).SetCellValue(dr1["z_one_" + (databaseDefPa * i)].ToString());
+                            ws.GetRow(i + 6).GetCell(2).SetCellValue(dr1["z_two_" + (databaseDefPa * i)].ToString());
+                            ws.GetRow(i + 6).GetCell(3).SetCellValue(dr1["z_three_" + (databaseDefPa * i)].ToString());
+                            ws.GetRow(i + 6).GetCell(4).SetCellValue(double.Parse(dr1["z_nd_" + (databaseDefPa * i)].ToString()));
 
-                        ws.GetRow(i + 33).GetCell(0).SetCellValue(-(jc * i));
-                        ws.GetRow(i + 33).GetCell(1).SetCellValue(dr1["f_one_" + (databaseDefPa * i)].ToString());
-                        ws.GetRow(i + 33).GetCell(2).SetCellValue(dr1["f_two_" + (databaseDefPa * i)].ToString());
-                        ws.GetRow(i + 33).GetCell(3).SetCellValue(dr1["f_three_" + (databaseDefPa * i)].ToString());
-                        ws.GetRow(i + 33).GetCell(4).SetCellValue(dr1["f_nd_" + (databaseDefPa * i)].ToString());
+                            //  ws.GetRow(12 + i).GetCell(18).SetCellValue(dr1["z_nd_" + (databaseDefPa * i)].ToString());
+
+                        }
+
+                        if (dr1["f_nd_" + (databaseDefPa * i)].ToString() != "0.00")
+                        {
+                            ws.GetRow(i + 33).GetCell(0).SetCellValue(-(jc * i));
+                            ws.GetRow(i + 33).GetCell(1).SetCellValue("-" + dr1["f_one_" + (databaseDefPa * i)].ToString());
+                            ws.GetRow(i + 33).GetCell(2).SetCellValue("-" + dr1["f_two_" + (databaseDefPa * i)].ToString());
+                            ws.GetRow(i + 33).GetCell(3).SetCellValue("-" + dr1["f_three_" + (databaseDefPa * i)].ToString());
+                            ws.GetRow(i + 33).GetCell(4).SetCellValue(double.Parse("-" + dr1["f_nd_" + (databaseDefPa * i)].ToString()));
+
+                            //  ws.GetRow(12 - i).GetCell(18).SetCellValue("-" + dr1["f_nd_" + (databaseDefPa * i)].ToString());
+                        }
+
                     }
                 }
 
-                ws.GetRow(18).GetCell(2).SetCellValue(dr1["p1"].ToString());
-                ws.GetRow(19).GetCell(2).SetCellValue(dr1["p2"].ToString());
-                ws.GetRow(20).GetCell(2).SetCellValue(dr1["p3"].ToString());
-                ws.GetRow(21).GetCell(2).SetCellValue("");
+                var testytpe = int.Parse(dr1["testtype"].ToString());
+                if (testytpe == 2)
+                {
+                    ws.GetRow(18).GetCell(4).SetCellValue(dr1["p1"].ToString());
+                    ws.GetRow(19).GetCell(4).SetCellValue(dr1["p2"].ToString());
+                    ws.GetRow(20).GetCell(4).SetCellValue(dr1["p3"].ToString());
+                    ws.GetRow(21).GetCell(4).SetCellValue(dr1["z_pmax"].ToString());
 
-                ws.GetRow(45).GetCell(2).SetCellValue(dr1["_p1"].ToString());
-                ws.GetRow(46).GetCell(2).SetCellValue(dr1["_p2"].ToString());
-                ws.GetRow(47).GetCell(2).SetCellValue(dr1["_p3"].ToString());
-                ws.GetRow(48).GetCell(2).SetCellValue("");
+                    ws.GetRow(22).GetCell(4).SetCellValue(dr1["desc"].ToString());
 
-                ws.GetRow(49).GetCell(2).SetCellValue(dr1["desc"].ToString());
+                    ws.GetRow(45).GetCell(4).SetCellValue("-" + dr1["_p1"].ToString());
+                    ws.GetRow(46).GetCell(4).SetCellValue("-" + dr1["_p2"].ToString());
+                    ws.GetRow(47).GetCell(4).SetCellValue("-" + dr1["_p3"].ToString());
+                    ws.GetRow(48).GetCell(4).SetCellValue("-" + dr1["f_pmax"].ToString());
+
+                    ws.GetRow(49).GetCell(4).SetCellValue(dr1["desc"].ToString());
+                }
+                else
+                {
+                    ws.GetRow(18).GetCell(2).SetCellValue(dr1["p1"].ToString());
+                    ws.GetRow(19).GetCell(2).SetCellValue(dr1["p2"].ToString());
+                    ws.GetRow(20).GetCell(2).SetCellValue(dr1["p3"].ToString());
+                    ws.GetRow(21).GetCell(2).SetCellValue(dr1["z_pmax"].ToString());
+                    ws.GetRow(22).GetCell(2).SetCellValue(dr1["desc"].ToString());
+
+
+                    ws.GetRow(45).GetCell(2).SetCellValue("-" + dr1["_p1"].ToString());
+                    ws.GetRow(46).GetCell(2).SetCellValue("-" + dr1["_p2"].ToString());
+                    ws.GetRow(47).GetCell(2).SetCellValue("-" + dr1["_p3"].ToString());
+                    ws.GetRow(48).GetCell(2).SetCellValue("-" + dr1["f_pmax"].ToString());
+
+
+                    ws.GetRow(49).GetCell(2).SetCellValue(dr1["desc"].ToString());
+                }
+
             }
 
             DataTable kfy_Info2 = new DAL_dt_kfy_Info().GetkfyByCodeAndTong(_tempCode, "第2樘");
@@ -3862,10 +3973,10 @@ namespace text.doors.Common
                         ws.GetRow(15).GetCell(8).SetCellValue(dr2["z_nd_p3jieduan"].ToString());
 
                         ws.GetRow(42).GetCell(0).SetCellValue("-P3阶段");
-                        ws.GetRow(42).GetCell(5).SetCellValue(dr2["f_one_p3jieduan"].ToString());
-                        ws.GetRow(42).GetCell(6).SetCellValue(dr2["f_two_p3jieduan"].ToString());
-                        ws.GetRow(42).GetCell(7).SetCellValue(dr2["f_three_p3jieduan"].ToString());
-                        ws.GetRow(42).GetCell(8).SetCellValue(dr2["f_nd_p3jieduan"].ToString());
+                        ws.GetRow(42).GetCell(5).SetCellValue("-" + dr2["f_one_p3jieduan"].ToString());
+                        ws.GetRow(42).GetCell(6).SetCellValue("-" + dr2["f_two_p3jieduan"].ToString());
+                        ws.GetRow(42).GetCell(7).SetCellValue("-" + dr2["f_three_p3jieduan"].ToString());
+                        ws.GetRow(42).GetCell(8).SetCellValue("-" + dr2["f_nd_p3jieduan"].ToString());
                     }
                     else if (i == 10)
                     {
@@ -3875,10 +3986,10 @@ namespace text.doors.Common
                         ws.GetRow(16).GetCell(7).SetCellValue(dr2["z_three_p3canyubianxing"].ToString());
                         ws.GetRow(16).GetCell(8).SetCellValue(dr2["z_nd_p3canyubianxing"].ToString());
 
-                        ws.GetRow(43).GetCell(5).SetCellValue(dr2["f_one_p3canyubianxing"].ToString());
-                        ws.GetRow(43).GetCell(6).SetCellValue(dr2["f_two_p3canyubianxing"].ToString());
-                        ws.GetRow(43).GetCell(7).SetCellValue(dr2["f_three_p3canyubianxing"].ToString());
-                        ws.GetRow(43).GetCell(8).SetCellValue(dr2["f_nd_p3canyubianxing"].ToString());
+                        ws.GetRow(43).GetCell(5).SetCellValue("-" + dr2["f_one_p3canyubianxing"].ToString());
+                        ws.GetRow(43).GetCell(6).SetCellValue("-" + dr2["f_two_p3canyubianxing"].ToString());
+                        ws.GetRow(43).GetCell(7).SetCellValue("-" + dr2["f_three_p3canyubianxing"].ToString());
+                        ws.GetRow(43).GetCell(8).SetCellValue("-" + dr2["f_nd_p3canyubianxing"].ToString());
                     }
                     else if (i == 11)
                     {
@@ -3887,35 +3998,70 @@ namespace text.doors.Common
                         ws.GetRow(17).GetCell(7).SetCellValue(dr2["z_three_pMaxcanyubianxing"].ToString());
                         ws.GetRow(17).GetCell(8).SetCellValue(dr2["z_nd_pMaxcanyubianxing"].ToString());
 
-                        ws.GetRow(44).GetCell(5).SetCellValue(dr2["f_one_pMaxcanyubianxing"].ToString());
-                        ws.GetRow(44).GetCell(6).SetCellValue(dr2["f_two_pMaxcanyubianxing"].ToString());
-                        ws.GetRow(44).GetCell(7).SetCellValue(dr2["f_three_pMaxcanyubianxing"].ToString());
-                        ws.GetRow(44).GetCell(8).SetCellValue(dr2["f_nd_pMaxcanyubianxing"].ToString());
+                        ws.GetRow(44).GetCell(5).SetCellValue("-" + dr2["f_one_pMaxcanyubianxing"].ToString());
+                        ws.GetRow(44).GetCell(6).SetCellValue("-" + dr2["f_two_pMaxcanyubianxing"].ToString());
+                        ws.GetRow(44).GetCell(7).SetCellValue("-" + dr2["f_three_pMaxcanyubianxing"].ToString());
+                        ws.GetRow(44).GetCell(8).SetCellValue("-" + dr2["f_nd_pMaxcanyubianxing"].ToString());
                     }
                     else
                     {
-                        ws.GetRow(i + 6).GetCell(5).SetCellValue(dr2["z_one_" + (databaseDefPa * i)].ToString());
-                        ws.GetRow(i + 6).GetCell(6).SetCellValue(dr2["z_two_" + (databaseDefPa * i)].ToString());
-                        ws.GetRow(i + 6).GetCell(7).SetCellValue(dr2["z_three_" + (databaseDefPa * i)].ToString());
-                        ws.GetRow(i + 6).GetCell(8).SetCellValue(dr2["z_nd_" + (databaseDefPa * i)].ToString());
+                        if (dr2["z_nd_" + (databaseDefPa * i)].ToString() != "0.00")
+                        {
+                            ws.GetRow(i + 6).GetCell(5).SetCellValue(dr2["z_one_" + (databaseDefPa * i)].ToString());
+                            ws.GetRow(i + 6).GetCell(6).SetCellValue(dr2["z_two_" + (databaseDefPa * i)].ToString());
+                            ws.GetRow(i + 6).GetCell(7).SetCellValue(dr2["z_three_" + (databaseDefPa * i)].ToString());
+                            ws.GetRow(i + 6).GetCell(8).SetCellValue(double.Parse(dr2["z_nd_" + (databaseDefPa * i)].ToString()));
 
-                        ws.GetRow(i + 33).GetCell(5).SetCellValue(dr2["f_one_" + (databaseDefPa * i)].ToString());
-                        ws.GetRow(i + 33).GetCell(6).SetCellValue(dr2["f_two_" + (databaseDefPa * i)].ToString());
-                        ws.GetRow(i + 33).GetCell(7).SetCellValue(dr2["f_three_" + (databaseDefPa * i)].ToString());
-                        ws.GetRow(i + 33).GetCell(8).SetCellValue(dr2["f_nd_" + (databaseDefPa * i)].ToString());
+                            // ws.GetRow(12 + i).GetCell(19).SetCellValue(dr2["z_nd_" + (databaseDefPa * i)].ToString());
+
+                        }
+                        if (dr2["f_nd_" + (databaseDefPa * i)].ToString() != "0.00")
+                        {
+                            ws.GetRow(i + 33).GetCell(5).SetCellValue("-" + dr2["f_one_" + (databaseDefPa * i)].ToString());
+                            ws.GetRow(i + 33).GetCell(6).SetCellValue("-" + dr2["f_two_" + (databaseDefPa * i)].ToString());
+                            ws.GetRow(i + 33).GetCell(7).SetCellValue("-" + dr2["f_three_" + (databaseDefPa * i)].ToString());
+                            ws.GetRow(i + 33).GetCell(8).SetCellValue(double.Parse("-" + dr2["f_nd_" + (databaseDefPa * i)].ToString()));
+
+                            //ws.GetRow(12 + i).GetCell(19).SetCellValue("-" + dr2["f_nd_" + (databaseDefPa * i)].ToString());
+
+                        }
+
                     }
                 }
-                ws.GetRow(18).GetCell(6).SetCellValue(dr2["p1"].ToString());
-                ws.GetRow(19).GetCell(6).SetCellValue(dr2["p2"].ToString());
-                ws.GetRow(20).GetCell(6).SetCellValue(dr2["p3"].ToString());
-                ws.GetRow(21).GetCell(6).SetCellValue("");
 
-                ws.GetRow(45).GetCell(6).SetCellValue(dr2["_p1"].ToString());
-                ws.GetRow(46).GetCell(6).SetCellValue(dr2["_p2"].ToString());
-                ws.GetRow(47).GetCell(6).SetCellValue(dr2["_p3"].ToString());
-                ws.GetRow(48).GetCell(6).SetCellValue("");
+                var testytpe = int.Parse(dr2["testtype"].ToString());
+                if (testytpe == 2)
+                {
+                    ws.GetRow(18).GetCell(8).SetCellValue(dr2["p1"].ToString());
+                    ws.GetRow(19).GetCell(8).SetCellValue(dr2["p2"].ToString());
+                    ws.GetRow(20).GetCell(8).SetCellValue(dr2["p3"].ToString());
+                    ws.GetRow(21).GetCell(8).SetCellValue(dr2["z_pmax"].ToString());
+                    ws.GetRow(22).GetCell(8).SetCellValue(dr2["desc"].ToString());
 
-                ws.GetRow(49).GetCell(6).SetCellValue(dr2["desc"].ToString());
+
+                    ws.GetRow(45).GetCell(8).SetCellValue("-" + dr2["_p1"].ToString());
+                    ws.GetRow(46).GetCell(8).SetCellValue("-" + dr2["_p2"].ToString());
+                    ws.GetRow(47).GetCell(8).SetCellValue("-" + dr2["_p3"].ToString());
+                    ws.GetRow(48).GetCell(8).SetCellValue("-" + dr2["f_pmax"].ToString());
+
+                    ws.GetRow(49).GetCell(8).SetCellValue(dr2["desc"].ToString());
+                }
+                else
+                {
+                    ws.GetRow(18).GetCell(6).SetCellValue(dr2["p1"].ToString());
+                    ws.GetRow(19).GetCell(6).SetCellValue(dr2["p2"].ToString());
+                    ws.GetRow(20).GetCell(6).SetCellValue(dr2["p3"].ToString());
+                    ws.GetRow(21).GetCell(6).SetCellValue(dr2["z_pmax"].ToString());
+                    ws.GetRow(22).GetCell(6).SetCellValue(dr2["desc"].ToString());
+
+
+                    ws.GetRow(45).GetCell(6).SetCellValue("-" + dr2["_p1"].ToString());
+                    ws.GetRow(46).GetCell(6).SetCellValue("-" + dr2["_p2"].ToString());
+                    ws.GetRow(47).GetCell(6).SetCellValue("-" + dr2["_p3"].ToString());
+                    ws.GetRow(48).GetCell(6).SetCellValue("-" + dr2["f_pmax"].ToString());
+
+                    ws.GetRow(49).GetCell(6).SetCellValue(dr2["desc"].ToString());
+                }
             }
 
             DataTable kfy_Info3 = new DAL_dt_kfy_Info().GetkfyByCodeAndTong(_tempCode, "第3樘");
@@ -3931,10 +4077,10 @@ namespace text.doors.Common
                         ws.GetRow(15).GetCell(11).SetCellValue(dr3["z_three_p3jieduan"].ToString());
                         ws.GetRow(15).GetCell(12).SetCellValue(dr3["z_nd_p3jieduan"].ToString());
 
-                        ws.GetRow(42).GetCell(9).SetCellValue(dr3["f_one_p3jieduan"].ToString());
-                        ws.GetRow(42).GetCell(10).SetCellValue(dr3["f_two_p3jieduan"].ToString());
-                        ws.GetRow(42).GetCell(11).SetCellValue(dr3["f_three_p3jieduan"].ToString());
-                        ws.GetRow(42).GetCell(12).SetCellValue(dr3["f_nd_p3jieduan"].ToString());
+                        ws.GetRow(42).GetCell(9).SetCellValue("-" + dr3["f_one_p3jieduan"].ToString());
+                        ws.GetRow(42).GetCell(10).SetCellValue("-" + dr3["f_two_p3jieduan"].ToString());
+                        ws.GetRow(42).GetCell(11).SetCellValue("-" + dr3["f_three_p3jieduan"].ToString());
+                        ws.GetRow(42).GetCell(12).SetCellValue("-" + dr3["f_nd_p3jieduan"].ToString());
                     }
                     else if (i == 10)
                     {
@@ -3943,10 +4089,10 @@ namespace text.doors.Common
                         ws.GetRow(16).GetCell(11).SetCellValue(dr3["z_three_p3canyubianxing"].ToString());
                         ws.GetRow(16).GetCell(12).SetCellValue(dr3["z_nd_p3canyubianxing"].ToString());
 
-                        ws.GetRow(43).GetCell(9).SetCellValue(dr3["f_one_p3canyubianxing"].ToString());
-                        ws.GetRow(43).GetCell(10).SetCellValue(dr3["f_two_p3canyubianxing"].ToString());
-                        ws.GetRow(43).GetCell(11).SetCellValue(dr3["f_three_p3canyubianxing"].ToString());
-                        ws.GetRow(43).GetCell(12).SetCellValue(dr3["f_nd_p3canyubianxing"].ToString());
+                        ws.GetRow(43).GetCell(9).SetCellValue("-" + dr3["f_one_p3canyubianxing"].ToString());
+                        ws.GetRow(43).GetCell(10).SetCellValue("-" + dr3["f_two_p3canyubianxing"].ToString());
+                        ws.GetRow(43).GetCell(11).SetCellValue("-" + dr3["f_three_p3canyubianxing"].ToString());
+                        ws.GetRow(43).GetCell(12).SetCellValue("-" + dr3["f_nd_p3canyubianxing"].ToString());
                     }
                     else if (i == 11)
                     {
@@ -3955,38 +4101,72 @@ namespace text.doors.Common
                         ws.GetRow(17).GetCell(11).SetCellValue(dr3["z_three_pMaxcanyubianxing"].ToString());
                         ws.GetRow(17).GetCell(12).SetCellValue(dr3["z_nd_pMaxcanyubianxing"].ToString());
 
-                        ws.GetRow(44).GetCell(9).SetCellValue(dr3["f_one_pMaxcanyubianxing"].ToString());
-                        ws.GetRow(44).GetCell(10).SetCellValue(dr3["f_two_pMaxcanyubianxing"].ToString());
-                        ws.GetRow(44).GetCell(11).SetCellValue(dr3["f_three_pMaxcanyubianxing"].ToString());
-                        ws.GetRow(44).GetCell(12).SetCellValue(dr3["f_nd_pMaxcanyubianxing"].ToString());
+                        ws.GetRow(44).GetCell(9).SetCellValue("-" + dr3["f_one_pMaxcanyubianxing"].ToString());
+                        ws.GetRow(44).GetCell(10).SetCellValue("-" + dr3["f_two_pMaxcanyubianxing"].ToString());
+                        ws.GetRow(44).GetCell(11).SetCellValue("-" + dr3["f_three_pMaxcanyubianxing"].ToString());
+                        ws.GetRow(44).GetCell(12).SetCellValue("-" + dr3["f_nd_pMaxcanyubianxing"].ToString());
                     }
                     else
                     {
-                        ws.GetRow(i + 6).GetCell(9).SetCellValue(dr3["z_one_" + (databaseDefPa * i)].ToString());
-                        ws.GetRow(i + 6).GetCell(10).SetCellValue(dr3["z_two_" + (databaseDefPa * i)].ToString());
-                        ws.GetRow(i + 6).GetCell(11).SetCellValue(dr3["z_three_" + (databaseDefPa * i)].ToString());
-                        ws.GetRow(i + 6).GetCell(12).SetCellValue(dr3["z_nd_" + (databaseDefPa * i)].ToString());
 
-                        ws.GetRow(i + 33).GetCell(9).SetCellValue(dr3["f_one_" + (databaseDefPa * i)].ToString());
-                        ws.GetRow(i + 33).GetCell(10).SetCellValue(dr3["f_two_" + (databaseDefPa * i)].ToString());
-                        ws.GetRow(i + 33).GetCell(11).SetCellValue(dr3["f_three_" + (databaseDefPa * i)].ToString());
-                        ws.GetRow(i + 33).GetCell(12).SetCellValue(dr3["f_nd_" + (databaseDefPa * i)].ToString());
+                        if (dr3["z_nd_" + (databaseDefPa * i)].ToString() != "0.00")
+                        {
+                            ws.GetRow(i + 6).GetCell(9).SetCellValue(dr3["z_one_" + (databaseDefPa * i)].ToString());
+                            ws.GetRow(i + 6).GetCell(10).SetCellValue(dr3["z_two_" + (databaseDefPa * i)].ToString());
+                            ws.GetRow(i + 6).GetCell(11).SetCellValue(dr3["z_three_" + (databaseDefPa * i)].ToString());
+                            ws.GetRow(i + 6).GetCell(12).SetCellValue(double.Parse(dr3["z_nd_" + (databaseDefPa * i)].ToString()));
+
+                            //ws.GetRow(12 + i).GetCell(20).SetCellValue(dr3["z_nd_" + (databaseDefPa * i)].ToString());
+                        }
+
+                        if (dr3["f_nd_" + (databaseDefPa * i)].ToString() != "0.00")
+                        {
+                            ws.GetRow(i + 33).GetCell(9).SetCellValue("-" + dr3["f_one_" + (databaseDefPa * i)].ToString());
+                            ws.GetRow(i + 33).GetCell(10).SetCellValue("-" + dr3["f_two_" + (databaseDefPa * i)].ToString());
+                            ws.GetRow(i + 33).GetCell(11).SetCellValue("-" + dr3["f_three_" + (databaseDefPa * i)].ToString());
+                            ws.GetRow(i + 33).GetCell(12).SetCellValue(double.Parse("-" + dr3["f_nd_" + (databaseDefPa * i)].ToString()));
+
+                            //  ws.GetRow(12 + i).GetCell(20).SetCellValue("-" + dr3["f_nd_" + (databaseDefPa * i)].ToString());
+
+                        }
+
                     }
                 }
 
-                ws.GetRow(18).GetCell(10).SetCellValue(dr3["p1"].ToString());
-                ws.GetRow(19).GetCell(10).SetCellValue(dr3["p2"].ToString());
-                ws.GetRow(20).GetCell(10).SetCellValue(dr3["p3"].ToString());
-                ws.GetRow(21).GetCell(10).SetCellValue("");
+                var testytpe = int.Parse(dr3["testtype"].ToString());
+                if (testytpe == 2)
+                {
+                    ws.GetRow(18).GetCell(12).SetCellValue(dr3["p1"].ToString());
+                    ws.GetRow(19).GetCell(12).SetCellValue(dr3["p2"].ToString());
+                    ws.GetRow(20).GetCell(12).SetCellValue(dr3["p3"].ToString());
+                    ws.GetRow(21).GetCell(12).SetCellValue(dr3["z_pmax"].ToString());
+                    ws.GetRow(22).GetCell(12).SetCellValue(dr3["desc"].ToString());
 
-                ws.GetRow(45).GetCell(10).SetCellValue(dr3["_p1"].ToString());
-                ws.GetRow(46).GetCell(10).SetCellValue(dr3["_p2"].ToString());
-                ws.GetRow(47).GetCell(10).SetCellValue(dr3["_p3"].ToString());
-                ws.GetRow(48).GetCell(10).SetCellValue("");
+                    ws.GetRow(45).GetCell(12).SetCellValue("-" + dr3["_p1"].ToString());
+                    ws.GetRow(46).GetCell(12).SetCellValue("-" + dr3["_p2"].ToString());
+                    ws.GetRow(47).GetCell(12).SetCellValue("-" + dr3["_p3"].ToString());
+                    ws.GetRow(48).GetCell(12).SetCellValue("-" + dr3["f_pmax"].ToString());
+
+                    ws.GetRow(49).GetCell(12).SetCellValue(dr3["desc"].ToString());
+                }
+                else
+                {
+                    ws.GetRow(18).GetCell(10).SetCellValue(dr3["p1"].ToString());
+                    ws.GetRow(19).GetCell(10).SetCellValue(dr3["p2"].ToString());
+                    ws.GetRow(20).GetCell(10).SetCellValue(dr3["p3"].ToString());
+                    ws.GetRow(21).GetCell(10).SetCellValue(dr3["z_pmax"].ToString());
+                    ws.GetRow(21).GetCell(10).SetCellValue(dr3["z_pmax"].ToString());
+
+                    ws.GetRow(45).GetCell(10).SetCellValue("-" + dr3["_p1"].ToString());
+                    ws.GetRow(46).GetCell(10).SetCellValue("-" + dr3["_p2"].ToString());
+                    ws.GetRow(47).GetCell(10).SetCellValue("-" + dr3["_p3"].ToString());
+                    ws.GetRow(48).GetCell(10).SetCellValue("-" + dr3["f_pmax"].ToString());
 
 
-                ws.GetRow(49).GetCell(10).SetCellValue(dr3["desc"].ToString());
+                    ws.GetRow(49).GetCell(10).SetCellValue(dr3["desc"].ToString());
+                }
             }
+
             #endregion
 
 

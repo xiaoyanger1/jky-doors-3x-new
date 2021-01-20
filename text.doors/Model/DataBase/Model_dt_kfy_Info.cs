@@ -160,6 +160,8 @@ namespace text.doors.Model.DataBase
 
         public int lx { get; set; }
 
+        public int? testtype { get; set; }
+
 
     }
 }

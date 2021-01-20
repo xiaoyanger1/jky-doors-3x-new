@@ -31,6 +31,7 @@
             this.components = new System.ComponentModel.Container();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.btn_gcjc = new System.Windows.Forms.Button();
             this.groupBox6 = new System.Windows.Forms.GroupBox();
             this.btn_zp3cybx = new System.Windows.Forms.Button();
             this.btn_fpmax_cybx = new System.Windows.Forms.Button();
@@ -144,6 +145,7 @@
             // tabPage1
             // 
             this.tabPage1.BackColor = System.Drawing.Color.White;
+            this.tabPage1.Controls.Add(this.btn_gcjc);
             this.tabPage1.Controls.Add(this.groupBox6);
             this.tabPage1.Controls.Add(this.panel3);
             this.tabPage1.Controls.Add(this.btn_gbjc);
@@ -170,6 +172,16 @@
             this.tabPage1.Size = new System.Drawing.Size(1111, 761);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "抗风压检测";
+            // 
+            // btn_gcjc
+            // 
+            this.btn_gcjc.Location = new System.Drawing.Point(1019, 23);
+            this.btn_gcjc.Name = "btn_gcjc";
+            this.btn_gcjc.Size = new System.Drawing.Size(75, 23);
+            this.btn_gcjc.TabIndex = 23;
+            this.btn_gcjc.Text = "工程检测";
+            this.btn_gcjc.UseVisualStyleBackColor = true;
+            this.btn_gcjc.Click += new System.EventHandler(this.btn_gcjc_Click);
             // 
             // groupBox6
             // 
@@ -405,7 +417,7 @@
             this.txt_lx.Name = "txt_lx";
             this.txt_lx.Size = new System.Drawing.Size(61, 21);
             this.txt_lx.TabIndex = 30;
-            this.txt_lx.Text = "300";
+            this.txt_lx.Text = "375";
             // 
             // label26
             // 
@@ -923,7 +935,7 @@
             this.groupBox2.Controls.Add(this.rdb_DWDD1);
             this.groupBox2.Location = new System.Drawing.Point(876, 5);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(220, 47);
+            this.groupBox2.Size = new System.Drawing.Size(138, 47);
             this.groupBox2.TabIndex = 21;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "单扇单锁点位移选择";
@@ -1181,5 +1193,6 @@
         private System.Windows.Forms.Label lbl_wy3;
         private System.Windows.Forms.Label lbl_wy2;
         private System.Windows.Forms.Label lbl_wy1;
+        private System.Windows.Forms.Button btn_gcjc;
     }
 }

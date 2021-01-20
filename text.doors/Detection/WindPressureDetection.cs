@@ -39,6 +39,8 @@ namespace text.doors.Detection
         public static double _displace2 = 0;
         public static double _displace3 = 0;
 
+        public static bool IsGCJC = false;
+
 
         public List<WindPressureDGV> windPressureDGV = new List<WindPressureDGV>();
         /// <summary>
@@ -262,16 +264,36 @@ namespace text.doors.Detection
         private List<WindPressureDGV> GetWindPressureDGV()
         {
             windPressureDGV = new List<WindPressureDGV>();
-            if (int.Parse(txt_gbjc.Text) == 0)
+
+            if (_serialPortClient.sp.IsOpen)
             {
-                return windPressureDGV;
+                if (int.Parse(txt_gbjc.Text) == 0)
+                {
+                    return windPressureDGV;
+                }
             }
             var dt = new DAL_dt_kfy_Info().GetkfyByCodeAndTong(_tempCode, _tempTong);
             if (dt != null && dt.Rows.Count > 0)
             {
                 DataRow dr = dt.Rows[0];
-                //极差
-                //txt_gbjc.Text = dr["defJC"].ToString();
+                if (!_serialPortClient.sp.IsOpen)
+                {
+                    //极差
+                    txt_gbjc.Text = dr["defJC"].ToString();
+                }
+
+                IsGCJC = int.Parse(dr["testtype"].ToString()) == 2 ? true : false;
+
+                if (IsGCJC)
+                {
+                    btn_gcjc.BackColor = Color.Green;
+                }
+                else
+                {
+                    btn_gcjc.BackColor = Color.Transparent;
+                }
+
+
                 txt_lx.Text = dr["lx"].ToString();
                 txt_desc.Text = dr["desc"].ToString();
                 //绑定锁点
@@ -601,6 +623,7 @@ namespace text.doors.Detection
             model._p2 = txt_f_p2.Text;
             model._p3 = txt_f_p3.Text;
 
+            model.testtype = IsGCJC == true ? 2 : 1;
             model.pMax = txt_zpmax.Text;
             model._pMax = txt_fpmax.Text;
             model.desc = txt_desc.Text;
@@ -1626,6 +1649,22 @@ namespace text.doors.Detection
         private void button12_Click(object sender, EventArgs e)
         {
             this.Close();
+        }
+
+
+
+        private void btn_gcjc_Click(object sender, EventArgs e)
+        {
+            IsGCJC = !IsGCJC;
+
+            if (IsGCJC)
+            {
+                btn_gcjc.BackColor = Color.Green;
+            }
+            else
+            {
+                btn_gcjc.BackColor = Color.Transparent;
+            }
         }
     }
 }

@@ -1,0 +1,233 @@
+------------------------------------------------------------
+2021-01-16 10:52:04,498 [1] - System.FormatException: 输入字符串的格式不正确。
+   在 System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   在 System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   在 System.Int32.Parse(String s)
+   在 text.doors.Common.ExportExcel.ExportData(String outFilePath) 位置 E:\08-GitHub\jky-doors-3x-new\text.doors\Common\ExportExcel.cs:行号 3837
+   在 text.doors.Login..ctor() 位置 E:\08-GitHub\jky-doors-3x-new\text.doors\User\Login.cs:行号 25
+   在 text.doors.Program.Main() 位置 E:\08-GitHub\jky-doors-3x-new\text.doors\Program.cs:行号 41
+------------------------------------------------------------
+------------------------------------------------------------
+------------------------------------------------------------
+------------------------------------------------------------
+2021-01-16 11:14:59,798 [1] - System.ArgumentException: 列“pMax”不属于表 Table。
+   在 System.Data.DataRow.GetDataColumn(String columnName)
+   在 System.Data.DataRow.get_Item(String columnName)
+   在 text.doors.dal.DAL_dt_Settings.GetInfoByCode(String code) 位置 E:\08-GitHub\jky-doors-3x-new\text.doors\Service\DAL_dt_Settings.cs:行号 513
+   在 text.doors.Common.ExportExcel.ExportData(String outFilePath) 位置 E:\08-GitHub\jky-doors-3x-new\text.doors\Common\ExportExcel.cs:行号 39
+   在 text.doors.Login..ctor() 位置 E:\08-GitHub\jky-doors-3x-new\text.doors\User\Login.cs:行号 25
+   在 text.doors.Program.Main() 位置 E:\08-GitHub\jky-doors-3x-new\text.doors\Program.cs:行号 41
+------------------------------------------------------------
+------------------------------------------------------------
+------------------------------------------------------------
+2021-01-16 11:21:48,624 [1] - System.IO.IOException: 文件“E:\建筑外窗（门）气密、水密、抗风压性能检测报告_20210114-4.xls”正由另一进程使用，因此该进程无法访问此文件。
+   在 System.IO.__Error.WinIOError(Int32 errorCode, String maybeFullPath)
+   在 System.IO.FileStream.Init(String path, FileMode mode, FileAccess access, Int32 rights, Boolean useRights, FileShare share, Int32 bufferSize, FileOptions options, SECURITY_ATTRIBUTES secAttrs, String msgPath, Boolean bFromProxy, Boolean useLongPath, Boolean checkHost)
+   在 System.IO.FileStream..ctor(String path, FileMode mode, FileAccess access, FileShare share)
+   在 System.IO.File.OpenWrite(String path)
+   在 text.doors.Common.ExportExcel.ExportData(String outFilePath) 位置 E:\08-GitHub\jky-doors-3x-new\text.doors\Common\ExportExcel.cs:行号 4055
+   在 text.doors.Login..ctor() 位置 E:\08-GitHub\jky-doors-3x-new\text.doors\User\Login.cs:行号 25
+   在 text.doors.Program.Main() 位置 E:\08-GitHub\jky-doors-3x-new\text.doors\Program.cs:行号 41
+------------------------------------------------------------
+------------------------------------------------------------
+2021-01-16 11:40:48,442 [1] - System.IO.IOException: 文件“E:\建筑外窗（门）气密、水密、抗风压性能检测报告_20210114-4.xls”正由另一进程使用，因此该进程无法访问此文件。
+   在 System.IO.__Error.WinIOError(Int32 errorCode, String maybeFullPath)
+   在 System.IO.FileStream.Init(String path, FileMode mode, FileAccess access, Int32 rights, Boolean useRights, FileShare share, Int32 bufferSize, FileOptions options, SECURITY_ATTRIBUTES secAttrs, String msgPath, Boolean bFromProxy, Boolean useLongPath, Boolean checkHost)
+   在 System.IO.FileStream..ctor(String path, FileMode mode, FileAccess access, FileShare share)
+   在 System.IO.File.OpenWrite(String path)
+   在 text.doors.Common.ExportExcel.ExportData(String outFilePath) 位置 E:\08-GitHub\jky-doors-3x-new\text.doors\Common\ExportExcel.cs:行号 4090
+   在 text.doors.Login..ctor() 位置 E:\08-GitHub\jky-doors-3x-new\text.doors\User\Login.cs:行号 25
+   在 text.doors.Program.Main() 位置 E:\08-GitHub\jky-doors-3x-new\text.doors\Program.cs:行号 41
+------------------------------------------------------------
+------------------------------------------------------------
+2021-01-16 12:07:47,531 [1] - System.IO.IOException: 文件“E:\建筑外窗（门）气密、水密、抗风压性能检测报告_20210114-4.xls”正由另一进程使用，因此该进程无法访问此文件。
+   在 System.IO.__Error.WinIOError(Int32 errorCode, String maybeFullPath)
+   在 System.IO.FileStream.Init(String path, FileMode mode, FileAccess access, Int32 rights, Boolean useRights, FileShare share, Int32 bufferSize, FileOptions options, SECURITY_ATTRIBUTES secAttrs, String msgPath, Boolean bFromProxy, Boolean useLongPath, Boolean checkHost)
+   在 System.IO.FileStream..ctor(String path, FileMode mode, FileAccess access, FileShare share)
+   在 System.IO.File.OpenWrite(String path)
+   在 text.doors.Common.ExportExcel.ExportData(String outFilePath) 位置 E:\08-GitHub\jky-doors-3x-new\text.doors\Common\ExportExcel.cs:行号 4106
+   在 text.doors.Login..ctor() 位置 E:\08-GitHub\jky-doors-3x-new\text.doors\User\Login.cs:行号 25
+   在 text.doors.Program.Main() 位置 E:\08-GitHub\jky-doors-3x-new\text.doors\Program.cs:行号 41
+------------------------------------------------------------
+------------------------------------------------------------
+2021-01-16 12:08:54,158 [1] - System.IO.IOException: 文件“E:\建筑外窗（门）气密、水密、抗风压性能检测报告_20210114-4.xls”正由另一进程使用，因此该进程无法访问此文件。
+   在 System.IO.__Error.WinIOError(Int32 errorCode, String maybeFullPath)
+   在 System.IO.FileStream.Init(String path, FileMode mode, FileAccess access, Int32 rights, Boolean useRights, FileShare share, Int32 bufferSize, FileOptions options, SECURITY_ATTRIBUTES secAttrs, String msgPath, Boolean bFromProxy, Boolean useLongPath, Boolean checkHost)
+   在 System.IO.FileStream..ctor(String path, FileMode mode, FileAccess access, FileShare share)
+   在 System.IO.File.OpenWrite(String path)
+   在 text.doors.Common.ExportExcel.ExportData(String outFilePath) 位置 E:\08-GitHub\jky-doors-3x-new\text.doors\Common\ExportExcel.cs:行号 4106
+   在 text.doors.Login..ctor() 位置 E:\08-GitHub\jky-doors-3x-new\text.doors\User\Login.cs:行号 25
+   在 text.doors.Program.Main() 位置 E:\08-GitHub\jky-doors-3x-new\text.doors\Program.cs:行号 41
+------------------------------------------------------------
+2021-01-16 12:14:56,955 [1] - System.IO.IOException: 文件“E:\建筑外窗（门）气密、水密、抗风压性能检测报告_20210114-4.xls”正由另一进程使用，因此该进程无法访问此文件。
+   在 System.IO.__Error.WinIOError(Int32 errorCode, String maybeFullPath)
+   在 System.IO.FileStream.Init(String path, FileMode mode, FileAccess access, Int32 rights, Boolean useRights, FileShare share, Int32 bufferSize, FileOptions options, SECURITY_ATTRIBUTES secAttrs, String msgPath, Boolean bFromProxy, Boolean useLongPath, Boolean checkHost)
+   在 System.IO.FileStream..ctor(String path, FileMode mode, FileAccess access, FileShare share)
+   在 System.IO.File.OpenWrite(String path)
+   在 text.doors.Common.ExportExcel.ExportData(String outFilePath) 位置 E:\08-GitHub\jky-doors-3x-new\text.doors\Common\ExportExcel.cs:行号 4106
+   在 text.doors.Login..ctor() 位置 E:\08-GitHub\jky-doors-3x-new\text.doors\User\Login.cs:行号 25
+   在 text.doors.Program.Main() 位置 E:\08-GitHub\jky-doors-3x-new\text.doors\Program.cs:行号 41
+------------------------------------------------------------
+------------------------------------------------------------
+2021-01-16 12:17:19,506 [1] - System.IO.IOException: 文件“E:\建筑外窗（门）气密、水密、抗风压性能检测报告_20210114-4.xls”正由另一进程使用，因此该进程无法访问此文件。
+   在 System.IO.__Error.WinIOError(Int32 errorCode, String maybeFullPath)
+   在 System.IO.FileStream.Init(String path, FileMode mode, FileAccess access, Int32 rights, Boolean useRights, FileShare share, Int32 bufferSize, FileOptions options, SECURITY_ATTRIBUTES secAttrs, String msgPath, Boolean bFromProxy, Boolean useLongPath, Boolean checkHost)
+   在 System.IO.FileStream..ctor(String path, FileMode mode, FileAccess access, FileShare share)
+   在 System.IO.File.OpenWrite(String path)
+   在 text.doors.Common.ExportExcel.ExportData(String outFilePath) 位置 E:\08-GitHub\jky-doors-3x-new\text.doors\Common\ExportExcel.cs:行号 4116
+   在 text.doors.Login..ctor() 位置 E:\08-GitHub\jky-doors-3x-new\text.doors\User\Login.cs:行号 25
+   在 text.doors.Program.Main() 位置 E:\08-GitHub\jky-doors-3x-new\text.doors\Program.cs:行号 41
+------------------------------------------------------------
+------------------------------------------------------------
+------------------------------------------------------------
+------------------------------------------------------------
+2021-01-16 14:42:43,481 [1] - System.IO.IOException: 文件“E:\建筑外窗（门）气密、水密、抗风压性能检测报告_20210114-4.xls”正由另一进程使用，因此该进程无法访问此文件。
+   在 System.IO.__Error.WinIOError(Int32 errorCode, String maybeFullPath)
+   在 System.IO.FileStream.Init(String path, FileMode mode, FileAccess access, Int32 rights, Boolean useRights, FileShare share, Int32 bufferSize, FileOptions options, SECURITY_ATTRIBUTES secAttrs, String msgPath, Boolean bFromProxy, Boolean useLongPath, Boolean checkHost)
+   在 System.IO.FileStream..ctor(String path, FileMode mode, FileAccess access, FileShare share)
+   在 System.IO.File.OpenWrite(String path)
+   在 text.doors.Common.ExportExcel.ExportData(String outFilePath) 位置 E:\08-GitHub\jky-doors-3x-new\text.doors\Common\ExportExcel.cs:行号 4123
+   在 text.doors.Login..ctor() 位置 E:\08-GitHub\jky-doors-3x-new\text.doors\User\Login.cs:行号 25
+   在 text.doors.Program.Main() 位置 E:\08-GitHub\jky-doors-3x-new\text.doors\Program.cs:行号 41
+------------------------------------------------------------
+------------------------------------------------------------
+------------------------------------------------------------
+2021-01-16 15:05:52,470 [1] - System.IO.IOException: 文件“E:\建筑外窗（门）气密、水密、抗风压性能检测报告_20210114-4.xls”正由另一进程使用，因此该进程无法访问此文件。
+   在 System.IO.__Error.WinIOError(Int32 errorCode, String maybeFullPath)
+   在 System.IO.FileStream.Init(String path, FileMode mode, FileAccess access, Int32 rights, Boolean useRights, FileShare share, Int32 bufferSize, FileOptions options, SECURITY_ATTRIBUTES secAttrs, String msgPath, Boolean bFromProxy, Boolean useLongPath, Boolean checkHost)
+   在 System.IO.FileStream..ctor(String path, FileMode mode, FileAccess access, FileShare share)
+   在 System.IO.File.OpenWrite(String path)
+   在 text.doors.Common.ExportExcel.ExportData(String outFilePath) 位置 E:\08-GitHub\jky-doors-3x-new\text.doors\Common\ExportExcel.cs:行号 4124
+   在 text.doors.Login..ctor() 位置 E:\08-GitHub\jky-doors-3x-new\text.doors\User\Login.cs:行号 25
+   在 text.doors.Program.Main() 位置 E:\08-GitHub\jky-doors-3x-new\text.doors\Program.cs:行号 41
+------------------------------------------------------------
+------------------------------------------------------------
+2021-01-16 15:10:41,744 [1] - System.IO.IOException: 文件“E:\建筑外窗（门）气密、水密、抗风压性能检测报告_20210114-4.xls”正由另一进程使用，因此该进程无法访问此文件。
+   在 System.IO.__Error.WinIOError(Int32 errorCode, String maybeFullPath)
+   在 System.IO.FileStream.Init(String path, FileMode mode, FileAccess access, Int32 rights, Boolean useRights, FileShare share, Int32 bufferSize, FileOptions options, SECURITY_ATTRIBUTES secAttrs, String msgPath, Boolean bFromProxy, Boolean useLongPath, Boolean checkHost)
+   在 System.IO.FileStream..ctor(String path, FileMode mode, FileAccess access, FileShare share)
+   在 System.IO.File.OpenWrite(String path)
+   在 text.doors.Common.ExportExcel.ExportData(String outFilePath) 位置 E:\08-GitHub\jky-doors-3x-new\text.doors\Common\ExportExcel.cs:行号 4129
+   在 text.doors.Login..ctor() 位置 E:\08-GitHub\jky-doors-3x-new\text.doors\User\Login.cs:行号 25
+   在 text.doors.Program.Main() 位置 E:\08-GitHub\jky-doors-3x-new\text.doors\Program.cs:行号 41
+------------------------------------------------------------
+------------------------------------------------------------
+------------------------------------------------------------
+------------------------------------------------------------
+2021-01-16 16:10:09,648 [1] - System.IO.IOException: 文件“E:\建筑外窗（门）气密、水密、抗风压性能检测报告_20210114-4.xls”正由另一进程使用，因此该进程无法访问此文件。
+   在 System.IO.__Error.WinIOError(Int32 errorCode, String maybeFullPath)
+   在 System.IO.FileStream.Init(String path, FileMode mode, FileAccess access, Int32 rights, Boolean useRights, FileShare share, Int32 bufferSize, FileOptions options, SECURITY_ATTRIBUTES secAttrs, String msgPath, Boolean bFromProxy, Boolean useLongPath, Boolean checkHost)
+   在 System.IO.FileStream..ctor(String path, FileMode mode, FileAccess access, FileShare share)
+   在 System.IO.File.OpenWrite(String path)
+   在 text.doors.Common.ExportExcel.ExportData(String outFilePath) 位置 E:\08-GitHub\jky-doors-3x-new\text.doors\Common\ExportExcel.cs:行号 4115
+   在 text.doors.Login..ctor() 位置 E:\08-GitHub\jky-doors-3x-new\text.doors\User\Login.cs:行号 25
+   在 text.doors.Program.Main() 位置 E:\08-GitHub\jky-doors-3x-new\text.doors\Program.cs:行号 41
+------------------------------------------------------------
+------------------------------------------------------------
+2021-01-16 16:12:57,781 [1] - System.IO.FileNotFoundException: 未能找到文件“E:\08-GitHub\jky-doors-3x-new\text.doors\bin\Debug\template\basedata.xls”。
+文件名:“E:\08-GitHub\jky-doors-3x-new\text.doors\bin\Debug\template\basedata.xls”
+   在 System.IO.__Error.WinIOError(Int32 errorCode, String maybeFullPath)
+   在 System.IO.FileStream.Init(String path, FileMode mode, FileAccess access, Int32 rights, Boolean useRights, FileShare share, Int32 bufferSize, FileOptions options, SECURITY_ATTRIBUTES secAttrs, String msgPath, Boolean bFromProxy, Boolean useLongPath, Boolean checkHost)
+   在 System.IO.FileStream..ctor(String path, FileMode mode, FileAccess access)
+   在 text.doors.Common.ExportExcel.ExportData(String outFilePath) 位置 E:\08-GitHub\jky-doors-3x-new\text.doors\Common\ExportExcel.cs:行号 41
+   在 text.doors.Login..ctor() 位置 E:\08-GitHub\jky-doors-3x-new\text.doors\User\Login.cs:行号 25
+   在 text.doors.Program.Main() 位置 E:\08-GitHub\jky-doors-3x-new\text.doors\Program.cs:行号 41
+------------------------------------------------------------
+2021-01-16 16:13:42,345 [1] - System.IO.FileNotFoundException: 未能找到文件“E:\08-GitHub\jky-doors-3x-new\text.doors\bin\Debug\template\basedata..xlsx”。
+文件名:“E:\08-GitHub\jky-doors-3x-new\text.doors\bin\Debug\template\basedata..xlsx”
+   在 System.IO.__Error.WinIOError(Int32 errorCode, String maybeFullPath)
+   在 System.IO.FileStream.Init(String path, FileMode mode, FileAccess access, Int32 rights, Boolean useRights, FileShare share, Int32 bufferSize, FileOptions options, SECURITY_ATTRIBUTES secAttrs, String msgPath, Boolean bFromProxy, Boolean useLongPath, Boolean checkHost)
+   在 System.IO.FileStream..ctor(String path, FileMode mode, FileAccess access)
+   在 text.doors.Common.ExportExcel.ExportData(String outFilePath) 位置 E:\08-GitHub\jky-doors-3x-new\text.doors\Common\ExportExcel.cs:行号 41
+   在 text.doors.Login..ctor() 位置 E:\08-GitHub\jky-doors-3x-new\text.doors\User\Login.cs:行号 25
+   在 text.doors.Program.Main() 位置 E:\08-GitHub\jky-doors-3x-new\text.doors\Program.cs:行号 41
+------------------------------------------------------------
+2021-01-16 16:15:38,770 [1] - NPOI.POIFS.FileSystem.OfficeXmlFileException: The supplied data appears to be in the Office 2007+ XML. You are calling the part of POI that deals with OLE2 Office Documents. You need to call a different part of POI to process this data (eg XSSF instead of HSSF)
+   在 NPOI.POIFS.Storage.HeaderBlock.PrivateHeaderBlock(Byte[] data)
+   在 NPOI.POIFS.Storage.HeaderBlock..ctor(Stream stream)
+   在 NPOI.POIFS.FileSystem.POIFSFileSystem..ctor(Stream stream)
+   在 NPOI.HSSF.UserModel.HSSFWorkbook..ctor(Stream s)
+   在 text.doors.Common.ExportExcel.ExportData(String outFilePath) 位置 E:\08-GitHub\jky-doors-3x-new\text.doors\Common\ExportExcel.cs:行号 42
+   在 text.doors.Login..ctor() 位置 E:\08-GitHub\jky-doors-3x-new\text.doors\User\Login.cs:行号 25
+   在 text.doors.Program.Main() 位置 E:\08-GitHub\jky-doors-3x-new\text.doors\Program.cs:行号 41
+------------------------------------------------------------
+2021-01-16 16:37:41,641 [1] - System.IO.FileNotFoundException: 未能找到文件“E:\08-GitHub\jky-doors-3x-new\text.doors\bin\Debug\template\basedata.xlsx”。
+文件名:“E:\08-GitHub\jky-doors-3x-new\text.doors\bin\Debug\template\basedata.xlsx”
+   在 System.IO.__Error.WinIOError(Int32 errorCode, String maybeFullPath)
+   在 System.IO.FileStream.Init(String path, FileMode mode, FileAccess access, Int32 rights, Boolean useRights, FileShare share, Int32 bufferSize, FileOptions options, SECURITY_ATTRIBUTES secAttrs, String msgPath, Boolean bFromProxy, Boolean useLongPath, Boolean checkHost)
+   在 System.IO.FileStream..ctor(String path, FileMode mode, FileAccess access)
+   在 text.doors.Common.ExportExcel.ExportData(String outFilePath) 位置 E:\08-GitHub\jky-doors-3x-new\text.doors\Common\ExportExcel.cs:行号 41
+   在 text.doors.Login..ctor() 位置 E:\08-GitHub\jky-doors-3x-new\text.doors\User\Login.cs:行号 25
+   在 text.doors.Program.Main() 位置 E:\08-GitHub\jky-doors-3x-new\text.doors\Program.cs:行号 41
+------------------------------------------------------------
+2021-01-16 16:50:36,447 [1] - System.InvalidOperationException: Cannot get a numeric value from a text cell
+   在 NPOI.HSSF.UserModel.HSSFCell.get_NumericCellValue()
+   在 NPOI.HSSF.UserModel.HSSFCell.SetCellType(CellType cellType, Boolean setValue, Int32 row, Int32 col, Int16 styleIndex)
+   在 NPOI.HSSF.UserModel.HSSFCell.SetCellType(CellType cellType)
+   在 text.doors.Common.ExportExcel.ExportData(String outFilePath) 位置 E:\08-GitHub\jky-doors-3x-new\text.doors\Common\ExportExcel.cs:行号 4009
+   在 text.doors.Login..ctor() 位置 E:\08-GitHub\jky-doors-3x-new\text.doors\User\Login.cs:行号 25
+   在 text.doors.Program.Main() 位置 E:\08-GitHub\jky-doors-3x-new\text.doors\Program.cs:行号 41
+------------------------------------------------------------
+2021-01-16 16:59:05,265 [1] - System.IO.FileNotFoundException: 未能找到文件“E:\08-GitHub\jky-doors-3x-new\text.doors\bin\Debug\template\basedata.xlsx”。
+文件名:“E:\08-GitHub\jky-doors-3x-new\text.doors\bin\Debug\template\basedata.xlsx”
+   在 System.IO.__Error.WinIOError(Int32 errorCode, String maybeFullPath)
+   在 System.IO.FileStream.Init(String path, FileMode mode, FileAccess access, Int32 rights, Boolean useRights, FileShare share, Int32 bufferSize, FileOptions options, SECURITY_ATTRIBUTES secAttrs, String msgPath, Boolean bFromProxy, Boolean useLongPath, Boolean checkHost)
+   在 System.IO.FileStream..ctor(String path, FileMode mode, FileAccess access)
+   在 text.doors.Common.ExportExcel.ExportData(String outFilePath) 位置 E:\08-GitHub\jky-doors-3x-new\text.doors\Common\ExportExcel.cs:行号 41
+   在 text.doors.Login..ctor() 位置 E:\08-GitHub\jky-doors-3x-new\text.doors\User\Login.cs:行号 25
+   在 text.doors.Program.Main() 位置 E:\08-GitHub\jky-doors-3x-new\text.doors\Program.cs:行号 41
+------------------------------------------------------------
+------------------------------------------------------------
+------------------------------------------------------------
+------------------------------------------------------------
+2021-01-16 17:58:46,627 [1] - System.IO.IOException: 文件“E:\08-GitHub\jky-doors-3x-new\text.doors\bin\Debug\template\basedata.xls”正由另一进程使用，因此该进程无法访问此文件。
+   在 System.IO.__Error.WinIOError(Int32 errorCode, String maybeFullPath)
+   在 System.IO.FileStream.Init(String path, FileMode mode, FileAccess access, Int32 rights, Boolean useRights, FileShare share, Int32 bufferSize, FileOptions options, SECURITY_ATTRIBUTES secAttrs, String msgPath, Boolean bFromProxy, Boolean useLongPath, Boolean checkHost)
+   在 System.IO.FileStream..ctor(String path, FileMode mode, FileAccess access)
+   在 text.doors.Common.ExportExcel.ExportData(String outFilePath) 位置 E:\08-GitHub\jky-doors-3x-new\text.doors\Common\ExportExcel.cs:行号 41
+   在 text.doors.Login..ctor() 位置 E:\08-GitHub\jky-doors-3x-new\text.doors\User\Login.cs:行号 25
+   在 text.doors.Program.Main() 位置 E:\08-GitHub\jky-doors-3x-new\text.doors\Program.cs:行号 41
+------------------------------------------------------------
+------------------------------------------------------------
+2021-01-16 18:13:21,475 [1] - System.IO.IOException: 文件“E:\建筑外窗（门）气密、水密、抗风压性能检测报告_20210116-2.xls”正由另一进程使用，因此该进程无法访问此文件。
+   在 System.IO.__Error.WinIOError(Int32 errorCode, String maybeFullPath)
+   在 System.IO.FileStream.Init(String path, FileMode mode, FileAccess access, Int32 rights, Boolean useRights, FileShare share, Int32 bufferSize, FileOptions options, SECURITY_ATTRIBUTES secAttrs, String msgPath, Boolean bFromProxy, Boolean useLongPath, Boolean checkHost)
+   在 System.IO.FileStream..ctor(String path, FileMode mode, FileAccess access, FileShare share)
+   在 System.IO.File.OpenWrite(String path)
+   在 text.doors.Common.ExportExcel.ExportData(String outFilePath) 位置 E:\08-GitHub\jky-doors-3x-new\text.doors\Common\ExportExcel.cs:行号 4128
+   在 text.doors.Login..ctor() 位置 E:\08-GitHub\jky-doors-3x-new\text.doors\User\Login.cs:行号 25
+   在 text.doors.Program.Main() 位置 E:\08-GitHub\jky-doors-3x-new\text.doors\Program.cs:行号 41
+------------------------------------------------------------
+2021-01-16 20:16:25,179 [1] - System.IO.IOException: 文件“E:\08-GitHub\jky-doors-3x-new\text.doors\bin\Debug\template\basedata.xls”正由另一进程使用，因此该进程无法访问此文件。
+   在 System.IO.__Error.WinIOError(Int32 errorCode, String maybeFullPath)
+   在 System.IO.FileStream.Init(String path, FileMode mode, FileAccess access, Int32 rights, Boolean useRights, FileShare share, Int32 bufferSize, FileOptions options, SECURITY_ATTRIBUTES secAttrs, String msgPath, Boolean bFromProxy, Boolean useLongPath, Boolean checkHost)
+   在 System.IO.FileStream..ctor(String path, FileMode mode, FileAccess access)
+   在 text.doors.Common.ExportExcel.ExportData(String outFilePath) 位置 E:\08-GitHub\jky-doors-3x-new\text.doors\Common\ExportExcel.cs:行号 41
+   在 text.doors.Login..ctor() 位置 E:\08-GitHub\jky-doors-3x-new\text.doors\User\Login.cs:行号 25
+   在 text.doors.Program.Main() 位置 E:\08-GitHub\jky-doors-3x-new\text.doors\Program.cs:行号 41
+------------------------------------------------------------
+2021-01-16 20:20:37,336 [1] - System.IO.IOException: 文件“E:\08-GitHub\jky-doors-3x-new\text.doors\bin\Debug\template\basedata.xls”正由另一进程使用，因此该进程无法访问此文件。
+   在 System.IO.__Error.WinIOError(Int32 errorCode, String maybeFullPath)
+   在 System.IO.FileStream.Init(String path, FileMode mode, FileAccess access, Int32 rights, Boolean useRights, FileShare share, Int32 bufferSize, FileOptions options, SECURITY_ATTRIBUTES secAttrs, String msgPath, Boolean bFromProxy, Boolean useLongPath, Boolean checkHost)
+   在 System.IO.FileStream..ctor(String path, FileMode mode, FileAccess access)
+   在 text.doors.Common.ExportExcel.ExportData(String outFilePath) 位置 E:\08-GitHub\jky-doors-3x-new\text.doors\Common\ExportExcel.cs:行号 41
+   在 text.doors.Login..ctor() 位置 E:\08-GitHub\jky-doors-3x-new\text.doors\User\Login.cs:行号 25
+   在 text.doors.Program.Main() 位置 E:\08-GitHub\jky-doors-3x-new\text.doors\Program.cs:行号 41
+------------------------------------------------------------
+2021-01-16 20:25:01,670 [1] - System.IO.IOException: 文件“E:\08-GitHub\jky-doors-3x-new\text.doors\bin\Debug\template\basedata.xls”正由另一进程使用，因此该进程无法访问此文件。
+   在 System.IO.__Error.WinIOError(Int32 errorCode, String maybeFullPath)
+   在 System.IO.FileStream.Init(String path, FileMode mode, FileAccess access, Int32 rights, Boolean useRights, FileShare share, Int32 bufferSize, FileOptions options, SECURITY_ATTRIBUTES secAttrs, String msgPath, Boolean bFromProxy, Boolean useLongPath, Boolean checkHost)
+   在 System.IO.FileStream..ctor(String path, FileMode mode, FileAccess access)
+   在 text.doors.Common.ExportExcel.ExportData(String outFilePath) 位置 E:\08-GitHub\jky-doors-3x-new\text.doors\Common\ExportExcel.cs:行号 41
+   在 text.doors.Login..ctor() 位置 E:\08-GitHub\jky-doors-3x-new\text.doors\User\Login.cs:行号 25
+   在 text.doors.Program.Main() 位置 E:\08-GitHub\jky-doors-3x-new\text.doors\Program.cs:行号 41
+------------------------------------------------------------
+2021-01-16 20:30:31,755 [1] - System.IO.IOException: 文件“E:\08-GitHub\jky-doors-3x-new\text.doors\bin\Debug\template\basedata.xls”正由另一进程使用，因此该进程无法访问此文件。
+   在 System.IO.__Error.WinIOError(Int32 errorCode, String maybeFullPath)
+   在 System.IO.FileStream.Init(String path, FileMode mode, FileAccess access, Int32 rights, Boolean useRights, FileShare share, Int32 bufferSize, FileOptions options, SECURITY_ATTRIBUTES secAttrs, String msgPath, Boolean bFromProxy, Boolean useLongPath, Boolean checkHost)
+   在 System.IO.FileStream..ctor(String path, FileMode mode, FileAccess access)
+   在 text.doors.Common.ExportExcel.ExportData(String outFilePath) 位置 E:\08-GitHub\jky-doors-3x-new\text.doors\Common\ExportExcel.cs:行号 41
+   在 text.doors.Login..ctor() 位置 E:\08-GitHub\jky-doors-3x-new\text.doors\User\Login.cs:行号 25
+   在 text.doors.Program.Main() 位置 E:\08-GitHub\jky-doors-3x-new\text.doors\Program.cs:行号 41
+------------------------------------------------------------
+------------------------------------------------------------
