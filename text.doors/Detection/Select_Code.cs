@@ -17,22 +17,34 @@ namespace text.doors.Detection
         public Select_Code()
         {
             InitializeComponent();
+
+            Init();
+
+        }
+        public void Init()
+        {
+            var list = new DAL_dt_Settings().GetCodeList();
+            cbb_code.DataSource = list;
+            cbb_code.DisplayMember = "name";
+            cbb_code.ValueMember = "id";
+            cbb_code.SelectedIndex = 0;
+
         }
 
         private void btn_Clone_Click(object sender, EventArgs e)
         {
             this.Close();
         }
-        
+        //
         private void btn_Ok_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrWhiteSpace(txt_Code.Text))
+            if (string.IsNullOrWhiteSpace(cbb_code.Text))
             {
                 MessageBox.Show("请输入编号", " 警告", MessageBoxButtons.OKCancel, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
                 return;
             }
 
-            DataTable dt = new DAL_dt_Settings().Getdt_SettingsByCode(txt_Code.Text);
+            DataTable dt = new DAL_dt_Settings().Getdt_SettingsByCode(cbb_code.Text);
 
             if (dt == null)
             {
@@ -65,5 +77,11 @@ namespace text.doors.Detection
             public string Tong { get { return _tong; } }
         }
 
+    }
+
+    public class DictName
+    {
+        public int id { get; set; }
+        public string name { get; set; }
     }
 }
