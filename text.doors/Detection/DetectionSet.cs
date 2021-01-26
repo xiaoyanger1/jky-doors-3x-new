@@ -211,11 +211,11 @@ namespace text.doors.Detection
                 {
                     txt_jianceshuliang.Text = "3";
                 }
-                if (_temppressure != 0 && _temperature != 0)
-                {
-                    txt_DaQiYaLi.Text = _temppressure.ToString();
-                    txt_DangQianWenDu.Text = _temperature.ToString();
-                }
+                //if (_temppressure != 0 && _temperature != 0)
+                //{
+                //    txt_DaQiYaLi.Text = _temppressure.ToString();
+                //    txt_DangQianWenDu.Text = _temperature.ToString();
+                //}
             }
             catch (Exception ex)
             {
@@ -303,7 +303,11 @@ namespace text.doors.Detection
             this.btn_select.Enabled = false;
             this.btn_delete.Enabled = false;
             this.btn_Ok.Enabled = true;
-
+            if (_temppressure != 0 && _temperature != 0)
+            {
+                txt_DaQiYaLi.Text = _temppressure.ToString();
+                txt_DangQianWenDu.Text = _temperature.ToString();
+            }
             BindDangQianDangHao();
         }
 

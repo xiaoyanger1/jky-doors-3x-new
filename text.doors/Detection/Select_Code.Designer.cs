@@ -89,7 +89,7 @@
             this.MinimizeBox = false;
             this.Name = "Select_Code";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "查询以往登录数据";
+            this.Text = "查询以往数据";
             this.TopMost = true;
             this.ResumeLayout(false);
             this.PerformLayout();
