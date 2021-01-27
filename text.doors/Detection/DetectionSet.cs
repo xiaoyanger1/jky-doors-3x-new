@@ -25,10 +25,12 @@ namespace text.doors.Detection
 
         private string _tempCode = "";
         private string _tempTong = "";
+        private SerialPortClient _serialPortClient;
 
         public DetectionSet() { }
-        public DetectionSet(double temperature, double temppressure, string tempCode, string tempTong)
+        public DetectionSet(SerialPortClient serialPortClient, double temperature, double temppressure, string tempCode, string tempTong)
         {
+            this._serialPortClient = serialPortClient;
             this._temperature = temperature;
             this._temppressure = temppressure;
             this._tempCode = tempCode;
@@ -303,11 +305,15 @@ namespace text.doors.Detection
             this.btn_select.Enabled = false;
             this.btn_delete.Enabled = false;
             this.btn_Ok.Enabled = true;
-            if (_temppressure != 0 && _temperature != 0)
-            {
-                txt_DaQiYaLi.Text = _temppressure.ToString();
-                txt_DangQianWenDu.Text = _temperature.ToString();
-            }
+            //if (_temppressure != 0 && _temperature != 0)
+            //{
+            //    txt_DaQiYaLi.Text = _temppressure.ToString();
+            //    txt_DangQianWenDu.Text = _temperature.ToString();
+            //}
+
+            txt_DaQiYaLi.Text = _serialPortClient.GetDQYLXS().ToString();
+
+            txt_DangQianWenDu.Text = _serialPortClient.GetWDXS().ToString();
             BindDangQianDangHao();
         }
 

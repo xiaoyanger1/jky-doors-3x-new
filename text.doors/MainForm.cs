@@ -324,7 +324,7 @@ namespace text.doors
             }
 
             this.pl_showItem.Controls.Clear();
-            DetectionSet ds = new DetectionSet(_temperature, _temppressure, _tempCode, _tempTong);
+            DetectionSet ds = new DetectionSet(_serialPortClient,_temperature, _temppressure, _tempCode, _tempTong);
             ds.deleBottomTypeEvent += new DetectionSet.deleBottomType(SelectDangHao);
             ds.GetDangHaoTrigger();
             ds.TopLevel = false;
