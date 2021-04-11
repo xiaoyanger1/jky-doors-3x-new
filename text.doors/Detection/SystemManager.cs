@@ -58,7 +58,7 @@ namespace text.doors.Detection
             SaveConfig(this.txt_PipeDiameter.Text, "PipeDiameter");
 
 
-            MessageBox.Show("保存成功,请重启软件", "风机", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
+            MessageBox.Show("保存成功,请重启软件", "风机", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             //Application.Exit();
             //System.Environment.Exit(0);
             this.Dispose();

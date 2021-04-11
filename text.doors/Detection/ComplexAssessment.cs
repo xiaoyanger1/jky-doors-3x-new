@@ -25,7 +25,7 @@ namespace text.doors.Detection
 
             if (!DefaultBase.IsSetTong)
             {
-                MessageBox.Show("请先检测设定", "检测", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
+                MessageBox.Show("请先检测设定", "检测", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 this.Hide();
                 DefaultBase.IsOpenComplexAssessment = false;
                 return;
@@ -47,7 +47,7 @@ namespace text.doors.Detection
                 string error = "";
                 if (!IsTestFinish(ref error))
                 {
-                    MessageBox.Show(error, "检测", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
+                    MessageBox.Show(error, "检测", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     this.Hide();
                     DefaultBase.IsOpenComplexAssessment = false;
                     return;
@@ -550,7 +550,7 @@ namespace text.doors.Detection
                 }
 
                 #endregion
-                MessageBox.Show("生成成功！", "完成", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
+                MessageBox.Show("生成成功！", "完成", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
             }
             catch (Exception ex)

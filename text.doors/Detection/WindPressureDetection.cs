@@ -660,7 +660,7 @@ namespace text.doors.Detection
             var res = _serialPortClient.Set_FY_Value(BFMCommand.正反复数值, BFMCommand.正反复, value);
             if (!res)
             {
-                MessageBox.Show("正反复异常！", "警告！", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
+                MessageBox.Show("正反复异常！", "警告！", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -677,7 +677,7 @@ namespace text.doors.Detection
             var res = _serialPortClient.Send_FY_Btn(BFMCommand.风压正压预备);
             if (!res)
             {
-                MessageBox.Show("正压预备异常！", "警告！", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
+                MessageBox.Show("正压预备异常！", "警告！", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -697,7 +697,7 @@ namespace text.doors.Detection
             var res = _serialPortClient.Send_FY_Btn(BFMCommand.风压正压开始);
             if (!res)
             {
-                //MessageBox.Show("正压开始异常！", "警告！", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
+                //MessageBox.Show("正压开始异常！", "警告！", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -876,7 +876,7 @@ namespace text.doors.Detection
             var res = _serialPortClient.Send_FY_Btn(BFMCommand.风压负压预备, false);
             if (!res)
             {
-                MessageBox.Show("负压预备异常！", "警告！", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
+                MessageBox.Show("负压预备异常！", "警告！", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -893,7 +893,7 @@ namespace text.doors.Detection
             var res = _serialPortClient.Send_FY_Btn(BFMCommand.风压负压开始, false);
             if (!res)
             {
-                MessageBox.Show("负压开始异常！", "警告！", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
+                MessageBox.Show("负压开始异常！", "警告！", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -942,7 +942,7 @@ namespace text.doors.Detection
             var res = _serialPortClient.Set_FY_Value(BFMCommand.负反复数值, BFMCommand.负反复, value, false);
             if (!res)
             {
-                MessageBox.Show("负反复异常！", "警告！", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
+                MessageBox.Show("负反复异常！", "警告！", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -966,7 +966,7 @@ namespace text.doors.Detection
             var res = _serialPortClient.Set_FY_Value(BFMCommand.正安全数值, BFMCommand.正安全, value);
             if (!res)
             {
-                MessageBox.Show("正安全异常！", "警告！", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
+                MessageBox.Show("正安全异常！", "警告！", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
             complete = new List<int>();
@@ -1175,7 +1175,7 @@ namespace text.doors.Detection
 
                 if (!IsSeccess)
                 {
-                    MessageBox.Show("风压正压开始结束状态异常", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
+                    MessageBox.Show("风压正压开始结束状态异常", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
                 if (value >= 15)
@@ -1192,7 +1192,7 @@ namespace text.doors.Detection
 
                 if (!IsSeccess)
                 {
-                    MessageBox.Show("风压负压预备结束状态异常", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
+                    MessageBox.Show("风压负压预备结束状态异常", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
                 if (value == 3)
@@ -1208,7 +1208,7 @@ namespace text.doors.Detection
 
                 if (!IsSeccess)
                 {
-                    MessageBox.Show("风压负压开始结束状态异常", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
+                    MessageBox.Show("风压负压开始结束状态异常", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
                 if (value >= 15)
@@ -1357,7 +1357,7 @@ namespace text.doors.Detection
             var res = _serialPortClient.Set_FY_Value(BFMCommand.负安全数值, BFMCommand.负安全, value, false);
             if (!res)
             {
-                MessageBox.Show("负安全异常！", "警告！", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
+                MessageBox.Show("负安全异常！", "警告！", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
             complete = new List<int>();
@@ -1384,7 +1384,7 @@ namespace text.doors.Detection
         {
             var res = _serialPortClient.Stop();
             if (!res) { }
-            //MessageBox.Show("急停异常", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
+            //MessageBox.Show("急停异常", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning);
         }
 
 
@@ -1496,14 +1496,14 @@ namespace text.doors.Detection
             {
                 if (!rdb_DWDD1.Checked && !rdb_DWDD3.Checked)
                 {
-                    MessageBox.Show("请选择位移！", "请选择位移！", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
+                    MessageBox.Show("请选择位移！", "请选择位移！", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     return;
                 }
             }
             var jc = int.Parse(txt_gbjc.Text);
             if (AddKfyInfo(jc))
             {
-                MessageBox.Show("处理成功！", "完成", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
+                MessageBox.Show("处理成功！", "完成", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             complete = new List<int>();
         }
@@ -1514,7 +1514,7 @@ namespace text.doors.Detection
             var res = _serialPortClient.SendGBJC(value);
             if (!res)
             {
-                MessageBox.Show("改变级差异常", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
+                MessageBox.Show("改变级差异常", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
 
             defKFYPa = new List<DefKFYPa>();
@@ -1585,7 +1585,7 @@ namespace text.doors.Detection
             var res = _serialPortClient.Set_FY_Value(BFMCommand.正PMAX值, BFMCommand.正PMAX, value);
             if (!res)
             {
-                MessageBox.Show("正pmax！", "警告！", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
+                MessageBox.Show("正pmax！", "警告！", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
             windPressureTest = PublicEnum.WindPressureTest.ZPmax;
@@ -1602,7 +1602,7 @@ namespace text.doors.Detection
             var res = _serialPortClient.Set_FY_Value(BFMCommand.负PMAX值, BFMCommand.负PMAX, value);
             if (!res)
             {
-                MessageBox.Show("负pmax！", "警告！", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
+                MessageBox.Show("负pmax！", "警告！", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
             windPressureTest = PublicEnum.WindPressureTest.FPmax;

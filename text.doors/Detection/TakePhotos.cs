@@ -90,7 +90,7 @@ namespace text.doors.Detection
                     {
                         pE.Save(stream);
                     }
-                    MessageBox.Show("照片保存至PersonImg文件夹下！", "警告", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
+                    MessageBox.Show("照片保存至PersonImg文件夹下！", "警告", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     //拍照完成后关摄像头并刷新同时关窗体
                     if (videoSourcePlayer != null && videoSourcePlayer.IsRunning)
                     {
@@ -102,7 +102,7 @@ namespace text.doors.Detection
             }
             catch (Exception ex)
             {
-                MessageBox.Show("摄像头异常！" + ex.Message, "警告", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
+                MessageBox.Show("摄像头异常！" + ex.Message, "警告", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 Logger.Error(ex);
             }
         }

@@ -55,7 +55,7 @@ namespace text.doors.Common
 
             if (strPortNames == null || strPortNames.Length == 0)
             {
-                MessageBox.Show("未找到串口！", "串口", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
+                MessageBox.Show("未找到串口！", "串口", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 

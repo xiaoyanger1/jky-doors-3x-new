@@ -44,7 +44,14 @@ namespace text.doors.Default
         public static int BarLength = 0;
 
 
-
+        /// <summary>
+        /// 正压系数
+        /// </summary>
+        public static string Z_Factor = System.Configuration.ConfigurationSettings.AppSettings["Z_Factor"].ToString();
+        /// <summary>
+        /// 负压系数
+        /// </summary>
+        public static string F_Factor = System.Configuration.ConfigurationSettings.AppSettings["F_Factor"].ToString();
 
 
 

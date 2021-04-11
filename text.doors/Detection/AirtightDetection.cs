@@ -115,15 +115,6 @@ namespace text.doors.Detection
         public void GetPressureFlow(PublicEnum.QM_TestCount qm_TestCount)
         {
             GetWindSpeedBase((int)qm_TestCount);
-
-            //foreach (var item in pressureList)
-            //{
-            //    item.PressurePa = item.PressurePa;
-            //    item.Pressure_Z = item.Pressure_Z;
-            //    item.Pressure_Z_Z = item.Pressure_Z_Z;
-            //    item.Pressure_F = item.Pressure_F;
-            //    item.Pressure_F_Z = item.Pressure_F_Z;
-            //}
         }
 
         /// <summary>
@@ -131,34 +122,6 @@ namespace text.doors.Detection
         /// </summary>
         private void BindFlowBase()
         {
-            //dgv_ll.DataSource = null;
-            //dgv_ll.DataSource = pressureList;//GetPressureFlow(QM_TestCount.第一次);
-
-            //dgv_ll.RowHeadersVisible = false;
-            //dgv_ll.AllowUserToResizeColumns = false;
-            //dgv_ll.AllowUserToResizeRows = false;
-            //dgv_ll.Columns[0].HeaderText = "压力Pa";
-            //dgv_ll.Columns[0].Width = 50;
-            //dgv_ll.Columns[0].ReadOnly = true;
-            //dgv_ll.Columns[0].DataPropertyName = "PressurePa";
-            //dgv_ll.Columns[1].HeaderText = "正压附加";
-            //dgv_ll.Columns[1].Width = 54;
-            //dgv_ll.Columns[1].DataPropertyName = "Pressure_Z";
-            //dgv_ll.Columns[2].HeaderText = "正压总的";
-            //dgv_ll.Columns[2].Width = 54;
-            //dgv_ll.Columns[2].DataPropertyName = "Pressure_Z_Z";
-            //dgv_ll.Columns[3].HeaderText = "负压附加";
-            //dgv_ll.Columns[3].Width = 54;
-            //dgv_ll.Columns[3].DataPropertyName = "Pressure_F";
-            //dgv_ll.Columns[4].HeaderText = "负压总的";
-            //dgv_ll.Columns[4].Width = 54;
-            //dgv_ll.Columns[4].DataPropertyName = "Pressure_F_Z";
-
-            //dgv_ll.Columns["Pressure_Z"].DefaultCellStyle.Format = "N2";
-            //dgv_ll.Columns["Pressure_Z_Z"].DefaultCellStyle.Format = "N2";
-            //dgv_ll.Columns["Pressure_F"].DefaultCellStyle.Format = "N2";
-            //dgv_ll.Columns["Pressure_F_Z"].DefaultCellStyle.Format = "N2";
-
             if (this.tabControl1.SelectedTab.Name == "流量原始数据")
             {
                 dgv_ll.DataSource = null;
@@ -521,31 +484,6 @@ namespace text.doors.Detection
                     }
                 }
             }
-
-
-            //读取设定值
-            //if (airtightPropertyTest == PublicEnum.AirtightPropertyTest.ZStart)
-            //{
-            //    double yl = _serialPortClient.GetZYYBYLZ(ref IsSeccess, "ZYKS");
-            //    if (!IsSeccess)
-            //    {
-            //        return;
-            //    }
-            //    lbl_setYL.Text = yl.ToString();
-            //}
-            //else if (airtightPropertyTest == PublicEnum.AirtightPropertyTest.FStart)
-            //{
-            //    double yl = _serialPortClient.GetZYYBYLZ(ref IsSeccess, "FYKS");
-            //    if (!IsSeccess)
-            //    {
-            //        return;
-            //    }
-            //    lbl_setYL.Text = "-" + yl.ToString();
-            //}
-            //else if (airtightPropertyTest == PublicEnum.AirtightPropertyTest.Stop)
-            //{
-            //    lbl_setYL.Text = "0";
-            //}
         }
 
         private void tim_PainPic_Tick(object sender, EventArgs e)
@@ -604,26 +542,26 @@ namespace text.doors.Detection
             //获取风速
             var fsvalue = _serialPortClient.GetFSXS();
 
-            if (rdb_zdstl.Checked)
-            {
-                Logger.Info($"总的风速：{fsvalue}当前级别：{kpa_Level}");
-            }
-            else
-            {
-                Logger.Info($"附加风速：{fsvalue}当前级别：{kpa_Level}");
-            }
+            //if (rdb_zdstl.Checked)
+            //{
+            //    Logger.Info($"总的风速：{fsvalue}当前级别：{kpa_Level}");
+            //}
+            //else
+            //{
+            //    Logger.Info($"附加风速：{fsvalue}当前级别：{kpa_Level}");
+            //}
 
             //转换流量
             fsvalue = Formula.MathFlow(fsvalue);
 
-            if (rdb_zdstl.Checked)
-            {
-                Logger.Info($"总的风速：{fsvalue}当前级别：{kpa_Level}");
-            }
-            else
-            {
-                Logger.Info($"附加风速：{fsvalue}当前级别：{kpa_Level}");
-            }
+            //if (rdb_zdstl.Checked)
+            //{
+            //    Logger.Info($"总的风速：{fsvalue}当前级别：{kpa_Level}");
+            //}
+            //else
+            //{
+            //    Logger.Info($"附加风速：{fsvalue}当前级别：{kpa_Level}");
+            //}
             if (this.tabControl1.SelectedTab.Name == "流量原始数据")
             {
                 #region 第一次
@@ -1284,7 +1222,7 @@ namespace text.doors.Detection
             //double yl = _serialPortClient.GetZYYBYLZ(ref IsSeccess, "ZYYB");
             //if (!IsSeccess)
             //{
-            //    MessageBox.Show("读取设定值异常", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
+            //    MessageBox.Show("读取设定值异常", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             //    return;
             //}
             //lbl_setYL.Text = yl.ToString();
@@ -1316,7 +1254,7 @@ namespace text.doors.Detection
         {
             var res = _serialPortClient.Stop();
             if (!res)
-                MessageBox.Show("急停异常", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
+                MessageBox.Show("急停异常", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning);
         }
 
         /// <summary>
@@ -1383,7 +1321,7 @@ namespace text.doors.Detection
             //double yl = _serialPortClient.GetZYYBYLZ(ref IsSeccess, "FYYB");
             //if (!IsSeccess)
             //{
-            //    MessageBox.Show("读取设定值异常", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
+            //    MessageBox.Show("读取设定值异常", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             //    return;
             //}
             //lbl_setYL.Text = "-" + yl.ToString();
@@ -1538,7 +1476,7 @@ namespace text.doors.Detection
                 BindLevelIndex(QM_TestCount.第一次);
                 if (AddQMResult(QM_TestCount.第一次))
                 {
-                    MessageBox.Show("处理完成！", "完成", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
+                    MessageBox.Show("处理完成！", "完成", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
             }
             else if (this.tabControl1.SelectedTab.Name == "重复流量数据")
@@ -1547,7 +1485,7 @@ namespace text.doors.Detection
                 BindLevelIndex(QM_TestCount.第二次);
                 if (AddQMResult(QM_TestCount.第二次))
                 {
-                    MessageBox.Show("处理完成！", "完成", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
+                    MessageBox.Show("处理完成！", "完成", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
             }
         }
@@ -2291,7 +2229,7 @@ namespace text.doors.Detection
             var res = _serialPortClient.Set_FY_Value(BFMCommand.正依次加压值, BFMCommand.正依次加压, value);
             if (!res)
             {
-                MessageBox.Show("正依次加压！", "警告！", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
+                MessageBox.Show("正依次加压！", "警告！", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
             //重复做
@@ -2349,7 +2287,7 @@ namespace text.doors.Detection
             var res = _serialPortClient.Set_FY_Value(BFMCommand.负依次加压值, BFMCommand.负依次加压, value);
             if (!res)
             {
-                MessageBox.Show("负依次加压异常！", "警告！", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
+                MessageBox.Show("负依次加压异常！", "警告！", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -2420,7 +2358,7 @@ namespace text.doors.Detection
         {
             var res = _serialPortClient.Stop();
 
-            // MessageBox.Show("急停异常", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
+            // MessageBox.Show("急停异常", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning);
 
             //Stop();
             this.Close();

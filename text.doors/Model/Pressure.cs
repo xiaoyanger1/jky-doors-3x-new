@@ -302,6 +302,9 @@ namespace text.doors.Model
         /// <param name="fs">风速枚举</param>
         public void AddZYZD(double data, PublicEnum.Kpa_Level fs)
         {
+
+            data = double.Parse(DefaultBase.Z_Factor) * data;
+
             if (fs == PublicEnum.Kpa_Level.liter10)
                 ZYZD_10.Add(data);
             if (fs == PublicEnum.Kpa_Level.liter30)
@@ -361,16 +364,6 @@ namespace text.doors.Model
                 FYFJ_YCJY.Add(data);
         }
 
-        ///// <summary>
-        ///// 依次加压(负压附加)
-        ///// </summary>
-        ///// <param name="data"></param>
-        ///// <param name="fs">风速枚举</param>
-        //public void AddYCJY(double data, PublicEnum.Kpa_Level fs)
-        //{
-        //    if (fs == PublicEnum.Kpa_Level.YCJY)
-        //        AddYCJY.Add(data);
-        //}
 
         /// <summary>
         /// 增加风速数据(负压总的)
@@ -379,6 +372,8 @@ namespace text.doors.Model
         /// <param name="fs">风速枚举</param>
         public void AddFYZD(double data, PublicEnum.Kpa_Level fs)
         {
+            data = double.Parse(DefaultBase.F_Factor) * data;
+
             if (fs == PublicEnum.Kpa_Level.liter10)
                 FYZD_10.Add(data);
             if (fs == PublicEnum.Kpa_Level.liter30)

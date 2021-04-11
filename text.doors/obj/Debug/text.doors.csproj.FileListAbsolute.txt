@@ -154,3 +154,4 @@ E:\08-GitHub\jky-doors-3x-new\text.doors\obj\Debug\text.doors.csproj.CoreCompile
 E:\08-GitHub\jky-doors-3x-new\text.doors\obj\Debug\text.doors.csproj.CopyComplete
 E:\08-GitHub\jky-doors-3x-new\text.doors\obj\Debug\建筑外门窗物理性能检测系统.exe
 E:\08-GitHub\jky-doors-3x-new\text.doors\obj\Debug\建筑外门窗物理性能检测系统.pdb
+E:\08-GitHub\jky-doors-3x-new\text.doors\obj\Debug\text.doors.Detection.CorrectionFactor.resources

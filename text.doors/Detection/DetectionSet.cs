@@ -45,19 +45,19 @@ namespace text.doors.Detection
 
             if (string.IsNullOrWhiteSpace(txt_jianceshuliang.Text))
             {
-                MessageBox.Show("请输入规格数量！", "警告！", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
+                MessageBox.Show("请输入规格数量！", "警告！", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
             if (string.IsNullOrWhiteSpace(cb_DangQianDangHao.Text))
             {
-                MessageBox.Show("请设置樘号！", "警告！", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
+                MessageBox.Show("请设置樘号！", "警告！", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
             if (string.IsNullOrWhiteSpace(code))
             {
-                MessageBox.Show("请设置当前编号！", "警告！", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
+                MessageBox.Show("请设置当前编号！", "警告！", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -68,7 +68,7 @@ namespace text.doors.Detection
                 var tong = this.cb_DangQianDangHao.Text;
                 if (dal.Add(setting, tong))
                 {
-                    MessageBox.Show("设定完成！", "完成", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
+                  //  MessageBox.Show("设定完成！", "完成", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     //获取樘号
                     deleBottomTypeEvent(GetBottomType(true));
                     DefaultBase.base_SpecCount = int.Parse(txt_jianceshuliang.Text);
@@ -84,20 +84,16 @@ namespace text.doors.Detection
                     this.btn_delete.Enabled = true;
                     this.btn_Ok.Enabled = true;
 
-                    this.Close();
+                   // this.Close();
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show("添加异常！", "异常", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
+                MessageBox.Show("添加异常！", "异常", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 Logger.Error(ex);
             }
         }
 
-        private object Getdt_Info()
-        {
-            throw new NotImplementedException();
-        }
         public void GetDangHaoTrigger()
         {
             //获取樘号
@@ -213,11 +209,7 @@ namespace text.doors.Detection
                 {
                     txt_jianceshuliang.Text = "3";
                 }
-                //if (_temppressure != 0 && _temperature != 0)
-                //{
-                //    txt_DaQiYaLi.Text = _temppressure.ToString();
-                //    txt_DangQianWenDu.Text = _temperature.ToString();
-                //}
+             
             }
             catch (Exception ex)
             {
@@ -289,13 +281,13 @@ namespace text.doors.Detection
         {
             if (string.IsNullOrEmpty(btn_JianYanBianHao.Text))
             {
-                MessageBox.Show("请输入编号！", "警告！", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
+                MessageBox.Show("请输入编号！", "警告！", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
             var arr = btn_JianYanBianHao.Text.Split('-');
             if (arr.Length == 1)
             {
-                MessageBox.Show("编号格式有误，请输入如d-1格式！", "警告！", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
+                MessageBox.Show("编号格式有误，请输入如d-1格式！", "警告！", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
             btn_JianYanBianHao.Text = arr[0] + "-" + (int.Parse(arr[1]) + 1).ToString();
@@ -305,12 +297,7 @@ namespace text.doors.Detection
             this.btn_select.Enabled = false;
             this.btn_delete.Enabled = false;
             this.btn_Ok.Enabled = true;
-            //if (_temppressure != 0 && _temperature != 0)
-            //{
-            //    txt_DaQiYaLi.Text = _temppressure.ToString();
-            //    txt_DangQianWenDu.Text = _temperature.ToString();
-            //}
-
+        
             txt_DaQiYaLi.Text = _serialPortClient.GetDQYLXS().ToString();
 
             txt_DangQianWenDu.Text = _serialPortClient.GetWDXS().ToString();
@@ -338,7 +325,7 @@ namespace text.doors.Detection
             catch (Exception ex)
             {
                 Logger.Error(ex);
-                MessageBox.Show("规格数量请输入数字", "警告！", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
+                MessageBox.Show("规格数量请输入数字", "警告！", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
         private void btn_GuiGeShuLiang_KeyUp(object sender, KeyEventArgs e)
@@ -348,20 +335,20 @@ namespace text.doors.Detection
             {
                 if (int.Parse(txt_jianceshuliang.Text) > 3)
                 {
-                    MessageBox.Show("最大只能输入三樘", "警告！", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
+                    MessageBox.Show("最大只能输入三樘", "警告！", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     txt_jianceshuliang.Text = "";
                     return;
                 }
             }
             catch
             {
-                MessageBox.Show("最大只能输入三樘", "警告！", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
+                MessageBox.Show("最大只能输入三樘", "警告！", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
             if (string.IsNullOrWhiteSpace(txt_jianceshuliang.Text))
             {
-                MessageBox.Show("请填写规格数量", "警告！", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
+                MessageBox.Show("请填写规格数量", "警告！", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
             BindDangQianDangHao();

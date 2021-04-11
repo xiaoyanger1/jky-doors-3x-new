@@ -118,6 +118,12 @@
     <Compile Include="Detection\AirtightDetection.Designer.cs">
       <DependentUpon>AirtightDetection.cs</DependentUpon>
     </Compile>
+    <Compile Include="Detection\CorrectionFactor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Detection\CorrectionFactor.Designer.cs">
+      <DependentUpon>CorrectionFactor.cs</DependentUpon>
+    </Compile>
     <Compile Include="Detection\ExportReport.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -227,6 +233,9 @@
     </Compile>
     <EmbeddedResource Include="Detection\AirtightDetection.resx">
       <DependentUpon>AirtightDetection.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Detection\CorrectionFactor.resx">
+      <DependentUpon>CorrectionFactor.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Detection\ExportReport.resx">
       <DependentUpon>ExportReport.cs</DependentUpon>

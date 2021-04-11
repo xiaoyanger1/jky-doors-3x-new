@@ -87,8 +87,8 @@ E:\08-GitHub\jky-doors-3x-new\Young.Core\bin\Debug\NPOI.OpenXmlFormats.dll
 E:\08-GitHub\jky-doors-3x-new\Young.Core\bin\Debug\System.Data.SQLite.DLL
 E:\08-GitHub\jky-doors-3x-new\Young.Core\bin\Debug\log4net.xml
 E:\08-GitHub\jky-doors-3x-new\Young.Core\bin\Debug\NPOI.xml
-E:\08-GitHub\jky-doors-3x-new\Young.Core\obj\Debug\Young.Core.csprojAssemblyReference.cache
 E:\08-GitHub\jky-doors-3x-new\Young.Core\obj\Debug\Young.Core.csproj.CoreCompileInputs.cache
 E:\08-GitHub\jky-doors-3x-new\Young.Core\obj\Debug\Young.Core.csproj.CopyComplete
 E:\08-GitHub\jky-doors-3x-new\Young.Core\obj\Debug\Young.Core.dll
 E:\08-GitHub\jky-doors-3x-new\Young.Core\obj\Debug\Young.Core.pdb
+E:\08-GitHub\jky-doors-3x-new\Young.Core\obj\Debug\Young.Core.csprojAssemblyReference.cache

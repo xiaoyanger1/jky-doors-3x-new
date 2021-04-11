@@ -472,7 +472,7 @@ namespace text.doors.Detection
         {
             var res = _serialPortClient.Stop();
             if (!res)
-                MessageBox.Show("急停异常", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
+                MessageBox.Show("急停异常", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning);
         }
 
 
@@ -521,7 +521,7 @@ namespace text.doors.Detection
             var res = _serialPortClient.SendSMXXYJ();
             if (!res)
             {
-                MessageBox.Show("设置水密性下一级异常", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
+                MessageBox.Show("设置水密性下一级异常", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
             waterTightPropertyTest = PublicEnum.WaterTightPropertyTest.Next;
         }
@@ -561,7 +561,7 @@ namespace text.doors.Detection
             var res = _serialPortClient.SetSMYB();
             if (!res)
             {
-                MessageBox.Show("水密预备异常", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
+                MessageBox.Show("水密预备异常", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -585,7 +585,7 @@ namespace text.doors.Detection
             var res = _serialPortClient.SendSMXKS();
             if (!res)
             {
-                MessageBox.Show("水密开始异常", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
+                MessageBox.Show("水密开始异常", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
             this.btn_start.Enabled = false;
@@ -714,7 +714,7 @@ namespace text.doors.Detection
 
             if (string.IsNullOrWhiteSpace(cbb_1_0Pa.Text))
             {
-                MessageBox.Show("请选择位置", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
+                MessageBox.Show("请选择位置", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 cbb_2_0Pa.Text = "";
                 CheckProblem = "";
                 CheckPosition = "";
@@ -733,7 +733,7 @@ namespace text.doors.Detection
         {
             if (string.IsNullOrWhiteSpace(cbb_1_100Pa.Text))
             {
-                MessageBox.Show("请选择位置", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
+                MessageBox.Show("请选择位置", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 cbb_2_100Pa.Text = "";
                 CheckProblem = "";
                 CheckPosition = "";
@@ -756,7 +756,7 @@ namespace text.doors.Detection
         {
             if (string.IsNullOrWhiteSpace(cbb_1_150Pa.Text))
             {
-                MessageBox.Show("请选择位置", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
+                MessageBox.Show("请选择位置", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 cbb_2_150Pa.Text = "";
                 CheckProblem = "";
                 CheckPosition = "";
@@ -778,7 +778,7 @@ namespace text.doors.Detection
         {
             if (string.IsNullOrWhiteSpace(cbb_1_200Pa.Text))
             {
-                MessageBox.Show("请选择位置", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
+                MessageBox.Show("请选择位置", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 cbb_2_200Pa.Text = "";
                 CheckProblem = "";
                 CheckPosition = "";
@@ -800,7 +800,7 @@ namespace text.doors.Detection
         {
             if (string.IsNullOrWhiteSpace(cbb_1_250Pa.Text))
             {
-                MessageBox.Show("请选择位置", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
+                MessageBox.Show("请选择位置", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 cbb_2_250Pa.Text = "";
                 CheckProblem = "";
                 CheckPosition = "";
@@ -822,7 +822,7 @@ namespace text.doors.Detection
         {
             if (string.IsNullOrWhiteSpace(cbb_1_300Pa.Text))
             {
-                MessageBox.Show("请选择位置", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
+                MessageBox.Show("请选择位置", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 cbb_2_300Pa.Text = "";
                 CheckProblem = "";
                 CheckPosition = "";
@@ -844,7 +844,7 @@ namespace text.doors.Detection
         {
             if (string.IsNullOrWhiteSpace(cbb_1_350Pa.Text))
             {
-                MessageBox.Show("请选择位置", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
+                MessageBox.Show("请选择位置", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 cbb_2_350Pa.Text = "";
                 CheckProblem = "";
                 CheckPosition = "";
@@ -866,7 +866,7 @@ namespace text.doors.Detection
         {
             if (string.IsNullOrWhiteSpace(cbb_1_400Pa.Text))
             {
-                MessageBox.Show("请选择位置", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
+                MessageBox.Show("请选择位置", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 cbb_2_400Pa.Text = "";
                 CheckProblem = "";
                 CheckPosition = "";
@@ -888,7 +888,7 @@ namespace text.doors.Detection
         {
             if (string.IsNullOrWhiteSpace(cbb_1_500Pa.Text))
             {
-                MessageBox.Show("请选择位置", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
+                MessageBox.Show("请选择位置", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 cbb_2_500Pa.Text = "";
                 CheckProblem = "";
                 CheckPosition = "";
@@ -910,7 +910,7 @@ namespace text.doors.Detection
         {
             if (string.IsNullOrWhiteSpace(cbb_1_600Pa.Text))
             {
-                MessageBox.Show("请选择位置", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
+                MessageBox.Show("请选择位置", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 cbb_2_600Pa.Text = "";
                 CheckProblem = "";
                 CheckPosition = "";
@@ -932,7 +932,7 @@ namespace text.doors.Detection
         {
             if (string.IsNullOrWhiteSpace(cbb_1_700Pa.Text))
             {
-                MessageBox.Show("请选择位置", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
+                MessageBox.Show("请选择位置", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 cbb_2_700Pa.Text = "";
                 CheckProblem = "";
                 CheckPosition = "";
@@ -959,7 +959,7 @@ namespace text.doors.Detection
             }
             catch
             {
-                MessageBox.Show("请输入数字", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
+                MessageBox.Show("请输入数字", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
 
@@ -972,7 +972,7 @@ namespace text.doors.Detection
         {
             if (string.IsNullOrWhiteSpace(CheckPosition) || string.IsNullOrWhiteSpace(CheckProblem))
             {
-                MessageBox.Show("选择失去焦点，请重新选择检测记录！", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
+                MessageBox.Show("选择失去焦点，请重新选择检测记录！", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
             Model_dt_sm_Info model = new Model_dt_sm_Info();
@@ -999,7 +999,7 @@ namespace text.doors.Detection
 
             if (new DAL_dt_sm_Info().Add(model))
             {
-                MessageBox.Show("处理成功！", "完成", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
+                MessageBox.Show("处理成功！", "完成", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
         #endregion
@@ -1058,14 +1058,14 @@ namespace text.doors.Detection
             int.TryParse(txt_maxValue.Text, out minValue);
             if (minValue == 0 || maxValue == 0)
             {
-                MessageBox.Show("上线-下线压力请设置大于零数字", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
+                MessageBox.Show("上线-下线压力请设置大于零数字", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
             var res = _serialPortClient.SendBoDongksjy(maxValue, minValue);
             if (!res)
             {
-                MessageBox.Show("水密波动开始异常", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
+                MessageBox.Show("水密波动开始异常", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -1097,7 +1097,7 @@ namespace text.doors.Detection
             var res = _serialPortClient.StopBoDong();
             if (!res)
             {
-                MessageBox.Show("停止波动", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
+                MessageBox.Show("停止波动", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -1208,7 +1208,7 @@ namespace text.doors.Detection
 
             if (string.IsNullOrWhiteSpace(cbb_1_0Pa_cf.Text))
             {
-                MessageBox.Show("请选择位置", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
+                MessageBox.Show("请选择位置", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 cbb_2_0Pa_cf.Text = "";
                 CheckProblem = "";
                 CheckPosition = "";
@@ -1227,7 +1227,7 @@ namespace text.doors.Detection
         {
             if (string.IsNullOrWhiteSpace(cbb_1_100Pa_cf.Text))
             {
-                MessageBox.Show("请选择位置", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
+                MessageBox.Show("请选择位置", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 cbb_2_100Pa_cf.Text = "";
                 CheckProblem = "";
                 CheckPosition = "";
@@ -1250,7 +1250,7 @@ namespace text.doors.Detection
         {
             if (string.IsNullOrWhiteSpace(cbb_1_150Pa_cf.Text))
             {
-                MessageBox.Show("请选择位置", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
+                MessageBox.Show("请选择位置", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 cbb_2_150Pa_cf.Text = "";
                 CheckProblem = "";
                 CheckPosition = "";
@@ -1272,7 +1272,7 @@ namespace text.doors.Detection
         {
             if (string.IsNullOrWhiteSpace(cbb_1_200Pa_cf.Text))
             {
-                MessageBox.Show("请选择位置", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
+                MessageBox.Show("请选择位置", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 cbb_2_200Pa_cf.Text = "";
                 CheckProblem = "";
                 CheckPosition = "";
@@ -1294,7 +1294,7 @@ namespace text.doors.Detection
         {
             if (string.IsNullOrWhiteSpace(cbb_1_250Pa_cf.Text))
             {
-                MessageBox.Show("请选择位置", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
+                MessageBox.Show("请选择位置", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 cbb_2_250Pa_cf.Text = "";
                 CheckProblem = "";
                 CheckPosition = "";
@@ -1316,7 +1316,7 @@ namespace text.doors.Detection
         {
             if (string.IsNullOrWhiteSpace(cbb_1_300Pa_cf.Text))
             {
-                MessageBox.Show("请选择位置", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
+                MessageBox.Show("请选择位置", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 cbb_2_300Pa_cf.Text = "";
                 CheckProblem = "";
                 CheckPosition = "";
@@ -1338,7 +1338,7 @@ namespace text.doors.Detection
         {
             if (string.IsNullOrWhiteSpace(cbb_1_350Pa_cf.Text))
             {
-                MessageBox.Show("请选择位置", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
+                MessageBox.Show("请选择位置", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 cbb_2_350Pa_cf.Text = "";
                 CheckProblem = "";
                 CheckPosition = "";
@@ -1360,7 +1360,7 @@ namespace text.doors.Detection
         {
             if (string.IsNullOrWhiteSpace(cbb_1_400Pa_cf.Text))
             {
-                MessageBox.Show("请选择位置", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
+                MessageBox.Show("请选择位置", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 cbb_2_400Pa_cf.Text = "";
                 CheckProblem = "";
                 CheckPosition = "";
@@ -1382,7 +1382,7 @@ namespace text.doors.Detection
         {
             if (string.IsNullOrWhiteSpace(cbb_1_500Pa_cf.Text))
             {
-                MessageBox.Show("请选择位置", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
+                MessageBox.Show("请选择位置", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 cbb_2_500Pa_cf.Text = "";
                 CheckProblem = "";
                 CheckPosition = "";
@@ -1404,7 +1404,7 @@ namespace text.doors.Detection
         {
             if (string.IsNullOrWhiteSpace(cbb_1_600Pa_cf.Text))
             {
-                MessageBox.Show("请选择位置", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
+                MessageBox.Show("请选择位置", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 cbb_2_600Pa_cf.Text = "";
                 CheckProblem = "";
                 CheckPosition = "";
@@ -1426,7 +1426,7 @@ namespace text.doors.Detection
         {
             if (string.IsNullOrWhiteSpace(cbb_1_700Pa_cf.Text))
             {
-                MessageBox.Show("请选择位置", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
+                MessageBox.Show("请选择位置", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 cbb_2_700Pa_cf.Text = "";
                 CheckProblem = "";
                 CheckPosition = "";
@@ -1448,7 +1448,7 @@ namespace text.doors.Detection
         {
             if (string.IsNullOrWhiteSpace(CheckPosition) || string.IsNullOrWhiteSpace(CheckProblem))
             {
-                MessageBox.Show("选择失去焦点，请重新选择检测记录！", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
+                MessageBox.Show("选择失去焦点，请重新选择检测记录！", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
             Model_dt_sm_Info model = new Model_dt_sm_Info();
@@ -1473,7 +1473,7 @@ namespace text.doors.Detection
 
             if (new DAL_dt_sm_Info().Add(model))
             {
-                MessageBox.Show("处理成功！", "完成", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
+                MessageBox.Show("处理成功！", "完成", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
 
@@ -1483,7 +1483,7 @@ namespace text.doors.Detection
             var res = _serialPortClient.SendShuiBengQiDong(ref _ShuiBengQiDong);
             if (!res)
             {
-                MessageBox.Show("水泵启动异常,请确认服务器连接是否成功!", "设置", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
+                MessageBox.Show("水泵启动异常,请确认服务器连接是否成功!", "设置", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
             btn_shuibeng.BackColor = _ShuiBengQiDong ? Color.Green : Color.Transparent;

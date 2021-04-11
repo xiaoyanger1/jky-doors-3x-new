@@ -43,7 +43,7 @@ namespace text.doors.Detection
             var name = cbb_type.Text;
             if (string.IsNullOrWhiteSpace(cbb_type.Text))
             {
-                MessageBox.Show("警告", "请选择传感器！", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
+                MessageBox.Show("警告", "请选择传感器！", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
             double res = 0;
@@ -113,7 +113,7 @@ namespace text.doors.Detection
 
             if (string.IsNullOrWhiteSpace(cbb_type.Text))
             {
-                MessageBox.Show("警告", "请选择传感器！", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
+                MessageBox.Show("警告", "请选择传感器！", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
 
@@ -134,7 +134,7 @@ namespace text.doors.Detection
         {
             if (string.IsNullOrWhiteSpace(cbb_type.Text))
             {
-                MessageBox.Show("警告", "请选择传感器！", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
+                MessageBox.Show("警告", "请选择传感器！", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
         }
@@ -143,7 +143,7 @@ namespace text.doors.Detection
 
             if (string.IsNullOrWhiteSpace(cbb_cgq.Text))
             {
-                MessageBox.Show("警告", "请选择传感器！", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
+                MessageBox.Show("警告", "请选择传感器！", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
             updateLvList();

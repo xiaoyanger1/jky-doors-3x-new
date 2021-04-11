@@ -25,12 +25,12 @@ namespace text.doors
             string administrator = "administrator";
             if (string.IsNullOrWhiteSpace(txt_oldPassWord.Text))
             {
-                MessageBox.Show("请输入原始密码", "设置密码", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
+                MessageBox.Show("请输入原始密码", "设置密码", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
             if (string.IsNullOrWhiteSpace(txt_NewPassWord.Text))
             {
-                MessageBox.Show("请输入新密码", "设置密码", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
+                MessageBox.Show("请输入新密码", "设置密码", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
             string sql = "select User_PassWord from User where User_Name='" + administrator + "'";
@@ -54,12 +54,12 @@ namespace text.doors
                 }
                 else
                 {
-                    MessageBox.Show("原始密码输入错误", "设置密码", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
+                    MessageBox.Show("原始密码输入错误", "设置密码", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
             }
             else
             {
-                MessageBox.Show("暂未找到用户，请联系系统管理员", "设置密码", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
+                MessageBox.Show("暂未找到用户，请联系系统管理员", "设置密码", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 Logger.Error("修改密码:未发现" + administrator + "账户");
             }
         }

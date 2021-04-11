@@ -4178,7 +4178,7 @@ namespace text.doors.Common
             //}
             //catch (Exception ex)
             //{
-            //    MessageBox.Show("导出异常", "导出", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
+            //    MessageBox.Show("导出异常", "导出", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             //    return false;
             //}
             return true;
