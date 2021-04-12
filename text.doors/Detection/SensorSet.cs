@@ -49,31 +49,37 @@ namespace text.doors.Detection
             double res = 0;
             ListViewItem lvi = new ListViewItem();
 
-            if (name == "风速传感器      米/秒")
+
+
+            if (name == "风速传感器(米/秒)")
             {
                 res = _serialPortClient.GetFSXS();
             }
-            if (name == "差压传感器      高 帕")
+            if (name == "差压传感器高(Pa)")
             {
                 res = _serialPortClient.GetCY_High();
             }
-            if (name == "温度传感器      ℃")
+            if (name == "差压传感器低(Pa)")
+            {
+                res = _serialPortClient.GetCY_Low();
+            }
+            if (name == "温度传感器(℃)")
             {
                 res = _serialPortClient.GetWDXS();
             }
-            if (name == "大气压力传感器 KPa")
+            if (name == "大气压力传感器(KPa)")
             {
                 res = _serialPortClient.GetDQYLXS();
             }
-            if (name == "位移传感器1      mm")
+            if (name == "位移传感器1(mm)")
             {
                 res = _serialPortClient.GetDisplace1();
             }
-            if (name == "位移传感器2      mm")
+            if (name == "位移传感器2(mm)")
             {
                 res = _serialPortClient.GetDisplace2();
             }
-            if (name == "位移传感器3      mm")
+            if (name == "位移传感器3(mm)")
             {
                 res = _serialPortClient.GetDisplace3();
             }
@@ -176,35 +182,41 @@ namespace text.doors.Detection
                 }
             }
         }
+
         private PublicEnum.DemarcateType? GetEnum(string name)
         {
             PublicEnum.DemarcateType? enum_Demarcate = null;
 
-            if (name == "风速传感器      米/秒")
+            if (name == "风速传感器(米/秒)")
             {
                 enum_Demarcate = PublicEnum.DemarcateType.风速传感器;
             }
-            if (name == "差压传感器      高 帕")
+            if (name == "差压传感器高(Pa)")
             {
-                enum_Demarcate = PublicEnum.DemarcateType.差压传感器;
+                enum_Demarcate = PublicEnum.DemarcateType.差压传感器高;
             }
-            if (name == "温度传感器      ℃")
+
+            if (name == "差压传感器低(Pa)")
+            {
+                enum_Demarcate = PublicEnum.DemarcateType.差压传感器低;
+            }
+            if (name == "温度传感器(℃)")
             {
                 enum_Demarcate = PublicEnum.DemarcateType.温度传感器;
             }
-            if (name == "大气压力传感器 KPa")
+            if (name == "大气压力传感器(KPa)")
             {
                 enum_Demarcate = PublicEnum.DemarcateType.大气压力传感器;
             }
-            if (name == "位移传感器1      mm")
+            if (name == "位移传感器1(mm)")
             {
                 enum_Demarcate = PublicEnum.DemarcateType.位移传感器1;
             }
-            if (name == "位移传感器2      mm")
+            if (name == "位移传感器2(mm)")
             {
                 enum_Demarcate = PublicEnum.DemarcateType.位移传感器2;
             }
-            if (name == "位移传感器3      mm")
+            if (name == "位移传感器3(mm)")
             {
                 enum_Demarcate = PublicEnum.DemarcateType.位移传感器3;
             }

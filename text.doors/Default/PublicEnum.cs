@@ -163,7 +163,8 @@ namespace text.doors.Default
         public enum DemarcateType
         {
             风速传感器,
-            差压传感器,
+            差压传感器高,
+            差压传感器低,
             温度传感器,
             大气压力传感器,
             位移传感器1,

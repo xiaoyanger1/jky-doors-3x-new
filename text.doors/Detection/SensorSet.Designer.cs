@@ -68,9 +68,9 @@
             // 
             this.btn_ok.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.btn_ok.Location = new System.Drawing.Point(51, 278);
-            this.btn_ok.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btn_ok.Margin = new System.Windows.Forms.Padding(4);
             this.btn_ok.Name = "btn_ok";
-            this.btn_ok.Size = new System.Drawing.Size(309, 34);
+            this.btn_ok.Size = new System.Drawing.Size(346, 34);
             this.btn_ok.TabIndex = 2;
             this.btn_ok.Text = "应用此值";
             this.btn_ok.UseVisualStyleBackColor = true;
@@ -90,9 +90,9 @@
             this.groupBox7.Controls.Add(this.btn_collection);
             this.groupBox7.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.groupBox7.Location = new System.Drawing.Point(472, 52);
-            this.groupBox7.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.groupBox7.Margin = new System.Windows.Forms.Padding(4);
             this.groupBox7.Name = "groupBox7";
-            this.groupBox7.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.groupBox7.Padding = new System.Windows.Forms.Padding(4);
             this.groupBox7.Size = new System.Drawing.Size(405, 374);
             this.groupBox7.TabIndex = 22;
             this.groupBox7.TabStop = false;
@@ -112,17 +112,18 @@
             // 
             this.cbb_type.FormattingEnabled = true;
             this.cbb_type.Items.AddRange(new object[] {
-            "风速传感器      米/秒",
-            "差压传感器      高 帕",
-            "温度传感器      ℃",
-            "大气压力传感器 KPa",
-            "位移传感器1      mm",
-            "位移传感器2      mm",
-            "位移传感器3      mm"});
-            this.cbb_type.Location = new System.Drawing.Point(177, 34);
-            this.cbb_type.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            "风速传感器 (米/秒)",
+            "差压传感器高(Pa)",
+            "差压传感器低(Pa)",
+            "温度传感器(℃)",
+            "大气压力传感器(KPa)",
+            "位移传感器1(mm)",
+            "位移传感器2(mm)",
+            "位移传感器3(mm)"});
+            this.cbb_type.Location = new System.Drawing.Point(163, 34);
+            this.cbb_type.Margin = new System.Windows.Forms.Padding(4);
             this.cbb_type.Name = "cbb_type";
-            this.cbb_type.Size = new System.Drawing.Size(181, 26);
+            this.cbb_type.Size = new System.Drawing.Size(234, 26);
             this.cbb_type.TabIndex = 26;
             this.cbb_type.SelectedIndexChanged += new System.EventHandler(this.cbb_type_SelectedIndexChanged);
             // 
@@ -149,25 +150,25 @@
             // txt_Key
             // 
             this.txt_Key.Location = new System.Drawing.Point(248, 231);
-            this.txt_Key.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.txt_Key.Margin = new System.Windows.Forms.Padding(4);
             this.txt_Key.Name = "txt_Key";
-            this.txt_Key.Size = new System.Drawing.Size(110, 28);
+            this.txt_Key.Size = new System.Drawing.Size(147, 28);
             this.txt_Key.TabIndex = 0;
             // 
             // txt_ave
             // 
             this.txt_ave.Location = new System.Drawing.Point(248, 189);
-            this.txt_ave.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.txt_ave.Margin = new System.Windows.Forms.Padding(4);
             this.txt_ave.Name = "txt_ave";
-            this.txt_ave.Size = new System.Drawing.Size(110, 28);
+            this.txt_ave.Size = new System.Drawing.Size(147, 28);
             this.txt_ave.TabIndex = 0;
             // 
             // btn_clear
             // 
             this.btn_clear.Location = new System.Drawing.Point(248, 86);
-            this.btn_clear.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btn_clear.Margin = new System.Windows.Forms.Padding(4);
             this.btn_clear.Name = "btn_clear";
-            this.btn_clear.Size = new System.Drawing.Size(112, 34);
+            this.btn_clear.Size = new System.Drawing.Size(149, 34);
             this.btn_clear.TabIndex = 2;
             this.btn_clear.Text = "清空";
             this.btn_clear.UseVisualStyleBackColor = true;
@@ -176,9 +177,9 @@
             // btn_Compute
             // 
             this.btn_Compute.Location = new System.Drawing.Point(50, 136);
-            this.btn_Compute.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btn_Compute.Margin = new System.Windows.Forms.Padding(4);
             this.btn_Compute.Name = "btn_Compute";
-            this.btn_Compute.Size = new System.Drawing.Size(310, 34);
+            this.btn_Compute.Size = new System.Drawing.Size(347, 34);
             this.btn_Compute.TabIndex = 2;
             this.btn_Compute.Text = "计算平均值";
             this.btn_Compute.UseVisualStyleBackColor = true;
@@ -187,7 +188,7 @@
             // btn_collection
             // 
             this.btn_collection.Location = new System.Drawing.Point(50, 86);
-            this.btn_collection.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btn_collection.Margin = new System.Windows.Forms.Padding(4);
             this.btn_collection.Name = "btn_collection";
             this.btn_collection.Size = new System.Drawing.Size(112, 34);
             this.btn_collection.TabIndex = 2;
@@ -199,7 +200,7 @@
             // 
             this.lv_cjz.HideSelection = false;
             this.lv_cjz.Location = new System.Drawing.Point(30, 30);
-            this.lv_cjz.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.lv_cjz.Margin = new System.Windows.Forms.Padding(4);
             this.lv_cjz.Name = "lv_cjz";
             this.lv_cjz.Size = new System.Drawing.Size(388, 324);
             this.lv_cjz.TabIndex = 23;
@@ -211,7 +212,7 @@
             this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Controls.Add(this.tabPage2);
             this.tabControl1.Location = new System.Drawing.Point(0, 0);
-            this.tabControl1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tabControl1.Margin = new System.Windows.Forms.Padding(4);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
             this.tabControl1.Size = new System.Drawing.Size(922, 519);
@@ -223,9 +224,9 @@
             this.tabPage1.Controls.Add(this.groupBox1);
             this.tabPage1.Controls.Add(this.groupBox7);
             this.tabPage1.Location = new System.Drawing.Point(4, 28);
-            this.tabPage1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tabPage1.Margin = new System.Windows.Forms.Padding(4);
             this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tabPage1.Padding = new System.Windows.Forms.Padding(4);
             this.tabPage1.Size = new System.Drawing.Size(914, 487);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "标定";
@@ -236,9 +237,9 @@
             this.groupBox1.Controls.Add(this.lv_cjz);
             this.groupBox1.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.groupBox1.Location = new System.Drawing.Point(12, 51);
-            this.groupBox1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.groupBox1.Margin = new System.Windows.Forms.Padding(4);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.groupBox1.Padding = new System.Windows.Forms.Padding(4);
             this.groupBox1.Size = new System.Drawing.Size(452, 374);
             this.groupBox1.TabIndex = 25;
             this.groupBox1.TabStop = false;
@@ -251,9 +252,9 @@
             this.tabPage2.Controls.Add(this.cbb_cgq);
             this.tabPage2.Controls.Add(this.label1);
             this.tabPage2.Location = new System.Drawing.Point(4, 28);
-            this.tabPage2.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tabPage2.Margin = new System.Windows.Forms.Padding(4);
             this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tabPage2.Padding = new System.Windows.Forms.Padding(4);
             this.tabPage2.Size = new System.Drawing.Size(914, 487);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "标定查询";
@@ -269,9 +270,9 @@
             this.groupBox2.Controls.Add(this.lbl_Key);
             this.groupBox2.Controls.Add(this.txt_sValue);
             this.groupBox2.Location = new System.Drawing.Point(474, 96);
-            this.groupBox2.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.groupBox2.Margin = new System.Windows.Forms.Padding(4);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.groupBox2.Padding = new System.Windows.Forms.Padding(4);
             this.groupBox2.Size = new System.Drawing.Size(386, 351);
             this.groupBox2.TabIndex = 33;
             this.groupBox2.TabStop = false;
@@ -290,7 +291,7 @@
             // txt_sKey
             // 
             this.txt_sKey.Location = new System.Drawing.Point(138, 63);
-            this.txt_sKey.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.txt_sKey.Margin = new System.Windows.Forms.Padding(4);
             this.txt_sKey.Name = "txt_sKey";
             this.txt_sKey.Size = new System.Drawing.Size(148, 28);
             this.txt_sKey.TabIndex = 31;
@@ -298,7 +299,7 @@
             // btn_del
             // 
             this.btn_del.Location = new System.Drawing.Point(200, 216);
-            this.btn_del.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btn_del.Margin = new System.Windows.Forms.Padding(4);
             this.btn_del.Name = "btn_del";
             this.btn_del.Size = new System.Drawing.Size(112, 34);
             this.btn_del.TabIndex = 32;
@@ -320,7 +321,7 @@
             // btn_update
             // 
             this.btn_update.Location = new System.Drawing.Point(58, 216);
-            this.btn_update.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btn_update.Margin = new System.Windows.Forms.Padding(4);
             this.btn_update.Name = "btn_update";
             this.btn_update.Size = new System.Drawing.Size(112, 34);
             this.btn_update.TabIndex = 32;
@@ -342,7 +343,7 @@
             // txt_sValue
             // 
             this.txt_sValue.Location = new System.Drawing.Point(138, 129);
-            this.txt_sValue.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.txt_sValue.Margin = new System.Windows.Forms.Padding(4);
             this.txt_sValue.Name = "txt_sValue";
             this.txt_sValue.Size = new System.Drawing.Size(148, 28);
             this.txt_sValue.TabIndex = 31;
@@ -353,7 +354,7 @@
             this.lv_list.FullRowSelect = true;
             this.lv_list.HideSelection = false;
             this.lv_list.Location = new System.Drawing.Point(44, 96);
-            this.lv_list.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.lv_list.Margin = new System.Windows.Forms.Padding(4);
             this.lv_list.Name = "lv_list";
             this.lv_list.Size = new System.Drawing.Size(388, 349);
             this.lv_list.TabIndex = 29;
@@ -365,15 +366,16 @@
             // 
             this.cbb_cgq.FormattingEnabled = true;
             this.cbb_cgq.Items.AddRange(new object[] {
-            "风速传感器      米/秒",
-            "差压传感器      高 帕",
-            "温度传感器      ℃",
-            "大气压力传感器 KPa",
-            "位移传感器1      mm",
-            "位移传感器2      mm",
-            "位移传感器3      mm"});
+            "风速传感器 (米/秒)",
+            "差压传感器高(Pa)",
+            "差压传感器低(Pa)",
+            "温度传感器(℃)",
+            "大气压力传感器(KPa)",
+            "位移传感器1(mm)",
+            "位移传感器2(mm)",
+            "位移传感器3(mm)"});
             this.cbb_cgq.Location = new System.Drawing.Point(160, 27);
-            this.cbb_cgq.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.cbb_cgq.Margin = new System.Windows.Forms.Padding(4);
             this.cbb_cgq.Name = "cbb_cgq";
             this.cbb_cgq.Size = new System.Drawing.Size(181, 26);
             this.cbb_cgq.TabIndex = 28;
@@ -397,7 +399,7 @@
             this.Controls.Add(this.tabControl1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "SensorSet";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "传感器标定";

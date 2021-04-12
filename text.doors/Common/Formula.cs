@@ -92,9 +92,13 @@ namespace text.doors.Common
         /// <returns></returns>
         private static List<Calibrating_Dict> GetListByEnum(PublicEnum.DemarcateType enum_Demarcate)
         {
-            if (enum_Demarcate == PublicEnum.DemarcateType.差压传感器)
+            if (enum_Demarcate == PublicEnum.DemarcateType.差压传感器高)
             {
-                return DAL_Demarcate_Dict.differentialPressureDict;
+                return DAL_Demarcate_Dict.differentialPressureDictHige;
+            }
+            if (enum_Demarcate == PublicEnum.DemarcateType.差压传感器低)
+            {
+                return DAL_Demarcate_Dict.differentialPressureDictLow;
             }
             if (enum_Demarcate == PublicEnum.DemarcateType.大气压力传感器)
             {

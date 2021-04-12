@@ -47,10 +47,10 @@ namespace text.doors.Service
         }
 
         //<summary>
-        //差压传感器
+        //差压传感器高
         //</summary>
-        private static List<Calibrating_Dict> _differentialPressureDict = null;
-        public static List<Calibrating_Dict> differentialPressureDict
+        private static List<Calibrating_Dict> _differentialPressureDictHige = null;
+        public static List<Calibrating_Dict> differentialPressureDictHige
         {
             get
             {
@@ -58,13 +58,34 @@ namespace text.doors.Service
                 {
                     DemarcateList = GetCalibrating_Dict();
                 }
-                if (_differentialPressureDict == null)
-                    differentialPressureDict = DemarcateList.FindAll(t => t.Enum == PublicEnum.DemarcateType.差压传感器.ToString()).OrderBy(t => t.x).ToList();
-                return _differentialPressureDict;
+                if (_differentialPressureDictHige == null)
+                    differentialPressureDictHige = DemarcateList.FindAll(t => t.Enum == PublicEnum.DemarcateType.差压传感器高.ToString()).OrderBy(t => t.x).ToList();
+                return _differentialPressureDictHige;
             }
             set
             {
-                _differentialPressureDict = value;
+                _differentialPressureDictHige = value;
+            }
+        }
+        //<summary>
+        //差压传感器低
+        //</summary>
+        private static List<Calibrating_Dict> _differentialPressureDictLow = null;
+        public static List<Calibrating_Dict> differentialPressureDictLow
+        {
+            get
+            {
+                if (DemarcateList.Count == 0)
+                {
+                    DemarcateList = GetCalibrating_Dict();
+                }
+                if (_differentialPressureDictLow == null)
+                    differentialPressureDictLow = DemarcateList.FindAll(t => t.Enum == PublicEnum.DemarcateType.差压传感器低.ToString()).OrderBy(t => t.x).ToList();
+                return _differentialPressureDictLow;
+            }
+            set
+            {
+                _differentialPressureDictLow = value;
             }
         }
 
