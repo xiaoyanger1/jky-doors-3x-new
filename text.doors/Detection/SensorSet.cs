@@ -51,7 +51,7 @@ namespace text.doors.Detection
 
 
 
-            if (name == "风速传感器(米/秒)")
+            if (name == "风速传感器 (米/秒)")
             {
                 res = _serialPortClient.GetFSXS();
             }
@@ -187,7 +187,7 @@ namespace text.doors.Detection
         {
             PublicEnum.DemarcateType? enum_Demarcate = null;
 
-            if (name == "风速传感器(米/秒)")
+            if (name == "风速传感器 (米/秒)")
             {
                 enum_Demarcate = PublicEnum.DemarcateType.风速传感器;
             }
