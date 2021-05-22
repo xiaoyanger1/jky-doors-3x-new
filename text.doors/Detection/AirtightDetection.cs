@@ -62,6 +62,7 @@ namespace text.doors.Detection
 
         public AirtightDetection()
         {
+            tc_RealTimeSurveillance.Anchor = AnchorStyles.Top;
         }
 
         public AirtightDetection(SerialPortClient tcpClient, string tempCode, string tempTong)

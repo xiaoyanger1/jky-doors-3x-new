@@ -30,9 +30,9 @@ namespace text.doors
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
 
 
-            RegDLL.RegClass reg = new RegDLL.RegClass(System.IO.File.GetLastWriteTime(System.Reflection.Assembly.GetAssembly(typeof(Login)).Location).ToShortDateString());
-            if (reg.MiStart_Infos() && reg.MiEnd_Infos())
-            {
+            //RegDLL.RegClass reg = new RegDLL.RegClass(System.IO.File.GetLastWriteTime(System.Reflection.Assembly.GetAssembly(typeof(Login)).Location).ToShortDateString());
+            //if (reg.MiStart_Infos() && reg.MiEnd_Infos())
+            //{
                 Process instance = RunningInstance();
                 if (instance == null)
                 {
@@ -51,11 +51,11 @@ namespace text.doors
                     // 已经有一个实例在运行
                     HandleRunningInstance(instance);
                 }
-            }
-            else
-            {
-                Application.Exit();
-            }
+            //}
+            //else
+            //{
+            //    Application.Exit();
+            //}
         }
 
         #region 全局错误
