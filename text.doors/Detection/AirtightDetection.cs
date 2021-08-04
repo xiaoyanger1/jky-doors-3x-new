@@ -2094,7 +2094,6 @@ namespace text.doors.Detection
                 if (value == 3)
                 {
                     airtightPropertyTest = PublicEnum.AirtightPropertyTest.Stop;
-                    //lbl_setYL.Text = "0";
                     OpenBtnType();
                 }
             }
@@ -2106,8 +2105,6 @@ namespace text.doors.Detection
                 if (value >= 15)
                 {
                     airtightPropertyTest = PublicEnum.AirtightPropertyTest.Stop;
-                    //IsStart = false;
-                    //lbl_setYL.Text = "0";
                     OpenBtnType();
                 }
             }
@@ -2117,14 +2114,6 @@ namespace text.doors.Detection
         {
             try
             {
-                //if (this.tabControl1.SelectedTab.Name == "流量原始数据")
-                //{
-                //    BindFlowBase(QM_TestCount.第一次);
-                //}
-                //else if (this.tabControl1.SelectedTab.Name == "重复流量数据")
-                //{
-                //    BindFlowBase(QM_TestCount.第二次);
-                //}
 
                 if (this.tabControl1.SelectedTab.Name == "流量原始数据")
                 {
@@ -2193,17 +2182,7 @@ namespace text.doors.Detection
 
         private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            //if (this.tabControl1.SelectedTab.Name == "流量原始数据")
-            //{
-            //    BindFlowBase(QM_TestCount.第一次);
-            //    BindLevelIndex(QM_TestCount.第一次);
-            //}
-            //else if (this.tabControl1.SelectedTab.Name == "重复流量数据")
-            //{
-            //    BindFlowBase(QM_TestCount.第二次);
-            //    BindLevelIndex(QM_TestCount.第二次);
-            //}
-
+           
             if (this.tabControl1.SelectedTab.Name == "流量原始数据")
             {
                 GetPressureFlow(QM_TestCount.第一次);

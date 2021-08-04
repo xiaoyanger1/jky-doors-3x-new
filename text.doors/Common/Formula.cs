@@ -11,6 +11,9 @@ namespace text.doors.Common
 {
     public class Formula
     {
+
+        private static Young.Core.Logger.ILog Logger = Young.Core.Logger.LoggerManager.Current();
+
         #region   y=kx+b
         /// <summary>
         /// 获取标定后值
@@ -267,6 +270,8 @@ namespace text.doors.Common
 
             string errorMsg = "";
 
+           
+
             //正压
             double _z_a = 0;
             double _z_b = 0;
@@ -275,13 +280,16 @@ namespace text.doors.Common
             if (z_isSuccess)
             {
                 var y = gjcd / lx;
-                zy = Math.Round((y - _z_b) / _z_a, 2, MidpointRounding.AwayFromZero);
+                // zy = Math.Round((y - _z_b) / _z_a, 2, MidpointRounding.AwayFromZero);
+                zy = (y - _z_b) / _z_a;
             }
             else
             {
                 zy = -100;
             }
 
+            Logger.Info("正压[a]:" + _z_a);
+            Logger.Info("正压[b]:" + _z_b);
             //负压
             double _f_a = 0;
             double _f_b = 0;
@@ -290,13 +298,18 @@ namespace text.doors.Common
             var f_isSuccess = Formula.LinearRegression(f_point, ref _f_a, ref _f_b, ref errorMsg);
             if (f_isSuccess)
             {
-                var y = Math.Round(gjcd / lx, 2, MidpointRounding.AwayFromZero);
-                fy = Math.Round((y - _f_b) / _f_a, 2, MidpointRounding.AwayFromZero);
+                //var y = Math.Round(gjcd / lx, 2, MidpointRounding.AwayFromZero);
+                //fy = Math.Round((y - _f_b) / _f_a, 2, MidpointRounding.AwayFromZero);
+
+                var y = gjcd / lx;
+                fy = (y - _f_b) / _f_a;
             }
             else
             {
                 fy = -100;
             }
+            Logger.Info("负压[a]:" + _f_a);
+            Logger.Info("负压[b]:" + _f_b);
         }
 
 
@@ -337,16 +350,17 @@ namespace text.doors.Common
                 denominator += (p.X - averagex) * (p.X - averagex);
             }
 
-            //回归系数b（Regression Coefficient）
-            double RCB = numerator / denominator;
+            //回归系数A（Regression Coefficient）
+            double RCA = numerator / denominator;
 
-            //回归系数a
-            double RCA = averagey - RCB * averagex;
+            RCA= Math.Round(RCA, 4, MidpointRounding.AwayFromZero);
+            //回归系数B
+            double RCB = averagey - RCA * averagex;
+            RCB = Math.Round(RCB, 4, MidpointRounding.AwayFromZero);
 
-            //b = Math.Round(RCB, 4, MidpointRounding.AwayFromZero);
-            //a = Math.Round(RCA, 4, MidpointRounding.AwayFromZero);
-            a = RCB;
-            b = RCA;
+            a = RCA;
+            b = RCB;
+
             return true;
         }
 

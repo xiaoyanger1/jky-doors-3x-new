@@ -97,7 +97,6 @@ namespace text.doors.Detection
             td = new Thread(BindFromInput);
             td.IsBackground = true;
             td.Start();
-
         }
 
         /// <summary>
